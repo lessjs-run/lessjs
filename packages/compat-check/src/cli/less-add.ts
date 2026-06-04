@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * @lessjs/core/cli/less-add - CLI for adding Web Component packages.
+ * @openelement/core/cli/less-add - CLI for adding Web Component packages.
  *
  * Usage:
- *   deno run -A jsr:@lessjs/core/cli/less-add @scope/package --dry-run
- *   deno run -A jsr:@lessjs/core/cli/less-add ./local/package/custom-elements.json
- *   deno run -A jsr:@lessjs/core/cli/less-add @scope/package --json
+ *   deno run -A jsr:@openelement/core/cli/less-add @scope/package --dry-run
+ *   deno run -A jsr:@openelement/core/cli/less-add ./local/package/custom-elements.json
+ *   deno run -A jsr:@openelement/core/cli/less-add @scope/package --json
  *
  * Exit codes:
  *   0 - plan generated (valid)

@@ -1,4 +1,4 @@
-# Dead Code Hunt Report
+﻿# Dead Code Hunt Report
 
 > v0.27.0 migration audit | deadcode-hunter | 2026-05-30
 
@@ -58,7 +58,7 @@ The build system auto-discovers them and still bundles them into client JS, wast
 - **File**: `www/app/islands/media-chrome-showcase.ts`
 - **Size**: 147 lines
 - **Bundle**: `island-media-chrome-showcase-*.js` — **175 KB** (exceeds 50 KB budget)
-- **Dependencies**: `@lessjs/adapter-vanilla`, dynamic import of `media-chrome` library
+- **Dependencies**: `@openelement/adapter-vanilla`, dynamic import of `media-chrome` library
 - **Status**: SSR=false client-only showcase. Zero route imports. This is purely a demo that loads the entire `media-chrome` library. It's the **largest single island** in the client bundle. Not used in any user-facing page.
 - **Action**: DELETE — saves 175 KB from every client download
 
@@ -67,7 +67,7 @@ The build system auto-discovers them and still bundles them into client JS, wast
 - **File**: `www/app/islands/react-showcase.ts`
 - **Size**: 168 lines
 - **Bundle**: `island-react-showcase-*.js` — **12 KB**
-- **Dependencies**: `react`, `@lessjs/adapter-react`
+- **Dependencies**: `react`, `@openelement/adapter-react`
 - **Status**: React integration demo. Zero route imports. No user-facing page uses it.
 - **Action**: DELETE — saves 12 KB + removes React adapter overhead
 
@@ -76,7 +76,7 @@ The build system auto-discovers them and still bundles them into client JS, wast
 - **File**: `www/app/islands/counter-island.tsx`
 - **Size**: 91 lines
 - **Bundle**: `island-counter-island-*.js` — **1.9 KB**
-- **Dependencies**: `@lessjs/core`, `@lessjs/signals`, `@lessjs/style-sheet`
+- **Dependencies**: `@openelement/core`, `@openelement/signals`, `@openelement/style-sheet`
 - **Status**: The `routes/guide/getting-started.tsx` route defines its OWN inline `CounterIsland` class (line 147-161) instead of importing this island. The island file is auto-discovered and bundled but never used. The getting-started route serves as documentation — showing the code inline.
 - **Duplicate**: Two `counter-island` implementations exist:
   1. `www/app/islands/counter-island.tsx` — reactive DSD with signals
@@ -87,21 +87,21 @@ The build system auto-discovers them and still bundles them into client JS, wast
 
 ## 2. MIGRATE — Wrong Import Paths
 
-### 2.1 routes/architecture/islands.tsx — @lessjs/runtime import in documentation
+### 2.1 routes/architecture/islands.tsx — @openelement/runtime import in documentation
 
 - **File**: `www/app/routes/architecture/islands.tsx`
-- **Line**: 122 (inside a `<less-code-block>` code example)
+- **Line**: 122 (inside a `<open-code-block>` code example)
 - **Current**:
   ```ts
-  import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+  import { DsdElement, html, signal, StyleSheet } from '@openelement/runtime';
   ```
 - **Should be**:
   ```ts
-  import { DsdElement, html } from '@lessjs/core';
-  import { StyleSheet } from '@lessjs/style-sheet';
-  import { signal } from '@lessjs/signals';
+  import { DsdElement, html } from '@openelement/core';
+  import { StyleSheet } from '@openelement/style-sheet';
+  import { signal } from '@openelement/signals';
   ```
-- **Context**: This is rendered as documentation in a code block on the "Islands" architecture page. Users reading the docs see the deprecated `@lessjs/runtime` import path. While it's not functional code, it's misleading documentation that should be updated.
+- **Context**: This is rendered as documentation in a code block on the "Islands" architecture page. Users reading the docs see the deprecated `@openelement/runtime` import path. While it's not functional code, it's misleading documentation that should be updated.
 - **Action**: Update the code example to use correct import paths.
 
 ---
@@ -127,9 +127,9 @@ The build system auto-discovers them and still bundles them into client JS, wast
 
 | File                           | Used By                                                    |
 | ------------------------------ | ---------------------------------------------------------- |
-| `data/_generated-blog-data.ts` | Blog routes via `@lessjs/content/blog-data` virtual module |
-| `data/_generated-nav.ts`       | All routes via `@lessjs/content/nav` virtual module        |
-| `data/_generated-i18n-data.ts` | Build pipeline via `@lessjs/i18n/data` virtual module      |
+| `data/_generated-blog-data.ts` | Blog routes via `@openelement/content/blog-data` virtual module |
+| `data/_generated-nav.ts`       | All routes via `@openelement/content/nav` virtual module        |
+| `data/_generated-i18n-data.ts` | Build pipeline via `@openelement/i18n/data` virtual module      |
 | `data/registry/hub-data.ts`    | Registry routes                                            |
 | `data/registry/hub-index.ts`   | Registry routes                                            |
 
@@ -143,13 +143,13 @@ The build system auto-discovers them and still bundles them into client JS, wast
 
 All islands use correct import paths:
 
-- `@lessjs/core` for `DsdElement`, `defineIsland`
-- `@lessjs/style-sheet` for `StyleSheet`
-- `@lessjs/signals` for `signal`
-- `@lessjs/adapter-vanilla` for `WithDsdHydration` (media-chrome)
-- `@lessjs/adapter-react` for `WithDsdHydration` (react)
+- `@openelement/core` for `DsdElement`, `defineIsland`
+- `@openelement/style-sheet` for `StyleSheet`
+- `@openelement/signals` for `signal`
+- `@openelement/adapter-vanilla` for `WithDsdHydration` (media-chrome)
+- `@openelement/adapter-react` for `WithDsdHydration` (react)
 
-No instances of incorrect `@lessjs/runtime` imports found in functional code.
+No instances of incorrect `@openelement/runtime` imports found in functional code.
 
 ---
 
@@ -260,7 +260,7 @@ All demo islands AND showcase islands are bundled into client JS despite having 
 
 ### Phase 2: Documentation FIX
 
-8. Update `routes/architecture/islands.tsx:122` code example — replace `@lessjs/runtime` with correct imports
+8. Update `routes/architecture/islands.tsx:122` code example — replace `@openelement/runtime` with correct imports
 
 ### Phase 3: Build optimization (for later)
 

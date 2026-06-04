@@ -1,15 +1,15 @@
 {
-  "name": "@lessjs/app",
+  "name": "@openelement/app",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.30.0",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.30.0/logger",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.30.0",
-    "@lessjs/content": "jsr:@lessjs/content@^0.30.0",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.30.0",
+    "@openelement/core": "jsr:@openelement/core@^0.30.0",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.30.0/logger",
+    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.30.0",
+    "@openelement/content": "jsr:@openelement/content@^0.30.0",
+    "@openelement/i18n": "jsr:@openelement/i18n@^0.30.0",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

@@ -1,5 +1,5 @@
 /**
- * @lessjs/i18n - Unit Tests
+ * @openelement/i18n - Unit Tests
  * ADR 0018: Tests updated for pure function pattern (loadI18nData)
  */
 import { assertEquals, assertStrictEquals } from 'jsr:@std/assert@^1.0.0';

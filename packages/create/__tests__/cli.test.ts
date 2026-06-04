@@ -1,5 +1,5 @@
 /**
- * @lessjs/create - cli.ts tests (Deno)
+ * @openelement/create - cli.ts tests (Deno)
  *
  * Tests template correctness by reading the source directly.
  * We do NOT call main() because it invokes Deno.exit() which
@@ -75,14 +75,14 @@ Deno.test('create-less: gitignore hides generated build artifacts', () => {
   assert(gitignore.includes('node_modules/'));
 });
 
-Deno.test('create-less: deno.json build:client uses @lessjs/adapter-vite', () => {
+Deno.test('create-less: deno.json build:client uses @openelement/adapter-vite', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assert(denoJson.tasks['build:client'].includes('@lessjs/adapter-vite'));
+  assert(denoJson.tasks['build:client'].includes('@openelement/adapter-vite'));
 });
 
-Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
+Deno.test('create-less: deno.json build:ssg uses @openelement/adapter-vite', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assert(denoJson.tasks['build:ssg'].includes('@lessjs/adapter-vite'));
+  assert(denoJson.tasks['build:ssg'].includes('@openelement/adapter-vite'));
 });
 
 Deno.test('create-less: deno.json maps LessJS package imports (v0.23 runtime facade)', () => {
@@ -99,9 +99,9 @@ Deno.test('create-less: deno.json maps LessJS package imports (v0.23 runtime fac
   assertEquals(denoJson.imports['@deno/vite-plugin'], 'npm:@deno/vite-plugin');
   assertEquals(denoJson.imports['entities'], 'npm:entities@^4.5.0');
   assertEquals(denoJson.imports['hono'], 'npm:hono@4.12.23');
-  assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
-  assertEquals(denoJson.imports['@lessjs/runtime'], 'jsr:@lessjs/runtime@^${v.runtime}');
-  assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
+  assertEquals(denoJson.imports['@openelement/app'], 'jsr:@openelement/app@^${v.app}');
+  assertEquals(denoJson.imports['@openelement/runtime'], 'jsr:@openelement/runtime@^${v.runtime}');
+  assertEquals(denoJson.imports['@openelement/ui'], 'jsr:@openelement/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
   assertEquals(denoJson.nodeModulesDir, 'auto');
 });
@@ -117,7 +117,7 @@ Deno.test('create-less: deno.json build uses the one-command LessJS build', () =
   const denoJson = JSON.parse(extractTemplate('deno.json'));
   assertEquals(
     denoJson.tasks['build'],
-    'deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build',
+    'deno run --config deno.json -A jsr:@openelement/adapter-vite@^${v.adapterVite}/cli/build',
   );
   assertExists(denoJson.tasks['build:ssr']);
   assertExists(denoJson.tasks['build:client']);
@@ -133,17 +133,17 @@ Deno.test('create-less: refuses path escape and existing target before writing',
 
 Deno.test('create-less: vite.config.ts imports lessjs plugin', () => {
   const viteConfig = extractTemplate('vite.config.ts');
-  assert(viteConfig.includes("import { lessjs } from '@lessjs/app'"));
+  assert(viteConfig.includes("import { lessjs } from '@openelement/app'"));
   assert(viteConfig.includes('lessjs({'));
 });
 
 Deno.test('create-less: vite.config.ts includes packageIslands config', () => {
   const viteConfig = extractTemplate('vite.config.ts');
-  assert(viteConfig.includes('@lessjs/ui'));
-  assert(viteConfig.includes("packageIslands: ['@lessjs/ui']"));
+  assert(viteConfig.includes('@openelement/ui'));
+  assert(viteConfig.includes("packageIslands: ['@openelement/ui']"));
   // v0.21.6: Hardcoded JSR URL aliases removed — plugin auto-generates them
   assertFalse(viteConfig.includes('lessUiAliases'));
-  assertFalse(viteConfig.includes('https://jsr.io/@lessjs/ui/'));
+  assertFalse(viteConfig.includes('https://jsr.io/@openelement/ui/'));
 });
 
 Deno.test('create-less: vite.config.ts includes virtual-passthrough resolve plugin (SOP-015)', () => {
@@ -156,8 +156,8 @@ Deno.test('create-less: vite.config.ts includes virtual-passthrough resolve plug
 Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', () => {
   const routeIndex = extractTemplate('app/routes/index.tsx');
   assert(routeIndex.includes('DsdElement'));
-  assert(routeIndex.includes("from '@lessjs/runtime'"));
-  assert(routeIndex.includes('@jsxImportSource @lessjs/core'));
+  assert(routeIndex.includes("from '@openelement/runtime'"));
+  assert(routeIndex.includes('@jsxImportSource @openelement/core'));
   assert(routeIndex.includes('StyleSheet'));
   assert(routeIndex.includes('static override styles'));
   assert(routeIndex.includes('override render()'));
@@ -172,10 +172,10 @@ Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', ()
 Deno.test('create-less: island counter uses JSX + static props (v0.24)', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.tsx');
   assert(islandCounter.includes('DsdElement'));
-  assert(islandCounter.includes("from '@lessjs/runtime'"));
+  assert(islandCounter.includes("from '@openelement/runtime'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
   assert(islandCounter.includes('static props'));
-  assert(islandCounter.includes('@jsxImportSource @lessjs/core'));
+  assert(islandCounter.includes('@jsxImportSource @openelement/core'));
   assert(islandCounter.includes('customElements.define'));
   // Verify no Lit dependency in template
   assertEquals(islandCounter.includes("from 'lit'"), false);
@@ -199,58 +199,58 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     const appDir = join(tmpRoot, projectName);
     const denoJsonPath = join(appDir, 'deno.json');
     const denoJson = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
-    denoJson.imports['@lessjs/app'] = pathToFileURL(
+    denoJson.imports['@openelement/app'] = pathToFileURL(
       join(repoRoot, 'packages', 'app', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/core'] = pathToFileURL(
+    denoJson.imports['@openelement/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/logger'] = pathToFileURL(
+    denoJson.imports['@openelement/core/logger'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/render-ir'] = pathToFileURL(
+    denoJson.imports['@openelement/core/render-ir'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'render-ir.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/jsx-runtime'] = pathToFileURL(
+    denoJson.imports['@openelement/core/jsx-runtime'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/jsx-dev-runtime'] = pathToFileURL(
+    denoJson.imports['@openelement/core/jsx-dev-runtime'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
     ).href;
-    denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
+    denoJson.imports['@openelement/adapter-vite'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/core'] = pathToFileURL(
+    denoJson.imports['@openelement/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/signals'] = pathToFileURL(
+    denoJson.imports['@openelement/signals'] = pathToFileURL(
       join(repoRoot, 'packages', 'signals', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/signals/framework'] = pathToFileURL(
+    denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
       join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
     ).href;
-    denoJson.imports['@lessjs/runtime'] = pathToFileURL(
+    denoJson.imports['@openelement/runtime'] = pathToFileURL(
       join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/style-sheet'] = pathToFileURL(
+    denoJson.imports['@openelement/style-sheet'] = pathToFileURL(
       join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/content'] = pathToFileURL(
+    denoJson.imports['@openelement/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/i18n'] = pathToFileURL(
+    denoJson.imports['@openelement/i18n'] = pathToFileURL(
       join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/adapter-lit'] = pathToFileURL(
+    denoJson.imports['@openelement/adapter-lit'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/adapter-lit/ssr'] = pathToFileURL(
+    denoJson.imports['@openelement/adapter-lit/ssr'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts'),
     ).href;
-    denoJson.imports['@lessjs/ui'] = pathToFileURL(
+    denoJson.imports['@openelement/ui'] = pathToFileURL(
       join(repoRoot, 'packages', 'ui', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/ui/'] = pathToFileURL(
+    denoJson.imports['@openelement/ui/'] = pathToFileURL(
       join(repoRoot, 'packages', 'ui', 'src') + sep,
     ).href;
     denoJson.imports['lit'] = 'npm:lit@^3.2.0';
@@ -265,7 +265,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     }`;
     // Remove sub-tasks that Vite 8 configLoader:'native' may trigger independently.
     // These would run without our import map plugin + alias filtering, causing
-    // the original @lessjs/ui/<subpath> ENOTDIR error.
+    // the original @openelement/ui/<subpath> ENOTDIR error.
     delete denoJson.tasks['build:ssr'];
     delete denoJson.tasks['build:client'];
     delete denoJson.tasks['build:ssg'];
@@ -275,110 +275,110 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
     const aliases = [
       {
-        find: '@lessjs/adapter-vite',
+        find: '@openelement/adapter-vite',
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/core/logger',
+        find: '@openelement/core/logger',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'logger.ts')),
       },
       {
-        find: '@lessjs/core/render-ir',
+        find: '@openelement/core/render-ir',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'render-ir.ts')),
       },
       {
-        find: '@lessjs/core/jsx-runtime',
+        find: '@openelement/core/jsx-runtime',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
       },
       {
-        find: '@lessjs/core/jsx-dev-runtime',
+        find: '@openelement/core/jsx-dev-runtime',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
       },
       {
-        find: '@lessjs/core',
+        find: '@openelement/core',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/signals/framework',
+        find: '@openelement/signals/framework',
         replacement: vitePath(join(signalsSrc, 'framework.ts')),
       },
       {
-        find: '@lessjs/runtime',
+        find: '@openelement/runtime',
         replacement: vitePath(join(repoRoot, 'packages', 'runtime', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/style-sheet',
+        find: '@openelement/style-sheet',
         replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/adapter-lit/ssr',
+        find: '@openelement/adapter-lit/ssr',
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts')),
       },
       {
-        find: '@lessjs/adapter-lit',
+        find: '@openelement/adapter-lit',
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/ui/open-props-tokens',
+        find: '@openelement/ui/open-props-tokens',
         replacement: vitePath(join(uiSrc, 'open-props-tokens.ts')),
       },
       {
-        find: '@lessjs/ui/less-button',
+        find: '@openelement/ui/less-button',
         replacement: vitePath(join(uiSrc, 'less-button.tsx')),
       },
       {
-        find: '@lessjs/ui/less-card',
+        find: '@openelement/ui/less-card',
         replacement: vitePath(join(uiSrc, 'less-card.tsx')),
       },
       {
-        find: '@lessjs/ui/less-input',
+        find: '@openelement/ui/less-input',
         replacement: vitePath(join(uiSrc, 'less-input.tsx')),
       },
       {
-        find: '@lessjs/ui/less-code-block',
+        find: '@openelement/ui/less-code-block',
         replacement: vitePath(join(uiSrc, 'less-code-block.tsx')),
       },
       {
-        find: '@lessjs/ui/less-callout',
+        find: '@openelement/ui/less-callout',
         replacement: vitePath(join(uiSrc, 'less-callout.tsx')),
       },
       {
-        find: '@lessjs/ui/less-layout',
+        find: '@openelement/ui/less-layout',
         replacement: vitePath(join(uiSrc, 'less-layout.tsx')),
       },
       {
-        find: '@lessjs/ui/less-step-card',
+        find: '@openelement/ui/less-step-card',
         replacement: vitePath(join(uiSrc, 'less-step-card.tsx')),
       },
       {
-        find: '@lessjs/ui/less-theme-toggle',
+        find: '@openelement/ui/less-theme-toggle',
         replacement: vitePath(join(uiSrc, 'less-theme-toggle.tsx')),
       },
       {
-        find: '@lessjs/ui/less-hero-ping',
+        find: '@openelement/ui/less-hero-ping',
         replacement: vitePath(join(uiSrc, 'less-hero-ping.tsx')),
       },
       {
-        find: '@lessjs/ui/less-dialog',
+        find: '@openelement/ui/less-dialog',
         replacement: vitePath(join(uiSrc, 'less-dialog.tsx')),
       },
-      // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases.
+      // Parent @openelement/ui alias MUST come after all @openelement/ui/* subpath aliases.
       // Point to the source directory (not index.ts) so Rolldown can resolve
-      // subpath imports like @lessjs/ui/less-callout without ENOTDIR.
+      // subpath imports like @openelement/ui/less-callout without ENOTDIR.
       {
-        find: '@lessjs/ui',
+        find: '@openelement/ui',
         replacement: vitePath(uiSrc),
       },
-      // @lessjs/app must resolve to local source
+      // @openelement/app must resolve to local source
       {
-        find: '@lessjs/app',
+        find: '@openelement/app',
         replacement: vitePath(join(repoRoot, 'packages', 'app', 'src', 'index.ts')),
       },
     ];
     const viteConfigPath = join(appDir, 'vite.config.ts');
     let viteConfig = readFileSync(viteConfigPath, 'utf-8');
     viteConfig = viteConfig.replace(
-      "import { lessjs } from '@lessjs/app';",
+      "import { lessjs } from '@openelement/app';",
       `import { less } from ${
         JSON.stringify(
           pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'less-plugin.ts')).href,
@@ -390,7 +390,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       'less({',
     );
     viteConfig = viteConfig.replace(
-      "import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';",
+      "import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';",
       `import { openPropsTokenSheet } from ${
         JSON.stringify(
           pathToFileURL(join(uiSrc, 'open-props-tokens.ts')).href,
@@ -398,7 +398,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       };`,
     );
     viteConfig = viteConfig.replace(
-      "packageIslands: ['@lessjs/ui'],",
+      "packageIslands: ['@openelement/ui'],",
       `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
     );
     // v0.21.6: Template no longer has hardcoded aliases.

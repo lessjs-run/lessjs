@@ -1,5 +1,5 @@
 /**
- * @lessjs/content/sitemap - Sitemap generator
+ * @openelement/content/sitemap - Sitemap generator
  *
  * Scans dist/ directory for index.html files and generates sitemap.xml.
  * Also optionally generates robots.txt.
@@ -11,7 +11,7 @@
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import type { SitemapOptions, SitemapUrl } from '../types.ts';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('content:sitemap');
 

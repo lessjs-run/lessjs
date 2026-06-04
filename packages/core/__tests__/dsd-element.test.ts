@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - DsdElement Tests
+ * @openelement/core - DsdElement Tests
  * Tests for the zero-dependency DsdElement base class.
  * Covers DSD detection, CSR fallback, template event binding,
  * AbortController cleanup, M-17 guard, StyleSheet merging,
@@ -8,7 +8,7 @@
 
 import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { jsx } from '../src/jsx-runtime.ts';
 import type { VNode } from '../src/vnode.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
@@ -395,7 +395,7 @@ Deno.test('DsdElement: this.params default empty object', () => {
 Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively', async () => {
   if (!hasDOM) return;
 
-  const { signal } = await import('@lessjs/signals');
+  const { signal } = await import('@openelement/signals');
   const tagName = `test-sigattr-${Math.random().toString(36).slice(2, 7)}`;
 
   const themeSig = signal('dark');
@@ -445,7 +445,7 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
 Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively', async () => {
   if (!hasDOM) return;
 
-  const { signal } = await import('@lessjs/signals');
+  const { signal } = await import('@openelement/signals');
   const tagName = `test-sightml-${Math.random().toString(36).slice(2, 7)}`;
 
   const htmlSig = signal('<b>bold</b>');
@@ -483,7 +483,7 @@ Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively'
 Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness', async () => {
   if (!hasDOM) return;
 
-  const { signal } = await import('@lessjs/signals');
+  const { signal } = await import('@openelement/signals');
   const tagName = `test-sigclass-${Math.random().toString(36).slice(2, 7)}`;
 
   const toggleSig = signal('on');

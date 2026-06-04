@@ -1,4 +1,4 @@
-# LessJS Current Routing Architecture — Complete Map
+﻿# LessJS Current Routing Architecture — Complete Map
 
 > **v0.27.0 Migration Target**: Replace custom routing with `URLPattern` + `Hono`\
 > **Estimated total manual routing logic**: ~1200+ lines across 8 files\
@@ -158,7 +158,7 @@
 
 ### 2.6 `packages/adapter-vite/src/ssg-package-resolver.ts` (265 lines)
 
-**Purpose**: Resolves `@lessjs/` package imports for SSG builds (JSR → local or fetched sources).
+**Purpose**: Resolves `@openelement/` package imports for SSG builds (JSR → local or fetched sources).
 
 | Component   | Savings | Notes                            |
 | ----------- | ------- | -------------------------------- |

@@ -1,5 +1,5 @@
-/**
- * @lessjs/ui - Smoke tests
+﻿/**
+ * @openelement/ui - Smoke tests
  *
  * Minimal tests to verify components can be imported and registered.
  * CI should never use continue-on-error - if tests fail, the build fails.
@@ -10,7 +10,7 @@ Deno.test('less-ui - index exports manifest (WC Package Protocol)', async () => 
   const mod = await import('../src/index.ts');
   assertExists(mod.manifest, 'manifest export should exist');
   assertEquals(typeof mod.manifest, 'object');
-  assertEquals(mod.manifest.packageName, '@lessjs/ui');
+  assertEquals(mod.manifest.packageName, '@openelement/ui');
   assertEquals(mod.manifest.declarations.length, 10);
   assertEquals(mod.manifest.declarations[0].tagName, 'less-card');
   assertEquals(mod.manifest.declarations[1].tagName, 'less-callout');

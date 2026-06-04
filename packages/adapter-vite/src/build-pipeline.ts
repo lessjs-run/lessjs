@@ -1,17 +1,17 @@
 /**
- * @lessjs/adapter-vite - BuildPipeline declarative API.
+ * @openelement/adapter-vite - BuildPipeline declarative API.
  *
  * v0.25.0 (SOP-001): lessPipeline() is the sole public build pipeline entry.
  * It wraps the internal plugin factory (less-plugin.ts) with a cleaner
  * declarative config shape. All existing build code is reused as-is.
  *
- * @module @lessjs/adapter-vite/build-pipeline
+ * @module @openelement/adapter-vite/build-pipeline
  */
 
 import type { Plugin } from 'vite';
 import { less } from './less-plugin.js';
-import type { FrameworkOptions } from '@lessjs/core';
-export type { FrameworkOptions } from '@lessjs/core';
+import type { FrameworkOptions } from '@openelement/core';
+export type { FrameworkOptions } from '@openelement/core';
 
 // ─── Pipeline Config ───────────────────────────────────────────────
 
@@ -32,7 +32,7 @@ export interface PipelineConfig {
  *
  * ```typescript
  * // vite.config.ts
- * import { lessPipeline } from '@lessjs/adapter-vite';
+ * import { lessPipeline } from '@openelement/adapter-vite';
  * export default defineConfig({
  *   plugins: [lessPipeline({ routes: { dir: 'app/routes' }, i18n: { locales: ['en', 'zh'] } })],
  * });

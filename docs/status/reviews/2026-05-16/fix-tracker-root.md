@@ -56,10 +56,10 @@
 
 ## Deferred Items (v0.14.11+)
 
-| ID  | Reason                                                                       |
-| --- | ---------------------------------------------------------------------------- |
-| G1  | fmt exclude can't be removed until Deno fmt panic on route files is resolved |
-| G5  | Requires ts-morph re-introduction or significant restructure of nav scanner  |
-| G10 | Requires extracting `@lessjs/build-types` or moving sitemap responsibility   |
-| G11 | Requires creating shared module between Cloudflare and Hono term APIs        |
-| G12 | Requires file-by-file audit of all `any` usages with per-file overrides      |
+| ID  | Reason                                                                          |
+| --- | ------------------------------------------------------------------------------- |
+| G1  | fmt exclude can't be removed until Deno fmt panic on route files is resolved    |
+| G5  | Requires ts-morph re-introduction or significant restructure of nav scanner     |
+| G10 | Requires extracting `@openelement/build-types` or moving sitemap responsibility |
+| G11 | Requires creating shared module between Cloudflare and Hono term APIs           |
+| G12 | Requires file-by-file audit of all `any` usages with per-file overrides         |

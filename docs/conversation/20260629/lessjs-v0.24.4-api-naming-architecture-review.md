@@ -1,4 +1,4 @@
-# LessJS v0.24.4 API 命名与架构/市场总览评估
+﻿# LessJS v0.24.4 API 命名与架构/市场总览评估
 
 > 日期: 2026-05-29\
 > 基线: v0.24.3 consolidation 已完成（假定所有 SOP exit criteria 通过）\
@@ -15,7 +15,7 @@
 
 ## 架构与 API 设计评估
 
-- **核心层 (@lessjs/core / runtime)**：
+- **核心层 (@openelement/core / runtime)**：
   - 保持最小表面：`defineIsland`, `bindEvents`, `renderToDom/String`, `signal/computed/effect`, `DsdElement`, `static props`。
   - 删除 legacy 模型后，命名统一不会再触碰旧模板路径。
   - 兼容别名策略：仅一版，@deprecated 注释，下一版移除。

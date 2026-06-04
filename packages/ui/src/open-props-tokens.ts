@@ -1,5 +1,5 @@
-/**
- * @lessjs/ui - Open Props Token Sheet
+﻿/**
+ * @openelement/ui - Open Props Token Sheet
  *
  * Shared CSSStyleSheet defining design tokens (spacing, gray palette,
  * border radius, typography, semantic brand/text/bg/border tokens)
@@ -8,7 +8,7 @@
  * Cleaned dead tokens; only used tokens survive.
  */
 
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 
 export const openPropsTokenSheet: StyleSheetLike = createTokenSheet();
 

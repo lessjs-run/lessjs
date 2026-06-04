@@ -22,7 +22,7 @@ to validate JSR consumer builds. This has a **chicken-and-egg problem**:
    never published
 
 Example: v0.21.9 had the optional-package 404 bug. We fixed it locally and
-bumped to v0.21.10. But the CI consumer-smoke pulls `@lessjs/adapter-vite@0.21.9`
+bumped to v0.21.10. But the CI consumer-smoke pulls `@openelement/adapter-vite@0.21.9`
 from JSR (because 0.21.10 isn't published yet) → hits the same 404 → blocks
 the publish that would ship the fix.
 

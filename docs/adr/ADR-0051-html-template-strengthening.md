@@ -55,7 +55,7 @@ parsed static parts, while dynamic value slots are recomputed per render.
 ### 2. `classMap()` helper
 
 ```ts
-import { classMap } from '@lessjs/core';
+import { classMap } from '@openelement/core';
 
 render() {
   return html`<div class=${classMap({
@@ -70,7 +70,7 @@ render() {
 ### 3. `when()` / `choose()` conditionals
 
 ```ts
-import { when, choose } from '@lessjs/core';
+import { when, choose } from '@openelement/core';
 
 // when(condition, truthyTemplate, falsyTemplate?)
 render() {
@@ -95,7 +95,7 @@ render() {
 ### 4. `repeat()` iteration
 
 ```ts
-import { repeat } from '@lessjs/core';
+import { repeat } from '@openelement/core';
 
 render() {
   return html`<ul>
@@ -112,7 +112,7 @@ function is omitted, `repeat` falls back to index-based rendering.
 ### 5. `ref()` directive
 
 ```ts
-import { ref } from '@lessjs/core';
+import { ref } from '@openelement/core';
 
 render() {
   return html`<input ${ref(this._inputEl)} @input=${this._onInput}>`;
@@ -136,7 +136,7 @@ type EventValue = EventListener | ((event: Event) => void);
 ### Architecture: Adapter Equality
 
 ```
-@lessjs/core/html          ← framework-agnostic default (strengthened by this ADR)
+@openelement/core/html          ← framework-agnostic default (strengthened by this ADR)
        │
        ▼
 RendererProtocol           ← adapter registration (unchanged)
@@ -175,7 +175,7 @@ users who don't need a specific UI framework — not a "lesser" alternative.
 
 ### Negative
 
-- Adds ~5 helper functions to `@lessjs/core`'s public API surface
+- Adds ~5 helper functions to `@openelement/core`'s public API surface
 - `repeat()` with key tracking requires diff/patch logic (~100 lines)
 - Builds a feature set that strongly overlaps with lit-html's directive system
   (intentional: overlap is the price of framework independence)
@@ -184,7 +184,7 @@ users who don't need a specific UI framework — not a "lesser" alternative.
 
 - This decision does not change the `RendererProtocol` interface
 - This decision does not affect existing Lit/FAST/React adapter code
-- This decision does not require changes to `@lessjs/ui` components
+- This decision does not require changes to `@openelement/ui` components
   (current string-based renders continue to work)
 
 ## Related

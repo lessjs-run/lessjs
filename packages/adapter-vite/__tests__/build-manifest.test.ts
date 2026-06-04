@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - build-manifest.ts tests (Deno)
+ * @openelement/adapter-vite - build-manifest.ts tests (Deno)
  *
  * Tests build manifest scanning and formatting using temp directories.
  */

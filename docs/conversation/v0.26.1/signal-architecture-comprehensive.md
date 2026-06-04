@@ -1,4 +1,4 @@
-# LessJS Signal Architecture — Comprehensive Design
+﻿# LessJS Signal Architecture — Comprehensive Design
 
 > Version: v0.26.1\
 > Date: 2026-05-30\
@@ -24,7 +24,7 @@ This is the **DSD-first Real DOM (RDOM)** approach. LessJS is uniquely positione
 
 LessJS uses [alien-signals](https://github.com/stackblitz/alien-signals) (1.6KB) — the same engine used by Vue 3.6 core and XState.
 
-### Primitives exposed via @lessjs/signals
+### Primitives exposed via @openelement/signals
 
 | Primitive  | API                                           | Usage                                   |
 | ---------- | --------------------------------------------- | --------------------------------------- |

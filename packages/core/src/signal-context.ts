@@ -1,13 +1,13 @@
 /**
- * @lessjs/core - SignalContext DOM-tree-based cross-component signal sharing.
+ * @openelement/core - SignalContext DOM-tree-based cross-component signal sharing.
  *
  * v0.29.6: WeakMap replaces symbol-keyed DOM property stamping.
  * Consumer walks parentElement / shadowRoot.host upward to find signals.
  *
- * @module @lessjs/core/signal-context
+ * @module @openelement/core/signal-context
  */
 
-import { signal, type WritableSignal } from '@lessjs/signals';
+import { signal, type WritableSignal } from '@openelement/signals';
 
 export interface Context<T> {
   key: symbol;

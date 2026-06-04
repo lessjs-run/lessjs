@@ -13,11 +13,11 @@
 
 SOP-014 Clean Architecture 重构后，`output.banner` 中的 `customElements` polyfill 使用 no-op 方法（`define` 不存储，`get` 永远返回 `undefined`），导致 SSG 渲染时 `renderDSDByName()` 无法查找到注册的组件类，所有组件输出为空白标签。
 
-同时，`HTMLElement` polyfill 从 `@lit-labs/ssr-dom-shim`（完整实现）退化为裸 `class HTMLElement {}`（零方法），违反 `@lessjs/core` 自包含原则。
+同时，`HTMLElement` polyfill 从 `@lit-labs/ssr-dom-shim`（完整实现）退化为裸 `class HTMLElement {}`（零方法），违反 `@openelement/core` 自包含原则。
 
 ## 2. 方案
 
-### 2.1 HTMLElement: `@lessjs/core` 自包含
+### 2.1 HTMLElement: `@openelement/core` 自包含
 
 `packages/core/src/dsd-element.ts` 的 `_HTMLElement` fallback 改为最小 SSR-safe stub 类 `_SsrHTMLElementStub`，包含 6 个成员，并赋值到 `globalThis.HTMLElement`。
 
@@ -69,7 +69,7 @@ globalThis.customElements = {
 
 ```
 1. output.banner → customElements (Map-backed)
-2. ESM graph → @lessjs/core/dsd-element.ts → _SsrHTMLElementStub → globalThis.HTMLElement
+2. ESM graph → @openelement/core/dsd-element.ts → _SsrHTMLElementStub → globalThis.HTMLElement
 3. Entry code body → CSSStyleSheet polyfill
 4. Deno import() → happy-dom Window → SSG render
 ```
@@ -92,6 +92,6 @@ globalThis.customElements = {
 
 ## 5. 架构原则
 
-- **`@lessjs/core` 自包含**: 拥有 `DsdElement` 的包必须自己提供 SSR-safe 的 `HTMLElement` 基类
+- **`@openelement/core` 自包含**: 拥有 `DsdElement` 的包必须自己提供 SSR-safe 的 `HTMLElement` 基类
 - **最小 stub**: SSR stub 只提供内部代码实际调用的方法，不模拟完整 DOM
 - **polyfill 分层**: HTMLElement (core) → customElements (banner) → CSSStyleSheet (entry) → happy-dom (ssgRender)

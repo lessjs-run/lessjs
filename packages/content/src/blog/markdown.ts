@@ -1,5 +1,5 @@
 /**
- * @lessjs/content - Markdown processing
+ * @openelement/content - Markdown processing
  *
  * Parses markdown files with frontmatter using gray-matter + marked.
  */

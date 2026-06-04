@@ -4,9 +4,9 @@ export const tagName = 'page-roadmap';
 // ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import '../islands/less-search.tsx';
 
 const routeSheet = new StyleSheet();

@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - island-transform.ts tests (Deno)
+ * @openelement/adapter-vite - island-transform.ts tests (Deno)
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { islandTransformPlugin } from '../src/island-transform.ts';
@@ -119,7 +119,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
       },
       {
         tagName: 'theme-toggle',
-        modulePath: '@lessjs/ui/less-theme-toggle',
+        modulePath: '@openelement/ui/less-theme-toggle',
         isPackage: true,
         strategy: 'idle' as const,
       },
@@ -127,7 +127,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     const code = generateClientEntry(islands);
     // All islands (local + package) use dynamic import() - they self-register
     assertEquals(code.includes('import("/app/islands/my-counter.ts")'), true);
-    assertEquals(code.includes('import("@lessjs/ui/less-theme-toggle")'), true);
+    assertEquals(code.includes('import("@openelement/ui/less-theme-toggle")'), true);
     // No explicit customElements.define() in generated entry
     assertEquals(code.includes("customElements.define('my-counter'"), false);
   });

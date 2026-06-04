@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Pure runtime.
+ * @openelement/core - Pure runtime.
  *
  * LessJS is a static-first framework with a pure runtime core:
  * - Zero node:* imports - no filesystem, no process, no path
@@ -11,8 +11,8 @@
  * Islands: Custom Element registration + prop deserialization
  * Adapter: createAdapterRegistry() + default registry access
  *
- * Build orchestration (Vite plugins) lives in @lessjs/adapter-vite.
- * For the unified lessjs() entry, use @lessjs/app instead.
+ * Build orchestration (Vite plugins) lives in @openelement/adapter-vite.
+ * For the unified lessjs() entry, use @openelement/app instead.
  */
 
 // --- Public API re-exports -----------------------------------------
@@ -136,7 +136,7 @@ export {
 } from './signal-like.js';
 export { consumeContext, type Context, createContext, provideContext } from './signal-context.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
-/** @internal — use @lessjs/core/security subpath */
+/** @internal — use @openelement/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
 export {
@@ -149,7 +149,7 @@ export {
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
 
-// v0.23: Build-time shared types live in @lessjs/protocols/build-types.
+// v0.23: Build-time shared types live in @openelement/protocols/build-types.
 
 // WC Package Protocol (v0.17+)
 export {

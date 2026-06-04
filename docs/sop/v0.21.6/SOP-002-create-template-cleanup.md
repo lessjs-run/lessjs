@@ -2,7 +2,7 @@
 
 Status: implemented\
 Target version: v0.21.6\
-Owner: @lessjs/create
+Owner: @openelement/create
 
 ## Objective
 
@@ -18,8 +18,8 @@ contains per-component JSR URL aliases:
 ```typescript
 // Currently generated (BAD)
 const lessUiAliases = {
-  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/0.21.5/src/less-card.ts',
-  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/0.21.5/src/less-button.ts',
+  '@openelement/ui/less-card': 'https://jsr.io/@openelement/ui/0.21.5/src/less-card.ts',
+  '@openelement/ui/less-button': 'https://jsr.io/@openelement/ui/0.21.5/src/less-button.ts',
   // ... 10+ more entries
 };
 ```
@@ -27,7 +27,7 @@ const lessUiAliases = {
 Three distinct problems:
 
 1. **Redundant**: The `lessjs()` plugin already generates these aliases via
-   `packageIslands: ['@lessjs/ui']`. The hardcoded list is duplicate work.
+   `packageIslands: ['@openelement/ui']`. The hardcoded list is duplicate work.
 
 2. **Broken on Windows**: Rolldown treats `https://jsr.io/...` as file paths,
    mangling `https://` to `https:/`, producing "os error 123"
@@ -41,7 +41,7 @@ Three distinct problems:
 
 1. Remove the `lessUiAliases` object from the create template
 2. Remove the `resolve: { alias: lessUiAliases }` section from generated config
-3. Keep `packageIslands: ['@lessjs/ui']` — the plugin handles the rest
+3. Keep `packageIslands: ['@openelement/ui']` — the plugin handles the rest
 4. Update the create integration test to verify no hardcoded aliases exist
 
 ## Generated Config Target
@@ -51,7 +51,7 @@ After fix, the generated `vite.config.ts` should contain:
 ```typescript
 export default defineConfig({
   plugins: [lessjs({
-    packageIslands: ['@lessjs/ui'],
+    packageIslands: ['@openelement/ui'],
     // ... other config
   })],
 });

@@ -1,12 +1,12 @@
 /**
- * @lessjs/adapter-vite â€” Internal plugin factory.
+ * @openelement/adapter-vite ¡ª Internal plugin factory.
  *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
  * This is the core build plugin implementation. It is NOT part of the
  * public API. Use `lessPipeline()` from the main entry instead.
  *
- * Internal only: called by lessPipeline() and the @lessjs/app umbrella.
+ * Internal only: called by lessPipeline() and the @openelement/app umbrella.
  */
 
 import type { Alias, Plugin } from 'vite';
@@ -15,12 +15,12 @@ import type {
   HydrationStrategy,
   LessPackageManifest,
   RouteEntry,
-} from '@lessjs/core';
+} from '@openelement/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
-import { LessError } from '@lessjs/core/errors';
-import { createLogger } from '@lessjs/core/logger';
+import { LessError } from '@openelement/core/errors';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('adapter-vite');
 
@@ -72,12 +72,12 @@ function mergeAliasOptions(
 }
 
 /**
- * LessJS Framework Vite plugin â€” internal plugin factory.
+ * openElement Framework Vite plugin ¡ª internal plugin factory.
  *
  * This is the core build plugin implementation. It is NOT part of the
- * public API. Use `lessPipeline()` from @lessjs/adapter-vite instead.
+ * public API. Use `lessPipeline()` from @openelement/adapter-vite instead.
  *
- * Internal only: called by lessPipeline() and the @lessjs/app umbrella.
+ * Internal only: called by lessPipeline() and the @openelement/app umbrella.
  * Jamstack: M=SSG+DSD, A=API Routes, J=Islands.
  *
  * @param options - Framework options

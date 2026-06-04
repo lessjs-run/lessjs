@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-dialog
+ * @openelement/ui - less-dialog
  *
  * Dialog component using native <dialog> element + popover API.
  * Per WHATWG HTML Living Standard sections 4.11.4 (dialog) and 6.9.2 (popover).
@@ -16,19 +16,19 @@
  *
  * Usage:
  * ```html
- * <less-dialog>
+ * <open-dialog>
  *   <button slot="trigger">Open Dialog</button>
  *   <div>Dialog content here</div>
- * </less-dialog>
+ * </open-dialog>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 
-export const tagName = 'less-dialog';
+export const tagName = 'open-dialog';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -114,7 +114,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessDialog extends DsdElement {
+export class OpenDialog extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['open', 'label'];
@@ -211,8 +211,8 @@ export class LessDialog extends DsdElement {
     if (open) {
       for (const child of children) {
         if (child !== this) {
-          if (!LessDialog._originalInertStates.has(child)) {
-            LessDialog._originalInertStates.set(child, child.hasAttribute('inert'));
+          if (!OpenDialog._originalInertStates.has(child)) {
+            OpenDialog._originalInertStates.set(child, child.hasAttribute('inert'));
           }
           child.setAttribute('inert', '');
         }
@@ -220,10 +220,10 @@ export class LessDialog extends DsdElement {
     } else {
       for (const child of children) {
         if (child !== this) {
-          const wasOriginallyInert = LessDialog._originalInertStates.get(child);
+          const wasOriginallyInert = OpenDialog._originalInertStates.get(child);
           if (wasOriginallyInert) child.setAttribute('inert', '');
           else child.removeAttribute('inert');
-          LessDialog._originalInertStates.delete(child);
+          OpenDialog._originalInertStates.delete(child);
         }
       }
     }
@@ -255,9 +255,9 @@ export class LessDialog extends DsdElement {
   private _escAttr = _escAttr;
 }
 
-export default LessDialog;
+export default OpenDialog;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessDialog);
+  customElements.define(tagName, OpenDialog);
 }

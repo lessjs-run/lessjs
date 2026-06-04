@@ -1,4 +1,4 @@
-/**
+﻿/**
  * E2E: Theme System
  *
  * Verifies the dark/light theme toggle:
@@ -38,12 +38,12 @@ async function waitForThemeChange(page: Page, before: string | null): Promise<vo
 }
 
 /**
- * Wait for <less-theme-toggle> to be fully upgraded:
+ * Wait for <open-theme-toggle> to be fully upgraded:
  * DSD hydration + _initTheme() must complete before clicks work.
  * We wait for the component to have a data-theme attribute,
  * which is set by _initTheme() during onDsdHydrated().
  *
- * NOTE: <less-theme-toggle> lives inside <less-layout>'s shadow DOM,
+ * NOTE: <open-theme-toggle> lives inside <open-layout>'s shadow DOM,
  * so we must query through the shadow root to find it.
  */
 async function waitForToggleReady(page: Page): Promise<void> {

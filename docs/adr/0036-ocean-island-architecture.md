@@ -12,7 +12,7 @@
 
 ### 1.1 Current State (v0.19.x)
 
-LessJS components (`@lessjs/ui`) are built on **Lit + DsdLitElement**:
+LessJS components (`@openelement/ui`) are built on **Lit + DsdLitElement**:
 
 ```typescript
 // 当前：Lit 依赖
@@ -92,12 +92,12 @@ We adopt a **two-layer component model**:
 
 | ID | Decision                                              | Rationale                                                                         |
 | -- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
-| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDsd()`                                          |
+| D1 | `DsdElement` in `@openelement/core`                   | Zero deps, co-located with `renderDsd()`                                          |
 | D2 | `render(): string`                                    | Already supported by `renderDsd()` line 177-181                                   |
 | D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node                                          |
 | D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code                                           |
 | D5 | `hydrateEvents` preserved → **DEPRECATED v0.21.0**    | Superseded by `@click` in `html` templates (ADR-0039). See SOP-006 for migration. |
-| D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path                              |
+| D6 | `@openelement/adapter-lit` retained                   | v0.20 keeps compatibility; v0.21 deprecates DSD path                              |
 | D7 | `less-hero-ping` migrated to DsdElement               | OBE: fully migrated in SOP-017 convergence pass                                   |
 | D8 | CSS Parts on every component                          | Standard WC external styling API                                                  |
 
@@ -118,7 +118,7 @@ We adopt a **two-layer component model**:
 - `renderDsd()` and `wrapDsdOutput()` — already support `render(): string`
 - `hydrateEvents` protocol — **deprecated in v0.21.0**, replaced by `@click` in `html` templates (ADR-0039, SOP-006)
 - `adapter-registry` — same multi-adapter dispatch
-- `@lessjs/adapter-lit` — retained for Pure Island SSR
+- `@openelement/adapter-lit` — retained for Pure Island SSR
 - `less-hero-ping` — stays Lit
 
 ---
@@ -128,7 +128,7 @@ We adopt a **two-layer component model**:
 ### 3.1 DsdElement API Contract
 
 ```typescript
-// @lessjs/core → DsdElement
+// @openelement/core → DsdElement
 export class DsdElement extends HTMLElement {
   // === For subclasses to override ===
   static hydrateEvents?: HydrateEventDescriptor[]; // declarative events
@@ -283,7 +283,7 @@ SOP-001 (DsdElement)
 - **True framework compatibility**: DSD components are framework-agnostic (anyone can extend `DsdElement`). FAST, Preact, React can all write DSD components.
 - **Zero maintenance tokens**: Open Props replaces ~100 lines of custom design token code.
 - **Standard CSS API**: `::part()` on every component = consistent external customization.
-- **Backward compatible**: `@lessjs/adapter-lit` stays. Existing Lit components on other sites using LessJS continue to work.
+- **Backward compatible**: `@openelement/adapter-lit` stays. Existing Lit components on other sites using LessJS continue to work.
 
 ### 5.2 Negative / Risk
 
@@ -299,7 +299,7 @@ SOP-001 (DsdElement)
 
 - `updated()` → `attributeChangedCallback + _syncDOM()` is more verbose but more explicit
 - Less "magic" reactivity — developers see exactly what happens on attribute changes
-- `@lessjs/adapter-lit` becomes a much smaller, focused package (Island SSR only)
+- `@openelement/adapter-lit` becomes a much smaller, focused package (Island SSR only)
 
 ---
 
@@ -329,7 +329,7 @@ SOP-001 (DsdElement)
 // ═══════════ v0.19 (Lit) ═══════════
 import { css, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdLitElement } from '@openelement/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 class LessButton extends DsdLitElement {
@@ -367,7 +367,7 @@ class LessButton extends DsdLitElement {
 }
 
 // ═══════════ v0.20 (Native DsdElement) ═══════════
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@openelement/core';
 
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`

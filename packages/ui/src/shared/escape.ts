@@ -1,5 +1,5 @@
-/**
- * @lessjs/ui - Shared HTML/attribute escape utilities.
+﻿/**
+ * @openelement/ui - Shared HTML/attribute escape utilities.
  *
  * SSR-safe (no DOM API). Used by all UI components to prevent XSS
  * when rendering user-provided attribute values as HTML content.

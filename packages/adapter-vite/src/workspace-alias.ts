@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Workspace alias auto-generation
+ * @openelement/adapter-vite - Workspace alias auto-generation
  *
  * Reads Deno workspace deno.json exports and generates
  * Vite resolve.alias entries. Uses sync Deno APIs so it
@@ -118,7 +118,7 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
     }
     // Parent alias last - use directory path to avoid ENOTDIR.
     // When the "." export points to a file (e.g. src/index.ts),
-    // Rolldown resolves subpath imports like @lessjs/ui/less-callout
+    // Rolldown resolves subpath imports like @openelement/ui/less-callout
     // as index.ts/less-callout -> ENOTDIR. Pointing to the parent
     // directory instead lets Vite resolve subpaths correctly.
     if (exports['.']) {

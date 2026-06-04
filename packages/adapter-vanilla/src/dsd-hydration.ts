@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vanilla - WithDsdHydration Mixin + DsdVanillaElement base class
+ * @openelement/adapter-vanilla - WithDsdHydration Mixin + DsdVanillaElement base class
  *
  * Mixin for vanilla Web Components that need DSD hydration (Layer 2).
  * Provides the common DSD detection, event binding, and cleanup pattern
@@ -7,7 +7,7 @@
  *
  * Usage (recommended - extend pre-composed base class):
  * ```ts
- * import { DsdVanillaElement } from '@lessjs/adapter-vanilla';
+ * import { DsdVanillaElement } from '@openelement/adapter-vanilla';
  *
  * class MyToggle extends DsdVanillaElement {
  *   static hydrateEvents = [
@@ -23,7 +23,7 @@
  *
  * Usage (advanced - Mixin with custom base class):
  * ```ts
- * import { WithDsdHydration } from '@lessjs/adapter-vanilla';
+ * import { WithDsdHydration } from '@openelement/adapter-vanilla';
  *
  * class MyToggle extends WithDsdHydration(HTMLElement) { ... }
  * ```
@@ -39,10 +39,15 @@
  *   - `static hydrateEvents: HydrateEventDescriptor[]` (declarative event bindings)
  *   - `render()` override (must check `_dsdHydrated` and return VNode/null)
  *
- * @module @lessjs/adapter-vanilla/dsd-hydration
+ * @module @openelement/adapter-vanilla/dsd-hydration
  */
 
-import { bindHydrateEvents, type HydrateEventDescriptor, isVNode, renderToDom } from '@lessjs/core';
+import {
+  bindHydrateEvents,
+  type HydrateEventDescriptor,
+  isVNode,
+  renderToDom,
+} from '@openelement/core';
 
 /** Constructor type for Mixin pattern */
 // deno-lint-ignore no-explicit-any
@@ -194,7 +199,7 @@ let _cached: (typeof HTMLElement) & (new (...args: any[]) => HTMLElement & DsdHy
  *
  * @example
  * ```ts
- * import { DsdVanillaElement } from '@lessjs/adapter-vanilla';
+ * import { DsdVanillaElement } from '@openelement/adapter-vanilla';
  *
  * class MyToggle extends DsdVanillaElement {
  *   static hydrateEvents = [

@@ -1,8 +1,8 @@
 /**
- * @lessjs/content navigation tools - Navigation module
+ * @openelement/content navigation tools - Navigation module
  *
  * Auto-generates sidebar navigation from route file meta exports.
- * Data is stored in ctx.navSections and exposed via @lessjs/generated/nav module.
+ * Data is stored in ctx.navSections and exposed via @openelement/generated/nav module.
  */
 
 export { extractMeta, scanNavData } from './scanner.ts';

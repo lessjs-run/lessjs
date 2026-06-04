@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite — Head injection validation & serialization.
+ * @openelement/adapter-vite — Head injection validation & serialization.
  *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
@@ -10,11 +10,11 @@
  *                          into a single headExtras string
  */
 
-import type { FrameworkOptions } from '@lessjs/core';
+import type { FrameworkOptions } from '@openelement/core';
 
-import { LessError } from '@lessjs/core/errors';
-import { escapeAttr as escapeHtmlAttr } from '@lessjs/core';
-import { createLogger } from '@lessjs/core/logger';
+import { LessError } from '@openelement/core/errors';
+import { escapeAttr as escapeHtmlAttr } from '@openelement/core';
+import { createLogger } from '@openelement/core/logger';
 // @deno-types="npm:@types/sanitize-html@^2"
 import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'npm:sanitize-html@^2.17.4';
 

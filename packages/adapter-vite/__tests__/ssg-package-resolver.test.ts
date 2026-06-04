@@ -8,23 +8,23 @@ import {
 } from '../src/ssg-package-resolver.ts';
 
 Deno.test('parseLessPackageSpecifier parses bare LessJS package ids', () => {
-  assertEquals(parseLessPackageSpecifier('@lessjs/core'), {
+  assertEquals(parseLessPackageSpecifier('@openelement/core'), {
     packageName: 'core',
     subpath: '.',
   });
-  assertEquals(parseLessPackageSpecifier('@lessjs/ui/less-card'), {
+  assertEquals(parseLessPackageSpecifier('@openelement/ui/less-card'), {
     packageName: 'ui',
     subpath: 'less-card',
   });
 });
 
 Deno.test('parseLessPackageSpecifier parses JSR LessJS package ids', () => {
-  assertEquals(parseLessPackageSpecifier('jsr:@lessjs/signals@^0.21/framework'), {
+  assertEquals(parseLessPackageSpecifier('jsr:@openelement/signals@^0.21/framework'), {
     packageName: 'signals',
     range: '^0.21',
     subpath: 'framework',
   });
-  assertEquals(parseLessPackageSpecifier('jsr:@lessjs/core@^0.21.9/navigation'), {
+  assertEquals(parseLessPackageSpecifier('jsr:@openelement/core@^0.21.9/navigation'), {
     packageName: 'core',
     range: '^0.21.9',
     subpath: 'navigation',
@@ -43,7 +43,7 @@ Deno.test('resolveLessPackageExport reports unknown LessJS subpaths clearly', ()
   assertThrows(
     () => resolveLessPackageExport('core', 'missing'),
     Error,
-    'Unknown @lessjs/core export subpath',
+    'Unknown @openelement/core export subpath',
   );
 });
 
@@ -78,16 +78,16 @@ Deno.test('createLessJsrPackageResolverPlugin resolves JSR and bare package ids'
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
   assertEquals(
-    await resolveId('@lessjs/ui/less-card'),
+    await resolveId('@openelement/ui/less-card'),
     toVirtualLessPackageId('ui', 'src/less-card.tsx'),
   );
   assertEquals(
-    await resolveId('jsr:@lessjs/signals@^0.21/framework'),
+    await resolveId('jsr:@openelement/signals@^0.21/framework'),
     toVirtualLessPackageId('signals', 'src/framework.ts'),
   );
   assertEquals(
     await load(toVirtualLessPackageId('signals', 'src/framework.ts')),
-    'export const url = "https://jsr.io/@lessjs/signals/0.21.9/src/framework.ts";',
+    'export const url = "https://jsr.io/@openelement/signals/0.21.9/src/framework.ts";',
   );
 });
 
@@ -102,7 +102,7 @@ Deno.test('createLessJsrPackageResolverPlugin fails fetch misses before Vite unr
   await assertRejects(
     () => Promise.resolve(load(toVirtualLessPackageId('core', 'src/index.ts'))),
     Error,
-    'Failed to fetch @lessjs/core/src/index.ts',
+    'Failed to fetch @openelement/core/src/index.ts',
   );
 });
 
@@ -132,15 +132,15 @@ Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packag
   ) => string | null | Promise<string | null>;
 
   // Optional packages are handled by optionalPackageStubsPlugin, not the resolver
-  assertEquals(await resolveId('@lessjs/adapter-vanilla'), null);
-  assertEquals(await resolveId('@lessjs/adapter-react'), null);
-  assertEquals(await resolveId('@lessjs/adapter-lit'), null);
-  assertEquals(await resolveId('@lessjs/content'), null);
-  assertEquals(await resolveId('@lessjs/i18n'), null);
+  assertEquals(await resolveId('@openelement/adapter-vanilla'), null);
+  assertEquals(await resolveId('@openelement/adapter-react'), null);
+  assertEquals(await resolveId('@openelement/adapter-lit'), null);
+  assertEquals(await resolveId('@openelement/content'), null);
+  assertEquals(await resolveId('@openelement/i18n'), null);
 
   // Required packages ARE resolved by the resolver
   assertEquals(
-    await resolveId('@lessjs/core'),
+    await resolveId('@openelement/core'),
     toVirtualLessPackageId('core', 'src/index.ts'),
   );
 });
@@ -150,7 +150,7 @@ Deno.test('createLessJsrPackageResolverPlugin lets exact user aliases resolve fi
     workspaceRoot: null,
     version: '0.21.9',
     userAliases: {
-      '@lessjs/ui/less-layout': './app/components/site-layout.tsx',
+      '@openelement/ui/less-layout': './app/components/site-layout.tsx',
     },
   });
   const resolveId = plugin.resolveId as unknown as (
@@ -158,9 +158,9 @@ Deno.test('createLessJsrPackageResolverPlugin lets exact user aliases resolve fi
     importer?: string,
   ) => string | null | Promise<string | null>;
 
-  assertEquals(await resolveId('@lessjs/ui/less-layout'), null);
+  assertEquals(await resolveId('@openelement/ui/less-layout'), null);
   assertEquals(
-    await resolveId('@lessjs/ui/less-card'),
+    await resolveId('@openelement/ui/less-card'),
     toVirtualLessPackageId('ui', 'src/less-card.tsx'),
   );
 });
@@ -171,7 +171,7 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
     `import type { Tokens } from 'npm:marked@12.0.0';`,
     `import { LitElement } from 'npm:lit@3.3.2';`,
     `import { something } from 'npm:@lit/reactive-element@2.1.0';`,
-    `import { ctx } from 'npm:@lessjs/core@0.21.10/context';`,
+    `import { ctx } from 'npm:@openelement/core@0.21.10/context';`,
     `import 'npm:marked@12.0.0';`,
     `const dynamic = import('npm:gray-matter@4.0.3');`,
     `const literal = 'npm:not-a-real-import@1.0.0';`,
@@ -192,7 +192,7 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   assertEquals(result.includes("from 'marked'"), true);
   assertEquals(result.includes("from 'lit'"), true);
   assertEquals(result.includes("from '@lit/reactive-element'"), true);
-  assertEquals(result.includes("from '@lessjs/core/context'"), true);
+  assertEquals(result.includes("from '@openelement/core/context'"), true);
   assertEquals(result.includes("import 'marked'"), true);
   assertEquals(result.includes("import('gray-matter')"), true);
   assertEquals(result.includes("from '@jsr/lessjs__signals/framework'"), true);

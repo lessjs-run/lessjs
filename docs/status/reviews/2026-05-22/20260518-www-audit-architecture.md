@@ -22,12 +22,12 @@
 
 **沿用现有技术栈，不引入新框架/库。**
 
-| 技术                     | 用途               | 理由                                         |
-| ------------------------ | ------------------ | -------------------------------------------- |
-| Vite SSG                 | 静态站点生成       | 已有，无需更换                               |
-| Lit                      | Web Component 渲染 | 已有，所有页面基于 LitElement                |
-| `virtual:less-nav`       | 导航数据注入       | 已有机制，修改 `vite.config.ts` 即可全局生效 |
-| `@lessjs/ui/less-layout` | 页面布局组件       | 已有，支持 `navItems` + `headerNav` 属性     |
+| 技术                           | 用途               | 理由                                         |
+| ------------------------------ | ------------------ | -------------------------------------------- |
+| Vite SSG                       | 静态站点生成       | 已有，无需更换                               |
+| Lit                            | Web Component 渲染 | 已有，所有页面基于 LitElement                |
+| `virtual:less-nav`             | 导航数据注入       | 已有机制，修改 `vite.config.ts` 即可全局生效 |
+| `@openelement/ui\/open-layout` | 页面布局组件       | 已有，支持 `navItems` + `headerNav` 属性     |
 
 ### 1.3 架构模式
 
@@ -216,7 +216,7 @@ sequenceDiagram
     Route->>Meta: 读取 {section:'Principles', label:'DSD Rendering', order:30}
     Route->>VirtualNav: import { navSections, headerNav }
     VirtualNav-->>Route: 返回构建时生成的导航数据
-    Route->>Layout: <less-layout .navItems=${navSections} .headerNav=${headerNav}>
+    Route->>Layout: <open-layout .navItems=${navSections} .headerNav=${headerNav}>
     Layout->>Layout: 按 section 分组渲染侧边栏
     Layout->>Layout: 渲染顶部导航栏（4 项）
     Layout-->>Browser: 完整 HTML（含 DSD）
@@ -269,7 +269,7 @@ sequenceDiagram
 | 1 | **侧边栏如何区分框架/引擎 section？** 当前 `navSections` 是全站统一的一维数组，所有 section 都会出现在侧边栏。迁移后，框架的 `Quick Start/Core/Production` 和引擎的 `Principles/Compatibility/Reference` 会混合在一起 | 假设 `less-layout` 组件会根据 `current-path` 自动高亮当前 section 所在的导航标签，同一页面只显示与当前路径匹配的 section 分组 | 如果 `less-layout` 不支持按路径过滤 section，需要在 renderer 中自行过滤 |
 | 2 | **重定向实现方式？** SSG 产物是纯静态 HTML，没有服务端重定向能力                                                                                                                                                      | 在 `404.ts` 中增加客户端重定向逻辑，或使用 Netlify/Vercel 的 `_redirects` 文件                                                | 如果部署平台不支持 `_redirects`，需要在 404.ts 中处理                   |
 | 3 | **`/guide/` 保持不变但导航标签叫 Framework** — 用户点击 "Framework" 导航到 `/guide/positioning`，URL 前缀是 `/guide/` 不是 `/framework/`                                                                              | PRD Open Question 1 结论：保持 `/guide/` 避免大规模路由变更，通过 headerNav label 建立用户心智                                | 可能造成用户困惑——导航标签和 URL 不一致                                 |
-| 4 | **Blog ADR 重定向机制？** 博客系统使用 markdown frontmatter 渲染，添加 `redirect` 字段需要修改 `@lessjs/content` 的博客渲染逻辑                                                                                       | 简化方案：在 24 篇 ADR 博客的 frontmatter 中添加 `hidden: true`，使其不出现在博客列表中，不修改渲染器                         | 如果需要保留旧 URL 的重定向，仍需额外处理                               |
+| 4 | **Blog ADR 重定向机制？** 博客系统使用 markdown frontmatter 渲染，添加 `redirect` 字段需要修改 `@openelement/content` 的博客渲染逻辑                                                                                  | 简化方案：在 24 篇 ADR 博客的 frontmatter 中添加 `hidden: true`，使其不出现在博客列表中，不修改渲染器                         | 如果需要保留旧 URL 的重定向，仍需额外处理                               |
 | 5 | **Community 页面合并到页脚的具体方式？** 页脚模板可能在 `less-layout` Web Component 内部                                                                                                                              | 在 `less-layout` 的 footer slot 中注入社区链接（GitHub / Discord / JSR），删除 Community 独立页面                             | 需要确认 `less-layout` 是否支持 footer slot 注入                        |
 | 6 | **`_hub-data-full.ts` vs `_hub-data.ts` 是否需要合并？**                                                                                                                                                              | PRD P2 优先级，本次不处理                                                                                                     | 不影响本次重构                                                          |
 
@@ -280,8 +280,8 @@ sequenceDiagram
 **无新依赖。** 所有变更基于现有技术栈：
 
 ```
-- @lessjs/app: 已有（Vite SSG 框架）
-- @lessjs/ui: 已有（less-layout, less-search, less-code-block 等）
+- @openelement/app: 已有（Vite SSG 框架）
+- @openelement/ui: 已有（less-layout, less-search, less-code-block 等）
 - lit: 已有（Web Component 渲染）
 - vite: 已有（构建工具）
 ```

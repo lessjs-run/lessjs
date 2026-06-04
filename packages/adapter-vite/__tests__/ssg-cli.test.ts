@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - ssg.ts CLI tests
+ * @openelement/adapter-vite - ssg.ts CLI tests
  *
  * Tests the standalone SSG CLI module imports and type exports.
  * Full SSG pipeline tests are in ssg-render.test.ts.

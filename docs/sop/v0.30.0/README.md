@@ -81,7 +81,7 @@ Initial architecture scan counts from that byte-read baseline:
 | duplicate compatibility type  |     4 |
 | duplicate `loadRecords`       |     3 |
 | duplicate `renderPlaceholder` |     3 |
-| internal `jsr:@lessjs/*`      |   287 |
+| internal `jsr:@openelement/*` |   287 |
 | `as any`                      |   194 |
 | `as unknown as`               |   172 |
 | TS suppressions               |     7 |
@@ -186,7 +186,7 @@ business logic.
 Tasks:
 
 - [x] Keep package publish/typecheck/dry-run order graph-derived.
-- [x] Extend `graph:check` to validate internal `jsr:@lessjs/*` ranges against
+- [x] Extend `graph:check` to validate internal `jsr:@openelement/*` ranges against
       the current release line.
 - [x] Ensure route metadata extraction uses AST or manifest data.
 - [x] Replace `readStaticLessExport()` in
@@ -219,7 +219,7 @@ Tasks:
 - [x] Move Hub CLI record loading into a shared helper.
 - [x] Move Hub snapshot placeholder rendering into a shared helper.
 - [x] Extract adapter DSD hydration event binding into a shared helper.
-- [x] Keep `escapeHtml` and `escapeAttr` canonical in `@lessjs/core`.
+- [x] Keep `escapeHtml` and `escapeAttr` canonical in `@openelement/core`.
 - [x] Remove redundant aliases such as local re-export types that only preserve
       old package boundaries.
 
@@ -314,7 +314,7 @@ Goal: prove and publish the cleaned architecture.
 Tasks:
 
 - [x] Bump all 19 packages to `0.30.0`.
-- [x] Update all internal `jsr:@lessjs/*` ranges to the v0.30.0 line.
+- [x] Update all internal `jsr:@openelement/*` ranges to the v0.30.0 line.
 - [x] Write `docs/changelog/v0.30.0.md`.
 - [x] Write `docs/release/v0.30.0.md`.
 - [x] Run full local gates:
@@ -380,13 +380,13 @@ Minimum checks:
 | Duplicate types           | more than one canonical `CompatibilityClassification` definition         |
 | Duplicate Hub CLI helper  | more than one `loadRecords()` implementation                             |
 | Duplicate snapshot helper | more than one `renderPlaceholder()` implementation                       |
-| Version ranges            | internal `jsr:@lessjs/*` range is below release line                     |
+| Version ranges            | internal `jsr:@openelement/*` range is below release line                |
 | Generated boundary        | framework behavior regex-parses TypeScript source                        |
 | Docs truth                | completed current SOP claim lacks a verification gate                    |
 
 ## Non-Goals
 
-- Do not implement UI Shell, Ocean-Island, daisyUI fork, or `@lessjs/ui/css`.
+- Do not implement UI Shell, Ocean-Island, daisyUI fork, or `@openelement/ui/css`.
 - Do not add new user-facing features.
 - Do not preserve removed APIs with deprecation shims.
 - Do not rewrite historical ADRs unless they are imported into current docs.

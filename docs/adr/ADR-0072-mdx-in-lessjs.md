@@ -12,9 +12,9 @@ should not create a second HTML-only content pipeline.
 
 ## Decision
 
-MDX support is build-time only. `@lessjs/content/mdx` wraps `@mdx-js/mdx` and
-compiles `.mdx` source to JSX using `@lessjs/core` as `jsxImportSource`.
-`@lessjs/adapter-vite` exposes `mdxPlugin()` and includes it in the default
+MDX support is build-time only. `@openelement/content/mdx` wraps `@mdx-js/mdx` and
+compiles `.mdx` source to JSX using `@openelement/core` as `jsxImportSource`.
+`@openelement/adapter-vite` exposes `mdxPlugin()` and includes it in the default
 LessJS Vite plugin stack, so `.mdx` files can be imported by routes or content
 modules.
 

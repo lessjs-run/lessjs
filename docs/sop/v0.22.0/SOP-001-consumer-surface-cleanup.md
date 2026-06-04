@@ -13,9 +13,9 @@ infrastructure, not copied into ordinary consumer `deno.json` files.
 
 ## Current Problem
 
-`@lessjs/create` currently emits imports for framework internals and transitive
-dependencies including `parse5`, `entities`, `hono`, `@lessjs/signals/framework`,
-`@lessjs/core/navigation`, and `@lessjs/ui/`. This is a product-surface leak.
+`@openelement/create` currently emits imports for framework internals and transitive
+dependencies including `parse5`, `entities`, `hono`, `@openelement/signals/framework`,
+`@openelement/core/navigation`, and `@openelement/ui/`. This is a product-surface leak.
 
 ## Target Files
 
@@ -34,9 +34,9 @@ Generated projects should start near this shape:
 ```json
 {
   "imports": {
-    "@lessjs/app": "jsr:@lessjs/app@^0.22",
-    "@lessjs/core": "jsr:@lessjs/core@^0.22",
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.22"
+    "@openelement/app": "jsr:@openelement/app@^0.22",
+    "@openelement/core": "jsr:@openelement/core@^0.22",
+    "@openelement/ui": "jsr:@openelement/ui@^0.22"
   }
 }
 ```
@@ -66,9 +66,9 @@ Acceptance:
 
 - [ ] Keep ADR-0047 pre-resolution in `adapter-vite` as the owner of external
       SSR dependency discovery.
-- [ ] Add the minimum bridge needed so `@lessjs/app` / `adapter-vite` can supply
+- [ ] Add the minimum bridge needed so `@openelement/app` / `adapter-vite` can supply
       sidecar import-map data without requiring consumers to write it by hand.
-- [ ] Do not make `@lessjs/app` a dumping ground for adapter internals; it may
+- [ ] Do not make `@openelement/app` a dumping ground for adapter internals; it may
       expose orchestration options, but resolver implementation belongs in
       `adapter-vite`.
 
@@ -78,7 +78,7 @@ Acceptance:
       `deno.json` unless direct user source imports them.
 - [ ] SSR build still resolves subpaths such as `entities/lib/*`.
 
-### Step 3: Simplify `@lessjs/create`
+### Step 3: Simplify `@openelement/create`
 
 - [ ] Remove unused default imports from the generated template.
 - [ ] Keep tasks stable: `dev`, `build`, and `preview` must still work.

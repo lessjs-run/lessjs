@@ -165,7 +165,7 @@ For v0.19.1, `less add` becomes real:
 
 Hardcoded per well-known package, with a generic fallback:
 
-**Known packages** (Shoelace, Media Chrome, @lessjs/ui):
+**Known packages** (Shoelace, Media Chrome, @openelement/ui):
 Hand-written, high-quality usage examples with real attribute/event usage.
 
 **Generic fallback** (any unknown package):
@@ -233,8 +233,8 @@ Auto-generated from CEM manifest:
 /registry/:package/:component       → Component detail (NEW, [package]/[component].ts)
 ```
 
-The `:package` parameter uses `~` as a `/` substitute (e.g., `@lessjs~ui` for
-`@lessjs/ui`), matching the existing convention.
+The `:package` parameter uses `~` as a `/` substitute (e.g., `@openelement~ui` for
+`@openelement/ui`), matching the existing convention.
 
 The `:component` parameter is the raw tag name (e.g., `sl-dialog`,
 `less-button`).

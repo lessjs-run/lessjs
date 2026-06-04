@@ -5,7 +5,7 @@ label: 'Islands & SSR'
 order: 4
 ---
 
-<less-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/guide/islands-and-ssr">
+<open-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/guide/islands-and-ssr">
 
           <h1>Islands 与 SSR</h1>
           <p class="subtitle">
@@ -41,13 +41,13 @@ order: 4
             Declarative Shadow DOM 让服务端渲染的 Web Components 在 HTML 解析阶段就有 shadow root。
             用户看到内容的那一刻，不需要任何 JavaScript。
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <open-code-block><pre><code>&lt;my-card&gt;
 
 &lt;template shadowrootmode="open"&gt;
 &lt;style&gt;:host &lt;/style&gt;
 &lt;p&gt;内容在 JavaScript 加载前即可见。&lt;/p&gt;
 &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;</code></pre></open-code-block>
 
           <h2>三层组件模型</h2>
           <table>
@@ -63,7 +63,7 @@ order: 4
           <p>
             通过 <code>defineIsland()</code> API 声明 island，支持四种 hydration 策略：
           </p>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 export class MyChart extends DsdElement
 
@@ -77,7 +77,7 @@ defineIsland(MyChart, );
 defineIsland(MyChart, );
 
 // 纯客户端渲染（无 DSD，无 SSR）
-defineIsland(MyChart, );</code></pre></less-code-block>
+defineIsland(MyChart, );</code></pre></open-code-block>
 
           <table>
             <thead><tr><th>策略</th><th>触发条件</th><th>推荐用途</th></tr></thead>
@@ -91,9 +91,9 @@ defineIsland(MyChart, );</code></pre></less-code-block>
 
           <h2>创建 Island</h2>
           <p>将需要客户端行为的组件放在 <code>app/islands/</code> 目录：</p>
-          <less-code-block><pre><code>// app/islands/counter.ts
+          <open-code-block><pre><code>// app/islands/counter.ts
 
-import from '@lessjs/core';
+import from '@openelement/core';
 
 export class Counter extends DsdElement &gt;-&lt;/button&gt;
 &lt;span&gt;&lt;/span&gt;
@@ -103,10 +103,10 @@ export class Counter extends DsdElement &gt;-&lt;/button&gt;
 }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);</code></pre></open-code-block>
 
 <p>在页面中使用：</p>
-<less-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
+<open-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></open-code-block>
 <p>
 构建器会自动扫描 <code>app/islands/</code>，生成 client entry，并注入到静态 HTML 中。
 页面 HTML 先渲染，浏览器加载 island entry 后再升级组件。
@@ -124,10 +124,10 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
             </tbody>
           </table>
 
-          <less-callout type="info" label="Upgrade, Not Hydration">
+          <open-callout type="info" label="Upgrade, Not Hydration">
             LessJS 使用 Island Upgrade 而非传统 hydration。浏览器解析 HTML 时 DSD 已经填充内容，
             客户端 entry 调用 <code>customElements.define()</code> 升级已有元素为真正的 Custom Element。
-          </less-callout>
+          </open-callout>
 
           <div class="nav-row">
             <a href="/guide/routing-and-data" class="nav-link">&larr; 路由与数据</a>

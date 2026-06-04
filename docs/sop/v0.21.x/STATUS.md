@@ -49,7 +49,7 @@ All required gates passed on 2026-05-24:
 
 | # | Question                                                                | Status                                                                      |
 | - | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| 1 | `@lessjs/core` public API classified and documented?                    | ✅ `docs/reference/core-api-surface.md`                                     |
+| 1 | `@openelement/core` public API classified and documented?               | ✅ `docs/reference/core-api-surface.md`                                     |
 | 2 | Stale contracts removed from types and docs?                            | ✅ `hydrateEvents` deprecated, `render()` TemplateResult-first              |
 | 3 | DSD conformance suite tests browser-parsed behavior?                    | ✅ `packages/core/__tests__/dsd-conformance.test.ts`                        |
 | 4 | SSG blog/docs path builds from generated project?                       | ✅ `packages/create/__tests__/cli.test.ts` (scaffold + build + verify HTML) |
@@ -68,7 +68,7 @@ All required gates passed on 2026-05-24:
   consumer smoke against the freshly published JSR package set.
 - `JSR Consumer Monitor` workflow
   (`.github/workflows/jsr-consumer-monitor.yml`): runs the public
-  `jsr:@lessjs/create` path on Windows by schedule or manual dispatch. It is a
+  `jsr:@openelement/create` path on Windows by schedule or manual dispatch. It is a
   compatibility monitor, not a source branch gate.
 - `CodeQL` security analysis (`.github/workflows/codeql.yml`): weekly +
   on-push security scans with `security-extended,security-and-quality` queries.
@@ -79,13 +79,13 @@ The v0.21.13 to v0.21.16 patch train closed the post-publish consumer build
 loop:
 
 - Phase 2 client builds now reuse the LessJS package resolver for package
-  islands such as `@lessjs/ui/less-card`.
+  islands such as `@openelement/ui/less-card`.
 - `content.nav` defaults `routesDir` to `app/routes`, and the create template
   writes that default explicitly.
 - Production builds now use a no-op outer Vite trigger entry so the generated
   Hono SSR entry is not bundled as a browser artifact.
-- Remote `@lessjs/core/*` resolution derives JSR URLs from `@lessjs/core`, not
-  from `@lessjs/adapter-vite`.
+- Remote `@openelement/core/*` resolution derives JSR URLs from `@openelement/core`, not
+  from `@openelement/adapter-vite`.
 
 The CI policy is documented in
 `docs/adr/ADR-0048-ci-release-gate-separation.md` and

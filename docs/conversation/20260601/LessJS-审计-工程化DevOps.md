@@ -1,4 +1,4 @@
-# LessJS v0.27.0 工程化/DevOps 专项审计报告
+﻿# LessJS v0.27.0 工程化/DevOps 专项审计报告
 
 **审计人**：devops-engineer
 **审计日期**：2026-06-01
@@ -21,10 +21,10 @@ LessJS v0.27.0 的工程体系整体**成熟度较高**，体现了从 v0.18 一
 #### P1-ENG-01：根 `deno.json` 的 `imports` 膨胀，维护成本高
 
 - **位置**：`deno.json:25-97`
-- **现象**：根 deno.json 的 `imports` 映射包含 47 条 `@lessjs/*` 条目，涵盖所有子包的主入口和子路径导出。此外还有 25 条 npm 依赖。每当子包新增导出路径，都需要手动同步更新根 imports。
+- **现象**：根 deno.json 的 `imports` 映射包含 47 条 `@openelement/*` 条目，涵盖所有子包的主入口和子路径导出。此外还有 25 条 npm 依赖。每当子包新增导出路径，都需要手动同步更新根 imports。
 - **影响**：
   - 维护负担大，新增子路径导出容易遗漏根映射
-  - `@lessjs/ui/*` 有 10 个组件逐一列出（L49-L58），注释说明是 Vite alias prefix-matching 的限制，但这种脆弱性应被工具化
+  - `@openelement/ui/*` 有 10 个组件逐一列出（L49-L58），注释说明是 Vite alias prefix-matching 的限制，但这种脆弱性应被工具化
 - **整改建议**：
   1. 编写自动化脚本验证根 imports 与子包 exports 的一致性（类似 `check-import-map.ts` 但针对 workspace 内部映射）
   2. 长期跟踪 Deno/Vite 对 subpath exports 的支持改进，减少手动枚举
@@ -59,7 +59,7 @@ LessJS v0.27.0 的工程体系整体**成熟度较高**，体现了从 v0.18 一
 
 - **位置**：`tsconfig.json`、`deno.json:177-185`
 - **现象**：
-  - `tsconfig.json` 定义了 `jsx: "react-jsx"`, `jsxImportSource: "@lessjs/core"`, `skipLibCheck: true` 等
+  - `tsconfig.json` 定义了 `jsx: "react-jsx"`, `jsxImportSource: "@openelement/core"`, `skipLibCheck: true` 等
   - `deno.json` 的 `compilerOptions` 也定义了相同的 `jsx`, `jsxImportSource`, `skipLibCheck`
   - 部分子包（如 `adapter-react`）又覆盖了 `jsxImportSource: "react"`
 - **影响**：配置分散在三个层级（tsconfig.json / 根 deno.json / 子包 deno.json），维护者需理解优先级关系，容易出错
@@ -254,7 +254,7 @@ LessJS v0.27.0 的工程体系整体**成熟度较高**，体现了从 v0.18 一
   - `rpc` 没有 `imports` 字段
   - 两者都是零依赖的纯类型/工具包
 - **影响**：无功能影响，但值得确认这些包是否真的不需要任何类型定义
-- **整改建议**：确认 `@lessjs/protocols` 是否需要 `typescript` 作为 dev dependency
+- **整改建议**：确认 `@openelement/protocols` 是否需要 `typescript` 作为 dev dependency
 
 ---
 
@@ -390,7 +390,7 @@ LessJS v0.27.0 的工程体系整体**成熟度较高**，体现了从 v0.18 一
 
 | 编号 | 级别 | 类别 | 问题摘要 |
 |------|------|------|----------|
-| P1-ENG-01 | P1 | 工程配置 | 根 imports 膨胀（47条@lessjs/*），维护成本高 |
+| P1-ENG-01 | P1 | 工程配置 | 根 imports 膨胀（47条@openelement/*），维护成本高 |
 | P1-ENG-02 | P1 | 工程配置 | hub:scan/validate 使用 -A 全权限 |
 | P2-ENG-03 | P2 | 工程配置 | 子包 build task 定义不一致 |
 | P2-ENG-04 | P2 | 工程配置 | tsconfig.json 与 deno.json compilerOptions 重复 |

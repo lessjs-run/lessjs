@@ -1,4 +1,4 @@
-# LessJS v0.24 全面审计报告
+﻿# LessJS v0.24 全面审计报告
 
 > **审计日期**: 2026-05-28 | **审计分支**: dev (8908be30)\
 > **框架版本**: v0.24.0 | **包数量**: 18 | **源码文件**: 311 .ts | **代码行数**: ~12,000+\
@@ -68,24 +68,24 @@ LessJS 是一个 DSD-first Islands 框架，核心渲染管线（DSD + SSG + Isl
 
 | 包名                    | 评分 | 代码行  | 核心问题                                           |
 | ----------------------- | ---- | ------- | -------------------------------------------------- |
-| @lessjs/core            | A-   | ~3000   | types.ts 膨胀 1462 行, LessMiddleware 用 any       |
-| @lessjs/signals         | B+   | ~200    | engine.ts 残留废弃类型, lint 排除 no-explicit-any  |
-| @lessjs/adapter-vite    | B    | ~2500   | bare catch 过多(~10 处), less-plugin.ts 378 行过长 |
-| @lessjs/app             | A    | ~75     | 极简 facade, 职责清晰                              |
-| @lessjs/adapter-lit     | B+   | ~500    | DsdLitElement 已 deprecated 但仍导出               |
-| @lessjs/adapter-react   | B    | ~450    | 2 处无注释 bare catch, createRoot 而非 hydrateRoot |
-| @lessjs/adapter-vanilla | B+   | ~400    | 与 react 高度重复                                  |
-| @lessjs/rpc             | A    | ~277    | 零依赖, 类型安全, 错误处理完善                     |
-| @lessjs/protocols       | A    | ~100    | 零依赖纯类型, 无问题                               |
-| @lessjs/runtime         | A    | ~84     | 纯 re-export facade                                |
-| @lessjs/content         | B+   | ~300    | 合理分层                                           |
-| @lessjs/i18n            | B+   | ~200    | 功能较基础                                         |
-| @lessjs/ui              | B    | ~600    | 9/10 组件未用 @prop(), 手动 _syncDOM()             |
-| @lessjs/hub             | B-   | ~800    | snapshot-playwright.ts 用 any, 与核心关联弱        |
-| @lessjs/style-sheet     | A    | ~50     | 极简                                               |
-| @lessjs/cem             | A    | ~200    | 零依赖纯解析                                       |
-| @lessjs/compat-check    | B+   | ~300    | 与 core 类型重复                                   |
-| @lessjs/create          | A    | ~1 文件 | 最简脚手架                                         |
+| @openelement/core            | A-   | ~3000   | types.ts 膨胀 1462 行, LessMiddleware 用 any       |
+| @openelement/signals         | B+   | ~200    | engine.ts 残留废弃类型, lint 排除 no-explicit-any  |
+| @openelement/adapter-vite    | B    | ~2500   | bare catch 过多(~10 处), less-plugin.ts 378 行过长 |
+| @openelement/app             | A    | ~75     | 极简 facade, 职责清晰                              |
+| @openelement/adapter-lit     | B+   | ~500    | DsdLitElement 已 deprecated 但仍导出               |
+| @openelement/adapter-react   | B    | ~450    | 2 处无注释 bare catch, createRoot 而非 hydrateRoot |
+| @openelement/adapter-vanilla | B+   | ~400    | 与 react 高度重复                                  |
+| @openelement/rpc             | A    | ~277    | 零依赖, 类型安全, 错误处理完善                     |
+| @openelement/protocols       | A    | ~100    | 零依赖纯类型, 无问题                               |
+| @openelement/runtime         | A    | ~84     | 纯 re-export facade                                |
+| @openelement/content         | B+   | ~300    | 合理分层                                           |
+| @openelement/i18n            | B+   | ~200    | 功能较基础                                         |
+| @openelement/ui              | B    | ~600    | 9/10 组件未用 @prop(), 手动 _syncDOM()             |
+| @openelement/hub             | B-   | ~800    | snapshot-playwright.ts 用 any, 与核心关联弱        |
+| @openelement/style-sheet     | A    | ~50     | 极简                                               |
+| @openelement/cem             | A    | ~200    | 零依赖纯解析                                       |
+| @openelement/compat-check    | B+   | ~300    | 与 core 类型重复                                   |
+| @openelement/create          | A    | ~1 文件 | 最简脚手架                                         |
 
 ### 2.2 关键代码质量问题
 

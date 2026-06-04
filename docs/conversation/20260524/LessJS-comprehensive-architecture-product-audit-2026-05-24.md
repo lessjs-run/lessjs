@@ -1,4 +1,4 @@
-# LessJS 全站架构与产品审计报告
+﻿# LessJS 全站架构与产品审计报告
 
 审计日期: 2026-05-24\
 仓库: `C:\Users\Administrator\WorkBuddy\Claw\src-tmp`\
@@ -86,7 +86,7 @@ DSD 报告补充:
 风险:
 
 - 对 npm/Vite/Playwright/React/Lit 等 npm 生态仍有实际依赖，不能把 Deno 选型叙述成“脱离 Node/npm 生态”。
-- JSR 分发对前端框架用户仍是较窄入口；需要确保 npm/Node 消费路径明确，尤其是 `@lessjs/create` 和 Vite adapter。
+- JSR 分发对前端框架用户仍是较窄入口；需要确保 npm/Node 消费路径明确，尤其是 `@openelement/create` 和 Vite adapter。
 
 建议:
 
@@ -99,8 +99,8 @@ DSD 报告补充:
 
 证据:
 
-- `@lessjs/adapter-vite` 负责 route scanning、virtual Hono entry、island transform、SSG build。
-- `@lessjs/app` 将 `less()`、content、i18n 组合为统一 Vite plugin。
+- `@openelement/adapter-vite` 负责 route scanning、virtual Hono entry、island transform、SSG build。
+- `@openelement/app` 将 `less()`、content、i18n 组合为统一 Vite plugin。
 - 构建输出显示 36 page routes、1 API route、24 islands。
 - e2e 覆盖 direct URL、navigation、i18n、theme、DSD、PWA、SEO 等页面级行为。
 
@@ -111,7 +111,7 @@ DSD 报告补充:
 
 建议:
 
-- 对外分层表述: `@lessjs/core` 是 renderer/runtime contract；`@lessjs/adapter-vite` 是当前官方 build adapter；`@lessjs/app` 是默认应用入口。
+- 对外分层表述: `@openelement/core` 是 renderer/runtime contract；`@openelement/adapter-vite` 是当前官方 build adapter；`@openelement/app` 是默认应用入口。
 - v1.0 前不要扩大到多 bundler adapter，先把 Vite 路径做成稳定参照实现。
 
 ### 4.3 DSD-first + Islands
@@ -150,13 +150,13 @@ DSD 报告补充:
 
 | 层                    | 包/目录                                                      | 评价                                                                           |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| Runtime core          | `@lessjs/core`                                               | 承载 DSD renderer、DsdElement、template、安全、ISR contract、manifest/types    |
-| Reactivity            | `@lessjs/signals`                                            | 独立 signals 层，core 通过 framework export 提供单入口 DX                      |
-| Build adapter         | `@lessjs/adapter-vite`                                       | 承载 route scanning、entry generation、SSG、island manifests、Hono integration |
-| App facade            | `@lessjs/app`                                                | 组合 core adapter、content、i18n，适合作为用户默认入口                         |
-| UI package            | `@lessjs/ui`                                                 | DSD-native 组件和 island 示例，是产品 showcase                                 |
-| Hub                   | `@lessjs/hub`                                                | schema、indexer、submitter、snapshot、validator                                |
-| Split helper packages | `@lessjs/cem`、`@lessjs/compat-check`、`@lessjs/style-sheet` | 已独立发布，但实现仍多为 core re-export                                        |
+| Runtime core          | `@openelement/core`                                               | 承载 DSD renderer、DsdElement、template、安全、ISR contract、manifest/types    |
+| Reactivity            | `@openelement/signals`                                            | 独立 signals 层，core 通过 framework export 提供单入口 DX                      |
+| Build adapter         | `@openelement/adapter-vite`                                       | 承载 route scanning、entry generation、SSG、island manifests、Hono integration |
+| App facade            | `@openelement/app`                                                | 组合 core adapter、content、i18n，适合作为用户默认入口                         |
+| UI package            | `@openelement/ui`                                                 | DSD-native 组件和 island 示例，是产品 showcase                                 |
+| Hub                   | `@openelement/hub`                                                | schema、indexer、submitter、snapshot、validator                                |
+| Split helper packages | `@openelement/cem`、`@openelement/compat-check`、`@openelement/style-sheet` | 已独立发布，但实现仍多为 core re-export                                        |
 
 强项:
 
@@ -167,7 +167,7 @@ DSD 报告补充:
 
 弱项:
 
-- `@lessjs/cem`、`@lessjs/compat-check`、`@lessjs/style-sheet` 虽然独立成包，但当前仍偏 thin wrapper，不足以证明独立产品面。
+- `@openelement/cem`、`@openelement/compat-check`、`@openelement/style-sheet` 虽然独立成包，但当前仍偏 thin wrapper，不足以证明独立产品面。
 - `adapter-vite/src/route-scanner.ts` 仍有 TODO: local island metadata 用 regex 读取，可能漏掉注释、computed property、destructured export 等边界。
 - generated Hono entry 对 route module 的 `tagName` fallback 会触发 bundler warning，说明“默认 tagName 派生”和“显式 route export”之间的契约还不够干净。
 
@@ -252,7 +252,7 @@ LessJS 最适合定位为:
 1. Hub marketplace: 当前 2 个包，只能称为 early registry evidence pipeline。
 2. Edge Full-Stack: 当前是 v0.22 计划态，不是成熟 runtime moat。
 3. Multi-framework adapters: Lit/React/Vanilla adapter 有价值，但不是稀缺点。
-4. UI components: `@lessjs/ui` 可作为 showcase，但不应成为主护城河。
+4. UI components: `@openelement/ui` 可作为 showcase，但不应成为主护城河。
 5. Package split: `cem`、`compat-check`、`style-sheet` 独立包还需要真实独立 API 和消费场景。
 
 ## 8. 主要问题清单
@@ -434,8 +434,8 @@ LessJS 最适合定位为:
 
 证据:
 
-- `packages/compat-check/src/index.ts` 从 `@lessjs/core/compatibility` re-export。
-- `packages/cem/src/index.ts` 从 `@lessjs/core/cem-parser` re-export。
+- `packages/compat-check/src/index.ts` 从 `@openelement/core/compatibility` re-export。
+- `packages/cem/src/index.ts` 从 `@openelement/core/cem-parser` re-export。
 - `packages/style-sheet/src/index.ts` 从本包 `style-sheet.js` re-export，但 core 也继续暴露 StyleSheet。
 
 风险:

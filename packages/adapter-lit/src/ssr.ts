@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-lit - SSR Adapter
+ * @openelement/adapter-lit - SSR Adapter
  *
  * Converts Lit TemplateResult to HTML string via safe interpolation.
  * No dependency on @lit-labs/ssr - produces clean DSD HTML without
@@ -28,14 +28,14 @@
  *   listeners / sets properties fresh - the SSR HTML is only for
  *   initial paint.
  *
- * v0.6: Uses SafeHtml/UnsafeHtml branded types from @lessjs/core.
+ * v0.6: Uses SafeHtml/UnsafeHtml branded types from @openelement/core.
  *   - Text content: escaped by default (SafeHtml)
  *   - TemplateResult literals (trusted HTML): UnsafeHtml
  *   - Lit's unsafeHTML() directive: UnsafeHtml (bypassed)
  *   - Lit's html`` tagged template: the template strings are trustable
  *     but interpolations are dynamically escaped
  *
- * @module @lessjs/adapter-lit/ssr
+ * @module @openelement/adapter-lit/ssr
  */
 
 // ─── Lit TemplateResult Detection ──────────────────────────────
@@ -100,19 +100,19 @@ function isNothing(value: unknown): boolean {
 
 /**
  * HTML escape utilities.
- * Canonical implementation lives in @lessjs/core/render-dsd.ts.
+ * Canonical implementation lives in @openelement/core/render-dsd.ts.
  * v0.6: Uses SafeHtml branded type to preserve Lit escaping semantics.
  *   - TemplateResult static parts (strings[]) are trusted HTML
  *   - Dynamic interpolations are escaped (except unsafeHTML directive)
  */
 
-// Re-export utilities from @lessjs/core (single source of truth)
-// @lessjs/core is a pure runtime with zero node:*, zero Vite, zero npm: deps.
-// ADR 0021: Always import from @lessjs/core main entry, never from subpaths.
-export { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
-import { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
-import { getDefaultRegistry } from '@lessjs/core';
-import { createLogger } from '@lessjs/core/logger';
+// Re-export utilities from @openelement/core (single source of truth)
+// @openelement/core is a pure runtime with zero node:*, zero Vite, zero npm: deps.
+// ADR 0021: Always import from @openelement/core main entry, never from subpaths.
+export { camelToKebab, escapeAttr, escapeHtml } from '@openelement/core';
+import { camelToKebab, escapeAttr, escapeHtml } from '@openelement/core';
+import { getDefaultRegistry } from '@openelement/core';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('core');
 
@@ -130,8 +130,8 @@ function startsWithCustomElement(html: string): boolean {
  * causes the nested CE to appear as raw HTML instead of a real DOM element.
  *
  * Case 1: Result starts with a CE tag -> extract just the CE tag.
- *   Input:  `<less-layout><template shadowrootmode="open">CONTENT</template></less-layout>`
- *   Output: `<less-layout>`
+ *   Input:  `<open-layout><template shadowrootmode="open">CONTENT</template></open-layout>`
+ *   Output: `<open-layout>`
  *
  * Case 2: Result starts with static content followed by a CE DSD -> replace the
  *   CE's DSD wrapper with just the CE tag (to become a real DOM node).
@@ -171,7 +171,7 @@ function unwrapDsdForNestedCe(html: string): string {
  * processed by renderDsd's renderDsdTree() (ADR-0071).
  *
  * This fixes the "island appearing as raw HTML/text in shadow DOM" bug
- * where <counter-island> DSD was rendered as text inside <less-layout>'s
+ * where <counter-island> DSD was rendered as text inside <open-layout>'s
  * <style> tag instead of being a real DOM element.
  */
 function stringifyContentValue(value: unknown): string {
@@ -294,7 +294,7 @@ function interpolate(result: unknown): string {
           //
           // Previously, property bindings were stripped entirely because
           // "static HTML can't have property bindings". But this broke
-          // data-driven components like <less-layout .navItems="${data}">
+          // data-driven components like <open-layout .navItems="${data}">
           // which need the data during renderDsdTree().
           //
           // Now: .navItems="${arr}" -> nav-items="[{...}]" (JSON-encoded)
@@ -429,7 +429,7 @@ export function renderLitToString(
   } catch (err) {
     const tag = tagName || 'unknown';
     throw new Error(
-      `[LessJS] <${tag}> TemplateResult interpolation failed. ` +
+      `[openElement] <${tag}> TemplateResult interpolation failed. ` +
         `Original error: ${err instanceof Error ? err.message : String(err)}`,
     );
   }
@@ -438,7 +438,7 @@ export function renderLitToString(
 // ─── Adapter Installation ─────────────────────────────────────
 
 /**
- * Install the Lit SSR adapter into @lessjs/core's renderDsd.
+ * Install the Lit SSR adapter into @openelement/core's renderDsd.
  *
  * This patches the DSD renderer so that when a component's render()
  * returns a Lit TemplateResult, it's automatically converted to string
@@ -447,7 +447,7 @@ export function renderLitToString(
  *
  * Call this once at the top of your SSG build script or vite.config.ts:
  *
- *   import { installLitAdapter } from '@lessjs/adapter-lit';
+ *   import { installLitAdapter } from '@openelement/adapter-lit';
  *   installLitAdapter();
  *
  * The adapter stays installed for the lifetime of the process.

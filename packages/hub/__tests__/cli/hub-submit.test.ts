@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - CLI Hub Submit Tests
+ * @openelement/hub - CLI Hub Submit Tests
  *
  * v0.19.0: Test CLI flag parsing and submission flow.
  * Does not actually create GitHub PRs (requires gh CLI).

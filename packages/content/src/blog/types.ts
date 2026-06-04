@@ -42,7 +42,7 @@ export interface LessBlogOptions {
   trustedHtml?: boolean;
   /**
    * Layout component tag name for wrapping blog pages.
-   * Default: 'less-layout' (from @lessjs/ui)
+   * Default: 'less-layout' (from @openelement/ui)
    */
   layoutTag?: string;
   /**

@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/core",
+  "name": "@openelement/core",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",
@@ -15,8 +15,8 @@
     "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.30.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.30.0"
+    "@openelement/signals": "jsr:@openelement/signals@^0.30.0",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.30.0"
   },
   "publish": {
     "include": [

@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
+export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-code-block';
 import '../../islands/reactive-showcase.js';
 
 const routeSheet = new StyleSheet();
@@ -61,12 +61,12 @@ export class DsdGuidePage extends DsdElement {
             DSD 是 WHATWG HTML 中的 template 语义，核心属性是 <code>shadowrootmode</code>。它允许 HTML
             直接携带 shadow root 内容，使服务端渲染的 Web Components 在 JS 加载前已经可见。
           </p>
-          <less-code-block><pre><code>{`&lt;my-card&gt;
+          <open-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;内容在 JavaScript 加载前可见。&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;`}</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></open-code-block>
 
           <h2>为什么 LessJS 选择 DSD</h2>
           <div class="comparison">
@@ -156,12 +156,12 @@ export class DsdGuidePage extends DsdElement {
             <code>shadowrootmode</code>. It lets HTML carry shadow root content so server-rendered Web
             Components are visible before their JavaScript implementation loads.
           </p>
-          <less-code-block><pre><code>{`&lt;my-card&gt;
+          <open-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;`}</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></open-code-block>
 
           <h2>Why LessJS Uses DSD</h2>
           <div class="comparison">

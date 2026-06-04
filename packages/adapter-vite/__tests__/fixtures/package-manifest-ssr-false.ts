@@ -5,7 +5,7 @@
  * The SSR admission plan should treat it as client-only.
  */
 
-import type { LessPackageManifest } from '@lessjs/core';
+import type { LessPackageManifest } from '@openelement/core';
 
 export const manifest: LessPackageManifest = {
   packageName: '@test/package-island-ssr-false',

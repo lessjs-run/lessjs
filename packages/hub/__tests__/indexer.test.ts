@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Indexer Tests
+ * @openelement/hub - Indexer Tests
  *
  * v0.19.0: Test search index building and filtering.
  */
@@ -111,7 +111,7 @@ Deno.test('searchPackages: searches by name', () => {
 Deno.test('searchPackages: searches by scope/name', () => {
   const entries = [
     entry('core', 'client-only', ['sl-btn'], false, '', '@shoelace'),
-    entry('core', 'ssr-capable', ['less-btn'], true, '', '@lessjs'),
+    entry('core', 'ssr-capable', ['less-btn'], true, '', '@openelement'),
   ];
 
   const result = searchPackages(entries, 'shoelace');

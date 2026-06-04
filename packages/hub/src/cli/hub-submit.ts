@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write --allow-env --allow-run
 /**
- * @lessjs/hub-submit - CLI for submitting packages to the Registry Hub.
+ * @openelement/hub-submit - CLI for submitting packages to the Registry Hub.
  *
  * Usage:
- *   deno run -A jsr:@lessjs/hub/cli/hub-submit [options]
- *   deno run -A jsr:@lessjs/hub/cli/hub-submit --dir ./my-package
- *   deno run -A jsr:@lessjs/hub/cli/hub-submit --dry-run
+ *   deno run -A jsr:@openelement/hub/cli/hub-submit [options]
+ *   deno run -A jsr:@openelement/hub/cli/hub-submit --dir ./my-package
+ *   deno run -A jsr:@openelement/hub/cli/hub-submit --dry-run
  *
  * Options:
  *   --dir <path>      Package directory (default: cwd)

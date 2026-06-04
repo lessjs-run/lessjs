@@ -1,9 +1,9 @@
-import { defineCustomElement, DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { signal } from '@lessjs/signals';
-import { consumeContext } from '@lessjs/core';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { THEME_CTX } from '@lessjs/ui/less-layout';
+﻿import { defineCustomElement, DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { signal } from '@openelement/signals';
+import { consumeContext } from '@openelement/core';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { THEME_CTX } from '@openelement/ui/less-layout';
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -64,9 +64,9 @@ export default class HomeConsole extends DsdElement {
         </div>
         <div class='pane'>
           <div class='counter-row'>
-            <button type='button' class='counter-btn' data-on-click='decrement'>-</button>
+            <button type='button' class='counter-btn' onClick={() => this.decrement()}>-</button>
             <span class='counter-value' data-signal='count' textContent={this.#count}></span>
-            <button type='button' class='counter-btn' data-on-click='increment'>+</button>
+            <button type='button' class='counter-btn' onClick={() => this.increment()}>+</button>
           </div>
           <p class='counter-caption'>
             <b>METRICS</b> — packages verified:{' '}

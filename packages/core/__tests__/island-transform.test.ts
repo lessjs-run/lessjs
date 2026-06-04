@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — Island transform unit tests (Deno)
+ * @openelement/core — Island transform unit tests (Deno)
  */
 import { assertEquals, assertStringIncludes, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { transformIslandSource } from '../src/island-transform.js';

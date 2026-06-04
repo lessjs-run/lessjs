@@ -15,19 +15,19 @@ implementation nor Vite adapter implementation.
 Shared contracts are currently scattered:
 
 - `LessBuildContextLike` and virtual module ids live under
-  `@lessjs/adapter-vite`.
-- signal protocol types are duplicated between `@lessjs/core` and
-  `@lessjs/signals`.
+  `@openelement/adapter-vite`.
+- signal protocol types are duplicated between `@openelement/core` and
+  `@openelement/signals`.
 - Hub, CEM, manifest, compatibility, and validation diagnostics still share
   concepts through package-specific imports.
 - Feature packages depend on adapter-owned types to integrate with the build.
 
 ## Target Contract
 
-Introduce a contracts layer, either as `@lessjs/protocols` or a deliberately
+Introduce a contracts layer, either as `@openelement/protocols` or a deliberately
 named equivalent.
 
-Default name: `@lessjs/protocols`. Use a different name only if the
+Default name: `@openelement/protocols`. Use a different name only if the
 implementation PR records a clearer distinction between runtime protocols and
 build protocols.
 
@@ -67,13 +67,13 @@ It must not own:
 
 ### Step 1: Inventory Shared Contracts
 
-- [ ] List every exported type and constant from `@lessjs/core`,
-      `@lessjs/adapter-vite`, `@lessjs/signals`, `@lessjs/hub`, `@lessjs/cem`,
-      and `@lessjs/compat-check`.
+- [ ] List every exported type and constant from `@openelement/core`,
+      `@openelement/adapter-vite`, `@openelement/signals`, `@openelement/hub`, `@openelement/cem`,
+      and `@openelement/compat-check`.
 - [ ] Mark each item as runtime kernel, build contract, feature API,
       diagnostics contract, obsolete export, or wrong owner.
-- [ ] Identify all imports from `@lessjs/adapter-vite/build-types` and
-      `@lessjs/adapter-vite/virtual-ids`.
+- [ ] Identify all imports from `@openelement/adapter-vite/build-types` and
+      `@openelement/adapter-vite/virtual-ids`.
 
 Acceptance:
 
@@ -93,8 +93,8 @@ Acceptance:
 Acceptance:
 
 - [ ] `deno publish --dry-run --allow-dirty` passes for the new package.
-- [ ] The package has no dependency on `@lessjs/core`, `@lessjs/adapter-vite`,
-      or `@lessjs/signals`.
+- [ ] The package has no dependency on `@openelement/core`, `@openelement/adapter-vite`,
+      or `@openelement/signals`.
 
 ### Step 3: Migrate Build Contracts
 
@@ -109,7 +109,7 @@ Acceptance:
 - [ ] `content` and `i18n` no longer import adapter-vite only to get build
       contracts.
 - [ ] Existing generated projects still build.
-- [ ] `@lessjs/app` does not import `@lessjs/adapter-vite/build-context`.
+- [ ] `@openelement/app` does not import `@openelement/adapter-vite/build-context`.
 
 ### Step 4: Migrate Protocol Types
 
@@ -124,7 +124,7 @@ Acceptance:
 
 - [ ] Public signal API behavior is unchanged.
 - [ ] Type imports form an acyclic graph.
-- [ ] The public docs say `@lessjs/signals` is powered by `alien-signals`, not a
+- [ ] The public docs say `@openelement/signals` is powered by `alien-signals`, not a
       custom LessJS engine.
 
 ### Step 5: Delete Wrong-Owner Paths
@@ -158,11 +158,11 @@ deno publish --dry-run --allow-dirty
 
 ## v0.23.0 Result
 
-- `@lessjs/protocols` owns shared build context contracts and virtual module
+- `@openelement/protocols` owns shared build context contracts and virtual module
   ids.
-- `@lessjs/content`, `@lessjs/i18n`, and `@lessjs/adapter-vite` consume those
-  contracts from `@lessjs/protocols`.
+- `@openelement/content`, `@openelement/i18n`, and `@openelement/adapter-vite` consume those
+  contracts from `@openelement/protocols`.
 - Old adapter-owned contract exports and root import-map aliases for removed
   wrong-owner paths were deleted.
-- `deno task graph:check` now verifies source-level direct `@lessjs/*` imports
+- `deno task graph:check` now verifies source-level direct `@openelement/*` imports
   against each package-local `deno.json`.

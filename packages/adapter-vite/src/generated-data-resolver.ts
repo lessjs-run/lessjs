@@ -2,9 +2,9 @@ import type { Plugin } from 'vite';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-export const GENERATED_NAV_ID = '@lessjs/generated/nav';
-export const GENERATED_BLOG_DATA_ID = '@lessjs/generated/blog-data';
-export const GENERATED_I18N_ID = '@lessjs/generated/i18n';
+export const GENERATED_NAV_ID = '@openelement/generated/nav';
+export const GENERATED_BLOG_DATA_ID = '@openelement/generated/blog-data';
+export const GENERATED_I18N_ID = '@openelement/generated/i18n';
 
 const GENERATED_DATA_FILES: Record<string, string> = {
   [GENERATED_NAV_ID]: '_generated-nav.ts',

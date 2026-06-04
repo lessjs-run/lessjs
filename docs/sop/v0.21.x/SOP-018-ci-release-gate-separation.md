@@ -29,7 +29,7 @@ published version rather than the current commit.
 `.github/workflows/publish.yml` remains the release truth for JSR consumers:
 
 ```sh
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 cd test-blog
 deno task build
 test -f dist/index.html
@@ -57,8 +57,8 @@ prove before publication:
   needed to write it explicitly.
 - `0.21.16`: the outer Vite build needed a no-op trigger entry instead of
   bundling the generated Hono SSR entry as a browser artifact; remote
-  `@lessjs/core/*` resolution needed to derive URLs from `@lessjs/core`, not
-  `@lessjs/adapter-vite`.
+  `@openelement/core/*` resolution needed to derive URLs from `@openelement/core`, not
+  `@openelement/adapter-vite`.
 
 ## Acceptance Commands
 
@@ -74,7 +74,7 @@ deno task docs:check-strategy
 After publishing a new package set:
 
 ```sh
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 cd test-blog
 deno task build
 test -f dist/index.html

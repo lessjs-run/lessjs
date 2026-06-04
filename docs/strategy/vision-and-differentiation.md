@@ -11,7 +11,7 @@
 
 LessJS 的当前和可预见的唯一消费者是其作者本人。
 
-近期能做的事：**个人博客**，页面上自如混用多种 WC UI 库（Shoelace / Media Chrome / @lessjs/ui / Material Web 等）。
+近期能做的事：**个人博客**，页面上自如混用多种 WC UI 库（Shoelace / Media Chrome / @openelement/ui / Material Web 等）。
 
 远期要做的事：**CRM 等数据驱动应用**。这需要 LessJS 从纯 SSG 引擎进化为全栈框架。
 
@@ -115,15 +115,15 @@ Web Standards First, Deno Second
 
 ### 后端能力：已有（不是零）
 
-| 能力              | 状态 | 证据                                 |
-| ----------------- | ---- | ------------------------------------ |
-| Hono 开发服务器   | ✅   | `entry-renderer.ts`                  |
-| API 路由约定      | ✅   | `app/routes/api/*.ts` → Hono sub-app |
-| 路由扫描 API 发现 | ✅   | `getRouteType()` 检测 `api/` 前缀    |
-| API 路由渲染      | ✅   | `renderApiRoute()` 挂载 Hono sub-app |
-| 运行中的 API      | ✅   | `/api/term`                          |
-| `@lessjs/rpc`     | ✅   | 客户端 fetch 抽象                    |
-| CF Pages 部署     | ✅   | 静态资源 + serverless functions      |
+| 能力               | 状态 | 证据                                 |
+| ------------------ | ---- | ------------------------------------ |
+| Hono 开发服务器    | ✅   | `entry-renderer.ts`                  |
+| API 路由约定       | ✅   | `app/routes/api/*.ts` → Hono sub-app |
+| 路由扫描 API 发现  | ✅   | `getRouteType()` 检测 `api/` 前缀    |
+| API 路由渲染       | ✅   | `renderApiRoute()` 挂载 Hono sub-app |
+| 运行中的 API       | ✅   | `/api/term`                          |
+| `@openelement/rpc` | ✅   | 客户端 fetch 抽象                    |
+| CF Pages 部署      | ✅   | 静态资源 + serverless functions      |
 
 缺少的：数据库客户端、认证、ISR 缓存层、请求上下文注入。
 
@@ -387,7 +387,7 @@ Web APIs        Web APIs           Web APIs
 **博客验证**：
 
 - 用 LessJS 构建个人博客
-- 页面混用 Shoelace + Media Chrome + @lessjs/ui
+- 页面混用 Shoelace + Media Chrome + @openelement/ui
 - 发现并修复真实使用中的问题
 
 ### 中期：v0.21.x — 全栈框架成型

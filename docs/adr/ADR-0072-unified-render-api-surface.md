@@ -18,7 +18,7 @@
 ADR-0071 unified the internal rendering pipeline (one VNode traversal instead of two). But the public API surface still exposes three rendering functions and a JSX factory:
 
 ```ts
-// @lessjs/core — root exports (current)
+// @openelement/core — root exports (current)
 export { renderDsd, renderDsdByName } from './render-dsd.js';
 export { renderNestedDsd, renderToString } from './jsx-render-string.js';
 export { For, Fragment, jsx, jsxDEV, jsxs, Show } from './jsx-runtime.js';
@@ -78,12 +78,12 @@ LessJS is the only framework that exports more than 2 render functions and the o
 ### Architecture
 
 ```ts
-// @lessjs/core — root exports (target)
+// @openelement/core — root exports (target)
 export { renderDsd } from './render-dsd.js';  // ONE rendering function
 export { renderToString } from './jsx-render-string.js';  // sync string fallback
 export { DsdElement, Fragment } from '...';  // component model
 
-// @lessjs/core/jsx-runtime — compiler protocol (already exists)
+// @openelement/core/jsx-runtime — compiler protocol (already exists)
 export { jsx, jsxDEV, jsxs } from './jsx-runtime.js';
 export { For, Show } from './jsx-runtime.js';
 
@@ -108,11 +108,11 @@ export async function renderDsdTree(vnode) { ... }  // was renderNestedDsd
 
 3. **`jsx`, `jsxDEV`, `jsxs` removed from root export**
 
-   These remain on `@lessjs/core/jsx-runtime` subpath where Deno's `jsxImportSource` expects them. Adapter generated code imports them from the subpath.
+   These remain on `@openelement/core/jsx-runtime` subpath where Deno's `jsxImportSource` expects them. Adapter generated code imports them from the subpath.
 
 4. **`For`, `Show` moved out of root export**
 
-   They remain available on `@lessjs/core/jsx-runtime` subpath (alongside `jsx`). This mirrors SolidJS: `<For>` and `<Show>` are control-flow components available from the JSX runtime, not from the root SSR package.
+   They remain available on `@openelement/core/jsx-runtime` subpath (alongside `jsx`). This mirrors SolidJS: `<For>` and `<Show>` are control-flow components available from the JSX runtime, not from the root SSR package.
 
 5. **`Fragment` stays in root**
 
@@ -144,17 +144,17 @@ export async function renderDsdTree(vnode) { ... }  // was renderNestedDsd
 - **JSX separation**: `jsx` leaves the root namespace. Matches React (`createElement` in `react`, not `react-dom/server`).
 - **Control flow separation**: `For`/`Show` stay on jsx-runtime subpath. Matches SolidJS pattern.
 - **Implementation freedom**: `renderDsdTree` can be refactored without breaking the public contract.
-- **Entry renderer simplification**: Generated code imports `renderDsd` + `jsx` from their proper locations instead of dumping everything into one `export { ... } from "@lessjs/core"`.
+- **Entry renderer simplification**: Generated code imports `renderDsd` + `jsx` from their proper locations instead of dumping everything into one `export { ... } from "@openelement/core"`.
 
 ### Negative
 
-- **Breaking change**: Users who import `renderDsdByName`, `renderNestedDsd`, or `jsx` from `@lessjs/core` root must update. Audit shows **zero user code** does this — all consumers are internal (entry-renderer.ts generated code, tests, and apilist docs).
+- **Breaking change**: Users who import `renderDsdByName`, `renderNestedDsd`, or `jsx` from `@openelement/core` root must update. Audit shows **zero user code** does this — all consumers are internal (entry-renderer.ts generated code, tests, and apilist docs).
 - **`renderDsd` signature change**: The second parameter changes from required `componentClass` to optional `props`. Internal callers need updating.
 
 ### Neutral
 
 - `renderDsdTree` name is bikesheddable. The important thing is it's not exported.
-- `@lessjs/core/jsx-runtime` subpath already exists and is already used by Deno's `jsxImportSource`.
+- `@openelement/core/jsx-runtime` subpath already exists and is already used by Deno's `jsxImportSource`.
 
 ---
 

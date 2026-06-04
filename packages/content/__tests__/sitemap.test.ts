@@ -23,13 +23,13 @@ function cleanup() {
 Deno.test('renderSitemapXml: generates valid sitemap XML', () => {
   const urls = [
     {
-      loc: 'https://lessjs.org/',
+      loc: 'https://openelement.org/',
       priority: 1.0,
       changefreq: 'weekly' as const,
       lastmod: '2026-05-08',
     },
     {
-      loc: 'https://lessjs.org/guide/getting-started',
+      loc: 'https://openelement.org/guide/getting-started',
       priority: 0.7,
       changefreq: 'weekly' as const,
       lastmod: '2026-05-08',
@@ -38,7 +38,7 @@ Deno.test('renderSitemapXml: generates valid sitemap XML', () => {
   const xml = renderSitemapXml(urls);
   assertEquals(xml.includes('<?xml version="1.0"'), true);
   assertEquals(xml.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'), true);
-  assertEquals(xml.includes('<loc>https://lessjs.org/</loc>'), true);
+  assertEquals(xml.includes('<loc>https://openelement.org/</loc>'), true);
   assertEquals(xml.includes('<priority>1.0</priority>'), true);
   assertEquals(xml.includes('<priority>0.7</priority>'), true);
   assertEquals(xml.includes('<changefreq>weekly</changefreq>'), true);
@@ -46,10 +46,10 @@ Deno.test('renderSitemapXml: generates valid sitemap XML', () => {
 });
 
 Deno.test('renderRobotsTxt: generates robots.txt', () => {
-  const txt = renderRobotsTxt('https://lessjs.org');
+  const txt = renderRobotsTxt('https://openelement.org');
   assertEquals(txt.includes('User-agent: *'), true);
   assertEquals(txt.includes('Allow: /'), true);
-  assertEquals(txt.includes('Sitemap: https://lessjs.org/sitemap.xml'), true);
+  assertEquals(txt.includes('Sitemap: https://openelement.org/sitemap.xml'), true);
 });
 
 Deno.test('scanHtmlFiles: finds index.html files recursively', () => {
@@ -89,7 +89,7 @@ Deno.test('generateSitemap: writes sitemap.xml and robots.txt', () => {
   writeFileSync(join(TMP_DIR, 'guide', 'index.html'), '<html></html>');
 
   const generated = generateSitemap(TMP_DIR, {
-    hostname: 'https://lessjs.org',
+    hostname: 'https://openelement.org',
   });
 
   assertEquals(generated.length, 2);
@@ -98,12 +98,12 @@ Deno.test('generateSitemap: writes sitemap.xml and robots.txt', () => {
 
   // Verify sitemap content
   const sitemapContent = Deno.readTextFileSync(join(TMP_DIR, 'sitemap.xml'));
-  assertEquals(sitemapContent.includes('https://lessjs.org/'), true);
-  assertEquals(sitemapContent.includes('https://lessjs.org/guide'), true);
+  assertEquals(sitemapContent.includes('https://openelement.org/'), true);
+  assertEquals(sitemapContent.includes('https://openelement.org/guide'), true);
 
   // Verify robots.txt content
   const robotsContent = Deno.readTextFileSync(join(TMP_DIR, 'robots.txt'));
-  assertEquals(robotsContent.includes('Sitemap: https://lessjs.org/sitemap.xml'), true);
+  assertEquals(robotsContent.includes('Sitemap: https://openelement.org/sitemap.xml'), true);
 
   cleanup();
 });
@@ -117,7 +117,7 @@ Deno.test('generateSitemap: respects exclude option', () => {
   writeFileSync(join(TMP_DIR, 'secret', 'index.html'), '<html></html>');
 
   generateSitemap(TMP_DIR, {
-    hostname: 'https://lessjs.org',
+    hostname: 'https://openelement.org',
     exclude: ['/secret'],
     robotsTxt: false,
   });

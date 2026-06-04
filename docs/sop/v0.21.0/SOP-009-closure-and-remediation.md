@@ -61,7 +61,7 @@ _handleTriggerClick() {
 }
 
 // After (signal-driven)
-import { signal } from '@lessjs/core';
+import { signal } from '@openelement/core';
 #open = signal(false);
 #query = signal('');
 _handleTriggerClick() {
@@ -197,13 +197,13 @@ _handleTriggerClick() {
 
 ### P2.1: Physical Package Split (SOP-007)
 
-**Problem**: compat-check/cem/style-sheet are thin re-export wrappers. Implementation still lives in `@lessjs/core/src/`.
+**Problem**: compat-check/cem/style-sheet are thin re-export wrappers. Implementation still lives in `@openelement/core/src/`.
 
 **Action**:
 
-- [ ] Move `compatibility.ts` implementation from core to `@lessjs/compat-check/src/`
-- [ ] Move `cem-parser.ts` implementation from core to `@lessjs/cem/src/`
-- [ ] Move `style-sheet.ts` implementation from core to `@lessjs/style-sheet/src/`
+- [ ] Move `compatibility.ts` implementation from core to `@openelement/compat-check/src/`
+- [ ] Move `cem-parser.ts` implementation from core to `@openelement/cem/src/`
+- [ ] Move `style-sheet.ts` implementation from core to `@openelement/style-sheet/src/`
 - [ ] Update core's re-export to import from new packages (reverse the dependency direction)
 - [ ] Run full test suite
 

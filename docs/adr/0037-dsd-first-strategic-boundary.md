@@ -66,7 +66,7 @@ v0.20.x is now the Ocean-Island and repository cleanup line:
 
 - `DsdElement` replaces `DsdLitElement` for DSD components.
 - `StyleSheet` handles CSSStyleSheet use across browser and SSR environments.
-- `@lessjs/ui` is DSD-native except the retained Lit island example.
+- `@openelement/ui` is DSD-native except the retained Lit island example.
 - DSD report gates fail on unknown error classes and excess hard errors.
 
 v0.21.x becomes the Reactive DSD line:

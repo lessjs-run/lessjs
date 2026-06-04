@@ -1,4 +1,4 @@
-# @lessjs/ui
+﻿# @openelement/ui
 
 LessJS Web Components package.
 
@@ -8,7 +8,7 @@ to work with LessJS Declarative Shadow DOM output and island upgrade.
 ## Install
 
 ```bash
-deno add jsr:@lessjs/ui
+deno add jsr:@openelement/ui
 ```
 
 ## Components
@@ -28,16 +28,16 @@ deno add jsr:@lessjs/ui
 
 ## Package Manifest
 
-`@lessjs/ui` exports a CEM-compatible `manifest` so LessJS can include these
+`@openelement/ui` exports a CEM-compatible `manifest` so LessJS can include these
 components in package manifest scanning:
 
 ```ts
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 
 export default {
   plugins: [
     lessjs({
-      packageIslands: ['@lessjs/ui'],
+      packageIslands: ['@openelement/ui'],
     }),
   ],
 };
@@ -49,19 +49,19 @@ DSD behavior, and hydration strategy metadata.
 ## Subpath Exports
 
 ```text
-@lessjs/ui/less-button
-@lessjs/ui/less-input
-@lessjs/ui/less-card
-@lessjs/ui/less-code-block
-@lessjs/ui/less-layout
-@lessjs/ui/less-step-card
-@lessjs/ui/less-callout
-@lessjs/ui/less-theme-toggle
-@lessjs/ui/less-hero-ping
-@lessjs/ui/less-dialog
-@lessjs/ui/less-callout
-@lessjs/ui/less-step-card
-@lessjs/ui/open-props-tokens
+@openelement/ui/less-button
+@openelement/ui/less-input
+@openelement/ui/less-card
+@openelement/ui/less-code-block
+@openelement/ui/less-layout
+@openelement/ui/less-step-card
+@openelement/ui/less-callout
+@openelement/ui/less-theme-toggle
+@openelement/ui/less-hero-ping
+@openelement/ui/less-dialog
+@openelement/ui/less-callout
+@openelement/ui/less-step-card
+@openelement/ui/open-props-tokens
 ```
 
 ## License

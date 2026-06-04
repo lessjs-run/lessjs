@@ -154,11 +154,11 @@
 
 ## 7. 代码规范与可维护性
 
-- 命名：整体包命名清晰，`@lessjs/core`、`adapter-vite`、`content`、`i18n` 边界明确；但版本号在 package/docs/roadmap 之间漂移，发布语义不可维护。\
+- 命名：整体包命名清晰，`@openelement/core`、`adapter-vite`、`content`、`i18n` 边界明确；但版本号在 package/docs/roadmap 之间漂移，发布语义不可维护。\
   Naming: package boundaries are clear, but version drift makes release semantics hard to maintain.
 - 注释：很多注释记录修复编号，利于追溯；但 `packages/adapter-vite/src/devtools/index.ts:40/49/191/195` 仍有乱码，降低可信度。\
   Comments: fix-history comments are useful, but corrupted DevTools strings reduce credibility.
-- 结构：核心 runtime 与 Vite adapter 拆分合理；但 `packages/adapter-vite/src/entry-renderer.ts:19` 已承认 adapter-vite/content 循环依赖，仍建议抽出 `@lessjs/build-types` 或把 sitemap 构建责任收回 adapter。\
+- 结构：核心 runtime 与 Vite adapter 拆分合理；但 `packages/adapter-vite/src/entry-renderer.ts:19` 已承认 adapter-vite/content 循环依赖，仍建议抽出 `@openelement/build-types` 或把 sitemap 构建责任收回 adapter。\
   Structure: runtime/build split is sound; the known adapter/content cycle should be resolved by extracting build types or moving sitemap responsibility.
 - 重复代码：`functions/api/term.ts:86-97` 已有健壮 JSON 处理，`www/app/routes/api/term.ts:68-70` 未复用；建议抽出共享 term command handler。\
   Duplication: Cloudflare and Hono terminal APIs diverge; extract shared command parsing/response logic.

@@ -4,8 +4,8 @@
  * Checks:
  * - all package deno.json files under packages/ are readable
  * - all package versions are on one release line
- * - internal jsr:@lessjs/* specifiers point at that release line
- * - source-level @lessjs/* imports are declared in each package deno.json
+ * - internal jsr:@openelement/* specifiers point at that release line
+ * - source-level @openelement/* imports are declared in each package deno.json
  * - no circular package dependencies exist
  * - publish-jsr.yml publishes every package after its dependencies
  */
@@ -56,7 +56,7 @@ async function readPackageInfo(dir: string): Promise<PackageInfo | null> {
 
   const deps: string[] = [];
   for (const key of Object.keys(imports)) {
-    if (key.startsWith('@lessjs/')) deps.push(key);
+    if (key.startsWith('@openelement/')) deps.push(key);
   }
 
   return {
@@ -70,7 +70,7 @@ async function readPackageInfo(dir: string): Promise<PackageInfo | null> {
 }
 
 function normalizeDep(dep: string, self: string): string | null {
-  const prefix = '@lessjs/';
+  const prefix = '@openelement/';
   if (!dep.startsWith(prefix)) return dep;
 
   const rest = dep.slice(prefix.length);
@@ -262,9 +262,9 @@ function collectImportStatements(source: string): string[] {
 function extractLessImports(source: string): string[] {
   const imports = new Set<string>();
   const patterns = [
-    /\bimport\s+(?:type\s+)?(?:[^'"]+?\s+from\s+)?['"](@lessjs\/[^'"]+)['"]/g,
-    /\bexport\s+(?:type\s+)?[^'"]+?\s+from\s+['"](@lessjs\/[^'"]+)['"]/g,
-    /\bimport\s*\(\s*['"](@lessjs\/[^'"]+)['"]\s*\)/g,
+    /\bimport\s+(?:type\s+)?(?:[^'"]+?\s+from\s+)?['"](@openelement\/[^'"]+)['"]/g,
+    /\bexport\s+(?:type\s+)?[^'"]+?\s+from\s+['"](@openelement\/[^'"]+)['"]/g,
+    /\bimport\s*\(\s*['"](@openelement\/[^'"]+)['"]\s*\)/g,
   ];
 
   for (const statement of collectImportStatements(source)) {
@@ -304,7 +304,7 @@ function validateVersionConsistency(packages: PackageInfo[], failures: string[])
 }
 
 function parseInternalJsrSpecifier(value: string): { packageName: string; version: string } | null {
-  const match = value.match(/^jsr:(@lessjs\/[^@/]+)@\^?(\d+\.\d+\.\d+)(?:\/.*)?$/);
+  const match = value.match(/^jsr:(@openelement\/[^@/]+)@\^?(\d+\.\d+\.\d+)(?:\/.*)?$/);
   if (!match) return null;
   return { packageName: match[1], version: match[2] };
 }
@@ -317,7 +317,7 @@ function validateInternalJsrRanges(
   if (!releaseVersion) return;
   for (const pkg of packages) {
     for (const [key, value] of Object.entries(pkg.importValues)) {
-      if (!value.startsWith('jsr:@lessjs/')) continue;
+      if (!value.startsWith('jsr:@openelement/')) continue;
       const parsed = parseInternalJsrSpecifier(value);
       if (!parsed) {
         failures.push(
@@ -401,7 +401,7 @@ async function main(): Promise<void> {
     }
   }
   if (failures.length === importFailuresBefore) {
-    console.log('  PASS: All source-level @lessjs/* imports are declared.');
+    console.log('  PASS: All source-level @openelement/* imports are declared.');
   }
 
   console.log('\n--- Topological Sort ---');

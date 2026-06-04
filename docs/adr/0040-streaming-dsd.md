@@ -115,4 +115,4 @@ chunked` works on HTTP/1.1, HTTP/2, and HTTP/3 without protocol-specific APIs.
 
 - ADR-0033: Renderer Kernel (timing-independent `renderDsd`)
 - ADR-0039: DsdElement + Signals
-- `renderDsd()` in `@lessjs/core`
+- `renderDsd()` in `@openelement/core`

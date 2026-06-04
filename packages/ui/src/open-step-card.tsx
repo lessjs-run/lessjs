@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - LessStepCard Component
+ * @openelement/ui - OpenStepCard Component
  *
  * Step card with numbered indicator and label.
  * Used in Quick Start sections and Getting Started guides.
@@ -16,18 +16,18 @@
  *
  * Usage:
  * ```html
- * <less-step-card step="1" label="Create">
- *   deno run -A jsr:@lessjs/create my-app
- * </less-step-card>
+ * <open-step-card step="1" label="Create">
+ *   deno run -A jsr:@openelement/create my-app
+ * </open-step-card>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc } from './shared/escape.js';
 
-export const tagName = 'less-step-card';
+export const tagName = 'open-step-card';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -80,7 +80,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessStepCard extends DsdElement {
+export class OpenStepCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
@@ -122,9 +122,9 @@ export class LessStepCard extends DsdElement {
   private _esc = _esc;
 }
 
-export default LessStepCard;
+export default OpenStepCard;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessStepCard);
+  customElements.define(tagName, OpenStepCard);
 }

@@ -1,11 +1,11 @@
-ï»¿/**
- * Blog Index Page - Data-driven rendering via @lessjs/generated/blog-data
+/**
+ * Blog Index Page - Data-driven rendering via @openelement/generated/blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { posts } from '@lessjs/generated/blog-data';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { posts } from '@openelement/generated/blog-data';
 
 const routeSheet = new StyleSheet();
 
@@ -86,8 +86,8 @@ export class BlogIndexPage extends DsdElement {
     return (
       
         <div class="container">
-          <h1>åšå®¢</h1>
-          <p class="subtitle">LessJS æ¡†æ¶çš„è®¾è®¡æ€è€ƒã€æ¶æ„å†³ç­–å’Œå‘å±•è·¯çº¿ã€‚</p>
+          <h1>²©¿Í</h1>
+          <p class="subtitle">LessJS ¿ò¼ÜµÄÉè¼ÆË¼¿¼¡¢¼Ü¹¹¾ö²ßºÍ·¢Õ¹Â·Ïß¡£</p>
           <div class="blog-list">
             {posts.filter((p) => p.frontmatter.type !== 'adr').map(
               (post, i) => {
@@ -122,7 +122,7 @@ export class BlogIndexPage extends DsdElement {
         <div class="container">
           <h1>Blog</h1>
           <p class="subtitle">
-            Design thoughts, architecture decisions, and development roadmap for the LessJS framework.
+            Design thoughts, architecture decisions, and development roadmap for the openElement Framework.
           </p>
           <div class="blog-list">
             {posts.filter((p) => p.frontmatter.type !== 'adr').map(

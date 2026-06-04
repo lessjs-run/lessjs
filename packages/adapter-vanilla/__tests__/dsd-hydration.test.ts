@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vanilla - DSD hydration tests
+ * @openelement/adapter-vanilla - DSD hydration tests
  *
  * These tests verify the Mixin pattern and DsdVanillaElement API.
  * DSD hydration behavior requires a real DOM environment (browser)

@@ -449,8 +449,8 @@ deno task test
 
 **通过标准**：
 
-- [ ] `AttrValue`/`ContentValue`/`EventValue` 类型可从 `@lessjs/core` 导入
-- [ ] 所有新增函数可从 `@lessjs/core` 导入
+- [ ] `AttrValue`/`ContentValue`/`EventValue` 类型可从 `@openelement/core` 导入
+- [ ] 所有新增函数可从 `@openelement/core` 导入
 - [ ] 现有测试全通过（无回归）
 - [ ] `deno task typecheck` 无新增错误
 
@@ -468,7 +468,7 @@ deno task test
 | G4   | `repeat([1,2,3], (x) => html`<li>${x}</li>`)` 正确渲染列表         |
 | G5   | `ref()` 在客户端 DOM 挂载后自动设置 `.value`                       |
 | G6   | 模板缓存命中时跳过 `detectBinding()`                               |
-| G7   | 所有新增 API 从 `@lessjs/core` 可导入                              |
+| G7   | 所有新增 API 从 `@openelement/core` 可导入                         |
 | G8   | `deno task typecheck && deno task test` 全通过                     |
 
 ## Risk Assessment

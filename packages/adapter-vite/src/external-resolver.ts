@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite — Deno External Dependency Pre-Resolution (ADR-0047).
+ * @openelement/adapter-vite — Deno External Dependency Pre-Resolution (ADR-0047).
  *
  * Eliminates ESM subpath leaks into Rolldown by having Deno resolve all
  * external package transitive dependencies before the bundler sees them.

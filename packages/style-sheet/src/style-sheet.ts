@@ -1,5 +1,5 @@
-/**
- * @lessjs/core - StyleSheet (cross-environment CSSStyleSheet abstraction).
+﻿/**
+ * @openelement/core - StyleSheet (cross-environment CSSStyleSheet abstraction).
  *
  * In the browser this delegates to the native CSSStyleSheet API at zero
  * cost.  In Deno / Node / Bun (where the CSSOM is not available) it falls

@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0013: 消除 less-runtime barrel、删除 virtual:less-runtime、移除 .less/ 残留'
 date: '2026-05-10'
 type: 'adr'
@@ -17,7 +17,7 @@ hidden: true
 
 1. **D4 修正**：`.less/` 在脚手架 `.gitignore` 模板和仓库 `.gitignore` 中的残留应**直接删除**，不做向后兼容。ADR 0010 已消除所有 `.less/` 写入，新项目不应该知道它曾经存在。
 
-2. **彻底删除 `virtual:less-runtime`**：消费者已全部改为从源文件直接导入后，没有任何代码 import `@lessjs/core/less-runtime`。`virtual:less-runtime` 的 Vite 别名、resolveId、load 钩子全部成为死代码。`registerAdapter()` 和 `renderDSD()` 在 SSR 构建中通过同一个 Vite bundle 天然共享模块作用域，不再需要虚拟模块来保证。
+2. **彻底删除 `virtual:less-runtime`**：消费者已全部改为从源文件直接导入后，没有任何代码 import `@openelement/core/less-runtime`。`virtual:less-runtime` 的 Vite 别名、resolveId、load 钩子全部成为死代码。`registerAdapter()` 和 `renderDSD()` 在 SSR 构建中通过同一个 Vite bundle 天然共享模块作用域，不再需要虚拟模块来保证。
 
 3. **删除 `runtime-shim.ts` 和生成器**：`virtual:less-runtime` 删除后，`runtime-shim.ts` 和 `generate-runtime-shim.ts` 也不再被任何代码引用，一并删除。
 
@@ -33,12 +33,12 @@ generate-runtime-shim.ts (229行脚本)
 
 less-runtime.ts (19行 barrel)
   → re-export from adapter-registry, render-dsd, ssr-handler, logger
-  → 被消费者 import { xxx } from '@lessjs/core/less-runtime'
+  → 被消费者 import { xxx } from '@openelement/core/less-runtime'
 
 virtual:less-runtime (Vite 虚拟模块)
-  → config() 别名: '@lessjs/core/less-runtime' → 'virtual:less-runtime'
+  → config() 别名: '@openelement/core/less-runtime' → 'virtual:less-runtime'
   → resolveId() 解析虚拟 ID
-  → load() SSR 分支: re-export from @lessjs/core
+  → load() SSR 分支: re-export from @openelement/core
   → load() 客户端分支: 返回 createRuntimeShimCode()
 
 build-ssg.ts 中的 less:ssg-virtual-runtime 插件
@@ -48,7 +48,7 @@ build-ssg.ts 中的 less:ssg-virtual-runtime 插件
 ### 当前架构（ADR 0013 后）
 
 ```
-消费者直接 import from '@lessjs/core/render-dsd' 等
+消费者直接 import from '@openelement/core/render-dsd' 等
   → Vite 自然解析，SSR 构建打包进同一个 bundle
   → 模块作用域共享通过 bundle 机制保证，无需虚拟模块
 ```
@@ -65,7 +65,7 @@ build-ssg.ts 中的 less:ssg-virtual-runtime 插件
 
 **`packages/core/src/index.ts`**：
 
-- 删除 `'@lessjs/core/less-runtime': VIRTUAL_RUNTIME_ID` 别名
+- 删除 `'@openelement/core/less-runtime': VIRTUAL_RUNTIME_ID` 别名
 - 删除 `VIRTUAL_RUNTIME_ID` 和 `RESOLVED_RUNTIME_ID` 常量
 - 删除 `resolveId()` 中对 `VIRTUAL_RUNTIME_ID` 的解析
 - 删除 `load()` 中对 `RESOLVED_RUNTIME_ID` 的处理
@@ -91,11 +91,11 @@ build-ssg.ts 中的 less:ssg-virtual-runtime 插件
 
 | 消费者                              | 之前                                                              | 之后                                                                                                                                                    |
 | ----------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `entry-descriptor.ts`               | `from '@lessjs/core/less-runtime'`                                | `from '@lessjs/core/render-dsd'`                                                                                                                        |
-| `entry-renderer.ts` (log+wrap)      | `import { log, wrapInDocument } from '@lessjs/core/less-runtime'` | `import { wrapInDocument } from '@lessjs/core/ssr-handler'` + `import { createLogger } from '@lessjs/core/logger'` + `const log = createLogger('core')` |
-| `entry-renderer.ts` (SSG re-export) | `from "@lessjs/core/less-runtime"`                                | 拆为 `from "@lessjs/core/ssr-handler"` + `from "@lessjs/core/adapter-registry"`                                                                         |
-| `adapter-lit/ssr.ts`                | `from '@lessjs/core/less-runtime'`                                | `from '@lessjs/core/adapter-registry'`                                                                                                                  |
-| `create/cli.ts`                     | `"@lessjs/core/less-runtime": "jsr:..."`                          | `"@lessjs/core/adapter-registry": "jsr:..."`                                                                                                            |
+| `entry-descriptor.ts`               | `from '@openelement/core/less-runtime'`                                | `from '@openelement/core/render-dsd'`                                                                                                                        |
+| `entry-renderer.ts` (log+wrap)      | `import { log, wrapInDocument } from '@openelement/core/less-runtime'` | `import { wrapInDocument } from '@openelement/core/ssr-handler'` + `import { createLogger } from '@openelement/core/logger'` + `const log = createLogger('core')` |
+| `entry-renderer.ts` (SSG re-export) | `from "@openelement/core/less-runtime"`                                | 拆为 `from "@openelement/core/ssr-handler"` + `from "@openelement/core/adapter-registry"`                                                                         |
+| `adapter-lit/ssr.ts`                | `from '@openelement/core/less-runtime'`                                | `from '@openelement/core/adapter-registry'`                                                                                                                  |
+| `create/cli.ts`                     | `"@openelement/core/less-runtime": "jsr:..."`                          | `"@openelement/core/adapter-registry": "jsr:..."`                                                                                                            |
 
 ### 5. types.ts 值导出清理（D2，与 ADR 合并执行）
 
@@ -108,7 +108,7 @@ build-ssg.ts 中的 less:ssg-virtual-runtime 插件
 
 - 消除 4 个文件（`less-runtime.ts`、`runtime-shim.ts`、`generate-runtime-shim.ts`、`generated/client-shim.js`）
 - 消除 `virtual:less-runtime` 整套机制（Vite 别名 + resolveId + load + SSG 插件）
-- 消除 `@lessjs/core/less-runtime` 这个模糊的 import 路径
+- 消除 `@openelement/core/less-runtime` 这个模糊的 import 路径
 - `.less/` 完全从项目记忆中抹除
 - types.ts 回归纯类型定义的职责
 - `index.ts` 不再需要 `readFileSync`、`dirname` 等 Node API import

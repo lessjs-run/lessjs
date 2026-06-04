@@ -107,16 +107,16 @@ TypeScript 可以检查 `DsdElement` 类的方法和属性类型，但 `html`...
 
 ```json
 // deno.json
-{ "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "@lessjs/core" } }
+{ "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "@openelement/core" } }
 
 // vite.config.ts
-{ "esbuild": { "jsx": "automatic", "jsxImportSource": "@lessjs/core" } }
+{ "esbuild": { "jsx": "automatic", "jsxImportSource": "@openelement/core" } }
 ```
 
 **jsx-runtime 最小接口**：
 
 ```typescript
-// @lessjs/core/jsx-runtime.ts
+// @openelement/core/jsx-runtime.ts
 export function jsx(tag, props, key?): VNode; // 0-1 child
 export function jsxs(tag, props, key?): VNode; // ≥2 children
 export function jsxDEV(tag, props, key?, source, self): VNode; // dev mode
@@ -208,7 +208,7 @@ function createPropSignal<T>(initial: T) {
 **兜底工具**：
 
 ```typescript
-// @lessjs/core — 显式解包工具（零开销，编译后内联）
+// @openelement/core — 显式解包工具（零开销，编译后内联）
 export function unwrap<T>(sig: Signal<T> | T): T {
   return sig instanceof Signal ? sig.value : sig;
 }
@@ -288,7 +288,7 @@ class MyComp extends DsdElement {
 `static props` 声明存在类型推导问题：TypeScript 默认推断 `count: Number` 的类型为 `NumberConstructor` 而非 `number`。需要映射类型解决：
 
 ```typescript
-// @lessjs/core — 类型推导工具
+// @openelement/core — 类型推导工具
 
 // Prop 声明类型
 type PropDecl<T = any> =
@@ -330,7 +330,7 @@ abstract class DsdElement<P extends Record<string, PropDecl> = {}> extends HTMLE
 **版本**：
 
 - **v0.26**: `html` tagged template 标记为 `@deprecated`，文档和示例优先展示 JSX。所有内部组件迁移到 JSX
-- **v0.28**: `html` tagged template 从 `@lessjs/core` 主入口移除，移入 `@lessjs/core/html-legacy` 子路径
+- **v0.28**: `html` tagged template 从 `@openelement/core` 主入口移除，移入 `@openelement/core/html-legacy` 子路径
 - **v1.0**: 完全移除 `template.ts`、`html-escape.ts` 中的 template 专用逻辑
 
 ### 7. 不做的
@@ -414,7 +414,7 @@ abstract class DsdElement<P extends Record<string, PropDecl> = {}> extends HTMLE
 ### Before (html tagged template + @prop decorator)
 
 ```typescript
-import { classMap, DsdElement, html, signal, when } from '@lessjs/core';
+import { classMap, DsdElement, html, signal, when } from '@openelement/core';
 
 class MyCard extends DsdElement {
   @prop()
@@ -447,8 +447,8 @@ class MyCard extends DsdElement {
 ### After (JSX + static props)
 
 ```tsx
-/** @jsxImportSource @lessjs/core */
-import { DsdElement } from '@lessjs/core';
+/** @jsxImportSource @openelement/core */
+import { DsdElement } from '@openelement/core';
 
 class MyCard extends DsdElement {
   static props = {

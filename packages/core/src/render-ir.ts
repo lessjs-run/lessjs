@@ -76,7 +76,7 @@ export function dsdHostNode(params: Omit<Extract<RenderNode, { kind: 'dsd-host' 
   return { kind: 'dsd-host', ...params } satisfies RenderNode;
 }
 
-// ─── camelCase → kebab-case ─────────────────────────────────────
+// ─── camelCase �?kebab-case ─────────────────────────────────────
 
 export function camelToKebab(str: string): string {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -188,7 +188,9 @@ export async function renderToNode(
   const { tag, props, children } = node;
 
   // Fragment
-  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
+  if (
+    tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(openelement.fragment)')
+  ) {
     const parts: RenderNode[] = [];
     for (const child of children) parts.push(await renderToNode(child, eventContext));
     return fragmentNode(parts);
@@ -225,7 +227,7 @@ export async function renderToNode(
       return await renderToNode(callComponent(tag, props, children), eventContext);
     } catch (err) {
       console.error(
-        `[LessJS/SSR] render failed for <${String(tag)}>:` +
+        `[openElement/SSR] render failed for <${String(tag)}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
       return fragmentNode([]);
@@ -245,7 +247,7 @@ export async function renderToNode(
     for (const child of children) childNodes.push(await renderToNode(child, eventContext));
   }
 
-  // Custom Element → DSD
+  // Custom Element �?DSD
   if (
     typeof customElements !== 'undefined' &&
     customElements.get &&
@@ -260,7 +262,7 @@ export async function renderToNode(
       return trustedHtmlNode(dsdResult.html);
     } catch (err) {
       console.error(
-        `[LessJS/SSR] renderDsd failed for registered CE <${tagName}>:` +
+        `[openElement/SSR] renderDsd failed for registered CE <${tagName}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
     }

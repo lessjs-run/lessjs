@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Route scanner
+ * @openelement/core - Route scanner
  * Scans the routes directory and generates a route map.
  * Produces the virtual:routes module.
  *
@@ -57,9 +57,9 @@ import type {
   LessPackageManifest,
   RouteEntry,
   SpecialFileType,
-} from '@lessjs/core';
-import { LessError } from '@lessjs/core/errors';
-import { createLogger } from '@lessjs/core/logger';
+} from '@openelement/core';
+import { LessError } from '@openelement/core/errors';
+import { createLogger } from '@openelement/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
 import * as ts from 'typescript';
@@ -569,11 +569,11 @@ function staticLessError(message: string): LessError {
  *
  * Example package export:
  * ```ts
- * // @lessjs/ui/index.ts
+ * // @openelement/ui/index.ts
  * export { manifest } from './manifest.js';
  * ```
  *
- * @param packageNames - List of package names to scan (e.g., ['@lessjs/ui'])
+ * @param packageNames - List of package names to scan (e.g., ['@openelement/ui'])
  * @returns Array of LessPackageManifest
  */
 export async function scanPackageManifests(
@@ -739,8 +739,8 @@ export async function detectAndClassifyCemPackages(
   const cemResults = await scanCemManifests(nodeModulesDir);
   if (cemResults.length === 0) return [];
 
-  const { parseCem } = await import('@lessjs/cem');
-  const { classifyCemManifest } = await import('@lessjs/compat-check');
+  const { parseCem } = await import('@openelement/cem');
+  const { classifyCemManifest } = await import('@openelement/compat-check');
 
   const allClassifications: CompatibilityClassification[] = [];
 

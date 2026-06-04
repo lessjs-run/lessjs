@@ -16,9 +16,9 @@
 | #  | Challenge                                                          | Approach                                                                                                     |
 | -- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
 | C1 | Consumer `deno.json` exposes 18 framework internals                | Slim to 3 public imports; `adapter-vite` pre-resolution injects sidecar import-map                           |
-| C2 | `@lessjs/core` owns build-only types causing circular deps         | Move `build-types.ts` + `virtual-ids.ts` ownership to `adapter-vite` (G10 was a tactical fix, now strategic) |
-| C3 | `style-sheet` is byte-identical in core and style-sheet packages   | Make `@lessjs/style-sheet` canonical; core re-exports                                                        |
-| C4 | UI components duplicate `_esc`/`_escAttr` 5 times                  | Extract shared `html-escape.ts` into `@lessjs/ui/src/shared/`                                                |
+| C2 | `@openelement/core` owns build-only types causing circular deps    | Move `build-types.ts` + `virtual-ids.ts` ownership to `adapter-vite` (G10 was a tactical fix, now strategic) |
+| C3 | `style-sheet` is byte-identical in core and style-sheet packages   | Make `@openelement/style-sheet` canonical; core re-exports                                                   |
+| C4 | UI components duplicate `_esc`/`_escAttr` 5 times                  | Extract shared `html-escape.ts` into `@openelement/ui/src/shared/`                                           |
 | C5 | `adapter-vite/src/index.ts` is 843 lines of mixed concerns         | Split into 5 focused modules with explicit responsibilities                                                  |
 | C6 | Signals engine swap risk (TC39 polyfill → alien-signals)           | Facade pattern: define public contract, engine adapter behind it, feature-flag gated                         |
 | C7 | CI coverage artifacts exist but aren't persisted                   | Upload coverage as artifact; add Playwright `trace: 'retain-on-failure'`                                     |
@@ -26,7 +26,7 @@
 
 #### 1.2 Architecture Patterns
 
-- **Facade Pattern**: `@lessjs/signals` public API (`signal`/`computed`/`effect`/`.value`/`subscribe`) remains stable regardless of engine (TC39 polyfill ↔ alien-signals)
+- **Facade Pattern**: `@openelement/signals` public API (`signal`/`computed`/`effect`/`.value`/`subscribe`) remains stable regardless of engine (TC39 polyfill ↔ alien-signals)
 - **Module Extraction**: `adapter-vite/src/index.ts` becomes orchestration-only; implementation lives in focused modules
 - **Canonical Ownership**: One implementation per concept; other packages re-export or depend
 - **Pre-resolution Bridge**: `adapter-vite` owns external dependency resolution; consumers never see `parse5`/`entities`/`hono` in their import map
@@ -56,7 +56,7 @@ packages/adapter-vite/src/external-resolver.ts  # Pre-resolution bridge for pars
 # SOP-002: Package Boundary Repair
 packages/core/src/build-types.ts                # MOVED → adapter-vite
 packages/core/src/virtual-ids.ts                # Ownership review; keep or move
-packages/core/src/style-sheet.ts                # Re-export from @lessjs/style-sheet
+packages/core/src/style-sheet.ts                # Re-export from @openelement/style-sheet
 packages/core/src/index.ts                      # Update exports (remove build-types, update style-sheet)
 packages/adapter-vite/src/virtual-ids.ts        # Own canonical definitions (not re-export)
 packages/adapter-vite/src/build-context.ts      # Import build-types from local, not core
@@ -248,8 +248,8 @@ classDiagram
     note for LessBlogOptions "OWNER: adapter-vite\n(moved from core)"
     note for LessPluginMeta "OWNER: adapter-vite\n(moved from core)"
     note for VirtualIds "OWNER: adapter-vite\ncanonical definitions"
-    note for StyleSheetLike "OWNER: @lessjs/style-sheet\ncanonical impl"
-    note for HtmlEscape "OWNER: @lessjs/ui/src/shared/\nfor UI component reuse"
+    note for StyleSheetLike "OWNER: @openelement/style-sheet\ncanonical impl"
+    note for HtmlEscape "OWNER: @openelement/ui/src/shared/\nfor UI component reuse"
 ```
 
 ---
@@ -268,9 +268,9 @@ sequenceDiagram
     participant Vite as adapter-vite
     participant Resolver as external-resolver.ts
 
-    User->>CLI: deno run -A jsr:@lessjs/create my-app
+    User->>CLI: deno run -A jsr:@openelement/create my-app
     CLI->>TPL: buildTemplates(v)
-    Note over TPL: deno.json now has ONLY:<br/>@lessjs/app, @lessjs/core, @lessjs/ui
+    Note over TPL: deno.json now has ONLY:<br/>@openelement/app, @openelement/core, @openelement/ui
     CLI->>FS: write deno.json + vite.config.ts + routes/islands
     FS-->>CLI: done
 
@@ -287,19 +287,19 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant Core as @lessjs/core
-    participant SS as @lessjs/style-sheet
+    participant Core as @openelement/core
+    participant SS as @openelement/style-sheet
     participant DSD as renderDsd()
-    participant UI as @lessjs/ui components
+    participant UI as @openelement/ui components
 
     Note over Core,SS: Core re-exports from style-sheet
     
-    DSD->>Core: import { StyleSheet } from '@lessjs/core'
+    DSD->>Core: import { StyleSheet } from '@openelement/core'
     Core->>SS: re-export { StyleSheet, StyleSheetLike, StyleSheetRule }
     SS-->>Core: canonical impl (ShimStyleSheet | native CSSStyleSheet)
     Core-->>DSD: StyleSheet constructor
     
-    UI->>Core: import { StyleSheet } from '@lessjs/core'
+    UI->>Core: import { StyleSheet } from '@openelement/core'
     Note over UI: Same resolution path<br/>No duplicate implementation
 ```
 
@@ -336,7 +336,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant User as user code
-    participant Facade as @lessjs/signals
+    participant Facade as @openelement/signals
     participant Engine as SignalEngine
     participant TC39 as Tc39Engine
     participant Alien as AlienEngine (exp.)
@@ -366,7 +366,7 @@ sequenceDiagram
 | #  | Question                                                                                                                                                | Assumption                                                                                                                                                                                                                                                                                            |
 | -- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Q1 | `build-types.ts` / `virtual-ids.ts` were moved _to_ core in G10 to break circular deps. Moving back to adapter-vite reintroduces the circular dep risk. | The circular dep was `content → adapter-vite/build-context`. If content/i18n import `LessBlogOptions` etc. from `adapter-vite/build-types` (not `build-context`), there's no Vite Plugin import = no circular dep. Validate this.                                                                     |
-| Q2 | `@lessjs/signals/framework` import path must be preserved per SOP-004. Does `alien-signals` experiment expose its own `framework` subpath?              | No. Alien engine is an internal adapter. The `framework` subpath continues to export `signal`/`computed`/`effect` regardless of which engine is active underneath.                                                                                                                                    |
+| Q2 | `@openelement/signals/framework` import path must be preserved per SOP-004. Does `alien-signals` experiment expose its own `framework` subpath?         | No. Alien engine is an internal adapter. The `framework` subpath continues to export `signal`/`computed`/`effect` regardless of which engine is active underneath.                                                                                                                                    |
 | Q3 | Should `lint.yml` be merged into `sop-gate.yml` or should `sop-gate.yml` call `lint.yml` via `workflow_call`?                                           | Prefer `workflow_call` — keeps `lint.yml` independently triggerable for quick PR feedback, while `sop-gate.yml` is the comprehensive release gate.                                                                                                                                                    |
 | Q4 | Does `virtual-ids.ts` stay in core or move to adapter-vite?                                                                                             | The constants are consumed by content, i18n, and adapter-vite. Moving to adapter-vite means content/i18n import from adapter-vite. If this creates a circular dep risk, keep in core but add a comment marking them as "shared build constants owned by adapter-vite, hosted in core for dep safety." |
 | Q5 | How deep should the alien-signals experiment go? Full engine replacement or proof-of-concept?                                                           | POC only: build a branch-local adapter, run existing signal tests against it, measure size/perf. Do NOT merge to main unless all tests pass and performance is measurably better.                                                                                                                     |
@@ -421,7 +421,7 @@ sequenceDiagram
 - **Priority**: P0
 - **Dependencies**: T01
 - **Source Files**:
-  - `packages/create/cli.ts` — template `deno.json`: 18 imports → 3 imports (`@lessjs/app`, `@lessjs/core`, `@lessjs/ui`)
+  - `packages/create/cli.ts` — template `deno.json`: 18 imports → 3 imports (`@openelement/app`, `@openelement/core`, `@openelement/ui`)
   - `packages/create/__tests__/cli.test.ts` — update assertions for new deno.json shape
   - `packages/app/src/index.ts` — add orchestration options so adapter-vite can inject sidecar import-map
   - `packages/adapter-vite/src/external-resolver.ts` — pre-resolution bridge: resolve parse5/entities/hono without consumer deno.json entries
@@ -430,9 +430,9 @@ sequenceDiagram
 **Description**:
 
 1. **Inventory current imports** in `create/cli.ts` `buildTemplates()`. Classify each as: direct-user, framework-public, framework-internal, build-tool, transitive-SSR.
-2. **Remove from template** `deno.json`: `vite`, `@deno/vite-plugin`, `hono`, `parse5`, `entities`, `entities/`, `@lessjs/adapter-lit`, `@lessjs/adapter-vite`, `@lessjs/content`, `@lessjs/core/navigation`, `@lessjs/i18n`, `@lessjs/signals`, `@lessjs/signals/framework`, `@lessjs/ui/open-props-tokens`, `@lessjs/ui/`.
-3. **Keep only**: `@lessjs/app`, `@lessjs/core`, `@lessjs/ui`.
-4. **Bridge in adapter-vite**: The `external-resolver.ts` must supply parse5/entities/hono resolution via ADR-0047 pre-resolution. `@lessjs/app` exposes orchestration options so adapter-vite can inject sidecar import-map data without requiring consumer to write it.
+2. **Remove from template** `deno.json`: `vite`, `@deno/vite-plugin`, `hono`, `parse5`, `entities`, `entities/`, `@openelement/adapter-lit`, `@openelement/adapter-vite`, `@openelement/content`, `@openelement/core/navigation`, `@openelement/i18n`, `@openelement/signals`, `@openelement/signals/framework`, `@openelement/ui/open-props-tokens`, `@openelement/ui/`.
+3. **Keep only**: `@openelement/app`, `@openelement/core`, `@openelement/ui`.
+4. **Bridge in adapter-vite**: The `external-resolver.ts` must supply parse5/entities/hono resolution via ADR-0047 pre-resolution. `@openelement/app` exposes orchestration options so adapter-vite can inject sidecar import-map data without requiring consumer to write it.
 5. **Update tests**: `cli.test.ts` must verify generated `deno.json` has exactly 3 user-facing imports.
 6. **Verification**: Generate project → `deno task build` → `deno task dev` → Playwright smoke test.
 
@@ -448,10 +448,10 @@ sequenceDiagram
   - `packages/core/src/virtual-ids.ts` — ownership review; keep in core with note or move
   - `packages/adapter-vite/src/virtual-ids.ts` — own canonical definitions if moved
   - `packages/adapter-vite/src/build-context.ts` — update imports to local `./build-types.js`
-  - `packages/content/src/*.ts` — update imports from `@lessjs/core/build-types` → `@lessjs/adapter-vite/build-types`
+  - `packages/content/src/*.ts` — update imports from `@openelement/core/build-types` → `@openelement/adapter-vite/build-types`
   - `packages/i18n/src/*.ts` — same import update
   - `packages/core/src/index.ts` — remove `build-types` from public exports
-  - `packages/core/src/style-sheet.ts` — replace with re-export from `@lessjs/style-sheet`
+  - `packages/core/src/style-sheet.ts` — replace with re-export from `@openelement/style-sheet`
   - `packages/style-sheet/src/style-sheet.ts` — stay canonical (already identical)
   - `packages/style-sheet/src/index.ts` — ensure clean public API
   - `packages/ui/src/shared/html-escape.ts` — **NEW**: shared `_esc()` / `_escAttr()` functions
@@ -467,8 +467,8 @@ sequenceDiagram
 
 1. **Move build-types.ts to adapter-vite**: Copy file, update all imports in content/i18n. Verify no circular dep via `deno info`. If circular dep risk exists, keep in core but add `@deprecated` comment marking adapter-vite as owner.
 2. **virtual-ids.ts ownership**: Constants are consumed by content, i18n, adapter-vite. If moving to adapter-vite creates circular dep with content/i18n, keep in core with clear ownership note.
-3. **StyleSheet canonical**: `@lessjs/style-sheet` is the canonical implementation. Core's `style-sheet.ts` becomes a re-export. Verify `DsdElement` and `renderDsd()` still typecheck.
-4. **UI _esc helpers**: Extract to `packages/ui/src/shared/html-escape.ts`. All 6 UI components import from shared. Functions: `escHtml(text: string): string` and `escAttr(text: string): string` (thin wrappers around `@lessjs/core` `escapeHtml`/`escapeAttr`).
+3. **StyleSheet canonical**: `@openelement/style-sheet` is the canonical implementation. Core's `style-sheet.ts` becomes a re-export. Verify `DsdElement` and `renderDsd()` still typecheck.
+4. **UI _esc helpers**: Extract to `packages/ui/src/shared/html-escape.ts`. All 6 UI components import from shared. Functions: `escHtml(text: string): string` and `escAttr(text: string): string` (thin wrappers around `@openelement/core` `escapeHtml`/`escapeAttr`).
 5. **Hub scanner null! fix**: Replace `records.push(null!)` with typed partial object construction, then fill in the remaining fields. Avoid type assertions.
 
 ---
@@ -538,14 +538,14 @@ sequenceDiagram
 # Cross-cutting Rules for Engineer (齐活林)
 
 ## Import Rules
-- @lessjs/core public API: runtime-only (DsdElement, renderDsd, escapeHtml, StyleSheet re-export)
-- @lessjs/adapter-vite: build-only, never imported by runtime code
-- @lessjs/signals public paths: "@lessjs/signals" and "@lessjs/signals/framework" — MUST NOT be removed
+- @openelement/core public API: runtime-only (DsdElement, renderDsd, escapeHtml, StyleSheet re-export)
+- @openelement/adapter-vite: build-only, never imported by runtime code
+- @openelement/signals public paths: "@openelement/signals" and "@openelement/signals/framework" — MUST NOT be removed
 - parse5, entities, hono: NEVER appear in consumer deno.json
 
 ## StyleSheet Canonical
-- @lessjs/style-sheet OWNS the StyleSheet implementation
-- @lessjs/core RE-EXPORTS StyleSheet from style-sheet
+- @openelement/style-sheet OWNS the StyleSheet implementation
+- @openelement/core RE-EXPORTS StyleSheet from style-sheet
 - No package may have its own copy of the StyleSheet code
 
 ## CI Artifacts

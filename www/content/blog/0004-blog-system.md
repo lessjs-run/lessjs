@@ -1,5 +1,5 @@
----
-title: '@lessjs/blog - Standalone Blog Package'
+﻿---
+title: '@openelement/blog - Standalone Blog Package'
 date: '2026-05-01'
 type: 'adr'
 tags: ['architecture', 'decision']
@@ -9,7 +9,7 @@ hidden: true
 
 ## Status
 
-**SUPERSEDED** — Blog functionality was merged into `@lessjs/content` (Blog + Nav + Sitemap unified plugin) instead of shipping as a standalone `@lessjs/blog` package. See `packages/content/` for the implementation.
+**SUPERSEDED** — Blog functionality was merged into `@openelement/content` (Blog + Nav + Sitemap unified plugin) instead of shipping as a standalone `@openelement/blog` package. See `packages/content/` for the implementation.
 
 ## Context
 
@@ -35,7 +35,7 @@ plugin, then gain `.less` compiler templates when the compiler exists:
 
 ## Proposal
 
-### `@lessjs/blog` package
+### `@openelement/blog` package
 
 A Vite plugin that:
 
@@ -48,8 +48,8 @@ A Vite plugin that:
 
 ```ts
 // vite.config.ts
-import { less } from '@lessjs/core';
-import { lessBlog } from '@lessjs/blog';
+import { less } from '@openelement/core';
+import { lessBlog } from '@openelement/blog';
 
 export default defineConfig({
   plugins: [
@@ -110,7 +110,7 @@ vite.config.ts
 With the `.less` compiler:
 
 ```less
-<!-- blog post template (built into @lessjs/blog) -->
+<!-- blog post template (built into @openelement/blog) -->
 <template>
   <article>
     <h1>{post.title}</h1>
@@ -149,7 +149,7 @@ The `.md` parser should support:
 ## Implementation order
 
 1. v0.8.0 stabilizes core API (render-dsd split, component unification)
-2. `@lessjs/blog` development starts after v0.8.0 — SSG plugin form only
+2. `@openelement/blog` development starts after v0.8.0 — SSG plugin form only
 3. Dogfood on LessJS docs site during v0.9.0 phase
 4. `.less` compiler support is added when v0.11.0 alpha is available
 5. LessJS docs site eats its own dogfood and replaces the current hardcoded blog

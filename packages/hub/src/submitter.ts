@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Submission Bundler + GitHub PR Pipeline
+ * @openelement/hub - Submission Bundler + GitHub PR Pipeline
  *
  * v0.19.0: Bundle validation artifacts into submission format,
  * optionally create GitHub Pull Requests for Hub registration.

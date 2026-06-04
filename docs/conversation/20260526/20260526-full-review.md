@@ -1,4 +1,4 @@
-# LessJS v0.21.16 全面评审报告
+﻿# LessJS v0.21.16 全面评审报告
 
 > **日期**: 2026-05-26
 > **范围**: 16 packages, 315 .ts files, 67K lines, 24 ADRs, 9 CI workflows
@@ -106,7 +106,7 @@ native/third-party 分层、双阈值（12/0）、环境变量覆盖、known err
 
 ## Architect 三大改进
 
-1. **P0：完成 style-sheet 提取** — 消除重复代码，让 `@lessjs/style-sheet` 有实际引用
+1. **P0：完成 style-sheet 提取** — 消除重复代码，让 `@openelement/style-sheet` 有实际引用
 2. **P1：移出 build-types/virtual-ids** — 恢复到正确的包边界
 3. **P2：adapter stub 数据驱动化** — 替换硬编码 OPTIONAL_PACKAGE_STUBS
 

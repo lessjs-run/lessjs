@@ -5,7 +5,7 @@ label: 'Package Compatibility'
 order: 10
 ---
 
-<less-layout
+<open-layout
         nav-items='$'
         header-nav='$'
         current-path="/$/architecture/package-compatibility"
@@ -68,10 +68,10 @@ order: 10
             在 Vite 插件的 <code>buildStart()</code> 阶段，LessJS 会自动扫描
             <code>node_modules</code> 下的所有包，寻找 <code>custom-elements.json</code>：
           </p>
-          <less-code-block><pre><code>// 伪代码 - 实际实现在 route-scanner.ts
+          <open-code-block><pre><code>// 伪代码 - 实际实现在 route-scanner.ts
 
 for (const pkg of node_modules)
-}</code></pre></less-code-block>
+}</code></pre></open-code-block>
 
           <h3>特点</h3>
           <ul>
@@ -85,11 +85,11 @@ for (const pkg of node_modules)
           <p>
             构建完成后，<code>dsd-report.json</code> 中新增了 <code>cemCompatibility</code> 部分：
           </p>
-          <less-code-block><pre><code>
+          <open-code-block><pre><code>
     ]
 
 }
-}</code></pre></less-code-block>
+}</code></pre></open-code-block>
 
 <p>
 每条记录包含包名、兼容等级、原因说明和组件数量，方便调试和审计。

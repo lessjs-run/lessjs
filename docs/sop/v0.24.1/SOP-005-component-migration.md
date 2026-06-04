@@ -7,7 +7,7 @@
 
 ## Objective
 
-将 `@lessjs/ui` 和其他内部组件从 `html` tagged template + `@prop()` 迁移到 JSX + `static props`。
+将 `@openelement/ui` 和其他内部组件从 `html` tagged template + `@prop()` 迁移到 JSX + `static props`。
 
 ## Scope
 
@@ -23,7 +23,7 @@
 
 ```bash
 # 找到所有使用 html tagged template 的组件
-grep -rn "from '@lessjs/core'" packages/ui/src/ --include="*.ts" | grep "html"
+grep -rn "from '@openelement/core'" packages/ui/src/ --include="*.ts" | grep "html"
 # 找到所有使用 @prop() 的组件
 grep -rn "@prop()" packages/ui/src/ --include="*.ts"
 ```
@@ -102,12 +102,12 @@ static props = {
 
 移除不再需要的 import：
 
-- `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` 从 `@lessjs/core`
-- `@prop` 从 `@lessjs/core`
+- `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` 从 `@openelement/core`
+- `@prop` 从 `@openelement/core`
 
 添加需要的 import：
 
-- 组件文件顶部添加 `/** @jsxImportSource @lessjs/core */`（如果未全局配置）
+- 组件文件顶部添加 `/** @jsxImportSource @openelement/core */`（如果未全局配置）
 
 ### Step 5: 删除 template.ts 中的指令实现
 

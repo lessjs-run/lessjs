@@ -96,7 +96,7 @@ deno task lint
 ### Step 8: 发布检查
 
 - [ ] `packages/core/deno.json` 新增 `./jsx-runtime` 子路径导出
-- [ ] `deno.json` 根配置 `jsx: "react-jsx"`, `jsxImportSource: "@lessjs/core"`
+- [ ] `deno.json` 根配置 `jsx: "react-jsx"`, `jsxImportSource: "@openelement/core"`
 - [ ] CHANGELOG 更新
 - [ ] ADR-0057 状态更新为 IMPLEMENTED
 - [ ] 版本号 bump

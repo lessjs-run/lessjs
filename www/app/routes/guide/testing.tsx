@@ -1,8 +1,8 @@
-﻿export const meta = { section: 'Production', label: 'Testing', order: 40 };
+export const meta = { section: 'Production', label: 'Testing', order: 40 };
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/core';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
+import { DsdElement } from '@openelement/core';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-code-block';
 
 export class TestingPage extends DsdElement {
   static override styles = [openPropsTokenSheet, pageStyles];
@@ -64,9 +64,9 @@ export class TestingPage extends DsdElement {
             generated HTML. This catches route scanning, SSR, client island, and SSG integration
             issues.
           </p>
-          <less-code-block>
+          <open-code-block>
             <pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run</code></pre>
-          </less-code-block>
+          </open-code-block>
           <h2>Browser Testing</h2>
           <p>
             Use browser tests when behavior depends on Custom Element upgrade, IntersectionObserver,

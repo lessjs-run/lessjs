@@ -1,5 +1,5 @@
-/**
- * @lessjs/signals - Alien Signals Engine Adapter.
+﻿/**
+ * @openelement/signals - Alien Signals Engine Adapter.
  *
  * v0.22 (SOP-004): Default engine using alien-signals.
  * v0.22.1: TC39 polyfill removed. alien-signals is the only engine.
@@ -11,7 +11,7 @@
  * - Alien is the ONLY engine.
  * - alien-signals is a hard dependency.
  *
- * @module @lessjs/signals/alien-engine
+ * @module @openelement/signals/alien-engine
  */
 
 import { computed as _c, effect as _e, signal as _s } from 'alien-signals';

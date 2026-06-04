@@ -28,27 +28,27 @@ tools and release gates
   arch:check, graph:check, docs gates, publish dry-run, consumer smoke
 
 product facades
-  @lessjs/app, @lessjs/runtime
+  @openelement/app, @openelement/runtime
 
 build adapters
-  @lessjs/adapter-vite, SSG phases, generated entry wiring
+  @openelement/adapter-vite, SSG phases, generated entry wiring
 
 framework adapters
-  @lessjs/adapter-lit, @lessjs/adapter-react, @lessjs/adapter-vanilla
+  @openelement/adapter-lit, @openelement/adapter-react, @openelement/adapter-vanilla
 
 feature packages
-  @lessjs/content, @lessjs/i18n, @lessjs/hub, @lessjs/ui,
-  @lessjs/cem, @lessjs/compat-check
+  @openelement/content, @openelement/i18n, @openelement/hub, @openelement/ui,
+  @openelement/cem, @openelement/compat-check
 
 implementation packages
-  @lessjs/signals, @lessjs/style-sheet, @lessjs/router, @lessjs/rpc
+  @openelement/signals, @openelement/style-sheet, @openelement/router, @openelement/rpc
 
 runtime kernel
-  @lessjs/core: DsdElement, JSX runtime, renderDsd, renderer IR,
+  @openelement/core: DsdElement, JSX runtime, renderDsd, renderer IR,
   islands, static props, error boundary, signal-like utilities
 
 protocols
-  @lessjs/protocols: build contracts and future schema primitives
+  @openelement/protocols: build contracts and future schema primitives
 ```
 
 Dependencies must point downward or sideways through explicit protocols. A
@@ -57,34 +57,34 @@ kernel must not import a concrete build adapter.
 
 ## Current Packages (19 total)
 
-| Package                   | Role                                | Key fact                          |
-| ------------------------- | ----------------------------------- | --------------------------------- |
-| `@lessjs/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime       |
-| `@lessjs/protocols`       | shared build contracts              | zero-dependency pure types        |
-| `@lessjs/signals`         | signal facade over `alien-signals`  | owns public signal contract       |
-| `@lessjs/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim   |
-| `@lessjs/router`          | client and route helpers            | URLPattern-based routing          |
-| `@lessjs/rpc`             | RPC primitives                      | zero-dependency utility           |
-| `@lessjs/runtime`         | authoring facade                    | single-import convenience         |
-| `@lessjs/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline               |
-| `@lessjs/app`             | configuration facade                | single Vite config entry          |
-| `@lessjs/content`         | content feature                     | markdown, MDX, nav, blog, sitemap |
-| `@lessjs/i18n`            | i18n feature                        | locale data + static path helpers |
-| `@lessjs/ui`              | DSD component library               | JSX components                    |
-| `@lessjs/cem`             | CEM parser                          | CEM shape extraction              |
-| `@lessjs/compat-check`    | compatibility classifier            | admission decisions               |
-| `@lessjs/hub`             | registry + trust evidence           | Playwright real-browser snapshots |
-| `@lessjs/create`          | project scaffolding                 | generated project contract        |
-| `@lessjs/adapter-lit`     | Lit interop                         | adapter-boundary conversion       |
-| `@lessjs/adapter-react`   | React interop                       | adapter-boundary conversion       |
-| `@lessjs/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction |
+| Package                        | Role                                | Key fact                          |
+| ------------------------------ | ----------------------------------- | --------------------------------- |
+| `@openelement/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime       |
+| `@openelement/protocols`       | shared build contracts              | zero-dependency pure types        |
+| `@openelement/signals`         | signal facade over `alien-signals`  | owns public signal contract       |
+| `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim   |
+| `@openelement/router`          | client and route helpers            | URLPattern-based routing          |
+| `@openelement/rpc`             | RPC primitives                      | zero-dependency utility           |
+| `@openelement/runtime`         | authoring facade                    | single-import convenience         |
+| `@openelement/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline               |
+| `@openelement/app`             | configuration facade                | single Vite config entry          |
+| `@openelement/content`         | content feature                     | markdown, MDX, nav, blog, sitemap |
+| `@openelement/i18n`            | i18n feature                        | locale data + static path helpers |
+| `@openelement/ui`              | DSD component library               | JSX components                    |
+| `@openelement/cem`             | CEM parser                          | CEM shape extraction              |
+| `@openelement/compat-check`    | compatibility classifier            | admission decisions               |
+| `@openelement/hub`             | registry + trust evidence           | Playwright real-browser snapshots |
+| `@openelement/create`          | project scaffolding                 | generated project contract        |
+| `@openelement/adapter-lit`     | Lit interop                         | adapter-boundary conversion       |
+| `@openelement/adapter-react`   | React interop                       | adapter-boundary conversion       |
+| `@openelement/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction |
 
 ## Public Component Contract
 
 The only LessJS component render contract is:
 
 ```tsx
-import { DsdElement, type VNode } from '@lessjs/core';
+import { DsdElement, type VNode } from '@openelement/core';
 
 class MyComponent extends DsdElement {
   render(): VNode | null {
@@ -133,12 +133,12 @@ logic.
 
 | Concept                             | Canonical owner                            |
 | ----------------------------------- | ------------------------------------------ |
-| component render contract           | `@lessjs/core`                             |
-| HTML and attribute escaping         | `@lessjs/core`                             |
-| compatibility classification shape  | `@lessjs/core/types`                       |
+| component render contract           | `@openelement/core`                        |
+| HTML and attribute escaping         | `@openelement/core`                        |
+| compatibility classification shape  | `@openelement/core/types`                  |
 | Hub package record loading          | `packages/hub/src/cli/shared.ts`           |
 | Hub snapshot placeholder rendering  | `packages/hub/src/snapshot-placeholder.ts` |
-| adapter DSD hydration event binding | `@lessjs/core`                             |
+| adapter DSD hydration event binding | `@openelement/core`                        |
 | package graph task execution        | `tools/run-package-graph-task.ts`          |
 
 ## Release Gates
@@ -164,6 +164,6 @@ work. Removed pre-freeze APIs are not preserved with deprecation shims.
 
 ## Next Architecture Work
 
-UI Shell, Ocean-Island, and `@lessjs/ui/css` remain deferred to the next product
+UI Shell, Ocean-Island, and `@openelement/ui/css` remain deferred to the next product
 surface release. They must build on the v0.30.0 contract instead of reopening
 the renderer or metadata cleanup arc.

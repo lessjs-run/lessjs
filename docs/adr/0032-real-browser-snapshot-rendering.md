@@ -121,7 +121,7 @@ hub:scan
    real browser context to extract `shadowRoot.innerHTML`, `adoptedStyleSheets`,
    and slot assignments. This is the ONLY reliable way to get accurate output.
 
-6. **SSR-capable @lessjs/ui components** — can continue using
+6. **SSR-capable @openelement/ui components** — can continue using
    `renderSnapshotLit()` (ADR-0029's `@lit-labs/ssr-dom-shim` approach) since
    it works perfectly for first-party Lit components. The Playwright path is
    used for **client-only npm packages** (Shoelace, Media Chrome) where happy-dom
@@ -177,14 +177,14 @@ hub:scan
 - **Requires Chromium at build time**: `hub:scan` needs Playwright + Chromium
   installed. This is already true for CI and local dev (e2e tests use it).
   For environments without Chromium, a `--skip-snapshots` flag can be added.
-- **Playwright dependency for hub package**: `@lessjs/hub` gains a dev-time
+- **Playwright dependency for hub package**: `@openelement/hub` gains a dev-time
   dependency on `playwright`. This does NOT affect runtime or published packages.
 - **HTTP server for module resolution**: components import from npm specifiers
   which need URL resolution. A temporary HTTP server (Deno.serve) is required.
 
 ### Neutral
 
-- `renderSnapshotLit()` for @lessjs/ui components stays unchanged — it works
+- `renderSnapshotLit()` for @openelement/ui components stays unchanged — it works
   perfectly and is faster than Playwright for SSR-capable Lit components.
 - The `DEMO_ATTRS` and `DEMO_SLOTS` configuration maps stay the same —
   they describe what the component should look like, not how to render it.

@@ -19,6 +19,6 @@ Deno.test('mdxPlugin transforms MDX with LessJS JSX runtime', async () => {
     '/content/example.mdx',
   );
   const code = String(typeof result === 'string' ? result : result?.code ?? '');
-  assertStringIncludes(code, '@lessjs/core');
+  assertStringIncludes(code, '@openelement/core');
   assertStringIncludes(code, 'less-counter');
 });

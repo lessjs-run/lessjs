@@ -41,7 +41,7 @@ Browser timeline:
 ### Evidence
 
 - DSD template in `www/dist/index.html`: 0 occurrences of `class="header-nav"` HTML content
-- `locales` attribute absent from `<less-layout>` in SSR output
+- `locales` attribute absent from `<open-layout>` in SSR output
 - 353 HTML files contain `__ROUTE_MANIFEST__` (injection works post-SSR)
 - CSS rules for `.header-nav` exist — styling is present, HTML is not
 
@@ -83,7 +83,7 @@ fall back to manifest.
 **Files**:
 
 - `packages/router/src/client-router.ts` — `#l()` method
-- `packages/ui/src/less-layout.tsx` — connectedCallback locale logic
+- `packages/ui/src\/open-layout.tsx` — connectedCallback locale logic
 
 ### Phase 3: Search Styling Investigation
 

@@ -1,12 +1,12 @@
 import type { Alias, Plugin } from 'vite';
 
-const VIRTUAL_LESSJS_PACKAGE_PREFIX = '\0lessjs:ssg-pkg/';
+const VIRTUAL_OPENELEMENT_PACKAGE_PREFIX = '\0openelement:ssg-pkg/';
 // Packages resolved by this plugin for JSR consumer SSG builds.
 // Optional packages (adapter-lit, adapter-vanilla, adapter-react, content, i18n)
 // are handled by optionalPackageStubsPlugin in build-ssg.ts instead.
 // The resolver must NOT intercept them, because it runs enforce: 'pre' and would
 // prevent the stubs plugin from providing empty stubs when packages are absent.
-const DEFAULT_LESSJS_PACKAGES = new Set([
+const DEFAULT_OPENELEMENT_PACKAGES = new Set([
   'adapter-vite',
   'app',
   'cem',
@@ -21,7 +21,7 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
   'ui',
 ]);
 
-const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
+const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
   core: {
     '.': 'src/index.ts',
     'cem-parser': 'src/cem-parser.ts',
@@ -93,13 +93,13 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
   },
 };
 
-export interface LessJsrPackageSpecifier {
+export interface OpenJsrPackageSpecifier {
   packageName: string;
   subpath: string;
   range?: string;
 }
 
-export interface LessJsrPackageResolverOptions {
+export interface OpenJsrPackageResolverOptions {
   workspaceRoot: string | null;
   version: string;
   localPackageRoot?: string | null;
@@ -108,11 +108,11 @@ export interface LessJsrPackageResolverOptions {
   readLocalSource?: (path: string) => string;
 }
 
-export function parseLessPackageSpecifier(id: string): LessJsrPackageSpecifier | null {
-  const bare = id.match(/^@lessjs\/([^/@]+)(?:\/(.+))?$/);
+export function parseOpenPackageSpecifier(id: string): OpenJsrPackageSpecifier | null {
+  const bare = id.match(/^@openelement\/([^/@]+)(?:\/(.+))?$/);
   if (bare) return { packageName: bare[1], subpath: bare[2] ?? '.' };
 
-  const jsr = id.match(/^jsr:@lessjs\/([^/@]+)(?:@([^/]+))?(?:\/(.+))?$/);
+  const jsr = id.match(/^jsr:@openelement\/([^/@]+)(?:@([^/]+))?(?:\/(.+))?$/);
   if (jsr) {
     return {
       packageName: jsr[1],
@@ -125,26 +125,30 @@ export function parseLessPackageSpecifier(id: string): LessJsrPackageSpecifier |
 }
 
 export function resolveLessPackageExport(packageName: string, subpath: string): string {
-  const exports = LESSJS_EXPORT_FILES[packageName];
-  if (!exports) throw new Error(`[LessJS/SSG] Unknown LessJS package: @lessjs/${packageName}`);
+  const exports = OPENELEMENT_EXPORT_FILES[packageName];
+  if (!exports) {
+    throw new Error(`[openElement/SSG] Unknown openElement package: @openelement/${packageName}`);
+  }
 
   const normalized = normalizeSubpath(subpath);
   const file = exports[normalized] ??
     (normalized.endsWith('.js') ? exports[normalized.replace(/\.js$/, '')] : undefined);
   if (file) return file;
 
-  throw new Error(`[LessJS/SSG] Unknown @lessjs/${packageName} export subpath: ${subpath}`);
+  throw new Error(
+    `[openElement/SSG] Unknown @openelement/${packageName} export subpath: ${subpath}`,
+  );
 }
 
 export function toVirtualLessPackageId(packageName: string, sourcePath: string): string {
-  return `${VIRTUAL_LESSJS_PACKAGE_PREFIX}${packageName}/${sourcePath}`;
+  return `${VIRTUAL_OPENELEMENT_PACKAGE_PREFIX}${packageName}/${sourcePath}`;
 }
 
 export function resolveVirtualLessPackageRelative(id: string, importer: string): string | null {
-  if (!importer.startsWith(VIRTUAL_LESSJS_PACKAGE_PREFIX)) return null;
+  if (!importer.startsWith(VIRTUAL_OPENELEMENT_PACKAGE_PREFIX)) return null;
   if (!id.startsWith('./') && !id.startsWith('../')) return null;
 
-  const importerPath = importer.slice(VIRTUAL_LESSJS_PACKAGE_PREFIX.length);
+  const importerPath = importer.slice(VIRTUAL_OPENELEMENT_PACKAGE_PREFIX.length);
   const [packageName, ...pathParts] = importerPath.split('/');
   const base = pathParts.slice(0, -1);
   const parts = [...base, ...id.split('/')];
@@ -162,8 +166,8 @@ export function resolveVirtualLessPackageRelative(id: string, importer: string):
   );
 }
 
-export function createLessJsrPackageResolverPlugin(
-  options: LessJsrPackageResolverOptions,
+export function createOpenJsrPackageResolverPlugin(
+  options: OpenJsrPackageResolverOptions,
 ): Plugin {
   const fetchSource = options.fetchSource ?? fetch;
 
@@ -180,9 +184,9 @@ export function createLessJsrPackageResolverPlugin(
       if (options.workspaceRoot) return null;
       if (hasExactUserAlias(id, options.userAliases)) return null;
 
-      const spec = parseLessPackageSpecifier(id);
+      const spec = parseOpenPackageSpecifier(id);
       if (spec) {
-        if (!DEFAULT_LESSJS_PACKAGES.has(spec.packageName)) return null;
+        if (!DEFAULT_OPENELEMENT_PACKAGES.has(spec.packageName)) return null;
         return toVirtualLessPackageId(
           spec.packageName,
           resolveLessPackageExport(spec.packageName, spec.subpath),
@@ -193,9 +197,11 @@ export function createLessJsrPackageResolverPlugin(
     },
     async load(id) {
       if (options.workspaceRoot) return null;
-      if (!id.startsWith(VIRTUAL_LESSJS_PACKAGE_PREFIX)) return null;
+      if (!id.startsWith(VIRTUAL_OPENELEMENT_PACKAGE_PREFIX)) return null;
 
-      const [packageName, ...pathParts] = id.slice(VIRTUAL_LESSJS_PACKAGE_PREFIX.length).split('/');
+      const [packageName, ...pathParts] = id.slice(VIRTUAL_OPENELEMENT_PACKAGE_PREFIX.length).split(
+        '/',
+      );
       const filePath = pathParts.join('/');
       if (options.localPackageRoot) {
         const localPath = `${options.localPackageRoot}/packages/${packageName}/${filePath}`;
@@ -205,17 +211,17 @@ export function createLessJsrPackageResolverPlugin(
             : await Deno.readTextFile(localPath);
         } catch (error) {
           throw new Error(
-            `[LessJS/SSG] Failed to read local @lessjs/${packageName}/${filePath} ` +
+            `[openElement/SSG] Failed to read local @openelement/${packageName}/${filePath} ` +
               `from ${localPath}: ${error instanceof Error ? error.message : String(error)}`,
           );
         }
       }
 
-      const url = `https://jsr.io/@lessjs/${packageName}/${options.version}/${filePath}`;
+      const url = `https://jsr.io/@openelement/${packageName}/${options.version}/${filePath}`;
       const resp = await fetchSource(url);
       if (!resp.ok) {
         throw new Error(
-          `[LessJS/SSG] Failed to fetch @lessjs/${packageName}/${filePath} ` +
+          `[openElement/SSG] Failed to fetch @openelement/${packageName}/${filePath} ` +
             `from ${url}: HTTP ${resp.status}`,
         );
       }
@@ -246,7 +252,7 @@ function normalizeSubpath(subpath: string): string {
 
 function resolveSourcePathExtension(packageName: string, path: string): string {
   const normalized = path.replace(/\.js$/, '');
-  const exports = LESSJS_EXPORT_FILES[packageName];
+  const exports = OPENELEMENT_EXPORT_FILES[packageName];
   if (exports) {
     const matched = Object.values(exports).find((file) =>
       file.replace(/\.(tsx|ts)$/, '') === normalized
@@ -265,17 +271,17 @@ function ensureTsExtension(path: string): string {
 /**
  * Rewrite Deno/JSR `npm:` import/export specifiers to bare specifiers that
  * Vite/Rolldown can resolve. JSR rewrites bare npm imports like
- * `import from 'marked'` to `import from 'npm:marked@12.0.0'`. Published LessJS
+ * `import from 'marked'` to `import from 'npm:marked@12.0.0'`. Published openElement
  * source can also use explicit `npm:` specifiers so fresh Deno consumers do not
  * need root import-map aliases. Vite doesn't understand `npm:` so we strip the
  * prefix and version, leaving a bare specifier like `marked` or
  * `@lit/reactive-element`.
  *
  * Handles:
- *   npm:package@version        → package
- *   npm:@scope/pkg@version     → @scope/pkg
- *   npm:package@version/sub    → package/sub
- *   npm:@scope/pkg@version/sub → @scope/pkg/sub
+ *   npm:package@version        �� package
+ *   npm:@scope/pkg@version     �� @scope/pkg
+ *   npm:package@version/sub    �� package/sub
+ *   npm:@scope/pkg@version/sub �� @scope/pkg/sub
  */
 const NPM_SPECIFIER_RE =
   /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\2/g;

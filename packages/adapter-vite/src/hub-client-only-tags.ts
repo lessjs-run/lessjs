@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { LessError } from '@lessjs/core/errors';
+import { LessError } from '@openelement/core/errors';
 
 export interface HubClientOnlyTag {
   tagName?: string;

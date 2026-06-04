@@ -8,8 +8,8 @@
 
 v0.23.0 turns the v0.22 Architecture Integrity work into a durable package
 architecture. The release should make the repository easier to reason about,
-publish, test, and extend without turning `@lessjs/core` or
-`@lessjs/adapter-vite` into permanent catch-all packages.
+publish, test, and extend without turning `@openelement/core` or
+`@openelement/adapter-vite` into permanent catch-all packages.
 
 The release should make this true:
 
@@ -33,9 +33,9 @@ LessJS maintainers
 | Included                                     | Excluded in v0.23                    |
 | -------------------------------------------- | ------------------------------------ |
 | Shared contracts/protocols ownership         | ISR production handler               |
-| `@lessjs/core` runtime kernel boundary       | CF Workers KV / Deno KV adapters     |
+| `@openelement/core` runtime kernel boundary  | CF Workers KV / Deno KV adapters     |
 | Signal facade and runtime facade positioning | Auth, ORM, database, session systems |
-| `@lessjs/app` as configuration facade        | Generic Node server abstraction      |
+| `@openelement/app` as configuration facade   | Generic Node server abstraction      |
 | `adapter-vite` build-module contracts        | Marketplace growth targets           |
 | Package graph and consumer smoke gates       | API freeze                           |
 | Docs/status/package ownership governance     | v1.0 stability claim                 |
@@ -63,21 +63,21 @@ ADR-0038 remains accepted, but its implementation moves to v0.24.x or later.
 - No v0.23 code change starts without a mapped SOP step and verification
   command.
 - A package ownership inventory exists for every `packages/*/deno.json` export
-  and every `@lessjs/*` dependency edge.
+  and every `@openelement/*` dependency edge.
 
 ## Initial Inventory Findings
 
 The v0.23 work started from the v0.22.1 graph and is closed by the v0.23.0
 package graph:
 
-| Finding                                              | v0.23.0 response                                                            |
-| ---------------------------------------------------- | --------------------------------------------------------------------------- |
-| `content` and `i18n` imported adapter build types    | shared build types and virtual ids now live under `@lessjs/protocols`       |
-| `app` imported adapter build context                 | `@lessjs/app` now consumes the public adapter facade instead of subpaths    |
-| `core` drifted toward signal implementation          | `@lessjs/signals` remains the `alien-signals` facade and runtime owner      |
-| generated templates used core as authoring barrel    | `@lessjs/runtime` is the authoring facade used by generated projects        |
-| publish workflow missed the new runtime package      | publish order now includes every package, including `@lessjs/runtime`       |
-| direct source imports were hidden by root import map | `graph:check` now fails undeclared package-local `@lessjs/*` source imports |
+| Finding                                              | v0.23.0 response                                                                 |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `content` and `i18n` imported adapter build types    | shared build types and virtual ids now live under `@openelement/protocols`       |
+| `app` imported adapter build context                 | `@openelement/app` now consumes the public adapter facade instead of subpaths    |
+| `core` drifted toward signal implementation          | `@openelement/signals` remains the `alien-signals` facade and runtime owner      |
+| generated templates used core as authoring barrel    | `@openelement/runtime` is the authoring facade used by generated projects        |
+| publish workflow missed the new runtime package      | publish order now includes every package, including `@openelement/runtime`       |
+| direct source imports were hidden by root import map | `graph:check` now fails undeclared package-local `@openelement/*` source imports |
 
 ## Execution Rules
 
@@ -92,11 +92,11 @@ package graph:
 
 ## Exit Criteria
 
-- Shared build/runtime contracts have one owner: `@lessjs/protocols`.
-- `@lessjs/core` no longer owns adapter build contracts or the authoring
+- Shared build/runtime contracts have one owner: `@openelement/protocols`.
+- `@openelement/core` no longer owns adapter build contracts or the authoring
   facade.
-- `@lessjs/signals` is documented as the LessJS facade over `alien-signals`.
-- `@lessjs/app` is the configuration facade, while `@lessjs/runtime` is the
+- `@openelement/signals` is documented as the LessJS facade over `alien-signals`.
+- `@openelement/app` is the configuration facade, while `@openelement/runtime` is the
   authoring facade.
 - `adapter-vite` no longer exports shared contracts only because other packages
   need a type.

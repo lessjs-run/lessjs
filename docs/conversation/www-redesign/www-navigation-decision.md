@@ -1,4 +1,4 @@
-# WWW Navigation Structure Decision
+﻿# WWW Navigation Structure Decision
 
 > Date: 2026-05-18
 > Decision: 5-section navigation (user's confirmed choice)
@@ -12,7 +12,7 @@ WWW navigation will use 5 sections, matching the project's five product pillars:
 /framework/  → Full-Stack Framework docs
 /engine/     → WC Rendering Engine docs
 /hub/        → Registry Hub (functional page, not docs)
-/ui/         → @lessjs/ui component library
+/ui/         → @openelement/ui component library
 /blog/       → Blog
 ```
 

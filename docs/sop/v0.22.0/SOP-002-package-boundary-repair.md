@@ -13,13 +13,13 @@ or explicitly be a compatibility facade.
 
 ## Required Repairs
 
-| Area                                   | Problem                                                             | Target                                                                  |
-| -------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `@lessjs/core`                         | Owns build-only files such as `build-types.ts` and `virtual-ids.ts` | Move adapter-only contracts to `adapter-vite` or a small shared package |
-| `@lessjs/style-sheet`                  | Duplicates `core/src/style-sheet.ts`                                | Make one implementation authoritative                                   |
-| `@lessjs/cem` / `@lessjs/compat-check` | Risk of thin-wrapper package claims                                 | Clarify ownership and public docs                                       |
-| UI helpers                             | `_escAttr` duplicated in components                                 | Use shared helper without widening public API unnecessarily             |
-| Hub scanner                            | `records.push(null!)` placeholder                                   | Replace with typed accumulation                                         |
+| Area                                             | Problem                                                             | Target                                                                  |
+| ------------------------------------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `@openelement/core`                              | Owns build-only files such as `build-types.ts` and `virtual-ids.ts` | Move adapter-only contracts to `adapter-vite` or a small shared package |
+| `@openelement/style-sheet`                       | Duplicates `core/src/style-sheet.ts`                                | Make one implementation authoritative                                   |
+| `@openelement/cem` / `@openelement/compat-check` | Risk of thin-wrapper package claims                                 | Clarify ownership and public docs                                       |
+| UI helpers                                       | `_escAttr` duplicated in components                                 | Use shared helper without widening public API unnecessarily             |
+| Hub scanner                                      | `records.push(null!)` placeholder                                   | Replace with typed accumulation                                         |
 
 ## Procedure
 
@@ -38,9 +38,9 @@ Acceptance:
 ### Step 2: Repair `StyleSheet` Ownership
 
 - [ ] Choose one canonical implementation.
-- [ ] If `@lessjs/style-sheet` owns the implementation, make core re-export or
+- [ ] If `@openelement/style-sheet` owns the implementation, make core re-export or
       depend on it deliberately.
-- [ ] If core owns the implementation, document `@lessjs/style-sheet` as a
+- [ ] If core owns the implementation, document `@openelement/style-sheet` as a
       facade and stop claiming full extraction.
 
 Acceptance:
@@ -58,7 +58,7 @@ Acceptance:
 
 Acceptance:
 
-- [ ] `@lessjs/core` public exports remain runtime-focused.
+- [ ] `@openelement/core` public exports remain runtime-focused.
 - [ ] `adapter-vite` tests pass without importing build-only contracts from
       core.
 

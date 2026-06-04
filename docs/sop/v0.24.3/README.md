@@ -58,7 +58,7 @@ v0.24.3 只做收敛，不做扩张。
 | TG-02 | P0       | Legacy Runtime Removal        | `html` / template helpers / `@prop()` 不再作为可用组件模型存在                |
 | TG-03 | P0       | Docs Truth Convergence        | release、README、package README、website、architecture docs 事实一致          |
 | TG-04 | P1       | JSX Renderer Hardening        | SSR/CSR Signal unwrap、SVG namespace、event cleanup 直接测试覆盖              |
-| TG-05 | P1       | Public API Surface Lockdown   | `@lessjs/core` / `@lessjs/runtime` 只暴露新模型与必要 kernel API              |
+| TG-05 | P1       | Public API Surface Lockdown   | `@openelement/core` / `@openelement/runtime` 只暴露新模型与必要 kernel API    |
 | TG-06 | P1       | Build Output Cleanliness      | `[object Object]` runtime pollution 有上下文 gate 和 allowlist                |
 | TG-07 | P1       | Release/Publish Consistency   | root publish task、workflow、graph gate、package list/order 一致              |
 | TG-08 | P2       | Architecture Narrative Update | roadmap/status/current architecture/ADR/SOP 都指向 v0.24.3 新状态             |
@@ -250,8 +250,8 @@ deno task lint
    - Preferred: delete if no runtime consumer remains。
    - Acceptable transitional option: move test fixtures to `legacy/` and exclude from public exports。
 3. Add negative public API tests:
-   - importing removed names from `@lessjs/core` should fail typecheck or not exist in API surface test。
-   - importing removed names from `@lessjs/runtime` should fail typecheck or not exist in API surface test。
+   - importing removed names from `@openelement/core` should fail typecheck or not exist in API surface test。
+   - importing removed names from `@openelement/runtime` should fail typecheck or not exist in API surface test。
 
 **Exit Criteria**:
 
@@ -485,7 +485,7 @@ Disallow in current docs/source examples unless file path includes `migration`, 
 1. Bump all packages to `0.24.3`。
 2. Bump LessJS cross-package deps to `^0.24.3`。
 3. Ensure root publish/dry-run task and GitHub publish workflow contain same package set/order。
-4. Ensure `@lessjs/signals` is published before `@lessjs/core`。
+4. Ensure `@openelement/signals` is published before `@openelement/core`。
 5. Fix misleading comments that reference wrong versions。
 6. Run:
 

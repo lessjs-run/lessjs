@@ -1,11 +1,11 @@
 /**
- * @lessjs/core - Signal-like detection utility.
+ * @openelement/core - Signal-like detection utility.
  *
  * v0.24.3: Extracted from template.ts so JSX renderers don't depend on
  * the legacy template module. Provides neutral isSignalLike + unwrapSignalLike
  * and the SignalLike type.
  *
- * @module @lessjs/core/signal-like
+ * @module @openelement/core/signal-like
  */
 
 /** Duck-type: any object with { value, subscribe } is treated as Signal. */

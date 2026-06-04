@@ -1,18 +1,18 @@
-﻿/**
- * @lessjs/ui - Design System
+/**
+ * @openelement/ui - Design System
  * Two plates. Zero noise.
  *
  * Dogfooding: uses real less-button, less-card, less-input components.
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-button';
-import '@lessjs/ui/less-card';
-import '@lessjs/ui/less-input';
-import '@lessjs/ui/less-code-block';
+import '@openelement/ui\/open-button';
+import '@openelement/ui\/open-card';
+import '@openelement/ui\/open-input';
+import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(
@@ -343,9 +343,9 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-badge'>可用</span>
               </div>
               <div class='preview-body'>
-                <less-button variant='primary'>主要按钮</less-button>
-                <less-button>默认按钮</less-button>
-                <less-button variant='ghost'>幽灵按钮</less-button>
+                <open-button variant='primary'>主要按钮</open-button>
+                <open-button>默认按钮</open-button>
+                <open-button variant='ghost'>幽灵按钮</open-button>
               </div>
             </div>
           </div>
@@ -357,17 +357,17 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-badge'>可用</span>
               </div>
               <div class='preview-body preview-body-col'>
-                <less-input placeholder='输入邮箱...' label='邮箱'></less-input>
-                <less-input type='password' placeholder='密码' label='密码' required>
-                </less-input>
-                <less-input value='hello@lessjs.org' label='只读' disabled></less-input>
+                <open-input placeholder='输入邮箱...' label='邮箱'></open-input>
+                <open-input type='password' placeholder='密码' label='密码' required>
+                </open-input>
+                <open-input value='hello@openelement.org' label='只读' disabled></open-input>
               </div>
             </div>
           </div>
           <div class='install-section'>
-            <h3>安装 @lessjs/ui</h3>
+            <h3>安装 @openelement/ui</h3>
             <div class='install-cmd'>
-              <span class='prompt'>$</span> deno add jsr:@lessjs/ui
+              <span class='prompt'>$</span> deno add jsr:@openelement/ui
             </div>
             <p>Deno、Node、Bun。零配置。</p>
           </div>
@@ -468,9 +468,9 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-badge'>Ready</span>
               </div>
               <div class='preview-body'>
-                <less-button variant='primary'>Primary</less-button>
-                <less-button>Default</less-button>
-                <less-button variant='ghost'>Ghost</less-button>
+                <open-button variant='primary'>Primary</open-button>
+                <open-button>Default</open-button>
+                <open-button variant='ghost'>Ghost</open-button>
               </div>
             </div>
           </div>
@@ -482,17 +482,17 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-badge'>Ready</span>
               </div>
               <div class='preview-body preview-body-col'>
-                <less-input placeholder='Enter email...' label='Email'></less-input>
-                <less-input type='password' placeholder='Password' label='Password' required>
-                </less-input>
-                <less-input value='hello@lessjs.org' label='Read-only' disabled></less-input>
+                <open-input placeholder='Enter email...' label='Email'></open-input>
+                <open-input type='password' placeholder='Password' label='Password' required>
+                </open-input>
+                <open-input value='hello@openelement.org' label='Read-only' disabled></open-input>
               </div>
             </div>
           </div>
           <div class='install-section'>
-            <h3>Install @lessjs/ui</h3>
+            <h3>Install @openelement/ui</h3>
             <div class='install-cmd'>
-              <span class='prompt'>$</span> deno add jsr:@lessjs/ui
+              <span class='prompt'>$</span> deno add jsr:@openelement/ui
             </div>
             <p>Deno, Node, Bun. Zero config.</p>
           </div>

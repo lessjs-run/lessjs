@@ -1,12 +1,12 @@
-﻿/**
- * Contributing Page - LessJS Framework Contribution Guide
+/**
+ * Contributing Page - openElement Framework Contribution Guide
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/less-code-block';
+import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(
@@ -56,16 +56,16 @@ export class ContributingPage extends DsdElement {
     return (
       
         <div class='container'>
-          <h1>Contributing to LessJS</h1>
+          <h1>Contributing to openElement</h1>
           <p class='subtitle'>感谢你对 LessJS 框架的兴趣！</p>
           <h2>开发环境设置</h2>
-          <less-code-block>
-            <pre><code>git clone https://github.com/lessjs-run/LessJS.git
+          <open-code-block>
+            <pre><code>git clone https://github.com/open-element/open-element.git
 cd lessjs
 deno install
 deno task test
 deno task docs:dev</code></pre>
-          </less-code-block>
+          </open-code-block>
           <h2>Deno-first 工具链</h2>
           <p>
             LessJS 的 core CLI、SSG、Serverless API、测试、发布和文档站任务都以 Deno 2.7+
@@ -102,16 +102,16 @@ deno task docs:dev</code></pre>
     return (
       
         <div class='container'>
-          <h1>Contributing to LessJS</h1>
-          <p class='subtitle'>Thank you for your interest in the LessJS framework!</p>
+          <h1>Contributing to openElement</h1>
+          <p class='subtitle'>Thank you for your interest in the openElement Framework!</p>
           <h2>Development Setup</h2>
-          <less-code-block>
-            <pre><code>git clone https://github.com/lessjs-run/LessJS.git
+          <open-code-block>
+            <pre><code>git clone https://github.com/open-element/open-element.git
 cd lessjs
 deno install
 deno task test
 deno task docs:dev</code></pre>
-          </less-code-block>
+          </open-code-block>
           <h2>Deno-first Toolchain</h2>
           <p>
             LessJS core CLI, SSG, serverless API, tests, publishing, and docs site tasks all use

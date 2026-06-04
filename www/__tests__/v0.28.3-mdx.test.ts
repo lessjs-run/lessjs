@@ -1,7 +1,7 @@
 import { assert, assertEquals, assertRejects, assertStringIncludes } from 'jsr:@std/assert@1';
-import { compileMdx } from '@lessjs/content/mdx';
-import { renderDsdTree } from '@lessjs/core';
-import { jsx } from '@lessjs/core/jsx-runtime';
+import { compileMdx } from '@openelement/content/mdx';
+import { renderDsdTree } from '@openelement/core';
+import { jsx } from '@openelement/core/jsx-runtime';
 
 Deno.test('v0.28.3 MDX: simple source compiles with frontmatter', async () => {
   const mod = await compileMdx(`---
@@ -10,18 +10,18 @@ title: Simple
 
 # Simple`);
   assertEquals(mod.frontmatter.title, 'Simple');
-  assertStringIncludes(mod.code, '@lessjs/core');
+  assertStringIncludes(mod.code, '@openelement/core');
 });
 
 Deno.test('v0.28.3 MDX: island syntax survives compile', async () => {
-  const mod = await compileMdx('<less-theme-toggle client:idle />');
+  const mod = await compileMdx('<open-theme-toggle client:idle />');
   assertStringIncludes(mod.code, 'less-theme-toggle');
   assertStringIncludes(mod.code, 'client:idle');
 });
 
 Deno.test('v0.28.3 MDX: VNode output can enter LessJS render path', async () => {
   const html = await renderDsdTree(jsx('less-card', { children: 'MDX card' }));
-  assertEquals(html, '<less-card>MDX card</less-card>');
+  assertEquals(html, '<open-card>MDX card</open-card>');
 });
 
 Deno.test('v0.28.3 MDX: signal placeholder content can render as JSX text', async () => {

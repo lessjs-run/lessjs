@@ -16,10 +16,10 @@ tags:
   assertStringIncludes(mod.content, '# Hello');
 });
 
-Deno.test('compileMdx targets @lessjs/core JSX runtime', async () => {
+Deno.test('compileMdx targets @openelement/core JSX runtime', async () => {
   const mod = await compileMdx('# Hello');
   assertStringIncludes(mod.code, 'jsx');
-  assertStringIncludes(mod.code, '@lessjs/core');
+  assertStringIncludes(mod.code, '@openelement/core');
 });
 
 Deno.test('compileMdx preserves JSX component usage for DSD render path', async () => {
@@ -29,8 +29,8 @@ Deno.test('compileMdx preserves JSX component usage for DSD render path', async 
 });
 
 Deno.test('compileMdx accepts a custom jsxImportSource', async () => {
-  const mod = await compileMdx('# Hello', { jsxImportSource: '@lessjs/core/jsx-runtime' });
-  assertStringIncludes(mod.code, '@lessjs/core/jsx-runtime');
+  const mod = await compileMdx('# Hello', { jsxImportSource: '@openelement/core/jsx-runtime' });
+  assertStringIncludes(mod.code, '@openelement/core/jsx-runtime');
 });
 
 Deno.test('compileMdx surfaces parser errors with source context', async () => {

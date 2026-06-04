@@ -5,7 +5,7 @@ label: 'Testing'
 order: 40
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -28,9 +28,9 @@ currentPath='/en/guide/testing'
       generated HTML. This catches route scanning, SSR, client island, and SSG integration
       issues.
     </p>
-    <less-code-block>
+    <open-code-block>
       <pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run</code></pre>
-    </less-code-block>
+    </open-code-block>
     <h2>Browser Testing</h2>
     <p>
       Use browser tests when behavior depends on Custom Element upgrade, IntersectionObserver,

@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - build-context.ts tests (Deno)
+ * @openelement/adapter-vite - build-context.ts tests (Deno)
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 import { LessBuildContext } from '../src/build-context.ts';
@@ -31,7 +31,7 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
   ctx.phase1.packageIslandDecls = [{ tagName: 'x', modulePath: './x', hydrate: 'idle' }];
   ctx.phase1.buildCompleted = true;
   ctx.phase1.resolvedConfig = {} as unknown as NonNullable<typeof ctx.phase1.resolvedConfig>;
-  ctx.phase1.userResolveAlias = { '@lessjs/ui': './ui' };
+  ctx.phase1.userResolveAlias = { '@openelement/ui': './ui' };
 
   ctx.reset();
 
@@ -44,5 +44,5 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
   // NOTE: userResolveAlias is intentionally NOT reset - it's user configuration,
   // not build state (see build-context.ts:138-140). It persists through reset()
   // so Phase 2/3 can still access resolve aliases after buildStart() calls reset().
-  assertEquals(ctx.phase1.userResolveAlias, { '@lessjs/ui': './ui' });
+  assertEquals(ctx.phase1.userResolveAlias, { '@openelement/ui': './ui' });
 });

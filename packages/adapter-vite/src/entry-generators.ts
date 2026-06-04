@@ -1,11 +1,11 @@
 /**
- * @lessjs/core - Entry Generators
+ * @openelement/core - Entry Generators
  *
  * v0.21.0: manifest-driven hydration strategies.
  * Zero DOM interaction - cannot interfere with DSD rendering.
  */
 
-import type { HydrationStrategy, StrategySource } from '@lessjs/core';
+import type { HydrationStrategy, StrategySource } from '@openelement/core';
 
 export interface ClientIslandEntry {
   tagName: string;
@@ -89,8 +89,8 @@ export function generateClientEntry(
 // Zero DOM interaction - safe with DSD rendering.
 
 var log = {
-  warn: function() { var a = ['[LessJS]']; a.push.apply(a, arguments); console.warn.apply(console, a); },
-  error: function() { var a = ['[LessJS]']; a.push.apply(a, arguments); console.error.apply(console, a); },
+  warn: function() { var a = ['[openElement]']; a.push.apply(a, arguments); console.warn.apply(console, a); },
+  error: function() { var a = ['[openElement]']; a.push.apply(a, arguments); console.error.apply(console, a); },
 };
 
 var __map = {

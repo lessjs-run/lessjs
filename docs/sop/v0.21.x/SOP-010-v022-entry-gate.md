@@ -26,7 +26,7 @@ This SOP is intentionally a gate, not a feature plan. If the gate fails, v0.22.0
 
 Answer these before opening v0.22.0 implementation work:
 
-1. Is the `@lessjs/core` public API classified and documented?
+1. Is the `@openelement/core` public API classified and documented?
 2. Are stale Reactive DSD and hydration contracts removed from types and docs?
 3. Does the DSD conformance suite test browser-parsed behavior?
 4. Does the SSG blog/docs path build from a generated project?
@@ -71,7 +71,7 @@ The gate passes only if:
 
 Do not proceed to v0.22.0 implementation if any of these are true:
 
-- `@lessjs/core` public API is still unclassified;
+- `@openelement/core` public API is still unclassified;
 - `DsdComponent.render()` or hydration docs contradict real behavior;
 - DSD report thresholds allow unlimited known failures;
 - generated SSG starter cannot build cleanly;

@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Adapter Registry
+ * @openelement/core - Adapter Registry
  *
  * Adapter registry storage for framework-specific rendering.
  *
@@ -18,7 +18,7 @@
 
 import type { RendererProtocol } from './types.js';
 
-// Re-export for consumers who import from @lessjs/core/adapter-registry
+// Re-export for consumers who import from @openelement/core/adapter-registry
 export type { RendererProtocol } from './types.js';
 
 export interface AdapterRegistry {

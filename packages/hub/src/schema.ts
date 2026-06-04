@@ -1,11 +1,11 @@
 /**
- * @lessjs/hub - Registry Hub Data Schema
+ * @openelement/hub - Registry Hub Data Schema
  *
  * v0.19.0: Hub package records, search index, submission bundles.
  *
  * All types are plain data. No runtime dependencies beyond TypeScript.
  *
- * v0.22 (SOP-004): CompatibilityTier now imported from @lessjs/core
+ * v0.22 (SOP-004): CompatibilityTier now imported from @openelement/core
  * to eliminate type duplication. CemAttribute/CemEvent/CemSlot remain
  * Hub-specific (simplified record format, not full CEM spec).
  *
@@ -13,10 +13,10 @@
  * @see docs/sop/v0.19.0-platform-hub.md
  */
 
-import type { CompatibilityTier } from '@lessjs/core';
+import type { CompatibilityTier } from '@openelement/core';
 
 // ─── Compatibility ───────────────────────────────────────────────────────
-// CompatibilityTier imported from @lessjs/core (single source of truth).
+// CompatibilityTier imported from @openelement/core (single source of truth).
 export type { CompatibilityTier };
 
 // ─── Tag Record ──────────────────────────────────────────────────────────

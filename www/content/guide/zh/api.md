@@ -1,4 +1,4 @@
----
+﻿---
 title: 'API 参考'
 section: '参考'
 label: 'API'
@@ -12,7 +12,7 @@ order: 70
 唯一的渲染入口。将自定义元素渲染为 DSD HTML。
 
 ```ts
-import { renderDsd } from '@lessjs/core';
+import { renderDsd } from '@openelement/core';
 
 // 按标签名 — 自动从 customElements 注册表查找
 const result = await renderDsd('less-layout', {
@@ -45,8 +45,8 @@ console.log(result.html);
 异步 VNode 树转 HTML 字符串。处理嵌套自定义元素的 DSD 渲染。
 
 ```ts
-import { renderDsdTree } from '@lessjs/core';
-import { jsx } from '@lessjs/core/jsx-runtime';
+import { renderDsdTree } from '@openelement/core';
+import { jsx } from '@openelement/core/jsx-runtime';
 
 const vnode = jsx('div', { class: 'greeting', children: 'hello' });
 const html = await renderDsdTree(vnode);
@@ -68,8 +68,8 @@ const html = await renderDsdTree(vnode);
 所有 DSD 原生组件的基类。
 
 ```tsx
-import { DsdElement } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
+import { DsdElement } from '@openelement/core';
+import { signal } from '@openelement/signals';
 
 class MyCounter extends DsdElement {
   static override styles = StyleSheet.create(`
@@ -113,10 +113,10 @@ render() {
 
 ## JSX 运行时 (Subpath)
 
-从 `@lessjs/core/jsx-runtime` 导入：
+从 `@openelement/core/jsx-runtime` 导入：
 
 ```ts
-import { For, jsx, jsxDEV, jsxs, Show } from '@lessjs/core/jsx-runtime';
+import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 ```
 
 ### For
@@ -142,10 +142,10 @@ import { For, jsx, jsxDEV, jsxs, Show } from '@lessjs/core/jsx-runtime';
 
 ## 信号
 
-从 `@lessjs/signals` 导入：
+从 `@openelement/signals` 导入：
 
 ```ts
-import { computed, effect, signal } from '@lessjs/signals';
+import { computed, effect, signal } from '@openelement/signals';
 
 const count = signal(0);
 const double = computed(() => count.value * 2);
@@ -159,7 +159,7 @@ effect(() => {
 
 ```tsx
 // 创建 island
-import { defineIsland } from '@lessjs/core';
+import { defineIsland } from '@openelement/core';
 
 defineIsland('my-widget', {
   tagName: 'my-widget',
@@ -179,7 +179,7 @@ defineIsland('my-widget', {
 将内容包装为完整 HTML 文档：
 
 ```ts
-import { wrapInDocument } from '@lessjs/core';
+import { wrapInDocument } from '@openelement/core';
 
 const html = wrapInDocument(content, {
   title: '我的页面',

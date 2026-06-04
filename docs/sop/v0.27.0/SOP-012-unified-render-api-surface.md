@@ -10,7 +10,7 @@
 
 ## 一、目标
 
-将 `@lessjs/core` 的公开 API 从 **3 个渲染函数 + 1 个 JSX 工厂** 精简为 **1 个渲染函数**。
+将 `@openelement/core` 的公开 API 从 **3 个渲染函数 + 1 个 JSX 工厂** 精简为 **1 个渲染函数**。
 
 ```
 当前 root exports              目标 root exports
@@ -26,7 +26,7 @@ For, Show                      Fragment           ← 保留
 
 `renderNestedDsd` 改名为 `renderDsdTree`，不再导出。
 
-`jsx`/`jsxDEV`/`jsxs`/`For`/`Show` 从根入口移除，保留在 `@lessjs/core/jsx-runtime` subpath。
+`jsx`/`jsxDEV`/`jsxs`/`For`/`Show` 从根入口移除，保留在 `@openelement/core/jsx-runtime` subpath。
 
 ---
 
@@ -163,7 +163,7 @@ export { DsdElement } from './dsd-element.js';
 export { Fragment } from './jsx-runtime.js';
 ```
 
-**确保 `@lessjs/core/jsx-runtime` subpath 包含所有必要导出**:
+**确保 `@openelement/core/jsx-runtime` subpath 包含所有必要导出**:
 
 ```typescript
 // packages/core/src/jsx-runtime.ts — 已存在，确认包含：
@@ -171,7 +171,7 @@ export { jsx, jsxDEV, jsxs }; // Deno jsxImportSource 需要
 export { For, Fragment, Show }; // 控制流组件
 ```
 
-**验收**: `deno task check` 通过。`grep "renderDsdByName\|renderNestedDsd\|import.*jsx.*from '@lessjs/core'"` 仅在 entry-renderer 生成代码和测试中有引用。
+**验收**: `deno task check` 通过。`grep "renderDsdByName\|renderNestedDsd\|import.*jsx.*from '@openelement/core'"` 仅在 entry-renderer 生成代码和测试中有引用。
 
 ### Step 5: 更新 `entry-renderer.ts` 生成代码
 
@@ -181,11 +181,11 @@ export { For, Fragment, Show }; // 控制流组件
 
 ```typescript
 // 旧：
-'export { renderDsd, renderDsdByName, renderNestedDsd, jsx, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"';
+'export { renderDsd, renderDsdByName, renderNestedDsd, jsx, wrapInDocument, registerAdapter, getAdapter } from "@openelement/core"';
 
 // 新：
-'export { renderDsd, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"';
-'export { jsx } from "@lessjs/core/jsx-runtime"';
+'export { renderDsd, wrapInDocument, registerAdapter, getAdapter } from "@openelement/core"';
+'export { jsx } from "@openelement/core/jsx-runtime"';
 ```
 
 #### 5.2 更新 `__renderAppShell` 中的调用（约第 550 行）
@@ -210,11 +210,11 @@ lines.push('  return layoutResult.html;');
 
 ```typescript
 // 旧：
-lines.push(`import { wrapInDocument } from '@lessjs/core';`);
+lines.push(`import { wrapInDocument } from '@openelement/core';`);
 
 // 新（如果需要 jsx，单独 import）：
-lines.push(`import { wrapInDocument } from '@lessjs/core';`);
-lines.push(`import { jsx } from '@lessjs/core/jsx-runtime';`);
+lines.push(`import { wrapInDocument } from '@openelement/core';`);
+lines.push(`import { jsx } from '@openelement/core/jsx-runtime';`);
 ```
 
 ### Step 6: 更新 `entry-descriptor.ts`
@@ -306,7 +306,7 @@ done
 ### 3.4 Registry 验证
 
 ```bash
-grep -c "data-srcdoc" www/dist/en/registry/@lessjs~ui/less-card/index.html
+grep -c "data-srcdoc" www/dist/en/registry/@openelement~ui/less-card/index.html
 # 预期: 1
 ```
 
@@ -343,7 +343,7 @@ grep "jsx\|For\|Show" packages/core/src/jsx-runtime.ts | grep "export" | wc -l  
 - [ ] `renderDsd(input: string | class, props?)` 签名扩展
 - [ ] `renderDsdTree` 内部函数名（原 `renderNestedDsd`）
 - [ ] `renderDsd('tag', props)` 自动查 registry 逻辑
-- [ ] `@lessjs/core/jsx-runtime` import 在 entry-renderer 生成代码
+- [ ] `@openelement/core/jsx-runtime` import 在 entry-renderer 生成代码
 - [ ] `For`/`Show` 确认在 `jsx-runtime.ts` 导出
 
 ### 更新项

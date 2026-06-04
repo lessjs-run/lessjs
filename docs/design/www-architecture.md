@@ -131,13 +131,13 @@ No external `_renderer.ts` or `section-renderer.ts` needed (removed in v0.26).
 - ❌ No inline styles (use StyleSheet + openPropsTokenSheet)
 - ❌ No LitElement (use DsdElement)
 - ❌ No `html\`\`` templates (use JSX)
-- ❌ No virtual:less imports in route files (use @lessjs/content/nav)
+- ❌ No virtual:less imports in route files (use @openelement/content/nav)
 
 ## New Page Checklist
 
 1. Create `routes/<section>/<name>.tsx`
 2. Set `meta` with correct `section`, `label`, `order`
-3. Import `@lessjs/content/nav` for nav data
+3. Import `@openelement/content/nav` for nav data
 4. Import `openPropsTokenSheet` + use `static styles`
 5. Use `less-layout` wrapper
 6. Register `customElements.define()`

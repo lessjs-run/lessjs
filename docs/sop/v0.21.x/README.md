@@ -50,7 +50,7 @@ The product stance for this line is:
 
 ## Public API Classification
 
-The v0.21.x line must classify every exported `@lessjs/core` symbol into one of these groups:
+The v0.21.x line must classify every exported `@openelement/core` symbol into one of these groups:
 
 | Level        | Meaning                               | Rule                                                                           |
 | ------------ | ------------------------------------- | ------------------------------------------------------------------------------ |

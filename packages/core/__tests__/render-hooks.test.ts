@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - RenderHooks unit tests (Deno)
+ * @openelement/core - RenderHooks unit tests (Deno)
  *
  * Tests for the render pipeline hooks: beforeRender, afterRender, onError.
  * Covers success, failure, and undefined hooks scenarios.

@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - route-scanner.ts tests (Deno)
+ * @openelement/adapter-vite - route-scanner.ts tests (Deno)
  */
 import { assertEquals, assertRejects } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
@@ -264,7 +264,7 @@ Deno.test({
     });
 
     await t.step('throws LessError for non-existent package', async () => {
-      const { LessError } = await import('@lessjs/core/errors');
+      const { LessError } = await import('@openelement/core/errors');
       try {
         await scanPackageManifests(['@nonexistent/package']);
         assertEquals(true, false, 'Expected LessError to be thrown');
@@ -274,18 +274,18 @@ Deno.test({
       }
     });
 
-    // Test skipped: requires @lessjs/ui/dist to be built first.
+    // Test skipped: requires @openelement/ui/dist to be built first.
     // Run `cd packages/ui && deno task build` then uncomment to run.
-    /* await t.step('scans @lessjs/ui for manifests', async () => {
-    const result = await scanPackageManifests(['@lessjs/ui']);
+    /* await t.step('scans @openelement/ui for manifests', async () => {
+    const result = await scanPackageManifests(['@openelement/ui']);
     assertEquals(Array.isArray(result), true);
     assertEquals(result.length > 0, true);
-    assertEquals(result[0].packageName, '@lessjs/ui');
+    assertEquals(result[0].packageName, '@openelement/ui');
     assertEquals(result[0].declarations.length > 0, true);
   }); */
 
     await t.step('throws LessError for package with import errors', async () => {
-      const { LessError } = await import('@lessjs/core/errors');
+      const { LessError } = await import('@openelement/core/errors');
       try {
         await scanPackageManifests(['vite']);
       } catch (e) {
@@ -305,7 +305,7 @@ Deno.test('route-scanner - scanIslands with non-existent dir', async () => {
 });
 
 Deno.test('route-scanner - scanPackageManifests rejects packages without manifest export', async () => {
-  const { LessError } = await import('@lessjs/core/errors');
+  const { LessError } = await import('@openelement/core/errors');
   // A package that exists but has no manifest export should throw
   try {
     await scanPackageManifests(['jsr:@std/assert']);

@@ -1,5 +1,5 @@
----
-title: '@lessjs/core 架构简化审查报告'
+﻿---
+title: '@openelement/core 架构简化审查报告'
 date: '2026-05-11'
 type: 'adr'
 tags: ['architecture', 'decision']
@@ -93,7 +93,7 @@ const safeErr = String(err.stack || err).replace(/&/g, '&amp;').replace(/</g, '&
 
 ```ts
 // 生成的代码：
-import { escapeHtml } from '@lessjs/core/html-escape';
+import { escapeHtml } from '@openelement/core/html-escape';
 // ...
 const safeErr = escapeHtml(String(err.stack || err));
 ```
@@ -128,7 +128,7 @@ const __less_get_default_export = (module) => module && module.default;
 **问题**:
 
 - 每个页面入口复制粘贴相同逻辑，增加生成的代码体积
-- `__ssr` 依赖于 `renderDSD` 和 `log`（都已从 `@lessjs/core/less-runtime` 导入），所以完全可以放在共享模块中
+- `__ssr` 依赖于 `renderDSD` 和 `log`（都已从 `@openelement/core/less-runtime` 导入），所以完全可以放在共享模块中
 - `__less_get_default_export` 是一个非常简单的箭头函数，可以内联到使用处
 
 **建议**: 将 `__ssr` 放在 `less-runtime.ts` 中导出，然后生成的代码只需 `import { ..., __ssr }`。`__less_get_default_export` 可以消除，直接写 `module?.default ?? module`。

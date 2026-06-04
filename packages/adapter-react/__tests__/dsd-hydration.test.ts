@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-react - DSD hydration tests
+ * @openelement/adapter-react - DSD hydration tests
  *
  * These tests verify the Mixin pattern and DsdReactElement API.
  * DSD hydration behavior requires a real DOM environment (browser)

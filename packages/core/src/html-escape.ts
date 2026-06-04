@@ -1,11 +1,11 @@
 /**
- * @lessjs/core - Safe/Unsafe HTML Contract
+ * @openelement/core - Safe/Unsafe HTML Contract
  *
  * Branded types for HTML escaping semantics:
  * - SafeHtml:  A string that has been HTML-escaped (safe for text content)
  * - UnsafeHtml: A string that is intentionally raw HTML (do not double-escape)
  *
- * @module @lessjs/core/html-escape
+ * @module @openelement/core/html-escape
  */
 
 // ─── L1: Safe/Unsafe HTML Contract ──────────────────────────────

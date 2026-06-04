@@ -1,9 +1,9 @@
-import { lessjs } from '@lessjs/app';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { lessjs } from '@openelement/app';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { defineConfig } from 'vite';
 
 // www/ is a pure JSR consumer - no resolve.alias needed.
-// The root deno.json workspace mapping resolves jsr:@lessjs/* -> local
+// The root deno.json workspace mapping resolves jsr:@openelement/* -> local
 // packages/ during dev, and JSR tarballs in production.
 
 // v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet.
@@ -48,7 +48,7 @@ body {
   color: var(--text-primary, #FFFFFF);
 }
 
-/* Light mode override â€” theme toggle adds [data-theme="light"] to html */
+/* Light mode override ¡ª theme toggle adds [data-theme="light"] to html */
 [data-theme="light"] {
   --bg-obsidian: #f6f7f9;
   --bg-panel: #ffffff;
@@ -102,7 +102,7 @@ export default defineConfig({
   // Must match root deno.json compilerOptions.jsx / jsxImportSource.
   esbuild: {
     jsx: 'automatic',
-    jsxImportSource: '@lessjs/core',
+    jsxImportSource: '@openelement/core',
   },
   plugins: [
     lessjs({
@@ -110,23 +110,23 @@ export default defineConfig({
       islandsDir: 'app/islands',
       componentsDir: 'app/components',
       html: {
-        title: 'LessJS',
+        title: 'openElement',
       },
       appShell: {
-        tagName: 'less-layout',
-        import: '@lessjs/ui/less-layout',
+        tagName: 'open-layout',
+        import: '@openelement/ui/open-layout',
         props: {
-          logoText: 'LESSJS',
-          footerText: 'Built with LessJS Framework - Self-bootstrapped from JSR - LESS IS MORE',
-          githubUrl: 'https://github.com/lessjs-run/LessJS',
+          logoText: 'openElement',
+          footerText: 'Built with openElement Framework ¡ª The Open Element for Web Components',
+          githubUrl: 'https://github.com/open-element/open-element',
         },
       },
-      packageIslands: ['@lessjs/ui', '@shoelace-style/shoelace'],
+      packageIslands: ['@openelement/ui', '@shoelace-style/shoelace'],
       ssr: {
         noExternal: [
-          '@lessjs/ui',
-          '@lessjs/adapter-react',
-          '@lessjs/adapter-vanilla',
+          '@openelement/ui',
+          '@openelement/adapter-react',
+          '@openelement/adapter-vanilla',
           '@shoelace-style/shoelace',
           'media-chrome',
           'react',
@@ -134,8 +134,8 @@ export default defineConfig({
         ],
       },
       pwa: {
-        name: 'LessJS Framework - Less is More',
-        shortName: 'LessJS',
+        name: 'openElement Framework',
+        shortName: 'openEle',
         themeColor: '#040508',
         backgroundColor: '#040508',
       },
@@ -210,7 +210,7 @@ export default defineConfig({
           '<meta property="og:url" content="https://lessjs.org">',
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
-          '<meta name="description" content="LessJS â€” Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
+          '<meta name="description" content="LessJS ¡ª Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
           '<style>html{visibility:visible!important;}body{background:#040508;color:#fff;}</style>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',

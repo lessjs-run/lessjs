@@ -1,11 +1,11 @@
-# @lessjs/rpc
+# @openelement/rpc
 
 零依赖 RPC 控制器 — 基于 Fetch API + AbortController，框架无关。
 
 ## 安装
 
 ```bash
-deno add jsr:@lessjs/rpc
+deno add jsr:@openelement/rpc
 ```
 
 ## 功能
@@ -21,8 +21,8 @@ deno add jsr:@lessjs/rpc
 ### 基础用法
 
 ```tsx
-import { RpcController, RpcError } from '@lessjs/rpc';
-import { DsdElement } from '@lessjs/runtime';
+import { RpcController, RpcError } from '@openelement/rpc';
+import { DsdElement } from '@openelement/runtime';
 
 class MyElement extends DsdElement {
   private rpc = new RpcController(this);

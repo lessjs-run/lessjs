@@ -58,7 +58,7 @@ Type guard: checks tag + props + children presence.
 # LessJS Core API Surface
 
 Status: v0.24.1\
-Scope: @lessjs/core
+Scope: @openelement/core
 
 ## Stable Userland API
 
@@ -71,7 +71,7 @@ Scope: @lessjs/core
 | renderToDOM(vnode, signal?)          | VNode → DOM nodes (CSR)                                      |
 | VNode / isVNode()                    | 5-field interface + type guard                               |
 | static props                         | ES2022 class fields replacing @prop() decorator              |
-| signal() / computed() / effect()     | Re-exported from @lessjs/signals                             |
+| signal() / computed() / effect()     | Re-exported from @openelement/signals                        |
 | StyleSheet                           | SSR-safe stylesheet abstraction                              |
 | renderDSD() / renderDSDStream()      | Component-to-DSD renderer entrypoints                        |
 | island() / lessBind()                | Island declaration helpers                                   |
@@ -162,8 +162,8 @@ All signal accesses in render() are auto-tracked — DOM re-renders on change.
 
 ```tsx
 <h2>编写第一个 JSX 组件</h2>
-<less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+<open-code-block><pre><code>import { DsdElement } from '@openelement/runtime';
+import { signal } from '@openelement/runtime';
 
 export class CounterElement extends DsdElement {
   count = signal(0);
@@ -178,7 +178,7 @@ export class CounterElement extends DsdElement {
 }
 
 customElements.define('my-counter', CounterElement);
-</code></pre></less-code-block>
+</code></pre></open-code-block>
 ````
 
 同时在配置段落增加 JSX 配置说明。
@@ -217,11 +217,11 @@ customElements.define('my-counter', CounterElement);
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@lessjs/core"
+    "jsxImportSource": "@openelement/core"
   },
   "imports": {
-    "@lessjs/core/jsx-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime",
-    "@lessjs/core/jsx-dev-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime"
+    "@openelement/core/jsx-runtime": "jsr:@openelement/core@^0.24.1/jsx-runtime",
+    "@openelement/core/jsx-dev-runtime": "jsr:@openelement/core@^0.24.1/jsx-runtime"
   }
 }
 ```
@@ -233,7 +233,7 @@ customElements.define('my-counter', CounterElement);
 export default defineConfig({
   esbuild: {
     jsx: 'automatic',
-    jsxImportSource: '@lessjs/core',
+    jsxImportSource: '@openelement/core',
   },
   plugins: [lessjs({ ... })]
 });
@@ -341,7 +341,7 @@ export default defineConfig({
 7. `ref` → JSX ref prop
 8. `unsafeHTML` → 内联 JSX
 9. 事件语法：`@click` → `onClick`
-10. `@lessjs/runtime` 导入路径变更
+10. `@openelement/runtime` 导入路径变更
 
 **中文版**: `www/app/routes/zh/guide/migration-v0.24.ts`
 

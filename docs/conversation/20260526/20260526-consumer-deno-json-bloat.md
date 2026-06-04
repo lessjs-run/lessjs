@@ -1,4 +1,4 @@
-# 消费者 deno.json 臃肿问题 — 框架内部实现细节泄露
+﻿# 消费者 deno.json 臃肿问题 — 框架内部实现细节泄露
 
 > **日期**: 2026-05-26
 > **关联**: ADR-0042 (Import Map Universal Resolution), ADR-0043 (external + noExternal)
@@ -16,18 +16,18 @@
 {
   "imports": {
     "vite": "npm:vite@8.0.10",
-    "@lessjs/app": "jsr:@lessjs/app@^0.21.16",
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.21.16",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.21.16",
-    "@lessjs/content": "jsr:@lessjs/content@^0.21.16",
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.16",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21.16/navigation",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.21.16",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.21.16",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21.16/framework",
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.21.16",
-    "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^0.21.16/open-props-tokens",
-    "@lessjs/ui/": "jsr:@lessjs/ui@^0.21.16/",
+    "@openelement/app": "jsr:@openelement/app@^0.21.16",
+    "@openelement/adapter-lit": "jsr:@openelement/adapter-lit@^0.21.16",
+    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.21.16",
+    "@openelement/content": "jsr:@openelement/content@^0.21.16",
+    "@openelement/core": "jsr:@openelement/core@^0.21.16",
+    "@openelement/core/navigation": "jsr:@openelement/core@^0.21.16/navigation",
+    "@openelement/i18n": "jsr:@openelement/i18n@^0.21.16",
+    "@openelement/signals": "jsr:@openelement/signals@^0.21.16",
+    "@openelement/signals/framework": "jsr:@openelement/signals@^0.21.16/framework",
+    "@openelement/ui": "jsr:@openelement/ui@^0.21.16",
+    "@openelement/ui/open-props-tokens": "jsr:@openelement/ui@^0.21.16/open-props-tokens",
+    "@openelement/ui/": "jsr:@openelement/ui@^0.21.16/",
     "hono": "npm:hono@^4.7.0",
     "hono/secure-headers": "npm:hono@^4.7.0/secure-headers",
     "parse5": "npm:parse5@^7.3.0",
@@ -42,9 +42,9 @@
 ```json
 {
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.16",
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.21.16",
-    "@lessjs/app": "jsr:@lessjs/app@^0.21.16"
+    "@openelement/core": "jsr:@openelement/core@^0.21.16",
+    "@openelement/ui": "jsr:@openelement/ui@^0.21.16",
+    "@openelement/app": "jsr:@openelement/app@^0.21.16"
   }
 }
 ```
@@ -64,13 +64,13 @@
 | `entities/lib/escape.js`       | 子路径 workaround | ADR-0042 ESM 解析泄露的产物                   | adapter-vite |
 | `hono`                         | SSR 运行时        | 入口代码 import hono，消费者必须声明          | adapter-vite |
 | `hono/secure-headers`          | SSR 运行时子路径  | 同上                                          | adapter-vite |
-| `@lessjs/signals`              | 框架内部依赖      | 页面代码可能不用 signal，但 core re-export 了 | core         |
-| `@lessjs/signals/framework`    | 框架内部子路径    | 同上                                          | core         |
-| `@lessjs/adapter-lit`          | 可选适配器        | 不用 Lit 组件的项目不需要                     | adapter-vite |
-| `@lessjs/adapter-vite`         | 构建工具          | 消费者通过 task 命令调用，不需要 import       | —            |
-| `@lessjs/core/navigation`      | 框架内部子路径    | 消费者一般不需要直接调用                      | core         |
-| `@lessjs/ui/` (trailing slash) | 子路径映射        | Rolldown 不需要消费者配这个                   | adapter-vite |
-| `@lessjs/ui/open-props-tokens` | 框架内部子路径    | 通过 `@lessjs/ui` 应自动可用                  | ui           |
+| `@openelement/signals`              | 框架内部依赖      | 页面代码可能不用 signal，但 core re-export 了 | core         |
+| `@openelement/signals/framework`    | 框架内部子路径    | 同上                                          | core         |
+| `@openelement/adapter-lit`          | 可选适配器        | 不用 Lit 组件的项目不需要                     | adapter-vite |
+| `@openelement/adapter-vite`         | 构建工具          | 消费者通过 task 命令调用，不需要 import       | —            |
+| `@openelement/core/navigation`      | 框架内部子路径    | 消费者一般不需要直接调用                      | core         |
+| `@openelement/ui/` (trailing slash) | 子路径映射        | Rolldown 不需要消费者配这个                   | adapter-vite |
+| `@openelement/ui/open-props-tokens` | 框架内部子路径    | 通过 `@openelement/ui` 应自动可用                  | ui           |
 | `vite`                         | 构建工具          | 不需要显式声明——Deno task 自动拉              | —            |
 
 ### 为什么会泄露
@@ -102,17 +102,17 @@ ADR-0042/0043 的 Clean Architecture 设计把 `parse5`/`entities`/`hono` 标记
 
 ## 方案
 
-**责任归属 `@lessjs/app`**。它是消费者唯一必装入口（`vite.config.ts` 里 `import { lessjs } from '@lessjs/app'`），不管底层用什么构建工具。
+**责任归属 `@openelement/app`**。它是消费者唯一必装入口（`vite.config.ts` 里 `import { lessjs } from '@openelement/app'`），不管底层用什么构建工具。
 
 ### 流程
 
 ```
-@lessjs/app 初始化
+@openelement/app 初始化
   ├── 读取 consumer 的 deno.json
   ├── 调用 external-resolver（adapter-vite 已实现 pre-resolution）
   ├── 生成 import map（parse5/entities/hono 的完整子路径映射）
   ├── 注入到 SSR bundle（virtual:less-import-map）
-  └── 消费者 deno.json：只需 @lessjs/core + @lessjs/ui + @lessjs/app（3 条）
+  └── 消费者 deno.json：只需 @openelement/core + @openelement/ui + @openelement/app（3 条）
 
 adapter-vite 的 external-resolver.ts 保持现状
   ├── 继续生成 Rolldown external 列表（构建时）
@@ -121,26 +121,26 @@ adapter-vite 的 external-resolver.ts 保持现状
 
 ### 为什么不是 adapter-vite
 
-`adapter-vite` 是 optional——消费者可以选择其他构建工具。import map 的生成是框架级能力（消费者总是需要 parse5/entities/hono 的映射），应该由必装入口 `@lessjs/app` 统一处理。adapter-vite 的 external-resolver 继续做它擅长的——Rolldown external 列表——但消费者 import map 的注入由 app 层负责。
+`adapter-vite` 是 optional——消费者可以选择其他构建工具。import map 的生成是框架级能力（消费者总是需要 parse5/entities/hono 的映射），应该由必装入口 `@openelement/app` 统一处理。adapter-vite 的 external-resolver 继续做它擅长的——Rolldown external 列表——但消费者 import map 的注入由 app 层负责。
 
 ### 消费者 deno.json 变化
 
 ```diff
  {
    "imports": {
-+    "@lessjs/core": "jsr:@lessjs/core@^0.21.16",
-+    "@lessjs/ui": "jsr:@lessjs/ui@^0.21.16",
-+    "@lessjs/app": "jsr:@lessjs/app@^0.21.16"
++    "@openelement/core": "jsr:@openelement/core@^0.21.16",
++    "@openelement/ui": "jsr:@openelement/ui@^0.21.16",
++    "@openelement/app": "jsr:@openelement/app@^0.21.16"
 -    "vite": "npm:vite@8.0.10",
--    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.21.16",
--    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.21.16",
--    "@lessjs/content": "jsr:@lessjs/content@^0.21.16",
--    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21.16/navigation",
--    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.21.16",
--    "@lessjs/signals": "jsr:@lessjs/signals@^0.21.16",
--    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21.16/framework",
--    "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^0.21.16/open-props-tokens",
--    "@lessjs/ui/": "jsr:@lessjs/ui@^0.21.16/",
+-    "@openelement/adapter-lit": "jsr:@openelement/adapter-lit@^0.21.16",
+-    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.21.16",
+-    "@openelement/content": "jsr:@openelement/content@^0.21.16",
+-    "@openelement/core/navigation": "jsr:@openelement/core@^0.21.16/navigation",
+-    "@openelement/i18n": "jsr:@openelement/i18n@^0.21.16",
+-    "@openelement/signals": "jsr:@openelement/signals@^0.21.16",
+-    "@openelement/signals/framework": "jsr:@openelement/signals@^0.21.16/framework",
+-    "@openelement/ui/open-props-tokens": "jsr:@openelement/ui@^0.21.16/open-props-tokens",
+-    "@openelement/ui/": "jsr:@openelement/ui@^0.21.16/",
 -    "hono": "npm:hono@^4.7.0",
 -    "hono/secure-headers": "npm:hono@^4.7.0/secure-headers",
 -    "parse5": "npm:parse5@^7.3.0",
@@ -150,7 +150,7 @@ adapter-vite 的 external-resolver.ts 保持现状
  }
 ```
 
-18 条 → 3 条。这是 ADR-0047 的自然延伸——pre-resolution 解决了 Rolldown 不解析子路径，`@lessjs/app` 解决消费者不感知子路径。
+18 条 → 3 条。这是 ADR-0047 的自然延伸——pre-resolution 解决了 Rolldown 不解析子路径，`@openelement/app` 解决消费者不感知子路径。
 
 ---
 

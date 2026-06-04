@@ -1,14 +1,14 @@
-﻿/**
+/**
  * Docs landing page - v0.23 artifact-first.
  *
- * Four entry paths: Build an app, Learn the engine, Integrate packages, Maintain LessJS.
+ * Four entry paths: Build an app, Learn the engine, Integrate packages, Maintain openElement.
  */
 export const meta = { section: 'Quick Start', label: 'Docs', order: 0 };
 export const tagName = 'page-docs';
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: block; }
@@ -54,7 +54,7 @@ export class DocsPage extends DsdElement {
             </a>
             <a class='path' href='/architecture'>
               <span class='chip'>Contribute</span>
-              <h2>Maintain LessJS</h2>
+              <h2>Maintain openElement</h2>
               <p>Read the package graph, ADR decisions, SOP execution maps, and release gate mechanics.</p>
             </a>
           </div>

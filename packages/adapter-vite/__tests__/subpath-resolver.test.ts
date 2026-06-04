@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - subpath-resolver.ts tests (Deno)
+ * @openelement/adapter-vite - subpath-resolver.ts tests (Deno)
  *
  * Tests for JSR subpath resolution: core package subpath mapping,
  * virtual module resolution, npm: prefix rewriting, and edge cases.
@@ -33,7 +33,7 @@ function callLoad(
   return load(id, {});
 }
 
-// ─── Constants ────────────────────────────────────────────────
+// ������ Constants ������������������������������������������������������������������������������������������������
 
 Deno.test('CORE_SUBPATHS: maps known subpaths to source files', () => {
   assertEquals(CORE_SUBPATHS.logger, 'logger.ts');
@@ -56,11 +56,11 @@ Deno.test('CORE_SUBPATHS: all values end with .ts', () => {
 });
 
 Deno.test('VIRTUAL_CORE_PREFIX: is a null-prefixed string', () => {
-  assertEquals(VIRTUAL_CORE_PREFIX, '\0lessjs:core/src/');
+  assertEquals(VIRTUAL_CORE_PREFIX, '\0openelement:core/src/');
   assertEquals(VIRTUAL_CORE_PREFIX.startsWith('\0'), true);
 });
 
-// ─── createCoreResolvePlugin: local mode ──────────────────────
+// ������ createCoreResolvePlugin: local mode ��������������������������������������������
 
 Deno.test('createCoreResolvePlugin: local mode (file:// metaUrl)', () => {
   const plugin = createCoreResolvePlugin('file:///home/user/project/src/index.ts');
@@ -69,7 +69,7 @@ Deno.test('createCoreResolvePlugin: local mode (file:// metaUrl)', () => {
   assertEquals(plugin.enforce, 'pre');
 
   // In local mode, resolveId should be a no-op (return undefined)
-  const result = callResolveId(plugin, '@lessjs/core');
+  const result = callResolveId(plugin, '@openelement/core');
   assertEquals(result, undefined);
 });
 
@@ -77,7 +77,7 @@ Deno.test('createCoreResolvePlugin: local mode load is no-op', async () => {
   const plugin = createCoreResolvePlugin('file:///project/src/index.ts');
 
   // In local mode, load should return undefined (pass through)
-  const result = await callLoad(plugin, '\0lessjs:core/src/logger.ts');
+  const result = await callLoad(plugin, '\0openelement:core/src/logger.ts');
   assertEquals(result, undefined);
 });
 
@@ -90,10 +90,12 @@ Deno.test('createCoreResolvePlugin: local mode plugins have correct hooks', () =
   assertEquals(typeof plugin.load, 'function');
 });
 
-// ─── createCoreResolvePlugin: remote mode ─────────────────────
+// ������ createCoreResolvePlugin: remote mode ������������������������������������������
 
 Deno.test('createCoreResolvePlugin: remote mode detects https:// URL', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   assertEquals(plugin.name, 'less:core-resolve');
   assertEquals(plugin.enforce, 'pre');
@@ -101,83 +103,105 @@ Deno.test('createCoreResolvePlugin: remote mode detects https:// URL', () => {
 
 Deno.test('createCoreResolvePlugin: remote mode detects http:// URL', () => {
   const plugin = createCoreResolvePlugin(
-    'http://localhost:8080/@lessjs/adapter-vite/0.17.0/src/index.ts',
+    'http://localhost:8080/@openelement/adapter-vite/0.17.0/src/index.ts',
   );
 
   assertEquals(plugin.name, 'less:core-resolve');
   assertEquals(plugin.enforce, 'pre');
 });
 
-Deno.test('createCoreResolvePlugin: remote mode resolves @lessjs/core bare specifier', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+Deno.test('createCoreResolvePlugin: remote mode resolves @openelement/core bare specifier', () => {
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
-  // @lessjs/core (no subpath) -> virtual:lessjs:core/src/index.ts
-  const result = callResolveId(plugin, '@lessjs/core');
-  assertEquals(result, '\0lessjs:core/src/index.ts');
+  // @openelement/core (no subpath) -> virtual:lessjs:core/src/index.ts
+  const result = callResolveId(plugin, '@openelement/core');
+  assertEquals(result, '\0openelement:core/src/index.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode resolves known subpath', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
-  const result = callResolveId(plugin, '@lessjs/core/logger');
-  assertEquals(result, '\0lessjs:core/src/logger.ts');
+  const result = callResolveId(plugin, '@openelement/core/logger');
+  assertEquals(result, '\0openelement:core/src/logger.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode resolves unknown subpath as .ts', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   // Unknown subpath like "context" -> "context.ts"
-  const result = callResolveId(plugin, '@lessjs/core/context');
-  assertEquals(result, '\0lessjs:core/src/context.ts');
+  const result = callResolveId(plugin, '@openelement/core/context');
+  assertEquals(result, '\0openelement:core/src/context.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode resolves relative imports from virtual modules', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   // Simulating a relative import from within a virtual module
-  const result = callResolveId(plugin, './errors.ts', '\0lessjs:core/src/navigation.ts');
-  assertEquals(result, '\0lessjs:core/src/errors.ts');
+  const result = callResolveId(plugin, './errors.ts', '\0openelement:core/src/navigation.ts');
+  assertEquals(result, '\0openelement:core/src/errors.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode handles relative imports with subdirectories', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
-  const result = callResolveId(plugin, './sub/file.ts', '\0lessjs:core/src/deep/dir/parent.ts');
-  assertEquals(result, '\0lessjs:core/src/deep/dir/sub/file.ts');
+  const result = callResolveId(
+    plugin,
+    './sub/file.ts',
+    '\0openelement:core/src/deep/dir/parent.ts',
+  );
+  assertEquals(result, '\0openelement:core/src/deep/dir/sub/file.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode skips already-resolved virtual IDs', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   // Already-resolved virtual IDs should pass through
-  const result = callResolveId(plugin, '\0lessjs:core/src/logger.ts');
-  assertEquals(result, '\0lessjs:core/src/logger.ts');
+  const result = callResolveId(plugin, '\0openelement:core/src/logger.ts');
+  assertEquals(result, '\0openelement:core/src/logger.ts');
 });
 
 Deno.test('createCoreResolvePlugin: remote mode passes unknown non-prefixed IDs through', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
-  // Random module that isn't @lessjs/core
+  // Random module that isn't @openelement/core
   const result = callResolveId(plugin, 'react');
   assertEquals(result, undefined);
 });
 
 Deno.test('createCoreResolvePlugin: remote mode returns undefined for absolute paths', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   const result = callResolveId(plugin, '/absolute/path');
   assertEquals(result, undefined);
 });
 
 Deno.test('createCoreResolvePlugin: remote mode null-byte-prefixed sources are not re-resolved', () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   // A \0-prefixed source that isn't our VIRTUAL_CORE_PREFIX
   const result = callResolveId(plugin, '\0other:virtual');
   assertEquals(result, undefined);
 });
 
-// ─── npm: prefix rewriting (in load hook) ─────────────────────
+// ������ npm: prefix rewriting (in load hook) ������������������������������������������
 
 Deno.test('createCoreResolvePlugin: local mode load returns undefined for non-virtual IDs', async () => {
   const plugin = createCoreResolvePlugin('file:///project/src/index.ts');
@@ -187,7 +211,9 @@ Deno.test('createCoreResolvePlugin: local mode load returns undefined for non-vi
 });
 
 Deno.test('createCoreResolvePlugin: remote mode load returns undefined for non-virtual IDs', async () => {
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   const result = await callLoad(plugin, 'some-regular-module');
   assertEquals(result, undefined);
@@ -196,13 +222,15 @@ Deno.test('createCoreResolvePlugin: remote mode load returns undefined for non-v
 Deno.test('createCoreResolvePlugin: remote mode load checks cache', () => {
   // This test verifies that load function exists and handles virtual IDs.
   // Actual fetch is tested in integration; this confirms signature and cache path.
-  const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');
+  const plugin = createCoreResolvePlugin(
+    'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
+  );
 
   assertExists(plugin.load, 'load hook must exist');
   assertEquals(typeof plugin.load, 'function');
 });
 
-// ─── CORE_SUBPATHS completeness ───────────────────────────────
+// ������ CORE_SUBPATHS completeness ��������������������������������������������������������������
 
 Deno.test('CORE_SUBPATHS: includes all expected core subpath modules', () => {
   const expectedKeys = ['logger', 'build-context', 'navigation', 'errors'];

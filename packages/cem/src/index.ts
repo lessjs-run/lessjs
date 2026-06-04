@@ -1,7 +1,7 @@
 /**
- * @lessjs/cem — Custom Elements Manifest Parser.
+ * @openelement/cem — Custom Elements Manifest Parser.
  *
- * Extracted from @lessjs/core in v0.21.0 (SOP-007).
+ * Extracted from @openelement/core in v0.21.0 (SOP-007).
  *
  * Parses and validates Custom Elements Manifest (CEM) JSON files.
  * Extracts LessJS-specific declarations, finds module paths for tags,
@@ -11,7 +11,7 @@
  * parse CEM files, not just LessJS.
  */
 
-// v0.23.0: Canonical implementation moved from @lessjs/core/cem-parser.
+// v0.23.0: Canonical implementation moved from @openelement/core/cem-parser.
 export {
   classifyCemManifest,
   extractLessDeclarations,

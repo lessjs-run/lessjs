@@ -37,7 +37,7 @@ infrastructure. Implementation is **~20 lines of code** — no new dependencies.
 ```typescript
 // packages/core/src/signal-context.ts
 
-import { effect, type Signal, signal } from '@lessjs/signals';
+import { effect, type Signal, signal } from '@openelement/signals';
 
 const contexts = new Map<symbol, unknown>();
 

@@ -2,7 +2,7 @@
 
 > Status: **HARDENED**\
 > Version: v0.24.4\
-> Scope: `@lessjs/core` public exports\
+> Scope: `@openelement/core` public exports\
 > Last hardened: 2026-05-29
 
 This page is the **authoritative API surface reference**. Any API listed here

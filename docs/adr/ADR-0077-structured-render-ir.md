@@ -66,7 +66,7 @@ component render result / VNode / adapter output
 
 ## Security Boundary
 
-`@lessjs/core` must not own a sanitizer dependency. Core should define trust
+`@openelement/core` must not own a sanitizer dependency. Core should define trust
 boundaries, not promise general-purpose HTML sanitization.
 
 Rules:

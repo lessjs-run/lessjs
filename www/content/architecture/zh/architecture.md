@@ -1,4 +1,4 @@
----
+﻿---
 title: 架构
 section: core
 label: 架构
@@ -14,9 +14,9 @@ LessJS 采用严格的三层架构，通过 ESM import 连接：
     │ ESM import
 构建层 (adapter-vite)  ─  路由扫描、SSG 管线、打包
     │ ESM import  
-核心层 (@lessjs/core)  ─  DsdElement、renderDsd、VNode、JSX
+核心层 (@openelement/core)  ─  DsdElement、renderDsd、VNode、JSX
     │ ESM import
-信号层 (@lessjs/signals) ─  signal()、computed()、effect()
+信号层 (@openelement/signals) ─  signal()、computed()、effect()
 ```
 
 每一层只依赖下一层。上层对下层不可见。
@@ -50,7 +50,7 @@ VNode 树只遍历一遍。遇到注册的自定义元素时，内联调用 `ren
 VNode 树
     ├─ <div class="app-header">
     │     ├─ <less-search>       → renderDsd('less-search') 内联渲染
-    │     └─ <less-theme-toggle> → renderDsd('less-theme-toggle') 内联渲染
+    │     └─ <open-theme-toggle> → renderDsd('less-theme-toggle') 内联渲染
     ├─ <slot></slot>             → light DOM 投射
     └─ <div class="app-footer">...</div>
 ```

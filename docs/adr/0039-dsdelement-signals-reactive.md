@@ -14,7 +14,7 @@ components are purely static DSD. Any dynamic behavior requires either:
 1. Full framework Island (Lit/React) — heavy for simple interactivity
 2. Manual `this.shadowRoot!.innerHTML = ...` — imperative, error-prone, no dependency tracking
 
-LessJS already has `@lessjs/signals` — a fine-grained reactive primitive
+LessJS already has `@openelement/signals` — a fine-grained reactive primitive
 matching the TC39 Signals proposal. The question: should DsdElement integrate
 with Signals to enable zero-framework reactivity in Ocean components?
 
@@ -153,7 +153,7 @@ This is now a documented contract: DSD hydration path MUST set
 ### Positive
 
 - Ocean components gain reactivity without framework dependency
-- `@lessjs/signals` package usage expanded — validates its design
+- `@openelement/signals` package usage expanded — validates its design
 - Zero additional runtime for components that don't use signals
 - Streaming DSD (ADR-0040) composes naturally — reactive chunks stream independently
 
@@ -167,5 +167,5 @@ This is now a documented contract: DSD hydration path MUST set
 
 - ADR-0036: Ocean-Island Architecture
 - ADR-0040: Streaming DSD
-- `@lessjs/signals`: Signal/SignalObject implementation
+- `@openelement/signals`: Signal/SignalObject implementation
 - TC39 Signals Proposal: https://github.com/tc39/proposal-signals

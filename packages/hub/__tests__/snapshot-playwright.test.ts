@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Playwright Snapshot Renderer Tests
+ * @openelement/hub - Playwright Snapshot Renderer Tests
  *
  * v0.19.0 Phase 3: Tests for the Playwright-based snapshot renderer.
  * These tests validate the fixture HTML generation and sanitizer,

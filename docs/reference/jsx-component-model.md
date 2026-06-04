@@ -8,8 +8,8 @@ Scope: JSX + Signal authoring in `DsdElement`
 Reactive DSD components use JSX syntax with Signal-driven state:
 
 ```tsx
-import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+import { DsdElement } from '@openelement/runtime';
+import { signal } from '@openelement/runtime';
 
 class CounterElement extends DsdElement {
   count = signal(0);

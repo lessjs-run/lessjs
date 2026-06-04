@@ -101,9 +101,9 @@ Required sections:
 
 - package layer diagram;
 - dependency direction rules;
-- why `@lessjs/protocols` exists;
-- why `@lessjs/core` is the runtime kernel;
-- why `@lessjs/signals` wraps `alien-signals`;
+- why `@openelement/protocols` exists;
+- why `@openelement/core` is the runtime kernel;
+- why `@openelement/signals` wraps `alien-signals`;
 - current gates that enforce the architecture.
 
 ### Component and Example Pages

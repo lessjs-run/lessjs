@@ -1,4 +1,4 @@
-# LessJS v0.24.3 — 重复代码与冗余扫描报告
+﻿# LessJS v0.24.3 — 重复代码与冗余扫描报告
 
 > **扫描日期**: 2026-05-29 | **扫描分支**: dev (19915451)\
 > **扫描范围**: 132 个 packages 源文件 + 全部 www/app 路由文件\
@@ -219,7 +219,7 @@ export const filterRegistryNav = filterHubNav; // 旧: Registry
 | 顺序 | 行动                                                                            | 影响                                                      | 工作量 |
 | ---- | ------------------------------------------------------------------------------- | --------------------------------------------------------- | ------ |
 | 1    | **从 `template.ts` 删除 `SignalLike` + `isSignalLike`**                         | 同一包内去重                                              | 小     |
-| 2    | **从 `compat-check/types.ts` 删除已在 core 的 6 个 validation 类型**            | 跨包去重，改为 `import type { ... } from '@lessjs/core'`  | 中     |
+| 2    | **从 `compat-check/types.ts` 删除已在 core 的 6 个 validation 类型**            | 跨包去重，改为 `import type { ... } from '@openelement/core'`  | 中     |
 | 3    | **从 `compat-check/types.ts` 删除 `ManifestDecision` / `SsrAdmissionDecision`** | 同上                                                      | 小     |
 | 4    | **从 `cem/types.ts` 删除 `ComponentLayer` / `HydrationStrategy`**               | 改为从 core 导入                                          | 小     |
 | 5    | **从 `adapter-vite/entry-descriptor.ts` 删除 `SsrAdmissionDecision`**           | 改为从 core 导入                                          | 小     |

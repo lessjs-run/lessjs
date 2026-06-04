@@ -98,7 +98,7 @@ jsx('less-layout', {
 `renderNestedDsd()` owns the final SSR traversal. The output shape is:
 
 ```html
-<less-layout current-path="/guide">
+<open-layout current-path="/guide">
   <template shadowrootmode="open">
     <slot></slot>
   </template>
@@ -107,15 +107,15 @@ jsx('less-layout', {
       <main>...</main>
     </template>
   </page-guide>
-</less-layout>
+</open-layout>
 ```
 
 The page component is light DOM for `less-layout`; the browser projects it into
-`<slot>`. No adapter-level `replace("</less-layout>", ...)` is allowed.
+`<slot>`. No adapter-level `replace("</open-layout>", ...)` is allowed.
 
 ## Module Boundaries
 
-### `@lessjs/core`
+### `@openelement/core`
 
 Owns rendering semantics:
 
@@ -126,7 +126,7 @@ Owns rendering semantics:
 - DSD/CSR host lifecycle: `DsdElement`
 - event marker serialization and hydration
 
-### `@lessjs/adapter-vite`
+### `@openelement/adapter-vite`
 
 Owns build orchestration:
 
@@ -138,20 +138,20 @@ Owns build orchestration:
 
 It must not own HTML composition semantics.
 
-### `@lessjs/ui`
+### `@openelement/ui`
 
 Owns framework UI components such as `less-layout`, `less-search`, and
 `less-theme-toggle`. These components are normal custom elements and must enter
 the same rendering path as user components.
 
-### `@lessjs/router`
+### `@openelement/router`
 
 Owns CSR navigation only. It does not define SSR route structure.
 
-### `@lessjs/content` and `@lessjs/i18n`
+### `@openelement/content` and `@openelement/i18n`
 
 Own build-time generated data. They write disk-backed generated modules, which
-adapter-vite resolves through `@lessjs/generated/*`.
+adapter-vite resolves through `@openelement/generated/*`.
 
 ## Accepted Changes
 

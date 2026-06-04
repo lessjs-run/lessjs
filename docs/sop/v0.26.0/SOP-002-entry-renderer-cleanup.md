@@ -4,7 +4,7 @@
 
 ## Objective
 
-`entry-renderer.ts` 生成的 SSR 入口代码不再包含 `virtual:less-blog-data` 和 `virtual:less-i18n-data` 导入。改用 `@lessjs/content/blog-data` 和 `@lessjs/i18n/data`。
+`entry-renderer.ts` 生成的 SSR 入口代码不再包含 `virtual:less-blog-data` 和 `virtual:less-i18n-data` 导入。改用 `@openelement/content/blog-data` 和 `@openelement/i18n/data`。
 
 ## Background
 
@@ -23,10 +23,10 @@ lines.push('export { locales, getDefaultLocale, getI18nOptions } from "virtual:l
 
 ```diff
 - lines.push('export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"');
-+ lines.push('export { posts, getPostBySlug, getBlogOptions } from "@lessjs/content/blog-data"');
++ lines.push('export { posts, getPostBySlug, getBlogOptions } from "@openelement/content/blog-data"');
 
 - lines.push('export { locales, getDefaultLocale, getI18nOptions } from "virtual:less-i18n-data"');
-+ lines.push('export { locales, getDefaultLocale, getI18nOptions } from "@lessjs/i18n/data"');
++ lines.push('export { locales, getDefaultLocale, getI18nOptions } from "@openelement/i18n/data"');
 ```
 
 ## Step 2: 更新 build-ssg.ts SSG 入口 (0.5h)
@@ -45,8 +45,8 @@ lines.push('export { locales, getDefaultLocale, getI18nOptions } from "virtual:l
 ```typescript
 resolve: {
   alias: {
-    '@lessjs/content/blog-data': join(process.cwd(), 'app/data/_generated-blog-data.ts'),
-    '@lessjs/i18n/data': join(process.cwd(), 'app/data/_generated-i18n-data.ts'),
+    '@openelement/content/blog-data': join(process.cwd(), 'app/data/_generated-blog-data.ts'),
+    '@openelement/i18n/data': join(process.cwd(), 'app/data/_generated-i18n-data.ts'),
   }
 }
 ```

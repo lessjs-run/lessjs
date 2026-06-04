@@ -1,4 +1,4 @@
-# LessJS www 全站重设计 — 视觉样例图规范
+﻿# LessJS www 全站重设计 — 视觉样例图规范
 
 > 文档版本: 1.0 | 作者: 产品经理许清楚 (Xu) | 日期: 2025-05-19
 >
@@ -118,7 +118,7 @@
  ║  左侧: showcase island 实时渲染                               ║
  ║  右侧: 对应源代码（暗色代码块）                                ║
  ║  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  ║
- ║  @lessjs/adapter-lit · npm i @lessjs/adapter-lit             ║
+ ║  @openelement/adapter-lit · npm i @openelement/adapter-lit             ║
  ║  (适配器说明 + 安装命令)                                       ║
  ╚═══════════════════════════════════════════════════════════════╝
 
@@ -132,7 +132,7 @@
  ║                                                               ║
  ║      ●  STEP 1. 创建                                         ║
  ║      │  ┌──────────────────────────────────┐                 ║
- ║      │  │ deno run -A jsr:@lessjs/create   │                 ║
+ ║      │  │ deno run -A jsr:@openelement/create   │                 ║
  ║      │  │                        [📋 复制] │                 ║
  ║      │  └──────────────────────────────────┘                 ║
  ║      │                                                        ║
@@ -199,7 +199,7 @@
  │          │                                                  │
  │          │  ┌─ ● ● ● ─ terminal ──────────────────┐        │
  │          │  │                                      │        │
- │          │  │  deno run -A jsr:@lessjs/create      │        │
+ │          │  │  deno run -A jsr:@openelement/create      │        │
  │          │  │  cd my-app                            │        │
  │          │  │                            [📋 复制] │        │
  │          │  └──────────────────────────────────────┘        │

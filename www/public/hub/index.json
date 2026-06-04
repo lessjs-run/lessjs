@@ -1,10 +1,10 @@
-{
+﻿{
   "schema": "hub-index-v1",
   "updatedAt": "2026-05-19T03:07:00.000Z",
   "packages": [
     {
       "name": "ui",
-      "scope": "@lessjs",
+      "scope": "@openelement",
       "version": "0.18.3",
       "description": "LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.",
       "compatibility": "ssr-capable",

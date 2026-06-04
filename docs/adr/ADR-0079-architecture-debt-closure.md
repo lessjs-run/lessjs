@@ -80,7 +80,7 @@ ADR-0058 (2026-05-29) preserved `render(): string` as an "escape hatch" for thir
 
 - `validatorVersion: '0.19.0'` (20+ occurrences)
 - Shoelace version `'2.20.1'` (5 occurrences)
-- `@lessjs/ui` version `'0.29.0'` (1 occurrence)
+- `@openelement/ui` version `'0.29.0'` (1 occurrence)
 - Deno cache paths (2 occurrences)
 
 All moved to `packages/hub/src/constants.ts`.

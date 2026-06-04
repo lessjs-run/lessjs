@@ -152,7 +152,7 @@ Phase 4 (v0.28.0): Full Router
 
 - SSG 仍需文件系统扫描或 Hono route 遍历
 - 现有 `[slug].tsx` 约定保留至 v0.28.0
-- `@lessjs/router` 不超过 200 行核心代码
+- `@openelement/router` 不超过 200 行核心代码
 
 ## Package Weight
 

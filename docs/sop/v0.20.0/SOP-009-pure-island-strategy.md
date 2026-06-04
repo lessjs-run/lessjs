@@ -15,7 +15,7 @@ Define the Pure Island strategy: `less-hero-ping` stays on Lit. No migration nee
 
 ## Decision
 
-**`less-hero-ping` retains Lit.** It is the only component in `@lessjs/ui` that genuinely needs framework reactivity:
+**`less-hero-ping` retains Lit.** It is the only component in `@openelement/ui` that genuinely needs framework reactivity:
 
 | Why it needs Lit                                       | Why DSD doesn't help                         |
 | ------------------------------------------------------ | -------------------------------------------- |
@@ -105,7 +105,7 @@ This is out of scope for v0.20 but the architecture supports it.
 
 ```
 LitElement.render(): TemplateResult
-  → @lessjs/adapter-lit claims it (adapter.isTemplate() = true)
+  → @openelement/adapter-lit claims it (adapter.isTemplate() = true)
   → adapter.render(TemplateResult) → HTML string
   → renderDsd() wraps in DSD template
   → Client: LitElement upgrade → render() → reactive cycle starts
@@ -113,7 +113,7 @@ LitElement.render(): TemplateResult
 
 ---
 
-## @lessjs/adapter-lit Status
+## @openelement/adapter-lit Status
 
 | v0.19                 | v0.20                       | v0.21+                              |
 | --------------------- | --------------------------- | ----------------------------------- |
@@ -128,10 +128,10 @@ LitElement.render(): TemplateResult
 
 - [ ] `less-hero-ping` renders ping animation correctly
 - [ ] Lit dependency still in `packages/ui/deno.json` (for hero-ping)
-- [ ] `@lessjs/adapter-lit` still in `www/deno.json` (for hero-ping SSR)
+- [ ] `@openelement/adapter-lit` still in `www/deno.json` (for hero-ping SSR)
 - [ ] CSS Parts on hero-ping work (`::part(dot-animated)`)
 - [ ] All 9 DSD components have zero Lit imports
-- [ ] All 9 DSD components have zero `@lessjs/adapter-lit` imports
+- [ ] All 9 DSD components have zero `@openelement/adapter-lit` imports
 - [ ] Island strategy table is documented in `packages/ui/README.md`
 
 ---

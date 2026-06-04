@@ -1,5 +1,5 @@
-/**
- * @lessjs/signals - Framework Layer
+﻿/**
+ * @openelement/signals - Framework Layer
  *
  * Developer-friendly API wrapping the engine.
  * signal(), computed(), effect() - the primary API surface.
@@ -7,7 +7,7 @@
  * v0.22.1: Alien Signals is the only engine. TC39 polyfill removed.
  * effectScope exposes component-level effect lifecycle management.
  *
- * @module @lessjs/signals/framework
+ * @module @openelement/signals/framework
  */
 
 import { effectScope as _es } from 'alien-signals';

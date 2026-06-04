@@ -12,10 +12,10 @@ turns the existing ADR/SOP decisions into repository checks and cleanup.
 
 ## Scope
 
-1. Confirm `DsdElement` exists as real public API in `@lessjs/core`.
+1. Confirm `DsdElement` exists as real public API in `@openelement/core`.
 2. Confirm `renderDsd()` extracts native `StyleSheet`/DsdElement styles before
    falling back to framework adapters.
-3. Confirm `@lessjs/ui` components use `DsdElement` for Ocean components.
+3. Confirm `@openelement/ui` components use `DsdElement` for Ocean components.
 4. Remove or update stale public examples that still teach Lit as the default
    page authoring model.
 5. Update Hub scanner language so first-party LessJS UI is described as
@@ -38,7 +38,7 @@ turns the existing ADR/SOP decisions into repository checks and cleanup.
 ### 1. Public Example Cleanup
 
 - Update Getting Started page examples to import `DsdElement` from
-  `@lessjs/core`.
+  `@openelement/core`.
 - Ensure page examples return string HTML, not Lit `html` templates.
 
 ### 2. Hub Metadata Cleanup
@@ -72,6 +72,6 @@ Run:
 ## Deferred Work
 
 - Split `less-layout` into smaller layout/navigation/theme modules.
-- Decide when `@lessjs/adapter-lit` can move from compatibility bridge to
+- Decide when `@openelement/adapter-lit` can move from compatibility bridge to
   optional legacy package.
 - Add a focused guard that fails if first-party Ocean components import Lit.

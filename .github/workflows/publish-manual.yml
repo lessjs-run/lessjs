@@ -74,13 +74,13 @@ jobs:
             (cd "$dir" && deno publish -c deno.json)
           }
 
-          publish_if_requested_and_missing "rpc" "@lessjs/rpc" "packages/rpc"
-          publish_if_requested_and_missing "signals" "@lessjs/signals" "packages/signals"
-          publish_if_requested_and_missing "core" "@lessjs/core" "packages/core"
-          publish_if_requested_and_missing "adapter-vite" "@lessjs/adapter-vite" "packages/adapter-vite"
-          publish_if_requested_and_missing "content" "@lessjs/content" "packages/content"
-          publish_if_requested_and_missing "i18n" "@lessjs/i18n" "packages/i18n"
-          publish_if_requested_and_missing "adapter-lit" "@lessjs/adapter-lit" "packages/adapter-lit"
-          publish_if_requested_and_missing "ui" "@lessjs/ui" "packages/ui"
-          publish_if_requested_and_missing "app" "@lessjs/app" "packages/app"
-          publish_if_requested_and_missing "create" "@lessjs/create" "packages/create"
+          publish_if_requested_and_missing "rpc" "@openelement/rpc" "packages/rpc"
+          publish_if_requested_and_missing "signals" "@openelement/signals" "packages/signals"
+          publish_if_requested_and_missing "core" "@openelement/core" "packages/core"
+          publish_if_requested_and_missing "adapter-vite" "@openelement/adapter-vite" "packages/adapter-vite"
+          publish_if_requested_and_missing "content" "@openelement/content" "packages/content"
+          publish_if_requested_and_missing "i18n" "@openelement/i18n" "packages/i18n"
+          publish_if_requested_and_missing "adapter-lit" "@openelement/adapter-lit" "packages/adapter-lit"
+          publish_if_requested_and_missing "ui" "@openelement/ui" "packages/ui"
+          publish_if_requested_and_missing "app" "@openelement/app" "packages/app"
+          publish_if_requested_and_missing "create" "@openelement/create" "packages/create"

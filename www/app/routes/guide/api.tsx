@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Core', label: 'API Routes', order: 60 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+export const meta = { section: 'Core', label: 'API Routes', order: 60 };
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-code-block';
+import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(
@@ -54,7 +54,7 @@ export class ApiPage extends DsdElement {
           <p>API routes 放在 app/routes/api。模块默认导出一个 Hono app。</p>
           <h2>Type-Safe RPC</h2>
           <p>
-            @lessjs/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
+            @openelement/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
             <a href='/api/reference'>RPC 远程调用</a>。
           </p>
           <h2>Static Build Boundary</h2>
@@ -108,22 +108,22 @@ export class ApiPage extends DsdElement {
             <span class='inline-code'>params</span>, <span class='inline-code'>env</span>, and{' '}
             <span class='inline-code'>platform</span>.
           </p>
-          <less-code-block>
+          <open-code-block>
             <pre><code>{'// app/routes/api/posts.ts'}
 import {'{'} Hono {'}'} from 'hono';
 const app = new Hono();
 app.get('/', (c) =&gt; c.json([{'{'} id: 1, title: 'Hello' {'}'}]));
 app.post('/', async (c) =&gt; {'{'} const body = await c.req.json(); return c.json({'{'} id: 2, ...body {'}'}, 201); {'}'});
 export default app;</code></pre>
-          </less-code-block>
-          <less-code-block>
+          </open-code-block>
+          <open-code-block>
             <pre><code>{'// app/routes/api/health.ts — simple endpoint, no Hono needed'}
-import type {'{'} LessApiContext {'}'} from '@lessjs/core';
+import type {'{'} LessApiContext {'}'} from '@openelement/core';
 
 export default function GET(ctx: LessApiContext) {'{'}
   return Response.json({'{'} ok: true, mode: ctx.env.MODE ?? 'production' {'}'});
 {'}'}</code></pre>
-          </less-code-block>
+          </open-code-block>
           <h2>Request Validation</h2>
           <p>
             LessJS does not mandate a validation library. Zod with{' '}
@@ -131,7 +131,7 @@ export default function GET(ctx: LessApiContext) {'{'}
           </p>
           <h2>Type-Safe RPC</h2>
           <p>
-            <span class='inline-code'>@lessjs/rpc</span>{' '}
+            <span class='inline-code'>@openelement/rpc</span>{' '}
             provides type-safe client/server calling conventions. See{' '}
             <a href='/api/reference'>RPC Guide</a>.
           </p>

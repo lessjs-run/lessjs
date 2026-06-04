@@ -14,8 +14,8 @@
 const defaultNoExternal = [
   /^lit/,
   /^@lit/,
-  /^@lessjs\/ui/,
-  /^@lessjs\/adapter-lit/,
+  /^@openelement\/ui/,
+  /^@openelement\/adapter-lit/,
   'parse5',
   'entities',
   'node-fetch',
@@ -53,7 +53,7 @@ const defaultNoExternal = [
 
 ```ts
 const ssrNoExternal = [
-  /^@lessjs\//, // 所有 LessJS 框架包
+  /^@openelement\//, // 所有 LessJS 框架包
   /^lit/, // lit, lit-html, lit-element
   /^@lit/, // @lit/reactive-element, @lit-labs/ssr-dom-shim
   /^@lit-labs\//, // @lit-labs/* (ssr-dom-shim 等)
@@ -85,7 +85,7 @@ const ssrExternal = [
 
 | 条件                               | 层级               | 理由                                    |
 | ---------------------------------- | ------------------ | --------------------------------------- |
-| `@lessjs/*` 包                     | `noExternal`       | 需要 TypeScript 编译 + Phase B 单例共享 |
+| `@openelement/*` 包                | `noExternal`       | 需要 TypeScript 编译 + Phase B 单例共享 |
 | `lit` / `@lit/*` 生态              | `noExternal`       | 需要 decorator 编译 + Lit SSR 内部状态  |
 | npm 包有子路径导出且被传递依赖引用 | `external`         | Rolldown 无法解析 → 交还 Deno           |
 | npm 包在 Deno 有原生替代           | `external`         | 避免冗余打包                            |
@@ -97,7 +97,7 @@ const ssrExternal = [
 viteBuild({ ssr: true })
 │
 ├── ssr.noExternal                    ┌─────────────────────────┐
-│   ├── /^@lessjs\//  ──────────────▶ │ Rolldown 打包            │
+│   ├── /^@openelement\//  ──────────────▶ │ Rolldown 打包            │
 │   ├── /^lit/                        │ - TypeScript 编译        │
 │   └── /^@lit/                       │ - Decorator 转换         │
 │                                     │ - Tree-shaking           │

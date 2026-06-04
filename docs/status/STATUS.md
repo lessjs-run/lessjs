@@ -35,7 +35,7 @@ migration, CI composite action, docs-site theme gates, and signal-driven
 registry work.
 
 v0.27.0 Status: **IMPLEMENTED.** Virtual module coupling removed from route
-files, island transform extracted to `@lessjs/core`, zero-bundler dev server,
+files, island transform extracted to `@openelement/core`, zero-bundler dev server,
 SSG rendering robustness, and www/ documentation overhaul.
 
 v0.25.0 Status: **IMPLEMENTED.** Declarative DX. `lessPipeline()`, 14 SOPs, and
@@ -103,14 +103,14 @@ the workspace so published JSR packages resolve a coherent version set.
 ## Key Decisions
 
 - **TemplateResult removed.** JSX+Signal is the only component model. `render()` returns `string | VNode`.
-- **Signals in DsdElement via effect().** Signal-to-VNode re-render uses `effect()` from `@lessjs/signals`.
+- **Signals in DsdElement via effect().** Signal-to-VNode re-render uses `effect()` from `@openelement/signals`.
 - **DSD-first architecture.** Declarative Shadow DOM is the primary output, zero JS by default.
 - **No DOM diff.** Signal writes trigger full re-render; complex subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions, and declared imports.
-- **Cross-package types canonical.** `@lessjs/core` is the single source of truth for shared types.
+- **Cross-package types canonical.** `@openelement/core` is the single source of truth for shared types.
 - **API surface hardened.** `docs/reference/core-api-surface.md` defines HARDENED vs STABLE levels.
 - **Adapter registry factory.** `createAdapterRegistry()` enables subprocess-isolated registries; `getDefaultRegistry()` keeps the shared runtime path explicit.
-- **Full Open Props migration.** No custom semantic tokens; all colors derive from `@lessjs/ui/open-props-tokens`.
+- **Full Open Props migration.** No custom semantic tokens; all colors derive from `@openelement/ui/open-props-tokens`.
 - **MDX through DSD.** MDX is build-time content compilation into the Less JSX runtime, not a runtime parser or React layer.
 
 ## Last Completed Line: v0.28.5

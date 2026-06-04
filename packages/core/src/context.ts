@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Request Context
+ * @openelement/core - Request Context
  * Provides a per-request context object that flows through SSR rendering
  * and is accessible to islands and layout components.
  *
@@ -13,8 +13,8 @@ import { createLogger } from './logger.js';
 
 /**
  * Minimal island descriptor used in SSR context.
- * Full IslandDecl (with import paths, strategy, etc.) lives in @lessjs/adapter-vite.
- * This keeps @lessjs/core zero-dependency on build orchestration.
+ * Full IslandDecl (with import paths, strategy, etc.) lives in @openelement/adapter-vite.
+ * This keeps @openelement/core zero-dependency on build orchestration.
  */
 export interface IslandDescriptor {
   /** Custom element tag name */

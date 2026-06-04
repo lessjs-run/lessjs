@@ -96,20 +96,20 @@ plugins.push(...lessContent({ ...contentOpts, ctx }));
 
 **Evaluation**:
 
-| Package                | Responsibility                                    | Purity                                        |
-| ---------------------- | ------------------------------------------------- | --------------------------------------------- |
-| `@lessjs/core`         | Runtime DSD rendering, island wrapper, navigation | ✅ Zero Node, zero Vite, zero npm: specifiers |
-| `@lessjs/adapter-vite` | Vite plugin, route scanning, SSG build pipeline   | ✅ Depends on Vite only                       |
-| `@lessjs/adapter-lit`  | Lit-specific DSD hydration, event binding         | ✅ Depends on Lit only                        |
-| `@lessjs/rpc`          | Fetch abstraction with loading/error states       | ✅ Framework-agnostic                         |
-| `@lessjs/content`      | Blog markdown, nav generation                     | ✅ Isolated                                   |
-| `@lessjs/i18n`         | Locale routing, translations                      | ✅ Isolated                                   |
+| Package                     | Responsibility                                    | Purity                                        |
+| --------------------------- | ------------------------------------------------- | --------------------------------------------- |
+| `@openelement/core`         | Runtime DSD rendering, island wrapper, navigation | ✅ Zero Node, zero Vite, zero npm: specifiers |
+| `@openelement/adapter-vite` | Vite plugin, route scanning, SSG build pipeline   | ✅ Depends on Vite only                       |
+| `@openelement/adapter-lit`  | Lit-specific DSD hydration, event binding         | ✅ Depends on Lit only                        |
+| `@openelement/rpc`          | Fetch abstraction with loading/error states       | ✅ Framework-agnostic                         |
+| `@openelement/content`      | Blog markdown, nav generation                     | ✅ Isolated                                   |
+| `@openelement/i18n`         | Locale routing, translations                      | ✅ Isolated                                   |
 
 **Rating**: ✅ **Excellent** - Clear boundaries, minimal coupling, clean exports.
 
 **Findings**:
 
-- **Medium**: `@lessjs/core` depends on `parse5` (npm: specifier). This violates the "zero npm: specifiers" claim in the JSDoc (line 7 of `core/src/index.ts`). Consider making `parse5` a peer dependency or moving SSR DOM parsing to `adapter-vite`.
+- **Medium**: `@openelement/core` depends on `parse5` (npm: specifier). This violates the "zero npm: specifiers" claim in the JSDoc (line 7 of `core/src/index.ts`). Consider making `parse5` a peer dependency or moving SSR DOM parsing to `adapter-vite`.
 - **Low**: Some types (`RenderAdapter`, `DsdComponent`) are defined in `core` but only implemented in `adapter-lit`. This creates a loose coupling that could be tightened with a devDependency.
 
 ---
@@ -128,7 +128,7 @@ plugins.push(...lessContent({ ...contentOpts, ctx }));
 
 **Findings**:
 
-- **Low**:Lit is the only supported UI framework for DSD hydration. While `@lessjs/core` is framework-agnostic, only `adapter-lit` exists. Consider documenting how to create `adapter-preact` or `adapter-vue`.
+- **Low**:Lit is the only supported UI framework for DSD hydration. While `@openelement/core` is framework-agnostic, only `adapter-lit` exists. Consider documenting how to create `adapter-preact` or `adapter-vue`.
 
 ---
 
@@ -185,11 +185,11 @@ plugins.push(...lessContent({ ...contentOpts, ctx }));
 
 ### Medium Issues (P2)
 
-| #  | Issue                                                            | Location                             | Recommendation                                                   |
-| -- | ---------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
-| M1 | `parse5` in `@lessjs/core` violates "zero npm: specifiers" claim | `packages/core/deno.json` line 13    | Move SSR DOM parsing to `adapter-vite` or make `parse5` optional |
-| M2 | No formal plugin API for third-party extensions                  | `packages/adapter-vite/src/index.ts` | Document `LessBuildContext` interface and provide hook points    |
-| M3 | Unclear guidance on `app/components/` vs inline route components | Documentation                        | Add architecture decision record (ADR) on component organization |
+| #  | Issue                                                                 | Location                             | Recommendation                                                   |
+| -- | --------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| M1 | `parse5` in `@openelement/core` violates "zero npm: specifiers" claim | `packages/core/deno.json` line 13    | Move SSR DOM parsing to `adapter-vite` or make `parse5` optional |
+| M2 | No formal plugin API for third-party extensions                       | `packages/adapter-vite/src/index.ts` | Document `LessBuildContext` interface and provide hook points    |
+| M3 | Unclear guidance on `app/components/` vs inline route components      | Documentation                        | Add architecture decision record (ADR) on component organization |
 
 ### Low Issues (P3)
 
@@ -219,7 +219,7 @@ plugins.push(...lessContent({ ...contentOpts, ctx }));
 
 ### 5.1 Short Term (Address in v0.15)
 
-1. **Remove `parse5` from `@lessjs/core`**\
+1. **Remove `parse5` from `@openelement/core`**\
    Move SSR DOM parsing to `adapter-vite` or make it an optional dependency. Update JSDoc to accurately reflect dependencies.
 
 2. **Document `LessBuildContext` for plugin authors**\
@@ -248,7 +248,7 @@ plugins.push(...lessContent({ ...contentOpts, ctx }));
    Cache rendered pages and only re-render changed routes (like Next.js `getStaticPaths`).
 
 8. **Edge Runtime Adapter**\
-   Add `@lessjs/adapter-cloudflare` or `@lessjs/adapter-vercel` for full edge SSR support.
+   Add `@openelement/adapter-cloudflare` or `@openelement/adapter-vercel` for full edge SSR support.
 
 ---
 

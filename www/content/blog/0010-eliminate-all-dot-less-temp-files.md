@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0010: 消除所有 .less/ 临时文件，统一单进程构建'
 date: '2026-05-11'
 type: 'adr'
@@ -52,7 +52,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 
 **方案**：从 `build.ts` 的 `closeBundle()` 中移除文件写入。所有数据通过 `LessBuildContext` 传递。`build-client.ts` 和 `build-ssg.ts` 不再有"无 ctx 时从文件读取"的 fallback 路径。
 
-**前提**：standalone `deno run -A jsr:@lessjs/core/cli/build-client` 不再支持独立运行——用户应使用 `deno run -A jsr:@lessjs/core/cli/build` 统一入口。
+**前提**：standalone `deno run -A jsr:@openelement/core/cli/build-client` 不再支持独立运行——用户应使用 `deno run -A jsr:@openelement/core/cli/build` 统一入口。
 
 ### 2. `.less-client-entry.ts` → `virtual:less-client-entry`
 
@@ -107,7 +107,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 
 ### Negative
 
-- **Standalone CLI 不再支持分步运行**：`deno run -A jsr:@lessjs/core/cli/build-client` 独立运行会报错。用户必须使用 `deno run -A jsr:@lessjs/core/cli/build` 或 `lessjs()` 编排器。
+- **Standalone CLI 不再支持分步运行**：`deno run -A jsr:@openelement/core/cli/build-client` 独立运行会报错。用户必须使用 `deno run -A jsr:@openelement/core/cli/build` 或 `lessjs()` 编排器。
   - **缓解**：`cli/build.ts` 已提供统一入口，分步运行无实际用例。
 - **无法直接查看生成的入口代码**：之前可以 `cat .less/.less-ssg-entry.ts` 查看生成的 Hono 入口。
   - **缓解**：`DEBUG=lessjs*` 日志会输出虚拟模块内容；也可在 Vite config 中添加 `debug: true` 查看。

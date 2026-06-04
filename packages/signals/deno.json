@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/signals",
+  "name": "@openelement/signals",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",

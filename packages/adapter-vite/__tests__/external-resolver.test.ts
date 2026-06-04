@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite — Tests for external-resolver.ts.
+ * @openelement/adapter-vite — Tests for external-resolver.ts.
  *
  * ADR-0047: Verifies Deno pre-resolution, fallback behavior, and
  * cache invalidation logic.
@@ -137,7 +137,7 @@ Deno.test('extractExternalSpecifiers: ignores non-npm specifiers', () => {
   const result = extractExternalSpecifiers(
     {
       modules: [
-        { specifier: 'jsr:@lessjs/core@0.21/logger.ts' },
+        { specifier: 'jsr:@openelement/core@0.21/logger.ts' },
         { specifier: 'https://esm.sh/react@18' },
         { specifier: 'npm:hono@4.12.23' },
       ],

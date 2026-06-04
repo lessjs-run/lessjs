@@ -1,14 +1,14 @@
 /**
- * @lessjs/core - JSX → DOM renderer (CSR path).
+ * @openelement/core - JSX �� DOM renderer (CSR path).
  *
  * Converts a VNode tree to real DOM nodes for client-side rendering and hydration.
  *
  * Design (ADR-0057):
  * - Event handlers (onClick) are wired via native addEventListener
  * - ref callbacks are invoked with the created element
- * - No synthetic event system — shadow DOM event bubbling is handled by the browser
+ * - No synthetic event system �� shadow DOM event bubbling is handled by the browser
  *
- * @module @lessjs/core/jsx-render-dom
+ * @module @openelement/core/jsx-render-dom
  */
 
 import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
@@ -16,9 +16,9 @@ import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
 import { trustRenderHtml } from './security.ts';
-import { effect } from '@lessjs/signals';
+import { effect } from '@openelement/signals';
 
-// ─── SVG namespace support ────────────────────────────────────────────────────
+// ������ SVG namespace support ��������������������������������������������������������������������������������������������������������
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -90,18 +90,18 @@ function createElementForTag(tag: string): Element {
   return document.createElement(tag);
 }
 
-// ─── applyProps ───────────────────────────────────────────────────────────────
+// ������ applyProps ������������������������������������������������������������������������������������������������������������������������������
 
 /**
  * Apply a single resolved (non-signal) prop value to a DOM element.
- * Extracted from applyProps so it can be reused inside signal→DOM
+ * Extracted from applyProps so it can be reused inside signal��DOM
  * effect callbacks without unwrapping signals again.
  */
 function applyStaticProp(el: Element, key: string, resolved: unknown): void {
   if (resolved == null) return;
   if (key === 'trustedHtml') return;
 
-  // style object — unwrap nested signal values
+  // style object �� unwrap nested signal values
   if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
     const styleObj: Record<string, string> = {};
     for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
@@ -137,15 +137,15 @@ function applyStaticProp(el: Element, key: string, resolved: unknown): void {
 /**
  * Apply a props object to a real DOM element.
  *
- * - `on*` handlers → addEventListener
- * - `ref` → invoke callback with element
- * - Signal values → create effect() binding (ADR-0058)
- * - `style` object → assign to element.style
- * - Boolean values → setAttribute / removeAttribute
- * - `innerHTML` → text by default; trusted HTML when trustedHtml=true
- * - `className` → `class` attribute
- * - `htmlFor` → `for` attribute
- * - Other values → setAttribute
+ * - `on*` handlers �� addEventListener
+ * - `ref` �� invoke callback with element
+ * - Signal values �� create effect() binding (ADR-0058)
+ * - `style` object �� assign to element.style
+ * - Boolean values �� setAttribute / removeAttribute
+ * - `innerHTML` �� text by default; trusted HTML when trustedHtml=true
+ * - `className` �� `class` attribute
+ * - `htmlFor` �� `for` attribute
+ * - Other values �� setAttribute
  */
 export function applyProps(
   el: Element,
@@ -190,7 +190,7 @@ export function applyProps(
     // Instead of unwrapping the signal to a static value and calling
     // it done, create an effect that binds the signal directly to the
     // DOM attribute. When the signal changes, only that attribute/prop
-    // is updated — no full re-render, no VDOM diff, no lifecycle noise.
+    // is updated �� no full re-render, no VDOM diff, no lifecycle noise.
     if (isSignalLike(value)) {
       const dispose = effect(() => {
         const resolved = unwrapSignalLike(value.value);
@@ -212,7 +212,7 @@ export function applyProps(
   }
 }
 
-// ─── renderToDom ──────────────────────────────────────────────────────────────
+// ������ renderToDom ����������������������������������������������������������������������������������������������������������������������������
 
 /**
  * Render a VNode tree to a real DOM node.
@@ -256,8 +256,10 @@ export function renderToDom(
 
   const { tag, props, children } = node as VNode;
 
-  // ── Fragment ──────────────────────────────────────────────────────────────
-  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
+  // ���� Fragment ����������������������������������������������������������������������������������������������������������������������������
+  if (
+    tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(openelement.fragment)')
+  ) {
     const frag = document.createDocumentFragment();
     for (const child of children) {
       frag.appendChild(renderToDom(child, signal, disposers));
@@ -265,7 +267,7 @@ export function renderToDom(
     return frag;
   }
 
-  // ── Show (conditional rendering) ──────────────────────────────────────────
+  // ���� Show (conditional rendering) ������������������������������������������������������������������������������������
   if (tag === SHOW_TAG || tag === 'show') {
     const whenSig = props?.when;
     const ch = children as VNode[];
@@ -294,7 +296,7 @@ export function renderToDom(
     return marker;
   }
 
-  // ── For (list rendering) ──────────────────────────────────────────────────
+  // ���� For (list rendering) ����������������������������������������������������������������������������������������������������
   if (tag === FOR_TAG || tag === 'fore') {
     const eachSig = props?.each;
     const renderFn = (children[0] as RenderFn) ??
@@ -326,7 +328,7 @@ export function renderToDom(
     return marker;
   }
 
-  // ── Component function / class ────────────────────────────────────────────
+  // ���� Component function / class ����������������������������������������������������������������������������������������
   if (isComponentCtor(tag)) {
     try {
       const instance = new tag();
@@ -337,7 +339,7 @@ export function renderToDom(
       return renderToDom(result, signal, disposers);
     } catch (err) {
       console.error(
-        `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,
+        `[openElement/CSR] renderToDom() failed for <${String(tag)}>:`,
         err instanceof Error ? err.message : String(err),
       );
       return document.createTextNode('');
@@ -349,14 +351,14 @@ export function renderToDom(
       return renderToDom(result, signal, disposers);
     } catch (err) {
       console.error(
-        `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,
+        `[openElement/CSR] renderToDom() failed for <${String(tag)}>:`,
         err instanceof Error ? err.message : String(err),
       );
       return document.createTextNode('');
     }
   }
 
-  // ── HTML / SVG element ───────────────────────────────────────────────────
+  // ���� HTML / SVG element ������������������������������������������������������������������������������������������������������
   const el = createElementForTag(tag as string);
   applyProps(el, props, signal, disposers);
   for (const child of children) {

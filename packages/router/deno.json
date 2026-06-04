@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/router",
+  "name": "@openelement/router",
   "version": "0.30.0",
   "exports": {
     ".": "./src/mod.ts",

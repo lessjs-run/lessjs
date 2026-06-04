@@ -1,4 +1,4 @@
----
+﻿---
 title: 'Homepage v2 Redesign'
 date: '2026-05-12'
 type: 'post'
@@ -40,11 +40,11 @@ The original homepage was text-heavy with no visual demonstration of DSD or the 
 - Demonstrates "HTML before JS" concretely
 
 ### CTA
-- Single command: `deno run -A jsr:@lessjs/create my-app`
+- Single command: `deno run -A jsr:@openelement/create my-app`
 - Requirements line
 
 ## Implementation Notes
-- Uses existing `<less-code-block>` for syntax highlighting (no hardcoded colors)
-- Uses existing `<less-layout>` for nav and footer
+- Uses existing `<open-code-block>` for syntax highlighting (no hardcoded colors)
+- Uses existing `<open-layout>` for nav and footer
 - Full-width hero via `width: 100vw; margin-left: calc(-50vw + 50%);`
 - Code examples defined as template strings at module scope for i18n reuse

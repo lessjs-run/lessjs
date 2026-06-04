@@ -5,23 +5,23 @@
 ### Virtual Modules Removed from Route Files
 
 60 route files no longer import from `virtual:less-nav` or `virtual:less-blog-data`.
-Data now flows through `@lessjs/content/nav`, `@lessjs/content/blog-data`, and
-`@lessjs/i18n/data` — framework-owned ESM exports, not Vite virtual modules.
+Data now flows through `@openelement/content/nav`, `@openelement/content/blog-data`, and
+`@openelement/i18n/data` — framework-owned ESM exports, not Vite virtual modules.
 
 ```diff
 - import { headerNav, navSections } from 'virtual:less-nav';
-+ import { headerNav, navSections } from '@lessjs/content/nav';
++ import { headerNav, navSections } from '@openelement/content/nav';
 ```
 
-- `@lessjs/content` now exports `./nav-data`, `./blog-data` writer utilities
-- `@lessjs/i18n` now exports `./data` writer
+- `@openelement/content` now exports `./nav-data`, `./blog-data` writer utilities
+- `@openelement/i18n` now exports `./data` writer
 - `buildStart()` hooks write `_generated-nav.ts`, `_generated-blog-data.ts`, `_generated-i18n-data.ts`
 - SSG bundle keeps virtual modules internally; route files use new paths
 
 ### Island Transform Extraction
 
-- `@lessjs/core/island-transform`: `transformIslandSource()` pure function, zero Vite
-- `@lessjs/adapter-vite` island-transform: 69 → 36 lines (−48%)
+- `@openelement/core/island-transform`: `transformIslandSource()` pure function, zero Vite
+- `@openelement/adapter-vite` island-transform: 69 → 36 lines (−48%)
 - 18 tests pass (6 core + 12 adapter)
 
 ### Dev Server Zero Bundler
@@ -61,12 +61,12 @@ build:docs ✅ 0 FAILED, sitemap 478 URLs
 
 ### Breaking: less() Removed
 
-`less()` fully removed from `@lessjs/adapter-vite`. `lessPipeline()` is the
+`less()` fully removed from `@openelement/adapter-vite`. `lessPipeline()` is the
 only public build entry. Zero backward compatibility.
 
 ```diff
-- import { less } from '@lessjs/adapter-vite';
-+ import { lessPipeline } from '@lessjs/adapter-vite';
+- import { less } from '@openelement/adapter-vite';
++ import { lessPipeline } from '@openelement/adapter-vite';
 ```
 
 ### 14 SOPs Delivered
@@ -116,7 +116,7 @@ only public build entry. Zero backward compatibility.
 
 ### less() Public API Removal
 
-- `less()` removed from `@lessjs/adapter-vite` public exports
+- `less()` removed from `@openelement/adapter-vite` public exports
 - `lessPipeline()` is the sole build pipeline entry
 - `lessCompat` removed, `@deprecated` aliases removed
 - `less-plugin.ts` marked `@internal`
@@ -168,12 +168,12 @@ only public build entry. Zero backward compatibility.
 
 ### Breaking Changes
 
-- **Removed `html` tagged template API**: `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` exports removed from `@lessjs/core`
+- **Removed `html` tagged template API**: `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` exports removed from `@openelement/core`
 - **Removed `@prop()` decorator**: Use `static props = { name: Type }` instead
 - **Removed TemplateResult types**: `TemplateResult`, `isTemplateResult`, `TemplateValue`, `AttrValue`, `ContentValue`, `EventValue`, `ClassMapValue`, `UnsafeHtmlValue`, `RefDirective`, `ChooseCase`, `ClassMapInput` removed from public API
 - **Removed `PropertyOptions` and `renderTemplateToString`**: Internal only; no longer exported
 - **File extensions**: All UI and island components changed from `.ts` to `.tsx`
-- **`@lessjs/signals` new dependency of `@lessjs/core`**: Core now imports `effect()` for VNode signal tracking; publish order: signals(5) → core(6)
+- **`@openelement/signals` new dependency of `@openelement/core`**: Core now imports `effect()` for VNode signal tracking; publish order: signals(5) → core(6)
 
 ### Migration: `packages/ui/`
 
@@ -191,16 +191,16 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### Bug Fixes
 
-- **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@lessjs/core' }` to both internal build configs.
+- **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@openelement/core' }` to both internal build configs.
 - **SVG icons disappearing**: `renderToDOM` used `document.createElement()` for SVG elements. Fixed by detecting SVG tags and using `document.createElementNS('http://www.w3.org/2000/svg', tag)`.
 - **VNode signal subscription**: `_renderIntoShadowRoot` VNode branch rendered DOM but never subscribed to signals. Fixed by wrapping `render()` in an `effect()` that auto-tracks signal accesses and re-renders DOM on changes.
 - **SSG package resolver**: Added `jsx-runtime` and `jsx-dev-runtime` subpath exports for core package.
 
 ### Configuration
 
-- Root `deno.json`: Added `jsx: "react-jsx"` and `jsxImportSource: "@lessjs/core"` compiler options
-- Root `deno.json`: Added `@lessjs/core/jsx-runtime` and `@lessjs/core/jsx-dev-runtime` import map entries
-- `packages/core/deno.json`: Added `./jsx-runtime` and `./jsx-dev-runtime` subpath exports; `@lessjs/signals` dependency
+- Root `deno.json`: Added `jsx: "react-jsx"` and `jsxImportSource: "@openelement/core"` compiler options
+- Root `deno.json`: Added `@openelement/core/jsx-runtime` and `@openelement/core/jsx-dev-runtime` import map entries
+- `packages/core/deno.json`: Added `./jsx-runtime` and `./jsx-dev-runtime` subpath exports; `@openelement/signals` dependency
 - `.github/workflows/publish-jsr.yml`: signals moved before core in publish order
 - All packages bumped to `0.24.1`; cross-package dependencies `^0.24.1`
 
@@ -210,7 +210,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### TG-09: Shared Type Deduplication
 
-12 types/utilities were duplicated across 2–3 packages. Every copy is now canonical at `@lessjs/core`.
+12 types/utilities were duplicated across 2–3 packages. Every copy is now canonical at `@openelement/core`.
 
 | Type                                                                                                                           | Previously duplicated in                                                       | Now                            |
 | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------ |
@@ -238,7 +238,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### Dependencies Changed
 
-- `@lessjs/cem` now has 1 internal dependency (`@lessjs/core`, was 0): eliminates `ComponentLayer`/`HydrationStrategy`/`CompatibilityTier`/`isValidTagName` duplication
+- `@openelement/cem` now has 1 internal dependency (`@openelement/core`, was 0): eliminates `ComponentLayer`/`HydrationStrategy`/`CompatibilityTier`/`isValidTagName` duplication
 
 ### Files Changed
 
@@ -247,13 +247,13 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 - `packages/core/src/dsd-element.ts` — `isSignalLike` import moved to `signal-like.js`
 - `packages/core/src/index.ts` — added `StrategySource`, `isValidTagName` exports
 - `packages/core/src/tag-utils.ts` — new file: canonical `isValidTagName()` with reserved-name check
-- `packages/compat-check/src/types.ts` — 12 local types replaced with `export type { ... } from '@lessjs/core'`
-- `packages/compat-check/src/compatibility.ts` — `isValidTagName` imported from `@lessjs/core`
-- `packages/cem/deno.json` — added `@lessjs/core` dependency
-- `packages/cem/src/types.ts` — `ComponentLayer`/`HydrationStrategy` imported from `@lessjs/core`
-- `packages/cem/src/cem-parser.ts` — `isValidTagName`/`CompatibilityTier` imported from `@lessjs/core`
-- `packages/adapter-vite/src/entry-descriptor.ts` — `SsrAdmissionDecision` imported from `@lessjs/core`
-- `packages/adapter-vite/src/entry-generators.ts` — `StrategySource` imported from `@lessjs/core`
+- `packages/compat-check/src/types.ts` — 12 local types replaced with `export type { ... } from '@openelement/core'`
+- `packages/compat-check/src/compatibility.ts` — `isValidTagName` imported from `@openelement/core`
+- `packages/cem/deno.json` — added `@openelement/core` dependency
+- `packages/cem/src/types.ts` — `ComponentLayer`/`HydrationStrategy` imported from `@openelement/core`
+- `packages/cem/src/cem-parser.ts` — `isValidTagName`/`CompatibilityTier` imported from `@openelement/core`
+- `packages/adapter-vite/src/entry-descriptor.ts` — `SsrAdmissionDecision` imported from `@openelement/core`
+- `packages/adapter-vite/src/entry-generators.ts` — `StrategySource` imported from `@openelement/core`
 - `www/app/utils/nav-filter.ts` — removed 3 deprecated aliases
 - 34 route files in `www/app/routes/` — alias renames
 
@@ -272,43 +272,43 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### Core Changes
 
-- **@lessjs/runtime** — New authoring facade package providing a single import surface:
+- **@openelement/runtime** — New authoring facade package providing a single import surface:
   `DsdElement, html, signal, StyleSheet`. Components and apps author against this
   one package instead of importing from multiple sub-packages.
-- **@lessjs/cem** — CEM (Custom Elements Manifest) parser implementation and types
+- **@openelement/cem** — CEM (Custom Elements Manifest) parser implementation and types
   migrated from core. Zero-dependency standalone package; canonical owner of all
   CEM-related types and parsing logic.
-- **@lessjs/compat-check** — Compatibility classification, manifest validation,
+- **@openelement/compat-check** — Compatibility classification, manifest validation,
   and `less-add` tooling migrated from core. Standalone package for build-time
   compatibility checks.
-- **@lessjs/core** — Refined to a pure runtime kernel: `DsdElement`, `html`,
+- **@openelement/core** — Refined to a pure runtime kernel: `DsdElement`, `html`,
   `renderDSD`, islands, navigation, logger, and errors only. Zero alien-signals
   dependency.
 
 ### Breaking Changes
 
-1. `signal` / `computed` / `effect`: migrated from `@lessjs/core` to
-   `@lessjs/signals` (or import via `@lessjs/runtime`)
-2. `StyleSheet`: migrated from `@lessjs/core` to `@lessjs/style-sheet`
-   (or import via `@lessjs/runtime`)
+1. `signal` / `computed` / `effect`: migrated from `@openelement/core` to
+   `@openelement/signals` (or import via `@openelement/runtime`)
+2. `StyleSheet`: migrated from `@openelement/core` to `@openelement/style-sheet`
+   (or import via `@openelement/runtime`)
 3. Removed core exports: `./signals`, `./style-sheet`, `./cem-parser`,
    `./compatibility`, `./validate-manifest`, `./less-add`
-4. `@lessjs/adapter-vite`: removed `./build-context` export
-5. `@lessjs/create` templates now use `@lessjs/runtime` instead of multiple
+4. `@openelement/adapter-vite`: removed `./build-context` export
+5. `@openelement/create` templates now use `@openelement/runtime` instead of multiple
    sub-package imports
 
 ### New Packages
 
-- `@lessjs/runtime`: Unified component authoring entry point
-- `@lessjs/cem`: Canonical owner of CEM types and parsing
-- `@lessjs/compat-check`: Compatibility classification + manifest validation + less-add
+- `@openelement/runtime`: Unified component authoring entry point
+- `@openelement/cem`: Canonical owner of CEM types and parsing
+- `@openelement/compat-check`: Compatibility classification + manifest validation + less-add
 
 ### CI / Tooling
 
 - Package graph checker (`graph:check`) integrated into CI pipeline
 - Import map checker (`graph:check-imports`) integrated into CI pipeline
 - Local consumer build smoke test (`consumer:local`) added
-- `@lessjs/adapter-vite` focused test suites: head-injection (38 tests),
+- `@openelement/adapter-vite` focused test suites: head-injection (38 tests),
   subpath-resolver (23 tests), less-plugin (44 tests)
 
 ### Architecture Principles
@@ -330,8 +330,8 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 ### Migration Guide
 
 ```diff
-- import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
-+ import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+- import { DsdElement, html, signal, StyleSheet } from '@openelement/core';
++ import { DsdElement, html, signal, StyleSheet } from '@openelement/runtime';
 ```
 
 ## 0.21.16 (2026-05-25)
@@ -340,8 +340,8 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 - Production builds now use a no-op outer Vite trigger entry instead of
   bundling the generated Hono SSR entry as a browser/client artifact.
-- JSR remote core subpath resolution now fetches `@lessjs/core` source URLs
-  instead of accidentally deriving paths from `@lessjs/adapter-vite`.
+- JSR remote core subpath resolution now fetches `@openelement/core` source URLs
+  instead of accidentally deriving paths from `@openelement/adapter-vite`.
 
 ### CI / Documentation
 
@@ -361,21 +361,21 @@ All 10 UI components migrated from `html` tagged templates to JSX:
   is enabled without an explicit route directory.
 - The create template now writes `content.nav.routesDir`, matching the runtime
   default and preventing post-publish consumer smoke builds from failing in
-  `@lessjs/content`.
+  `@openelement/content`.
 
 ## 0.21.14 (2026-05-25)
 
 ### Fixed
 
 - Client island builds in JSR consumers now reuse the LessJS package resolver,
-  so package islands such as `@lessjs/ui/less-card` resolve from JSR in Phase 2.
+  so package islands such as `@openelement/ui/less-card` resolve from JSR in Phase 2.
 
 ## 0.21.13 (2026-05-25)
 
 ### Architecture: Clean Architecture — Import Map Universal Resolution (ADR-0042~0045)
 
 - **SSG Phase 3 refactor**: Split SSR dependency strategy into external + noExternal two tiers.
-  - `noExternal`: @lessjs/* + Lit ecosystem (bundled by Rolldown)
+  - `noExternal`: @openelement/* + Lit ecosystem (bundled by Rolldown)
   - `external`: parse5, entities, hono, node-fetch, etc. (resolved by Deno ESM Runtime via import map)
 - **SSR polyfill unification**: New `ssr-polyfills.ts` module — CSSStyleSheet → HTMLElement → customElements
 - **Import map hardening**: Added `entities/` subpath mapping for Deno native npm resolution
@@ -396,6 +396,6 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### Changed
 
-- `defaultNoExternal` in build-ssg.ts now only covers @lessjs/* + Lit ecosystem
+- `defaultNoExternal` in build-ssg.ts now only covers @openelement/* + Lit ecosystem
 - SSG entry code uses shared polyfill module instead of inline + output.banner
 - importmap.json sidecar now only records external dependencies

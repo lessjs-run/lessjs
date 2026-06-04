@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Snapshot Management
+ * @openelement/hub - Snapshot Management
  *
  * v0.19.0: Encode, decode, and verify SSR snapshot artifacts for the Hub.
  *

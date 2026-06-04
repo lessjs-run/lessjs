@@ -8,7 +8,7 @@ export interface LessMdxPluginOptions {
 
 export function mdxPlugin(options: LessMdxPluginOptions = {}): Plugin {
   const plugin = mdx({
-    jsxImportSource: options.jsxImportSource ?? '@lessjs/core',
+    jsxImportSource: options.jsxImportSource ?? '@openelement/core',
     providerImportSource: undefined,
     development: options.development ?? false,
   }) as Plugin;

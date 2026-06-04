@@ -5,7 +5,7 @@ label: 'Deployment'
 order: 5
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -18,9 +18,9 @@ currentPath='/guide/deployment'
       adapter 单独部署。
     </p>
     <h2>Build Once</h2>
-    <less-code-block>
+    <open-code-block>
       <pre><code>deno task build</code></pre>
-    </less-code-block>
+    </open-code-block>
     <p>
       构建输出 
       <span class='inline-code'>dist/</span>：带 Declarative Shadow DOM 的静态 HTML、client
@@ -90,11 +90,11 @@ currentPath='/guide/deployment'
       LessJS 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
       构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
     </p>
-    <less-code-block><pre><code> from '@lessjs/app';
+    <open-code-block><pre><code> from '@openelement/app';
 
 export default defineConfig(,
 })],
-});`}</code></pre></less-code-block>
+});`}</code></pre></open-code-block>
 
     <h2>Deployment Checklist</h2>
     <ul>

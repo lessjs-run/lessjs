@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - SSG Report Integration Test
+ * @openelement/adapter-vite - SSG Report Integration Test
  *
  * Verifies that ssgRender produces a valid dsd-report.json
  * with correct shape, error counts, and metrics.
@@ -247,25 +247,25 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   ctx.phase1.packageManifests = [
     {
       schemaVersion: '1.0.0',
-      packageName: '@lessjs/ui',
+      packageName: '@openelement/ui',
       version: '0.17.2',
       declarations: [
         {
           tagName: 'less-layout',
-          less: { module: '@lessjs/ui/less-layout', hydrate: 'load', ssr: true },
+          less: { module: '@openelement/ui/less-layout', hydrate: 'load', ssr: true },
         },
         {
           tagName: 'less-button',
-          less: { module: '@lessjs/ui/less-button', hydrate: 'idle', ssr: false },
+          less: { module: '@openelement/ui/less-button', hydrate: 'idle', ssr: false },
         },
-        { tagName: 'less-card', less: { module: '@lessjs/ui/less-card' } }, // no ssr field -> default true
+        { tagName: 'less-card', less: { module: '@openelement/ui/less-card' } }, // no ssr field -> default true
       ],
     },
   ];
   ctx.phase1.packageIslandDecls = [
     {
       tagName: 'less-layout',
-      modulePath: '@lessjs/ui/less-layout',
+      modulePath: '@openelement/ui/less-layout',
       isPackage: true,
       hydrate: 'load',
       ssr: true,
@@ -273,13 +273,18 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     },
     {
       tagName: 'less-button',
-      modulePath: '@lessjs/ui/less-button',
+      modulePath: '@openelement/ui/less-button',
       isPackage: true,
       hydrate: 'idle',
       ssr: false,
       dsd: true,
     },
-    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'idle' }, // no ssr -> default true
+    {
+      tagName: 'less-card',
+      modulePath: '@openelement/ui/less-card',
+      isPackage: true,
+      hydrate: 'idle',
+    }, // no ssr -> default true
   ];
 
   const bundle = createMockBundle();
@@ -299,7 +304,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertEquals(layout.dsd, true);
     assertEquals(layout.hydrate, 'load');
     assertEquals(layout.renderPath, 'client-only');
-    assertEquals(layout.packageName, '@lessjs/ui');
+    assertEquals(layout.packageName, '@openelement/ui');
   });
 
   await t.step('ssr: false -> renderPath client-only', () => {
@@ -450,7 +455,7 @@ Deno.test('SSG report: cemCompatibility with only ssr-capable components', async
     {
       tagName: 'ssr-badge',
       tier: 'ssr-capable',
-      reason: 'HTMLElement (via @lessjs/adapter-vanilla) with ssr: true',
+      reason: 'HTMLElement (via @openelement/adapter-vanilla) with ssr: true',
       source: 'package',
       modulePath: './ssr-badge.js',
       ssr: true,

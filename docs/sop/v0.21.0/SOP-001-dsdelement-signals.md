@@ -5,7 +5,7 @@
 > Version: v0.21.0
 > Priority: P0
 > Status: IMPLEMENTED
-> Depends on: v0.20 Ocean-Island, `@lessjs/signals`, ADR-0039
+> Depends on: v0.20 Ocean-Island, `@openelement/signals`, ADR-0039
 
 ## Objective
 
@@ -125,14 +125,14 @@ Use a symbol marker internally and expose structural types only for TypeScript.
 - [ ] Implement `html(strings, ...values)` returning `TemplateResult`.
 - [ ] Add `isTemplateResult(value)`.
 - [ ] Add `isSignalLike(value)` that accepts LessJS `Signal` shape without
-      importing `@lessjs/signals` into core runtime.
+      importing `@openelement/signals` into core runtime.
 - [ ] Do not export `html` from `index.ts` yet.
 
 Acceptance:
 
 - [ ] A simple `html` template returns a stable `TemplateResult`.
 - [ ] Nested `html` results are represented without stringifying too early.
-- [ ] No new npm, node, Vite, or Hono dependency enters `@lessjs/core`.
+- [ ] No new npm, node, Vite, or Hono dependency enters `@openelement/core`.
 
 ### Step 2: Render TemplateResult to Initial HTML
 
@@ -255,14 +255,14 @@ Acceptance:
 
 ### Step 9: Export Public API
 
-- [ ] Export `html` and related public types from `@lessjs/core`.
+- [ ] Export `html` and related public types from `@openelement/core`.
 - [ ] Do not export internal binding structures.
 - [ ] Keep `unsafeHTML()` export covered by SOP-002.
 - [ ] Update typecheck entrypoints if new files are added.
 
 Acceptance:
 
-- [ ] `import { DsdElement, html } from '@lessjs/core'` works.
+- [ ] `import { DsdElement, html } from '@openelement/core'` works.
 - [ ] `deno task typecheck` includes new files.
 
 ## Verification
@@ -292,7 +292,7 @@ Required test cases:
 
 - `DsdElement` can host simple reactive components without Lit/React.
 - No DOM diff API is introduced.
-- No core dependency on `@lessjs/signals` package internals is introduced.
+- No core dependency on `@openelement/signals` package internals is introduced.
 - All existing DSD and adapter tests still pass.
 
 ## Related

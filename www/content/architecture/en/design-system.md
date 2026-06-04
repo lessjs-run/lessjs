@@ -5,7 +5,7 @@ label: 'Design System'
 order: 10
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -94,9 +94,9 @@ currentPath=/architecture/design-system`}
           <span class='preview-badge'>Ready</span>
         </div>
         <div class='preview-body'>
-          <less-button variant='primary'>Primary</less-button>
-          <less-button>Default</less-button>
-          <less-button variant='ghost'>Ghost</less-button>
+          <open-button variant='primary'>Primary</open-button>
+          <open-button>Default</open-button>
+          <open-button variant='ghost'>Ghost</open-button>
         </div>
       </div>
     </div>
@@ -108,17 +108,17 @@ currentPath=/architecture/design-system`}
           <span class='preview-badge'>Ready</span>
         </div>
         <div class='preview-body preview-body-col'>
-          <less-input placeholder='Enter email...' label='Email'></less-input>
-          <less-input type='password' placeholder='Password' label='Password' required>
-          </less-input>
-          <less-input value='hello@lessjs.org' label='Read-only' disabled></less-input>
+          <open-input placeholder='Enter email...' label='Email'></open-input>
+          <open-input type='password' placeholder='Password' label='Password' required>
+          </open-input>
+          <open-input value='hello@openelement.org' label='Read-only' disabled></open-input>
         </div>
       </div>
     </div>
     <div class='install-section'>
-      <h3>Install @lessjs/ui</h3>
+      <h3>Install @openelement/ui</h3>
       <div class='install-cmd'>
-        <span class='prompt'>$</span> deno add jsr:@lessjs/ui
+        <span class='prompt'>$</span> deno add jsr:@openelement/ui
       </div>
       <p>Deno, Node, Bun. Zero config.</p>
     </div>

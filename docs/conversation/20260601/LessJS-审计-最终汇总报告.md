@@ -1,8 +1,8 @@
-# LessJS 仓库综合技术审计最终报告
+﻿# LessJS 仓库综合技术审计最终报告
 
 ## 1. 基础信息
 
-- **仓库地址**：https://github.com/lessjs-run/lessjs/tree/dev
+- **仓库地址**：https://github.com/open-element/open-element/tree/dev
 - **审计版本**：v0.27.0
 - **审计团队**：架构师 / 前端核心开发 / 测试工程师 / 工程化DevOps / 性能优化 / 安全工程师 / 技术负责人
 - **审计日期**：2026-06-01
@@ -65,7 +65,7 @@
 | 15 | 架构 | Hub Client-Only Tags 使用正则解析 TypeScript 源文件，格式变化时关联出错 | 架构师 |
 | 16 | 架构 | SSR 错误处理中 `console.log` 残留调试代码（与 #6 交叉印证）| 架构师 |
 | 17 | 架构 | `PluginMeta` 索引签名 `[key: string]: unknown` 破坏类型安全 | 架构师 |
-| 18 | 工程化 | 根 `deno.json` imports 47 条 `@lessjs/*` 膨胀，混入 www/adapter 专用依赖 | DevOps |
+| 18 | 工程化 | 根 `deno.json` imports 47 条 `@openelement/*` 膨胀，混入 www/adapter 专用依赖 | DevOps |
 | 19 | 工程化 | hub:scan/hub:validate 使用 `-A` 全权限，不遵循最小权限原则 | DevOps |
 | 20 | 工程化 | CI 中 `deno install` 14 个 job 各执行一次，缓存不完整 | DevOps |
 | 21 | 工程化 | test.yml 14 job 无统一门禁汇总 | DevOps |
@@ -90,7 +90,7 @@
 - **架构**：`entry-renderer.ts` 代码生成与业务逻辑混合（783 行）、`LessBuildContext` 三种职责耦合、CORS 默认仅允许 localhost、CEM 扫描遍历全量 node_modules
 - **工程化**：子包 build task 命名不一致、tsconfig.json 重复配置项、.gitignore 去重、缺少 commitlint、Deno 缓存未优化
 - **安全**：headExtras 正则可绕过、Shadow DOM `mode:'open'` 无 DOM 隔离、DevTools innerHTML 拼接、flexsearch 长期未维护
-- **性能**：DSD Polyfill 每页内联 2.5KB、`@lessjs/runtime` 桶式导出影响 Tree-Shaking、less-layout Island 23KB 内联导航数据
+- **性能**：DSD Polyfill 每页内联 2.5KB、`@openelement/runtime` 桶式导出影响 Tree-Shaking、less-layout Island 23KB 内联导航数据
 - **测试**：extractParams 静默失败返回 {}、DD hydration rAF 回调无元素存活检查、visible 策略 30s 超时仅 log.debug、E2E 仅 Chromium
 
 ### 3.4 长期建议项
@@ -150,7 +150,7 @@
 | 安全 | innerHTML 安全合约文档化 + 类型约束；DENO_DEPLOY_TOKEN 环境变量化 | P1 |
 | 文档 | 安全策略文档、Deno 权限最小化指南、浏览器兼容性矩阵 | P2 |
 | 兼容性 | DSD polyfill 外部化 + 特性检测；Firefox/WebKit E2E 覆盖 | P2 |
-| 生态 | 去除 @lessjs/ui 硬绑定，layout provider 可替换 | V2 |
+| 生态 | 去除 @openelement/ui 硬绑定，layout provider 可替换 | V2 |
 
 ---
 
@@ -197,7 +197,7 @@
 | entry-renderer 代码生成模板化 |
 | LessBuildContext 拆分为 Config + State + PluginRegistry |
 | DSD Polyfill 外部化 |
-| @lessjs/runtime 桶式导出优化 |
+| @openelement/runtime 桶式导出优化 |
 | types.ts 按 domain 拆分 |
 | 移除 legacy @prop() 运行时 |
 | 覆盖率看板 + 性能回归测试 |

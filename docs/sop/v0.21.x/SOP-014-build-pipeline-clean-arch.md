@@ -42,7 +42,7 @@ deno task build
 └── Phase 3: SSG Render (Clean Architecture) ★ 本次重构重点
     ├── SSR polyfill banner 注入
     ├── viteBuild({ssr:true, external+noExternal})
-    │   ├── noExternal: @lessjs/* + lit + @lit/*
+    │   ├── noExternal: @openelement/* + lit + @lit/*
     │   └── external: parse5, entities, hono, ...
     ├── Deno import() 解析 external 依赖
     ├── ssgRender() 渲染所有页面
@@ -124,7 +124,7 @@ Phase 2 现在通过 deno.json import map 解析裸标识符（bare specifier）
 - 插件 `less:deno-import-map-resolve` 读取消费者的 `deno.json`，解析 `imports` 字段
 - 对 `npm:` / `jsr:` 开头的目标，回退到默认 node_modules 解析
 - 对相对路径 / 文件路径目标，通过 Rolldown 的 `this.resolve()` 递归解析
-- 支持 prefix/subpath matching（如 `@lessjs/ui/` → `jsr:@lessjs/ui@^0.21/`）
+- 支持 prefix/subpath matching（如 `@openelement/ui/` → `jsr:@openelement/ui@^0.21/`）
 
 **配置示例**：
 
@@ -156,9 +156,9 @@ const clientConfig: InlineConfig = {
 ```jsonc
 {
   "imports": {
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.21",
-    "@lessjs/ui/": "jsr:@lessjs/ui@^0.21/", // ★ subpath mapping
-    "@lessjs/core": "jsr:@lessjs/core@^0.21",
+    "@openelement/ui": "jsr:@openelement/ui@^0.21",
+    "@openelement/ui/": "jsr:@openelement/ui@^0.21/", // ★ subpath mapping
+    "@openelement/core": "jsr:@openelement/core@^0.21",
     "lit": "npm:lit@^3.2.0"
     // ...
   }
@@ -167,11 +167,11 @@ const clientConfig: InlineConfig = {
 
 **与 Phase 1 / Phase 3 的一致性**：
 
-| Phase   | Resolution                                                  | 解析来源                 |
-| ------- | ----------------------------------------------------------- | ------------------------ |
-| Phase 1 | import map (@deno/vite-plugin)                              | deno.json + Vite plugin  |
-| Phase 2 | import map (less:deno-import-map-resolve)                   | deno.json 直接读取       |
-| Phase 3 | import map (Deno ESM Runtime + @lessjs/ssg-package-resolve) | deno.json + Deno Runtime |
+| Phase   | Resolution                                                       | 解析来源                 |
+| ------- | ---------------------------------------------------------------- | ------------------------ |
+| Phase 1 | import map (@deno/vite-plugin)                                   | deno.json + Vite plugin  |
+| Phase 2 | import map (less:deno-import-map-resolve)                        | deno.json 直接读取       |
+| Phase 3 | import map (Deno ESM Runtime + @openelement/ssg-package-resolve) | deno.json + Deno Runtime |
 
 ---
 
@@ -210,7 +210,7 @@ async function buildSSG(options, ctx) {
     },
     ssr: {
       noExternal: [
-        /^@lessjs\//,     // LessJS 框架包
+        /^@openelement\//,     // LessJS 框架包
         /^lit/,            // lit, lit-html, lit-element
         /^@lit/,           // @lit/reactive-element
         /^@lit-labs\//,    // @lit-labs/ssr-dom-shim
@@ -268,7 +268,7 @@ async function buildSSG(options, ctx) {
 ```
 新增了一个依赖，应该放在 noExternal 还是 external？
 
-1. 是否是 @lessjs/* 包？
+1. 是否是 @openelement/* 包？
    → YES: noExternal（需要 TypeScript 编译）
    → NO: 继续
 
@@ -299,7 +299,7 @@ export function generateSsrPolyfillBanner(): string {
 
   // Layer 1: CSSStyleSheet
   parts.push([
-    `import { StyleSheet } from '@lessjs/core';`,
+    `import { StyleSheet } from '@openelement/core';`,
     `if (typeof globalThis.CSSStyleSheet === 'undefined') {`,
     `  globalThis.CSSStyleSheet = class {`,
     `    replaceSync(_css: string) {}`,
@@ -350,19 +350,19 @@ export function generateSsrPolyfillBanner(): string {
 {
   "imports": {
     // === LessJS 框架包（jsr: scheme） ===
-    "@lessjs/core": "jsr:@lessjs/core@^0.21",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21/navigation",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21/logger",
-    "@lessjs/core/errors": "jsr:@lessjs/core@^0.21/errors",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.21",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21/framework",
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.21",
-    "@lessjs/ui/": "jsr:@lessjs/ui@^0.21/", // ★ subpath mapping
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.21",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.21",
-    "@lessjs/app": "jsr:@lessjs/app@^0.21",
-    "@lessjs/content": "jsr:@lessjs/content@^0.21",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.21",
+    "@openelement/core": "jsr:@openelement/core@^0.21",
+    "@openelement/core/navigation": "jsr:@openelement/core@^0.21/navigation",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.21/logger",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.21/errors",
+    "@openelement/signals": "jsr:@openelement/signals@^0.21",
+    "@openelement/signals/framework": "jsr:@openelement/signals@^0.21/framework",
+    "@openelement/ui": "jsr:@openelement/ui@^0.21",
+    "@openelement/ui/": "jsr:@openelement/ui@^0.21/", // ★ subpath mapping
+    "@openelement/adapter-lit": "jsr:@openelement/adapter-lit@^0.21",
+    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.21",
+    "@openelement/app": "jsr:@openelement/app@^0.21",
+    "@openelement/content": "jsr:@openelement/content@^0.21",
+    "@openelement/i18n": "jsr:@openelement/i18n@^0.21",
 
     // === Lit 生态（npm: scheme） ===
     "lit": "npm:lit@^3.2.0",
@@ -423,18 +423,18 @@ function buildTemplates(v: Record<string, string>): Record<string, string> {
       {
         imports: {
           // LessJS 框架（jsr:，使用版本变量）
-          '@lessjs/app': `jsr:@lessjs/app@^${v.app}`,
-          '@lessjs/core': `jsr:@lessjs/core@^${v.core}`,
-          '@lessjs/core/navigation': `jsr:@lessjs/core@^${v.core}/navigation`,
-          '@lessjs/signals': `jsr:@lessjs/signals@^${v.signals}`,
-          '@lessjs/signals/framework': `jsr:@lessjs/signals@^${v.signals}/framework`,
-          '@lessjs/ui': `jsr:@lessjs/ui@^${v.ui}`,
-          '@lessjs/ui/': `jsr:@lessjs/ui@^${v.ui}/`, // ★ subpath
-          '@lessjs/adapter-lit': `jsr:@lessjs/adapter-lit@^${v.adapterLit}`,
-          '@lessjs/adapter-vite': `jsr:@lessjs/adapter-vite@^${v.adapterVite}`,
-          '@lessjs/content': `jsr:@lessjs/content@^${v.content}`,
-          '@lessjs/i18n': `jsr:@lessjs/i18n@^${v.i18n}`,
-          '@lessjs/ui/open-props-tokens': `jsr:@lessjs/ui@^${v.ui}/open-props-tokens`,
+          '@openelement/app': `jsr:@openelement/app@^${v.app}`,
+          '@openelement/core': `jsr:@openelement/core@^${v.core}`,
+          '@openelement/core/navigation': `jsr:@openelement/core@^${v.core}/navigation`,
+          '@openelement/signals': `jsr:@openelement/signals@^${v.signals}`,
+          '@openelement/signals/framework': `jsr:@openelement/signals@^${v.signals}/framework`,
+          '@openelement/ui': `jsr:@openelement/ui@^${v.ui}`,
+          '@openelement/ui/': `jsr:@openelement/ui@^${v.ui}/`, // ★ subpath
+          '@openelement/adapter-lit': `jsr:@openelement/adapter-lit@^${v.adapterLit}`,
+          '@openelement/adapter-vite': `jsr:@openelement/adapter-vite@^${v.adapterVite}`,
+          '@openelement/content': `jsr:@openelement/content@^${v.content}`,
+          '@openelement/i18n': `jsr:@openelement/i18n@^${v.i18n}`,
+          '@openelement/ui/open-props-tokens': `jsr:@openelement/ui@^${v.ui}/open-props-tokens`,
 
           // Lit 生态
           'lit': 'npm:lit@^3.2.0',
@@ -500,7 +500,7 @@ function buildTemplates(v: Record<string, string>): Record<string, string> {
 3. 确认 polyfill 顺序：CSSStyleSheet → HTMLElement → customElements
 4. 如果使用第三方 WC 库在模块顶层调用 `customElements.define()`，确认没有 `typeof customElements === 'undefined'` 检查被绕过
 
-### 7.3 `Error: Build failed: ... jsr:@lessjs/* ...`
+### 7.3 `Error: Build failed: ... jsr:@openelement/* ...`
 
 **症状**：消费者项目构建时 rollup 报 `jsr:` 前缀的模块无法解析
 
@@ -508,7 +508,7 @@ function buildTemplates(v: Record<string, string>): Record<string, string> {
 
 **解决**：
 
-1. 检查 `@lessjs/create` 生成的模板中 import map 是否用 `jsr:` scheme
+1. 检查 `@openelement/create` 生成的模板中 import map 是否用 `jsr:` scheme
 2. 确认 `@deno/vite-plugin` 正确配置
 3. 确认 `deno.json` 有正确的 `"imports"` 映射
 4. 运行 `deno task typecheck` 验证类型解析
@@ -587,7 +587,7 @@ deno task hub:validate --strict --json
 
 ```bash
 # 1. 从 JSR 创建新项目
-deno run -A jsr:@lessjs/create test-app
+deno run -A jsr:@openelement/create test-app
 
 # 2. 检查生成的 deno.json
 cat test-app/deno.json | grep -E "entities|parse5|hono"

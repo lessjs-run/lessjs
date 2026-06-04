@@ -18,18 +18,18 @@ The LessJS framework demonstrates a **mature testing infrastructure** with compr
 
 ### 1.1 Unit & Integration Tests
 
-| Package              | Test Files    | Coverage Assessment                                      |
-| -------------------- | ------------- | -------------------------------------------------------- |
-| @lessjs/core         | 7 test files  | ✅ Excellent - covers context, DSD, errors, islands, SSR |
-| @lessjs/adapter-vite | 12 test files | ✅ Excellent - comprehensive build pipeline tests        |
-| @lessjs/adapter-lit  | 3 test files  | ✅ Good - DSD hydration, SSR, escape consistency         |
-| @lessjs/signals      | 7 test files  | ✅ Excellent - signals, computed, effects, channels      |
-| @lessjs/rpc          | 2 test files  | ⚠️ Adequate - smoke and state machine tests              |
-| @lessjs/ui           | 2 test files  | ⚠️ Adequate - component and smoke tests                  |
-| @lessjs/content      | 4 test files  | ✅ Good - markdown, nav, routes, sitemap                 |
-| @lessjs/i18n         | 1 test file   | ⚠️ Adequate - basic i18n functionality                   |
-| @lessjs/create       | 1 test file   | ⚠️ Adequate - CLI test                                   |
-| @lessjs/app          | 1 test file   | ⚠️ Adequate - app tests                                  |
+| Package                   | Test Files    | Coverage Assessment                                      |
+| ------------------------- | ------------- | -------------------------------------------------------- |
+| @openelement/core         | 7 test files  | ✅ Excellent - covers context, DSD, errors, islands, SSR |
+| @openelement/adapter-vite | 12 test files | ✅ Excellent - comprehensive build pipeline tests        |
+| @openelement/adapter-lit  | 3 test files  | ✅ Good - DSD hydration, SSR, escape consistency         |
+| @openelement/signals      | 7 test files  | ✅ Excellent - signals, computed, effects, channels      |
+| @openelement/rpc          | 2 test files  | ⚠️ Adequate - smoke and state machine tests              |
+| @openelement/ui           | 2 test files  | ⚠️ Adequate - component and smoke tests                  |
+| @openelement/content      | 4 test files  | ✅ Good - markdown, nav, routes, sitemap                 |
+| @openelement/i18n         | 1 test file   | ⚠️ Adequate - basic i18n functionality                   |
+| @openelement/create       | 1 test file   | ⚠️ Adequate - CLI test                                   |
+| @openelement/app          | 1 test file   | ⚠️ Adequate - app tests                                  |
 
 **Total**: 45 test files across 10 packages
 
@@ -58,9 +58,9 @@ Located in `www/e2e/`:
 
 ⚠️ **Partial coverage**:
 
-- `@lessjs/rpc` - Only 2 test files for RPC functionality
-- `@lessjs/ui` - Only 2 test files for UI components
-- `@lessjs/create` - Only CLI test, no template validation tests
+- `@openelement/rpc` - Only 2 test files for RPC functionality
+- `@openelement/ui` - Only 2 test files for UI components
+- `@openelement/create` - Only CLI test, no template validation tests
 
 ---
 
@@ -378,7 +378,7 @@ test('homepage loads within 5 seconds', async ({ page }) => {
 2. ✅ Add coverage enforcement with minimum thresholds
 3. ✅ Create `testing-strategy.md` document
 4. ✅ Add security testing (SAST/DAST tools)
-5. ✅ Audit under-tested packages (@lessjs/rpc, @lessjs/ui, @lessjs/create)
+5. ✅ Audit under-tested packages (@openelement/rpc, @openelement/ui, @openelement/create)
 
 ### Short-term Improvements (Medium)
 
@@ -398,70 +398,70 @@ test('homepage loads within 5 seconds', async ({ page }) => {
 
 ## 14. Detailed Package Analysis
 
-### @lessjs/core (Score: 9/10)
+### @openelement/core (Score: 9/10)
 
 - **Test Files**: 7
 - **Coverage**: Excellent
 - **Strengths**: Comprehensive tests for context, DSD collector, errors, islands, SSR handler
 - **Improvements**: Add more edge case tests for URL parsing
 
-### @lessjs/adapter-vite (Score: 9/10)
+### @openelement/adapter-vite (Score: 9/10)
 
 - **Test Files**: 12
 - **Coverage**: Excellent
 - **Strengths**: Thorough build pipeline tests, SSG integration tests
 - **Improvements**: Add tests for error scenarios in build process
 
-### @lessjs/signals (Score: 9/10)
+### @openelement/signals (Score: 9/10)
 
 - **Test Files**: 7
 - **Coverage**: Excellent
 - **Strengths**: Comprehensive reactivity tests, batch updates, channels
 - **Improvements**: Add performance benchmarks for signal updates
 
-### @lessjs/adapter-lit (Score: 8/10)
+### @openelement/adapter-lit (Score: 8/10)
 
 - **Test Files**: 3
 - **Coverage**: Good
 - **Strengths**: DSD hydration, SSR, escape consistency tests
 - **Improvements**: Add more Lit SSR edge cases
 
-### @lessjs/content (Score: 7/10)
+### @openelement/content (Score: 7/10)
 
 - **Test Files**: 4
 - **Coverage**: Good
 - **Strengths**: Markdown, nav, routes, sitemap tests
 - **Improvements**: Add tests for malformed markdown
 
-### @lessjs/i18n (Score: 6/10)
+### @openelement/i18n (Score: 6/10)
 
 - **Test Files**: 1
 - **Coverage**: Adequate
 - **Strengths**: Basic i18n functionality tested
 - **Improvements**: Add tests for locale fallback, pluralization
 
-### @lessjs/rpc (Score: 6/10)
+### @openelement/rpc (Score: 6/10)
 
 - **Test Files**: 2
 - **Coverage**: Adequate
 - **Strengths**: State machine and smoke tests
 - **Improvements**: Add more RPC endpoint tests, error handling
 
-### @lessjs/ui (Score: 6/10)
+### @openelement/ui (Score: 6/10)
 
 - **Test Files**: 2
 - **Coverage**: Adequate
 - **Strengths**: Component and smoke tests
 - **Improvements**: Add tests for all UI components
 
-### @lessjs/create (Score: 5/10)
+### @openelement/create (Score: 5/10)
 
 - **Test Files**: 1
 - **Coverage**: Adequate
 - **Strengths**: CLI test
 - **Improvements**: Add template validation tests, project creation tests
 
-### @lessjs/app (Score: 6/10)
+### @openelement/app (Score: 6/10)
 
 - **Test Files**: 1
 - **Coverage**: Adequate

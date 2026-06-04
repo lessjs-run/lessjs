@@ -26,7 +26,7 @@ public imports or weakening LessJS-specific diagnostics.
 
 - [ ] Define the public contract for `signal`, `computed`, `effect`,
       `subscribe`, `.value`, and cleanup behavior.
-- [ ] Keep `@lessjs/signals` and `@lessjs/signals/framework` import paths.
+- [ ] Keep `@openelement/signals` and `@openelement/signals/framework` import paths.
 - [ ] Mark `batch()` and other legacy sugar according to existing deprecation
       policy, not by silent removal.
 

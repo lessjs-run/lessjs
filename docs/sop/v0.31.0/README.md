@@ -10,7 +10,7 @@
 v0.31.0 is reserved for the UI Shell work that was previously planned for
 v0.30.0:
 
-- `@lessjs/ui/css`
+- `@openelement/ui/css`
 - Ocean/Island UI split
 - daisyUI compiled CSS fork
 - Open Props token merge
@@ -37,6 +37,6 @@ gate-proved metadata/release boundaries.
 
 ## Carry-Forward ADRs
 
-- ADR-0074: @lessjs/ui Dual-Track Ocean and Island Architecture
+- ADR-0074: @openelement/ui Dual-Track Ocean and Island Architecture
 - ADR-0075: Fork daisyUI 5 Compiled CSS for DSD Shell Components
 - ADR-0076: Open Props and daisyUI Token Merge

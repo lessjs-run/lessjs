@@ -10,7 +10,7 @@
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 import { buildSsrAdmissionPlan } from '../src/entry-descriptor.ts';
 import type { IslandDecl } from '../src/entry-descriptor.ts';
-import type { CompatibilityClassification } from '@lessjs/core';
+import type { CompatibilityClassification } from '@openelement/core';
 
 // 鈹€鈹€鈹€ Fixture imports 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
@@ -248,7 +248,7 @@ Deno.test('SSR Admission: CEM client-only -> clientOnlyTags', () => {
     {
       tagName: 'cem-client-only',
       tier: 'client-only',
-      reason: 'CEM-only package @lessjs/ui (no LessJS SSR declaration)',
+      reason: 'CEM-only package @openelement/ui (no LessJS SSR declaration)',
       source: 'package',
       modulePath: '/node_modules/browser-package/button.ts',
       ssr: false,

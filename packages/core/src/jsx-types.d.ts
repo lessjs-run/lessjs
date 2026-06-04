@@ -1,11 +1,11 @@
 /**
- * @lessjs/core - JSX type declarations.
+ * @openelement/core - JSX type declarations.
  *
  * Required by TypeScript's `jsx: "react-jsx"` mode.
  * Defines JSX.Element as VNode so function components returning VNode
  * are recognized as valid JSX component types.
  *
- * @module @lessjs/core/jsx-types
+ * @module @openelement/core/jsx-types
  */
 
 declare namespace JSX {

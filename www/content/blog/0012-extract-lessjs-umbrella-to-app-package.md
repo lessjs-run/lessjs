@@ -1,5 +1,5 @@
----
-title: 'ADR 0012: 将 lessjs() 统一入口从 @lessjs/core 拆到 @lessjs/app'
+﻿---
+title: 'ADR 0012: 将 lessjs() 统一入口从 @openelement/core 拆到 @openelement/app'
 date: '2026-05-10'
 type: 'adr'
 tags: ['architecture', 'decision']
@@ -15,7 +15,7 @@ hidden: true
 
 `lessjs()` 是 LessJS 的统一 Vite 插件入口，将 `less()` + `lessContent()` + `lessI18n()` 组合在一个调用中，通过显式传递 `LessBuildContext` 避免了 globalThis 桥接。
 
-当前 `lessjs()` 放在 `@lessjs/core` 中（`packages/core/src/index.ts` L349-396），使用动态 `import()` 加载 `@lessjs/content` 和 `@lessjs/i18n`：
+当前 `lessjs()` 放在 `@openelement/core` 中（`packages/core/src/index.ts` L349-396），使用动态 `import()` 加载 `@openelement/content` 和 `@openelement/i18n`：
 
 ```ts
 // 当前：core 里动态 import 上层包
@@ -24,12 +24,12 @@ export async function lessjs(options = {}) {
   const plugins = [...less(coreOpts, ctx)];
 
   if (contentOpts) {
-    const contentMod = await import('@lessjs/content');  // 动态 import
+    const contentMod = await import('@openelement/content');  // 动态 import
     plugins.push(...contentMod.lessContent({...contentOpts, ctx}));
   }
 
   if (i18nOpts) {
-    const i18nMod = await import('@lessjs/i18n');  // 动态 import
+    const i18nMod = await import('@openelement/i18n');  // 动态 import
     plugins.push(i18nMod.lessI18n({...i18nOpts, ctx}));
   }
 
@@ -39,7 +39,7 @@ export async function lessjs(options = {}) {
 
 ### 问题：依赖方向倒挂
 
-`@lessjs/core` 是基础层——`content` 和 `i18n` 都依赖 core。但 `lessjs()` 在 core 里 import content 和 i18n，形成概念上的循环依赖：
+`@openelement/core` 是基础层——`content` 和 `i18n` 都依赖 core。但 `lessjs()` 在 core 里 import content 和 i18n，形成概念上的循环依赖：
 
 ```
 content → core → content   ← 概念倒挂（动态 import 打断了物理循环）
@@ -57,20 +57,20 @@ i18n    → core → i18n       ← 同上
 | 方案                          | 做法                       | 优点                                | 缺点                 |
 | ----------------------------- | -------------------------- | ----------------------------------- | -------------------- |
 | A. 留在 core，保持动态 import | 现状                       | 零改动                              | 概念倒挂，类型不安全 |
-| B. 拆到 @lessjs/app           | 新包依赖 core+content+i18n | 依赖方向干净，静态 import，类型安全 | 多一个包             |
+| B. 拆到 @openelement/app           | 新包依赖 core+content+i18n | 依赖方向干净，静态 import，类型安全 | 多一个包             |
 | C. 留在 core，注册表模式      | core 定义 pluginRegistry   | core 不需知道子插件                 | 多一层间接，过度设计 |
 
 ## Decision
 
-**选方案 B**：将 `lessjs()` 从 `@lessjs/core` 拆到新包 `@lessjs/app`。
+**选方案 B**：将 `lessjs()` 从 `@openelement/core` 拆到新包 `@openelement/app`。
 
 ### 新依赖图
 
 ```
-@lessjs/app
-  ├── @lessjs/core       (静态 import)
-  ├── @lessjs/content    (静态 import)
-  └── @lessjs/i18n       (静态 import)
+@openelement/app
+  ├── @openelement/core       (静态 import)
+  ├── @openelement/content    (静态 import)
+  └── @openelement/i18n       (静态 import)
 ```
 
 依赖方向清晰：app 是"组装层"，core 是"基础层"，content/i18n 是"功能层"。无循环，无倒挂。
@@ -81,7 +81,7 @@ i18n    → core → i18n       ← 同上
 rpc → ui → adapter-lit → signal → content → i18n → core → app → create
 ```
 
-`@lessjs/app` 排在 core 之后、create 之前。
+`@openelement/app` 排在 core 之后、create 之前。
 
 ### 代码变更
 
@@ -98,16 +98,16 @@ packages/app/
 
 ```ts
 import type { Plugin } from 'vite';
-import type { FrameworkOptions } from '@lessjs/core';
-import type { LessContentOptions } from '@lessjs/content';
-import type { LessI18nOptions } from '@lessjs/i18n';
-import type { LessBuildContext } from '@lessjs/core/build-context';
+import type { FrameworkOptions } from '@openelement/core';
+import type { LessContentOptions } from '@openelement/content';
+import type { LessI18nOptions } from '@openelement/i18n';
+import type { LessBuildContext } from '@openelement/core/build-context';
 
-import { less } from '@lessjs/core';
-import { LessBuildContext as LessBuildContextClass } from '@lessjs/core/build-context';
-import { lessContent } from '@lessjs/content';
-import { lessI18n } from '@lessjs/i18n';
-import { createLogger } from '@lessjs/core/logger';
+import { less } from '@openelement/core';
+import { LessBuildContext as LessBuildContextClass } from '@openelement/core/build-context';
+import { lessContent } from '@openelement/content';
+import { lessI18n } from '@openelement/i18n';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('app');
 
@@ -145,7 +145,7 @@ export default lessjs;
 
 - **静态 import**：不再需要 `await import()` + `try/catch`
 - **类型安全**：直接 import `lessContent` / `lessI18n`，无需 `as Record<string, unknown>` 断言
-- **安装即用**：如果 `@lessjs/content` 未安装，Deno 会在启动时报错，而非运行时静默降级
+- **安装即用**：如果 `@openelement/content` 未安装，Deno 会在启动时报错，而非运行时静默降级
 
 #### 3. `packages/core/src/index.ts`
 
@@ -157,21 +157,21 @@ export default lessjs;
 
 ```ts
 // Before (v0.9.x)
-import { lessjs } from '@lessjs/core';
+import { lessjs } from '@openelement/core';
 
 // After (v0.10.x)
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 ```
 
-`less()` 不受影响——仍在 `@lessjs/core`。
+`less()` 不受影响——仍在 `@openelement/core`。
 
 ### 为什么安装失败是正确的行为
 
 当前 `lessjs()` 用 try/catch 静默降级未安装的子插件。这看似友好，但隐藏了配置错误：
 
-- 用户在 `lessjs()` 中传了 `content: { blog: {...} }` 但忘了安装 `@lessjs/content`
+- 用户在 `lessjs()` 中传了 `content: { blog: {...} }` 但忘了安装 `@openelement/content`
 - 当前行为：**静默跳过**，不报错，用户困惑"博客功能为什么没生效"
-- 新行为：**启动报错** `Cannot find module '@lessjs/content'`，问题一目了然
+- 新行为：**启动报错** `Cannot find module '@openelement/content'`，问题一目了然
 
 如果用户不想用 content/i18n，**不传对应选项即可**——这是 opt-in 的正确姿势，不需要 try/catch。
 
@@ -189,7 +189,7 @@ import { lessjs } from '@lessjs/app';
 ### Negative
 
 - **多一个包**：8 个包变为 9 个，维护成本略增
-- **用户 import 路径变化**：`lessjs()` 从 `@lessjs/core` 改为 `@lessjs/app`（有迁移成本）
+- **用户 import 路径变化**：`lessjs()` 从 `@openelement/core` 改为 `@openelement/app`（有迁移成本）
 - **app 强依赖 content 和 i18n**：即使不用，也必须安装（node_modules 里有）
 - **split-call 模式需要显式传 ctx**：`lessContent()` 和 `lessI18n()` 不再自动发现 ctx，必须通过 `ctx` 参数传入
 
@@ -197,7 +197,7 @@ import { lessjs } from '@lessjs/app';
 
 - 分开调用模式 `less() + lessContent({ ctx }) + lessI18n({ ctx })` 仍然可用，但需显式传 ctx
 - `lessjs()` 的 API 签名不变，只是 import 来源变了
-- `@lessjs/app` 的版本号从 0.1.0 开始，独立于 core 版本
+- `@openelement/app` 的版本号从 0.1.0 开始，独立于 core 版本
 
 ## 参考
 

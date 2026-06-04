@@ -8,9 +8,9 @@
 export const meta = { section: 'Quick Start', label: 'Architecture', order: 10 };
 export const tagName = 'guide-architecture';
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display:block; }

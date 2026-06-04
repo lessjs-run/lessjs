@@ -1,4 +1,4 @@
-# @lessjs/protocols
+# @openelement/protocols
 
 Dependency-light shared LessJS contracts.
 

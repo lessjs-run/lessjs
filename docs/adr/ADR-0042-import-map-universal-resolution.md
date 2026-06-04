@@ -25,7 +25,7 @@ LessJS SSG 构建管线 Phase 3 当前使用 `viteBuild({ssr:true, noExternal: [
 
 具体决策：
 
-1. **`deno.json` import map 覆盖所有依赖**：包括 LessJS 自身包（`@lessjs/*`）、Lit 生态（`lit`、`@lit/reactive-element` 等）、SSR 传递依赖（`parse5`、`entities`、`hono` 等）。
+1. **`deno.json` import map 覆盖所有依赖**：包括 LessJS 自身包（`@openelement/*`）、Lit 生态（`lit`、`@lit/reactive-element` 等）、SSR 传递依赖（`parse5`、`entities`、`hono` 等）。
 
 2. **SSR 传递依赖使用 subpath mapping**：对于有子路径导出的包（如 `entities`），使用 Deno import map 的尾部斜杠语法：
    ```json
@@ -49,8 +49,8 @@ LessJS SSG 构建管线 Phase 3 当前使用 `viteBuild({ssr:true, noExternal: [
 │                                                              │
 │  "imports": {                                                │
 │    // LessJS own packages                                    │
-│    "@lessjs/core": "jsr:@lessjs/core@^0.21",                │
-│    "@lessjs/ui/": "jsr:@lessjs/ui@^0.21/",                  │
+│    "@openelement/core": "jsr:@openelement/core@^0.21",                │
+│    "@openelement/ui/": "jsr:@openelement/ui@^0.21/",                  │
 │                                                              │
 │    // Lit ecosystem                                          │
 │    "lit": "npm:lit@^3.2.0",                                  │
@@ -81,7 +81,7 @@ LessJS SSG 构建管线 Phase 3 当前使用 `viteBuild({ssr:true, noExternal: [
                     │ viteBuild(ssr)   │          │ Deno import()        │
                     │                  │          │                      │
                     │ noExternal:      │          │ Resolves external:   │
-                    │  /^@lessjs\//    │          │  parse5, entities,   │
+                    │  /^@openelement\//    │          │  parse5, entities,   │
                     │  /^lit/          │          │  hono via import map │
                     │  /^@lit/         │          │                      │
                     │                  │          │ ✅ Subpath ok        │

@@ -85,7 +85,7 @@ static props = {
 Maps a `PropDecl` to its runtime TypeScript type:
 
 ```ts
-import type { PropType } from '@lessjs/runtime';
+import type { PropType } from '@openelement/runtime';
 
 type CountType = PropType<NumberConstructor>; // number
 type LabelType = PropType<StringConstructor>; // string
@@ -106,7 +106,7 @@ type Y = PropType<{ type: NumberConstructor; reflect: boolean }>; // number
 Maps an entire `static props` record to typed properties:
 
 ```ts
-import type { PropsFrom } from '@lessjs/runtime';
+import type { PropsFrom } from '@openelement/runtime';
 
 class MyCard extends DsdElement {
   static props = {
@@ -256,7 +256,7 @@ disconnectedCallback()
 ### Counter with Static Props + JSX
 
 ```tsx
-import { computed, DsdElement, signal } from '@lessjs/runtime';
+import { computed, DsdElement, signal } from '@openelement/runtime';
 
 class CounterElement extends DsdElement {
   static props = {

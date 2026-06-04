@@ -8,7 +8,7 @@
 
 ## Objective
 
-消除 `@lessjs/core` / `@lessjs/cem` / `@lessjs/compat-check` / `@lessjs/adapter-vite` 之间的跨包类型重复定义，以及 `template.ts` 内部因 v0.24.3 提取导致的同文件重复。
+消除 `@openelement/core` / `@openelement/cem` / `@openelement/compat-check` / `@openelement/adapter-vite` 之间的跨包类型重复定义，以及 `template.ts` 内部因 v0.24.3 提取导致的同文件重复。
 
 ## Background
 
@@ -180,7 +180,7 @@ import type {
   ValidationError,
   ValidationResult,
   // ValidationWarning — 待确认差异后决定
-} from '@lessjs/core';
+} from '@openelement/core';
 ```
 
 **3d. 删除本地定义并更新内部引用**
@@ -197,11 +197,11 @@ grep -rn "ManifestDecision\|ValidationResult\|etc" packages/compat-check/src/
 
 **3e. 更新 compat-check 的 public exports**
 
-`compat-check/src/index.ts` 已经 re-export 了这些类型。如果这些类型从 `./types.js` 导入，直接改为从 `@lessjs/core` 导入即可：
+`compat-check/src/index.ts` 已经 re-export 了这些类型。如果这些类型从 `./types.js` 导入，直接改为从 `@openelement/core` 导入即可：
 
 ```diff
 - export { ManifestDecision, SsrAdmissionDecision, ... } from './types.js';
-+ export { ManifestDecision, SsrAdmissionDecision, ... } from '@lessjs/core';
++ export { ManifestDecision, SsrAdmissionDecision, ... } from '@openelement/core';
 ```
 
 **3f. 验证**
@@ -214,7 +214,7 @@ deno task test
 **Acceptance**:
 
 - [ ] `compat-check/src/types.ts` 不再定义已存在于 core 的 7+ 个类型
-- [ ] compat-check 通过 `@lessjs/core` 获得这些类型
+- [ ] compat-check 通过 `@openelement/core` 获得这些类型
 - [ ] `ValidationWarning` 已确认新 canonical 版本并统一
 - [ ] `deno task typecheck` pass
 - [ ] `deno task test` pass
@@ -235,7 +235,7 @@ deno task test
 1. 在 `cem/src/types.ts` 添加：
 
 ```typescript
-import type { ComponentLayer, HydrationStrategy } from '@lessjs/core';
+import type { ComponentLayer, HydrationStrategy } from '@openelement/core';
 ```
 
 2. 删除本地定义（行位置：`ComponentLayer` 和 `HydrationStrategy` 的 `export type` 行）。
@@ -257,7 +257,7 @@ deno task typecheck
 **Acceptance**:
 
 - [ ] `cem/src/types.ts` 不再定义 `ComponentLayer` / `HydrationStrategy`
-- [ ] cem 通过 `@lessjs/core` 获得这些类型
+- [ ] cem 通过 `@openelement/core` 获得这些类型
 - [ ] `deno task typecheck` pass
 
 ---
@@ -283,8 +283,8 @@ grep -n "SsrAdmissionDecision" packages/adapter-vite/src/entry-descriptor.ts
 3. 将 `SsrAdmissionDecision` 添加到已有 import：
 
 ```diff
-- import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@lessjs/core';
-+ import type { ComponentLayer, FrameworkOptions, HydrationStrategy, SsrAdmissionDecision } from '@lessjs/core';
+- import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@openelement/core';
++ import type { ComponentLayer, FrameworkOptions, HydrationStrategy, SsrAdmissionDecision } from '@openelement/core';
 ```
 
 4. 删除本地 `export interface SsrAdmissionDecision { ... }` 定义。
@@ -298,7 +298,7 @@ deno task typecheck
 **Acceptance**:
 
 - [ ] `entry-descriptor.ts` 不再本地定义 `SsrAdmissionDecision`
-- [ ] import 从 `@lessjs/core` 获取该类型
+- [ ] import 从 `@openelement/core` 获取该类型
 - [ ] `deno task typecheck` pass
 
 ---
@@ -324,7 +324,7 @@ deno task typecheck
 
 1. 确认 compat-check 的 `isValidTagName` 是否为正确的 WC 规范实现（要求至少一个连字符）。
 
-2. 将 compat-check 版本的逻辑提取到 `@lessjs/core` 或 `@lessjs/cem` 中的一个位置（建议放在 `packages/core/src/` 下作为共享 utility）：
+2. 将 compat-check 版本的逻辑提取到 `@openelement/core` 或 `@openelement/cem` 中的一个位置（建议放在 `packages/core/src/` 下作为共享 utility）：
 
 ```typescript
 // packages/core/src/tag-utils.ts (新建)

@@ -254,7 +254,7 @@ The full re-render approach was chosen for VNodes because:
 
 ## Error Handling in Effects
 
-The alien-signals `effect()` wrapper in `@lessjs/signals` includes cleanup-safe error handling:
+The alien-signals `effect()` wrapper in `@openelement/signals` includes cleanup-safe error handling:
 
 ```ts
 effect(fn: () => void | (() => void)) {

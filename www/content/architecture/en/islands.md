@@ -1,11 +1,11 @@
----
+﻿---
 title: 'Island Upgrade'
 section: 'Principles'
 label: 'Island Upgrade'
 order: 40
 ---
 
-<less-layout
+<open-layout
         locale="$"
         locales='$'
         nav-items='$'

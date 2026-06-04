@@ -13,28 +13,28 @@
 ```mermaid
 graph TB
     subgraph "用户入口"
-        APP["@lessjs/app<br/>伞包：lessjs() = less() + content + i18n"]
+        APP["@openelement/app<br/>伞包：lessjs() = less() + content + i18n"]
     end
 
     subgraph "构建编排层"
-        ADAPTER_VITE["@lessjs/adapter-vite<br/>Vite 插件 + SSG 三阶段构建"]
-        CONTENT["@lessjs/content<br/>Blog + Nav + Sitemap"]
-        I18N["@lessjs/i18n<br/>国际化 locale 展开"]
+        ADAPTER_VITE["@openelement/adapter-vite<br/>Vite 插件 + SSG 三阶段构建"]
+        CONTENT["@openelement/content<br/>Blog + Nav + Sitemap"]
+        I18N["@openelement/i18n<br/>国际化 locale 展开"]
     end
 
     subgraph "运行时核心层"
-        CORE["@lessjs/core<br/>DSD 渲染 / Island / 导航 / 日志<br/>纯运行时 · 零 node:* · 零 Vite"]
+        CORE["@openelement/core<br/>DSD 渲染 / Island / 导航 / 日志<br/>纯运行时 · 零 node:* · 零 Vite"]
     end
 
     subgraph "框架适配层"
-        ADAPTER_LIT["@lessjs/adapter-lit<br/>Lit TemplateResult → DSD HTML"]
+        ADAPTER_LIT["@openelement/adapter-lit<br/>Lit TemplateResult → DSD HTML"]
     end
 
     subgraph "独立功能包"
-        UI["@lessjs/ui<br/>8 个 Web Component"]
-        SIGNALS["@lessjs/signals<br/>TC39 Signals polyfill + framework"]
-        RPC["@lessjs/rpc<br/>零依赖 fetch RPC 控制器"]
-        CREATE["@lessjs/create<br/>脚手架 CLI"]
+        UI["@openelement/ui<br/>8 个 Web Component"]
+        SIGNALS["@openelement/signals<br/>TC39 Signals polyfill + framework"]
+        RPC["@openelement/rpc<br/>零依赖 fetch RPC 控制器"]
+        CREATE["@openelement/create<br/>脚手架 CLI"]
     end
 
     APP --> ADAPTER_VITE
@@ -150,7 +150,7 @@ sequenceDiagram
 **关键发现**：
 
 - ✅ **无循环依赖**：所有依赖方向为单向，不存在 A→B→A 的循环
-- ✅ **核心包不依赖适配器**：`@lessjs/core` 仅依赖 `parse5`，零 node:*/Vite 依赖
+- ✅ **核心包不依赖适配器**：`@openelement/core` 仅依赖 `parse5`，零 node:*/Vite 依赖
 - ✅ **signals/rpc 完全解耦**：可独立使用，不依赖任何 LessJS 包
 - ✅ **依赖层级合理**：app → 构建层 → 核心层，符合分层架构
 
@@ -181,7 +181,7 @@ sequenceDiagram
 
 **问题**：
 
-1. **constants.ts 几乎为空**：`@lessjs/core/constants.ts` 仅一行注释，无实际导出。虚拟模块 ID 已迁移到 `adapter-vite/virtual-ids`（ADR 0021），但文件仍存在。属于清理遗留。
+1. **constants.ts 几乎为空**：`@openelement/core/constants.ts` 仅一行注释，无实际导出。虚拟模块 ID 已迁移到 `adapter-vite/virtual-ids`（ADR 0021），但文件仍存在。属于清理遗留。
 
 2. **strategy-recommender.ts 未被任何代码引用**：该模块定义了 `IslandProfile` 和 `recommendStrategy()` 接口，但在整个代码库中未被任何运行时或构建时代码调用。属于未完成的功能预研或死代码。
 
@@ -200,8 +200,8 @@ sequenceDiagram
 
 **ADR 0017** 的实施效果良好：
 
-- `@lessjs/core`：纯运行时，可在 Deno/Node/Bun/Edge 运行
-- `@lessjs/adapter-vite`：构建编排，仅构建时使用
+- `@openelement/core`：纯运行时，可在 Deno/Node/Bun/Edge 运行
+- `@openelement/adapter-vite`：构建编排，仅构建时使用
 - 虚拟模块 ID 从 core 迁移到 adapter-vite（ADR 0021）
 - `LessBuildContext` 显式传递，无 globalThis 桥接
 
@@ -345,7 +345,7 @@ sequenceDiagram
 
 ### 6.1 HTML 转义
 
-**实现位置**：`@lessjs/core/html-escape.ts`
+**实现位置**：`@openelement/core/html-escape.ts`
 
 **评价**：✅ 实现完善
 
@@ -358,7 +358,7 @@ sequenceDiagram
 
 ### 6.2 CSP 策略
 
-**实现位置**：`@lessjs/core/types.ts`（配置）、`@lessjs/adapter-vite/ssg-postprocess.ts`（注入）
+**实现位置**：`@openelement/core/types.ts`（配置）、`@openelement/adapter-vite/ssg-postprocess.ts`（注入）
 
 **评价**：✅ 实现良好
 
@@ -408,7 +408,7 @@ sequenceDiagram
 
 **评价**：✅ 良好
 
-- `@lessjs/app` 伞包通过 `lessjs()` 统一入口组合所有子插件
+- `@openelement/app` 伞包通过 `lessjs()` 统一入口组合所有子插件
 - `LessBuildContext` 作为共享上下文，子插件通过 `ctx.plugins.*` 注册数据
 - `dispatchDataPlugin()` 延迟分发机制允许 content/i18n 在 `buildStart()` 中注册
 - 每个子插件可独立使用（传入 `ctx` 参数）

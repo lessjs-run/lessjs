@@ -48,43 +48,43 @@ console.log(`Project generated at ${appDir}`);
 const denoJsonPath = join(appDir, 'deno.json');
 const denoJson = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
 
-denoJson.imports['@lessjs/app'] = pathToFileURL(
+denoJson.imports['@openelement/app'] = pathToFileURL(
   join(repoRoot, 'packages', 'app', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/core'] = pathToFileURL(
+denoJson.imports['@openelement/core'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/core/logger'] = pathToFileURL(
+denoJson.imports['@openelement/core/logger'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
 ).href;
-denoJson.imports['@lessjs/adapter-vite/build-context'] = pathToFileURL(
+denoJson.imports['@openelement/adapter-vite/build-context'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
 ).href;
-denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
+denoJson.imports['@openelement/adapter-vite'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/signals'] = pathToFileURL(
+denoJson.imports['@openelement/signals'] = pathToFileURL(
   join(repoRoot, 'packages', 'signals', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/signals/framework'] = pathToFileURL(
+denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
   join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
 ).href;
-denoJson.imports['@lessjs/content'] = pathToFileURL(
+denoJson.imports['@openelement/content'] = pathToFileURL(
   join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/i18n'] = pathToFileURL(
+denoJson.imports['@openelement/i18n'] = pathToFileURL(
   join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/adapter-lit'] = pathToFileURL(
+denoJson.imports['@openelement/adapter-lit'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/adapter-lit/ssr'] = pathToFileURL(
+denoJson.imports['@openelement/adapter-lit/ssr'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts'),
 ).href;
-denoJson.imports['@lessjs/ui'] = pathToFileURL(
+denoJson.imports['@openelement/ui'] = pathToFileURL(
   join(repoRoot, 'packages', 'ui', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@lessjs/ui/'] = pathToFileURL(
+denoJson.imports['@openelement/ui/'] = pathToFileURL(
   join(repoRoot, 'packages', 'ui', 'src') + '/',
 ).href;
 denoJson.imports['lit'] = 'npm:lit@^3.2.0';
@@ -112,78 +112,78 @@ const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
 
 const aliases = [
   {
-    find: '@lessjs/adapter-vite/build-context',
+    find: '@openelement/adapter-vite/build-context',
     replacement: vitePath(
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
     ),
   },
   {
-    find: '@lessjs/adapter-vite',
+    find: '@openelement/adapter-vite',
     replacement: vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
   },
   {
-    find: '@lessjs/core/logger',
+    find: '@openelement/core/logger',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'logger.ts')),
   },
   {
-    find: '@lessjs/core',
+    find: '@openelement/core',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
   },
   {
-    find: '@lessjs/signals/framework',
+    find: '@openelement/signals/framework',
     replacement: vitePath(join(signalsSrc, 'framework.ts')),
   },
   {
-    find: '@lessjs/adapter-lit/ssr',
+    find: '@openelement/adapter-lit/ssr',
     replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts')),
   },
   {
-    find: '@lessjs/adapter-lit',
+    find: '@openelement/adapter-lit',
     replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
   },
   {
-    find: '@lessjs/ui/open-props-tokens',
+    find: '@openelement/ui/open-props-tokens',
     replacement: vitePath(join(uiSrc, 'open-props-tokens.ts')),
   },
   {
-    find: '@lessjs/ui/less-button',
+    find: '@openelement/ui/less-button',
     replacement: vitePath(join(uiSrc, 'less-button.ts')),
   },
   {
-    find: '@lessjs/ui/less-card',
+    find: '@openelement/ui/less-card',
     replacement: vitePath(join(uiSrc, 'less-card.ts')),
   },
   {
-    find: '@lessjs/ui/less-input',
+    find: '@openelement/ui/less-input',
     replacement: vitePath(join(uiSrc, 'less-input.ts')),
   },
   {
-    find: '@lessjs/ui/less-code-block',
+    find: '@openelement/ui/less-code-block',
     replacement: vitePath(join(uiSrc, 'less-code-block.ts')),
   },
   {
-    find: '@lessjs/ui/less-layout',
+    find: '@openelement/ui/less-layout',
     replacement: vitePath(join(uiSrc, 'less-layout.ts')),
   },
   {
-    find: '@lessjs/ui/less-theme-toggle',
+    find: '@openelement/ui/less-theme-toggle',
     replacement: vitePath(join(uiSrc, 'less-theme-toggle.ts')),
   },
   {
-    find: '@lessjs/ui/less-hero-ping',
+    find: '@openelement/ui/less-hero-ping',
     replacement: vitePath(join(uiSrc, 'less-hero-ping.ts')),
   },
   {
-    find: '@lessjs/ui/less-dialog',
+    find: '@openelement/ui/less-dialog',
     replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
   },
-  // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases
+  // Parent @openelement/ui alias MUST come after all @openelement/ui/* subpath aliases
   {
-    find: '@lessjs/ui',
+    find: '@openelement/ui',
     replacement: vitePath(uiSrc),
   },
   {
-    find: '@lessjs/app',
+    find: '@openelement/app',
     replacement: vitePath(join(repoRoot, 'packages', 'app', 'src', 'index.ts')),
   },
 ];
@@ -192,7 +192,7 @@ const viteConfigPath = join(appDir, 'vite.config.ts');
 let viteConfig = readFileSync(viteConfigPath, 'utf-8');
 
 viteConfig = viteConfig.replace(
-  "import { lessjs } from '@lessjs/app';",
+  "import { lessjs } from '@openelement/app';",
   `import { lessPipeline } from ${
     JSON.stringify(
       pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
@@ -201,7 +201,7 @@ viteConfig = viteConfig.replace(
 );
 viteConfig = viteConfig.replace('lessjs({', 'lessPipeline({');
 viteConfig = viteConfig.replace(
-  "packageIslands: ['@lessjs/ui'],",
+  "packageIslands: ['@openelement/ui'],",
   `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
 );
 viteConfig = viteConfig.replace(

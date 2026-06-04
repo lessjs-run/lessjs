@@ -1,36 +1,36 @@
-# LessJS Framework Dependency Audit — v0.26.1
+﻿# LessJS Framework Dependency Audit — v0.26.1
 
 > 审计范围: 全部 56 个文件（10 UI 组件 + 8 Islands + 32 Routes + 2 Core）
 > 审计维度: 10 类框架依赖检查
 
 ---
 
-## Issue #1: Import from @lessjs/runtime instead of @lessjs/core
+## Issue #1: Import from @openelement/runtime instead of @openelement/core
 
 | File                                             | Issue                                                      | Severity | Fix recommendation                                                                                                  |
 | ------------------------------------------------ | ---------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| `www/app/routes/index/index.tsx:7`               | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 统一为 `@lessjs/core`。`@lessjs/runtime` 是 facade，UI 组件和 island 都正确使用 `@lessjs/core`，仅 route 页面不一致 |
-| `www/app/routes/404.tsx:5`                       | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/contributing.tsx:6`              | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/changelog.tsx:12`                | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/roadmap.tsx:7`                   | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/apilist.tsx:7`                   | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/getting-started.tsx:4`     | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/core-concepts.tsx:4`       | `import { DsdElement } from '@lessjs/runtime'`             | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/routing-and-data.tsx:4`    | `import { DsdElement } from '@lessjs/runtime'`             | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/islands-and-ssr.tsx:4`     | `import { DsdElement } from '@lessjs/runtime'`             | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/architecture.tsx:11`       | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/deployment.tsx:3`          | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/api.tsx:3`                 | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/error-handling.tsx:3`      | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/configuration.tsx:4`       | `import { DsdElement } from '@lessjs/runtime'`             | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/guide/testing.tsx:4`             | `import { DsdElement } from '@lessjs/runtime'`             | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/architecture/architecture.tsx:5` | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/architecture/dsd.tsx:4`          | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/architecture/islands.tsx:3`      | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
-| `www/app/routes/architecture/comparison.tsx:6`   | `import { DsdElement, StyleSheet } from '@lessjs/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/index/index.tsx:7`               | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 统一为 `@openelement/core`。`@openelement/runtime` 是 facade，UI 组件和 island 都正确使用 `@openelement/core`，仅 route 页面不一致 |
+| `www/app/routes/404.tsx:5`                       | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/contributing.tsx:6`              | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/changelog.tsx:12`                | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/roadmap.tsx:7`                   | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/apilist.tsx:7`                   | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/getting-started.tsx:4`     | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/core-concepts.tsx:4`       | `import { DsdElement } from '@openelement/runtime'`             | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/routing-and-data.tsx:4`    | `import { DsdElement } from '@openelement/runtime'`             | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/islands-and-ssr.tsx:4`     | `import { DsdElement } from '@openelement/runtime'`             | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/architecture.tsx:11`       | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/deployment.tsx:3`          | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/api.tsx:3`                 | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/error-handling.tsx:3`      | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/configuration.tsx:4`       | `import { DsdElement } from '@openelement/runtime'`             | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/guide/testing.tsx:4`             | `import { DsdElement } from '@openelement/runtime'`             | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/architecture/architecture.tsx:5` | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/architecture/dsd.tsx:4`          | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/architecture/islands.tsx:3`      | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
+| `www/app/routes/architecture/comparison.tsx:6`   | `import { DsdElement, StyleSheet } from '@openelement/runtime'` | MEDIUM   | 同上                                                                                                                |
 
-**Summary**: 20 route files use `@lessjs/runtime`, while all UI components (`packages/ui/`) and all islands (`www/app/islands/`) correctly use `@lessjs/core`. 批量替换为 `@lessjs/core`。
+**Summary**: 20 route files use `@openelement/runtime`, while all UI components (`packages/ui/`) and all islands (`www/app/islands/`) correctly use `@openelement/core`. 批量替换为 `@openelement/core`。
 
 ---
 
@@ -88,7 +88,7 @@
 | `less-search.tsx:343-348` | 自定义 `_escapeHtml()` 和 `_escapeAttr()`                           | LOW    | 已有 `shared/escape.js` 中的 `_esc()` 和 `_escAttr()` 工具，应复用而非重复实现                                                                 |                    |
 | `less-term.tsx:89-91`     | 自定义静态 `_escapeHtml()`                                          | LOW    | 同上，使用 `import { _esc } from './shared/escape.js'`                                                                                         |                    |
 | `less-term.tsx:136-149`   | 自定义 `_sanitizeTermHtml()` HTML 清理器                            | MEDIUM | 这个自定义 sanitizer 基于 `innerHTML` + 白名单过滤，有潜在 XSS 风险。应使用标准 sanitizer（如 DOMPurify）或使用 `renderToDom()` 替代字符串拼接 |                    |
-| `changelog.tsx:159-252`   | 自建 Markdown 渲染器 `renderChangelog()`, `renderInline()`, `esc()` | LOW    | 使用 `@lessjs/content` 的标准 markdown 处理管线。当前代码是自包含的 SSR 渲染器，接受                                                           |                    |
+| `changelog.tsx:159-252`   | 自建 Markdown 渲染器 `renderChangelog()`, `renderInline()`, `esc()` | LOW    | 使用 `@openelement/content` 的标准 markdown 处理管线。当前代码是自包含的 SSR 渲染器，接受                                                           |                    |
 
 ---
 
@@ -162,7 +162,7 @@
 
 | Category                                  | Issues Found | HIGH   | MEDIUM | LOW    |
 | ----------------------------------------- | ------------ | ------ | ------ | ------ |
-| #1: @lessjs/runtime import                | 20           | 0      | 20     | 0      |
+| #1: @openelement/runtime import                | 20           | 0      | 20     | 0      |
 | #2: signal.value in render()              | 2            | 2      | 0      | 0      |
 | #3: Missing consumeContext/provideContext | 2            | 0      | 1      | 1      |
 | #4: Raw setAttribute                      | 4            | 0      | 2      | 2      |
@@ -176,8 +176,8 @@
 
 ## Top Priority Fixes
 
-1. **#9 (HIGH × 9)**: 所有 `@lessjs/ui` 组件必须包含 `openPropsTokenSheet` — 这是最高影响的问题，影响独立使用场景
+1. **#9 (HIGH × 9)**: 所有 `@openelement/ui` 组件必须包含 `openPropsTokenSheet` — 这是最高影响的问题，影响独立使用场景
 2. **#2 (HIGH × 2)**: `less-toc.tsx` 和 `reactive-showcase.tsx` 违反 ADR-0062，需要在 render() 中去掉 `.value` 读取
 3. **#10 (HIGH × 2)**: `reactive-showcase.tsx` 在 render() 中创建 `computed()` 实例，应移到类字段声明
-4. **#1 (MEDIUM × 20)**: 批量替换 route 页面的 `@lessjs/runtime` → `@lessjs/core`
+4. **#1 (MEDIUM × 20)**: 批量替换 route 页面的 `@openelement/runtime` → `@openelement/core`
 5. **#5 (MEDIUM × 4)**: 替换 innerHTML 写入为 `renderToDom()` 或 DOM API

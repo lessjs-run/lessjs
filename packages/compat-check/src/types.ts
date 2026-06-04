@@ -1,12 +1,12 @@
 /**
- * @lessjs/compat-check - compatibility types.
+ * @openelement/compat-check - compatibility types.
  *
- * Shared domain types are re-exported from @lessjs/core. This package owns the
+ * Shared domain types are re-exported from @openelement/core. This package owns the
  * compatibility classifier implementation, not duplicate copies of shared
  * public contracts.
  */
 
-import type { CompatibilityClassification } from '@lessjs/core';
+import type { CompatibilityClassification } from '@openelement/core';
 
 export type {
   CompatibilityClassification,
@@ -24,7 +24,7 @@ export type {
   ValidationError,
   ValidationResult,
   ValidationWarning,
-} from '@lessjs/core';
+} from '@openelement/core';
 
 /**
  * CEM compatibility report section in dsd-report.json.

@@ -15,7 +15,7 @@ The core principle for v0.21.9 is:
 > only performs the final bundle, tree-shaking, and code splitting.
 
 This SOP exists because local workspace gates were not enough. A generated app
-using `jsr:@lessjs/create` exposed package graph leaks only after packages were
+using `jsr:@openelement/create` exposed package graph leaks only after packages were
 published and consumed outside the monorepo.
 
 ## Scope
@@ -37,15 +37,15 @@ needed before Edge Full-Stack can be trusted.
 The intended application graph is clean ESM:
 
 ```ts
-import { DsdElement, html, signal } from '@lessjs/core';
-import '@lessjs/ui/less-card';
+import { DsdElement, html, signal } from '@openelement/core';
+import '@openelement/ui/less-card';
 ```
 
 The failing published-consumer path showed that LessJS can accidentally hand
 Vite a graph containing Deno/JSR-specific resolution details:
 
 ```text
-Rolldown failed to resolve import "jsr:@lessjs/signals@^0.21/framework"
+Rolldown failed to resolve import "jsr:@openelement/signals@^0.21/framework"
 from "lessjs:ssg-pkg/core/index.ts"
 ```
 
@@ -62,7 +62,7 @@ Record:
 
 - package name and version;
 - all `exports`;
-- all `imports` using `jsr:@lessjs/*`;
+- all `imports` using `jsr:@openelement/*`;
 - any LessJS dependency still using a broad range such as `^0.21`;
 - whether a subpath import has a matching exported subpath.
 
@@ -80,7 +80,7 @@ Move SSG package resolution out of ad hoc code paths in `build-ssg.ts`.
 Create or extract a focused resolver module that owns:
 
 - parsing LessJS package specifiers;
-- parsing `jsr:@lessjs/*` specifiers;
+- parsing `jsr:@openelement/*` specifiers;
 - resolving package subpaths through known exports;
 - mapping virtual package ids back to source modules;
 - keeping package version choice explicit;
@@ -89,9 +89,9 @@ Create or extract a focused resolver module that owns:
 Acceptance:
 
 - `build-ssg.ts` delegates package graph normalization to the resolver;
-- resolver tests cover `@lessjs/core`, `@lessjs/core/navigation`,
-  `@lessjs/ui/less-card`, `@lessjs/signals/framework`, `@lessjs/content`,
-  and `@lessjs/i18n`;
+- resolver tests cover `@openelement/core`, `@openelement/core/navigation`,
+  `@openelement/ui/less-card`, `@openelement/signals/framework`, `@openelement/content`,
+  and `@openelement/i18n`;
 - unresolved LessJS package imports fail with a LessJS error message before
   Vite emits a generic unresolved import error.
 
@@ -106,15 +106,15 @@ The module graph handed to Vite must contain only:
 
 Vite must not be asked to understand:
 
-- `jsr:@lessjs/*`;
+- `jsr:@openelement/*`;
 - Deno workspace-only aliases;
 - package metadata imports after manual source fetch;
 - missing LessJS package subpaths.
 
 Acceptance:
 
-- consumer SSG logs contain no unresolved `jsr:@lessjs/*`;
-- generated virtual entry code contains no direct `jsr:@lessjs/*`;
+- consumer SSG logs contain no unresolved `jsr:@openelement/*`;
+- generated virtual entry code contains no direct `jsr:@openelement/*`;
 - Vite is used for bundle optimization, not for Deno/JSR package semantics.
 
 ### 4. Generated Consumer Smoke Test
@@ -124,7 +124,7 @@ Add a CI smoke that runs outside the monorepo workspace.
 The smoke must prove:
 
 ```powershell
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 cd test-blog
 deno task build
 ```
@@ -188,7 +188,7 @@ $tmp = Join-Path $env:TEMP "lessjs-v0219-consumer-smoke"
 Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $tmp | Out-Null
 Set-Location $tmp
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 Set-Location test-blog
 deno task build
 ```
@@ -200,7 +200,7 @@ v0.21.9 passes when:
 - every LessJS package version is unified;
 - generated consumer SSG builds successfully outside the monorepo;
 - Vite/Rolldown reports no unresolved LessJS import;
-- no `jsr:@lessjs/*` specifier leaks into the Vite module graph;
+- no `jsr:@openelement/*` specifier leaks into the Vite module graph;
 - package graph resolver tests pass;
 - global gate passes or any failure has a documented owner and command.
 

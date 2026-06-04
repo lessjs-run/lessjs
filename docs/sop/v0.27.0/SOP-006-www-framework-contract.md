@@ -34,7 +34,7 @@ site breakage:
 - Theme, search, i18n URL normalization, and SPA head/layout state are covered
   by focused Playwright regressions.
 - Search index and route manifest output are generated from route metadata.
-- Shared docs grid styles live in `@lessjs/ui/docs-page-styles`.
+- Shared docs grid styles live in `@openelement/ui/docs-page-styles`.
 - Local island metadata scanning is static and no longer imports browser-only
   custom-element modules during SSR discovery.
 
@@ -85,17 +85,17 @@ framework.
 
 ## Ownership Map
 
-| Concern         | Owner                                      | Consumer Contract                                        |
-| --------------- | ------------------------------------------ | -------------------------------------------------------- |
-| route discovery | `@lessjs/adapter-vite` + `@lessjs/content` | page exports route metadata only                         |
-| navigation data | `@lessjs/content`                          | `www` imports generated manifest or layout consumes it   |
-| search data     | `@lessjs/content`                          | no hand-maintained `public/search-index.json`            |
-| locale parsing  | `@lessjs/i18n`                             | locale is derived from configured locales only           |
-| SPA navigation  | `@lessjs/router`                           | document and layout state update together                |
-| layout shell    | `@lessjs/ui`                               | route pages do not pass nav/header/current-path manually |
-| event hydration | `@lessjs/core`                             | JSX event handlers survive SSR without method-name hacks |
-| docs page CSS   | `@lessjs/ui`                               | route pages choose a layout preset, not raw grid CSS     |
-| island metadata | `@lessjs/adapter-vite`                     | metadata scan does not execute browser-only code         |
+| Concern         | Owner                                                | Consumer Contract                                        |
+| --------------- | ---------------------------------------------------- | -------------------------------------------------------- |
+| route discovery | `@openelement/adapter-vite` + `@openelement/content` | page exports route metadata only                         |
+| navigation data | `@openelement/content`                               | `www` imports generated manifest or layout consumes it   |
+| search data     | `@openelement/content`                               | no hand-maintained `public/search-index.json`            |
+| locale parsing  | `@openelement/i18n`                                  | locale is derived from configured locales only           |
+| SPA navigation  | `@openelement/router`                                | document and layout state update together                |
+| layout shell    | `@openelement/ui`                                    | route pages do not pass nav/header/current-path manually |
+| event hydration | `@openelement/core`                                  | JSX event handlers survive SSR without method-name hacks |
+| docs page CSS   | `@openelement/ui`                                    | route pages choose a layout preset, not raw grid CSS     |
+| island metadata | `@openelement/adapter-vite`                          | metadata scan does not execute browser-only code         |
 
 ## Phase 0: Reproduce and Lock the Baseline
 
@@ -116,7 +116,7 @@ Record:
   `customElements is not defined`;
 - the generated `www/dist` route list;
 - stale `search-index.json` paths and HTTP status for each search result path;
-- theme state before and after clicking `<less-theme-toggle>`;
+- theme state before and after clicking `<open-theme-toggle>`;
 - `html.lang`, `document.title`, layout locale, and switch href before and
   after clicking the language switch;
 - computed style for `.content-grid` on `/guide/getting-started`.
@@ -178,7 +178,7 @@ export interface DocsRouteManifest {
    and optional localized labels.
 3. Add a manifest writer under `packages/content/src/manifest/writer.ts`.
 4. Add a generated module in `www/app/data/_generated-route-manifest.ts`.
-5. Keep `@lessjs/content/nav` compatibility exports by deriving
+5. Keep `@openelement/content/nav` compatibility exports by deriving
    `navSections` and `headerNav` from the manifest.
 6. Change `www` route pages to stop importing `navSections` and `headerNav`
    directly once `less-layout` can consume the manifest.
@@ -200,13 +200,13 @@ export interface DocsRouteManifest {
 locale through `URLPattern('/:locale?/:page*')`. It must validate the first
 segment against configured locales before treating it as a locale.
 
-`packages/ui/src/less-layout.tsx` currently fetches the target document and
+`packages/ui/src\/open-layout.tsx` currently fetches the target document and
 swaps only the current layout light DOM children. That does not synchronize
 document state.
 
 ### Target API
 
-Move path normalization into `@lessjs/i18n`:
+Move path normalization into `@openelement/i18n`:
 
 ```ts
 export interface LocalePath {
@@ -222,7 +222,7 @@ export function normalizeLocalePath(
 ): LocalePath;
 ```
 
-Move SPA document swap into `@lessjs/router`:
+Move SPA document swap into `@openelement/router`:
 
 ```ts
 export interface PageSnapshot {
@@ -258,7 +258,7 @@ export interface PageSnapshot {
    - updates the active layout attributes;
    - replaces the active route slot;
    - rehydrates nested custom elements when needed.
-6. Make `<less-layout>` default to generated manifest data when `nav-items`,
+6. Make `<open-layout>` default to generated manifest data when `nav-items`,
    `header-nav`, `current-path`, `locale`, or `locales` are omitted.
 7. Keep attributes as explicit override escape hatches for non-doc consumers.
 
@@ -349,7 +349,7 @@ is the contract.
 
 ### Acceptance
 
-- `<less-theme-toggle>` works without changing it to a method-name string API.
+- `<open-theme-toggle>` works without changing it to a method-name string API.
 - `www` has no hand-authored `data-on-*` event markers.
 - `renderToString()` no longer depends on `Function.name` for event hydration.
 - Event cleanup remains covered by disconnected lifecycle tests.
@@ -404,7 +404,7 @@ routes.
 - Search tests cover at least one guide result, one architecture result, and
   one registry or hub result.
 
-## Phase 6: Move Docs Page CSS Into `@lessjs/ui`
+## Phase 6: Move Docs Page CSS Into `@openelement/ui`
 
 ### Problem
 
@@ -425,7 +425,7 @@ Provide framework-level docs layout primitives:
 or, if a wrapper element is too large for this release:
 
 ```ts
-import { docsPageSheet, docsTocPageSheet } from '@lessjs/ui/docs-page';
+import { docsPageSheet, docsTocPageSheet } from '@openelement/ui/docs-page';
 ```
 
 ### Implementation
@@ -469,7 +469,7 @@ export const tagName = 'less-search';
 3. Reuse or extract the existing small literal parser pattern already used by
    content nav scanning.
 4. Keep dynamic import as an opt-in fallback only when explicitly allowed.
-5. Add `defineCustomElement(tag, ctor)` to `@lessjs/core` or `@lessjs/ui`:
+5. Add `defineCustomElement(tag, ctor)` to `@openelement/core` or `@openelement/ui`:
 
 ```ts
 export function defineCustomElement(
@@ -501,7 +501,7 @@ export function defineCustomElement(
 Add or update Playwright tests under `www/e2e`:
 
 1. `theme-system.spec.ts`
-   - find `<less-theme-toggle>` through deep shadow traversal;
+   - find `<open-theme-toggle>` through deep shadow traversal;
    - click the toggle;
    - assert `html[data-theme]` changes;
    - assert the choice survives reload.

@@ -1,7 +1,7 @@
 /**
- * @lessjs/compat-check — SSR Compatibility Classifier.
+ * @openelement/compat-check — SSR Compatibility Classifier.
  *
- * Extracted from @lessjs/core in v0.21.0 (SOP-007).
+ * Extracted from @openelement/core in v0.21.0 (SOP-007).
  *
  * Classifies Web Component packages into 4 compatibility tiers:
  *   - ssr-capable: Fully SSR-safe, DSD output works
@@ -10,11 +10,11 @@
  *   - experimental-dom: Uses experimental DOM features
  *
  * This package is standalone — usable by any WC ecosystem tool,
- * not just LessJS. Use `npx @lessjs/compat-check my-package` to
+ * not just LessJS. Use `npx @openelement/compat-check my-package` to
  * check a package's SSR readiness.
  */
 
-// v0.23.0: Canonical implementation moved from @lessjs/core/compatibility.
+// v0.23.0: Canonical implementation moved from @openelement/core/compatibility.
 export {
   classifyCemManifest,
   classifyComponent,
@@ -49,9 +49,9 @@ export type {
   ValidationWarning,
 } from './types.js';
 
-// v0.23.0: Validate-manifest moved from @lessjs/core.
+// v0.23.0: Validate-manifest moved from @openelement/core.
 export { validateManifest, validateManifestFromJson } from './validate-manifest.js';
 
-// v0.23.0: less-add moved from @lessjs/core.
+// v0.23.0: less-add moved from @openelement/core.
 export { generateAddPlan } from './less-add.js';
 export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';

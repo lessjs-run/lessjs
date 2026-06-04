@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ScrollReveal — Ocean component.
  *
  * Wraps slotted content with an IntersectionObserver-driven reveal
@@ -7,10 +7,10 @@
  * v0.28: Signal-driven visibility via data-signal-class. querySelector +
  *   classList.add replaced with registerSignal + data-signal-class marker.
  */
-import { defineCustomElement, DsdElement } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { defineCustomElement, DsdElement } from '@openelement/core';
+import { signal } from '@openelement/signals';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 
 export const tagName = 'scroll-reveal';
 

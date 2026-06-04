@@ -171,9 +171,9 @@ part="footer"    — optional footer
 ```diff
 - import { css, html, nothing } from 'lit';
 - import { property } from 'lit/decorators.js';
-- import { DsdLitElement } from '@lessjs/adapter-lit';
+- import { DsdLitElement } from '@openelement/adapter-lit';
 - import { lessDesignTokens } from './design-tokens.js';
-+ import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
++ import { DsdElement, type HydrateEventDescriptor } from '@openelement/core';
 ```
 
 ### 2. Convert Lit @property → observedAttributes

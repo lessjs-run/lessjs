@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0006: 版本号策略 — 从 0.6 到 2.0 的递进路线'
 date: '2026-05-07'
 type: 'adr'
@@ -99,7 +99,7 @@ v2.0.0  ← Compiler 成为默认（如需 Breaking Change）
 
 | 能力                  | 说明                                                                       |
 | --------------------- | -------------------------------------------------------------------------- |
-| @lessjs/i18n 独立包   | 从 content 拆出，lessI18n() 独立插件，SSG locale 展开                      |
+| @openelement/i18n 独立包   | 从 content 拆出，lessI18n() 独立插件，SSG locale 展开                      |
 | 双语文档站            | 25/30 页面英文版 + language switcher + en/zh 路径                          |
 | View Transitions API  | 跨页面 MPA 动画（Chrome 111+, Safari 18+, Firefox 129+）                   |
 | Speculation Rules API | 浏览器 prefetch/prerender（Chrome 121+）                                   |
@@ -116,7 +116,7 @@ v2.0.0  ← Compiler 成为默认（如需 Breaking Change）
 | 消除 globalThis 桥接（ADR 0008）     | 消除 createServer() + 全部 globalThis 桥接   |
 | 消除 .less/ 临时文件（ADR 0010）     | 构建 ctx 替代文件系统中间态                  |
 | 消除 last globalThis（ADR 0011）     | closeBundle 替代 globalThis 数据传递         |
-| 提取 @lessjs/app（ADR 0012）         | umbrella 函数抽到独立包                      |
+| 提取 @openelement/app（ADR 0012）         | umbrella 函数抽到独立包                      |
 | 消除 less-runtime barrel（ADR 0013） | 内联 shim 替代 barrel 重导出                 |
 | SSR Bundle 公共 API（ADR 0014）      | renderRoute() + getStaticPaths() + routeInfo |
 
@@ -147,7 +147,7 @@ v2.0.0  ← Compiler 成为默认（如需 Breaking Change）
 
 **1.0.0 的含义**：
 
-- 公共 API（`less()` 配置、CLI 命令、`@lessjs/core` 导出、`@lessjs/rpc` 导出）视为稳定
+- 公共 API（`less()` 配置、CLI 命令、`@openelement/core` 导出、`@openelement/rpc` 导出）视为稳定
 - Breaking Change 必须升 MAJOR
 - Lit adapter 继续作为一等公民支持
 - Compiler 仍为 opt-in，不是默认
@@ -160,7 +160,7 @@ v2.0.0  ← Compiler 成为默认（如需 Breaking Change）
 | v1.2 | Fullstack 示例丰富     | CRM/admin 级 demo                   |
 | v1.x | 更多 adapter           | Vue adapter、React island bridge 等 |
 
-> **注**：`@lessjs/blog` 开发提前到 v0.8.0 后启动（SSG 插件形态，不依赖 Fullstack），在 v0.9 期间 dogfooding。v1.0 时 blog 包随主框架一起稳定。
+> **注**：`@openelement/blog` 开发提前到 v0.8.0 后启动（SSG 插件形态，不依赖 Fullstack），在 v0.9 期间 dogfooding。v1.0 时 blog 包随主框架一起稳定。
 
 #### v2.0.0 — Compiler 成为默认（如果需要）
 
@@ -182,13 +182,13 @@ LessJS 是 Deno workspace monorepo，7 个包发布到 JSR。仓库 Release tag 
 仓库 tag: v0.9.0
 
 包版本变更：
-  @lessjs/core         0.8.1 → 0.9.0   (SSR 属性绑定行为变更)
-  @lessjs/adapter-lit  0.6.4 → 0.7.0   (interpolate 属性绑定输出变更)
-  @lessjs/content      0.1.0 → 0.2.0   (新增 nav/sitemap 模块)
-  @lessjs/ui           0.6.2 → 不变    (无变更)
-  @lessjs/rpc          0.6.1 → 不变    (无变更)
-  @lessjs/signals        0.6.2 → 不变   (无变更)
-  @lessjs/create       0.6.1 → 不变    (无变更)
+  @openelement/core         0.8.1 → 0.9.0   (SSR 属性绑定行为变更)
+  @openelement/adapter-lit  0.6.4 → 0.7.0   (interpolate 属性绑定输出变更)
+  @openelement/content      0.1.0 → 0.2.0   (新增 nav/sitemap 模块)
+  @openelement/ui           0.6.2 → 不变    (无变更)
+  @openelement/rpc          0.6.1 → 不变    (无变更)
+  @openelement/signals        0.6.2 → 不变   (无变更)
+  @openelement/create       0.6.1 → 不变    (无变更)
 ```
 
 **具体规则**：

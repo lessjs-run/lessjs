@@ -53,10 +53,10 @@ async function cacheFirst(request) {
 <docs-home>
   <template shadowrootmode="open">
     ...
-    <less-layout locale="en" version-info="v0.17.4">
+    <open-layout locale="en" version-info="v0.17.4">
       <!-- 这里没有 template shadowrootmode="open"！ -->
       ...
-    </less-layout>
+    </open-layout>
     ...
   </template>
 </docs-home>
@@ -79,7 +79,7 @@ else if (source === 'package') {
 }
 ```
 
-即使 `@lessjs/ui/less-layout` 在 manifest 中声明了 `ssr: true`，也被排除在 SSR 之外。
+即使 `@openelement/ui\/open-layout` 在 manifest 中声明了 `ssr: true`，也被排除在 SSR 之外。
 
 **根因 2 — `isInsideDsdTemplate()` 阻止嵌套 DSD**：
 

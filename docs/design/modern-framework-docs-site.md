@@ -417,7 +417,7 @@ description: Render Web Components with Declarative Shadow DOM.
 section: Concepts
 status: shipped
 version: 0.23.x
-packageOwner: '@lessjs/core'
+packageOwner: '@openelement/core'
 related:
   - /architecture/runtime-kernel
   - /docs/reference/core

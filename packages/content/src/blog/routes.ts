@@ -1,5 +1,5 @@
 /**
- * @lessjs/content - Route generation
+ * @openelement/content - Route generation
  *
  * Scans content directory for .md files and generates route data.
  */
@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import type { BlogPost, LessBlogOptions } from './types.ts';
 import { parseMarkdownFile, slugFromFilename } from './markdown.ts';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('blog');
 

@@ -1,4 +1,4 @@
-# LessJS Coding Conventions
+﻿# LessJS Coding Conventions
 
 ## Deno / Lint
 
@@ -10,7 +10,7 @@
 ## JSR Import Map (deno.json)
 
 - Version constraints: always use `^X.Y.Z` where Z is the version that introduced the export
-  - Example: `@lessjs/core/build-types` introduced in 0.14.11 → use `^0.14.11`
+  - Example: `@openelement/core/build-types` introduced in 0.14.11 → use `^0.14.11`
 - When adding a new subpath export to a package, update ALL downstream `deno.json` imports
 - Never add `jsr:` import map entries for packages that create circular publish dependencies
 - Use dynamic `import()` for runtime-only cross-package dependencies

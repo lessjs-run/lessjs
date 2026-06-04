@@ -106,7 +106,7 @@ Same syntax. No selector to maintain. No double-fire risk.
 Every component currently using `static hydrateEvents` or `render(): string`
 must be migrated.
 
-### @lessjs/ui components
+### @openelement/ui components
 
 | Component           | Current                              | Target                           | Effort    |
 | ------------------- | ------------------------------------ | -------------------------------- | --------- |
@@ -147,7 +147,7 @@ Acceptance:
 - [ ] TypeScript `@deprecated` strikethrough appears in IDE for `hydrateEvents`
 - [ ] Dev-mode console warning fires when a component defines `static hydrateEvents`
 
-### Step 1: Migrate @lessjs/ui Static Components (no events)
+### Step 1: Migrate @openelement/ui Static Components (no events)
 
 These components have no `hydrateEvents` and no interactive state. The only
 change is wrapping the template string in `html`:
@@ -175,7 +175,7 @@ Acceptance:
 - [ ] No `hydrateEvents` remains in these components
 - [ ] `deno task test` passes
 
-### Step 2: Migrate @lessjs/ui Interactive Components (with events)
+### Step 2: Migrate @openelement/ui Interactive Components (with events)
 
 For each component currently using `hydrateEvents`:
 
@@ -209,7 +209,7 @@ render() {
 
 Acceptance:
 
-- [ ] No `static hydrateEvents` remains in any `@lessjs/ui` component
+- [ ] No `static hydrateEvents` remains in any `@openelement/ui` component
 - [ ] Event handlers fire exactly once per user interaction
 - [ ] DSD upgrade path: `data-less-event-N` markers present in SSR output
 - [ ] Signal update path: `_patchBindings()` does not destroy event listeners
@@ -235,7 +235,7 @@ Currently `_renderIntoShadowRoot()` calls both `_bindTemplateRuntime()` (for
 components are migrated to `@click`, the dual-call creates a risk of double-fire
 for any remaining `hydrateEvents` users.
 
-After all `@lessjs/ui` and `www` components are migrated:
+After all `@openelement/ui` and `www` components are migrated:
 
 - [ ] Move `_hydrateEvents()` call in `_renderIntoShadowRoot()` behind a
       `if (ctor.hydrateEvents?.length)` guard — only call for components that
@@ -287,7 +287,7 @@ deno task dsd:check-report
 
 Required test cases:
 
-- [ ] No `static hydrateEvents` in any `@lessjs/ui` component
+- [ ] No `static hydrateEvents` in any `@openelement/ui` component
 - [ ] No `static hydrateEvents` in any `www/app/islands/*` component
 - [ ] `@click` binds correctly after DSD upgrade
 - [ ] `@click` survives signal-driven `_patchBindings()`
@@ -297,7 +297,7 @@ Required test cases:
 
 ## Exit Criteria
 
-- Every `@lessjs/ui` and `www` island component uses `html` tagged templates
+- Every `@openelement/ui` and `www` island component uses `html` tagged templates
 - No `static hydrateEvents` declaration in any LessJS-maintained component
 - `_hydrateEvents()` is a guarded backward-compat path with deprecation warning
 - `@click` is the documented sole event binding mechanism

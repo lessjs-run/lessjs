@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
+export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/core';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
-import '@lessjs/ui/less-callout';
+import { DsdElement } from '@openelement/core';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-code-block';
+import '@openelement/ui\/open-callout';
 
 const localesJson = JSON.stringify(['en', 'zh']);
 
@@ -48,7 +48,7 @@ function RoutingDataZh() {
 
       <h2>页面契约</h2>
       <p>每个路由文件需导出以下内容：</p>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`import { DsdElement } from '@openelement/core';
 
 export class AboutPage extends DsdElement {
   override render() {
@@ -58,7 +58,7 @@ export class AboutPage extends DsdElement {
 
 customElements.define('page-about', AboutPage);
 export default AboutPage;
-export const tagName = 'page-about';`}</code></pre></less-code-block>
+export const tagName = 'page-about';`}</code></pre></open-code-block>
 
       <h2>动态路由：方括号语法</h2>
       <p>文件名中的 <code>[param]</code> 转换为 Hono 路由参数，SSR 时作为组件属性注入：</p>
@@ -69,7 +69,7 @@ export const tagName = 'page-about';`}</code></pre></less-code-block>
           <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
         </tbody>
       </table>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`import { DsdElement } from '@openelement/core';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -79,7 +79,7 @@ export class PostPage extends DsdElement {
   }
 }
 
-customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
+customElements.define('page-post', PostPage);`}</code></pre></open-code-block>
 
       <h2>特殊文件</h2>
       <table>
@@ -102,13 +102,13 @@ customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
         </tbody>
       </table>
       <p>构建命令：</p>
-      <less-code-block><pre><code>deno task build</code></pre></less-code-block>
+      <open-code-block><pre><code>deno task build</code></pre></open-code-block>
       <p>输出在 <code>dist/</code>，可直接部署到 GitHub Pages、Cloudflare Pages、Netlify、Vercel 或 S3。</p>
 
       <h2>构建时获取数据</h2>
       <p>在页面组件中，可以在模块顶层执行数据获取。数据在 SSG 构建时获取，写入静态 HTML：</p>
-      <less-code-block><pre><code>{`// app/routes/blog/index.ts
-import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`// app/routes/blog/index.ts
+import { DsdElement } from '@openelement/core';
 
 // 构建时获取数据
 const posts = await fetch('https://api.example.com/posts')
@@ -129,21 +129,21 @@ export class BlogIndex extends DsdElement {
   }
 }
 
-customElements.define('page-blog-index', BlogIndex);`}</code></pre></less-code-block>
+customElements.define('page-blog-index', BlogIndex);`}</code></pre></open-code-block>
 
-      <less-callout type='info' label='内容系统'>
-        对于 Markdown 博客等场景，可以使用 <code>@lessjs/content</code> 插件。
+      <open-callout type='info' label='内容系统'>
+        对于 Markdown 博客等场景，可以使用 <code>@openelement/content</code> 插件。
         它提供 frontmatter 解析、导航元数据扫描和 sitemap 生成。
-      </less-callout>
+      </open-callout>
 
       <h2>SSG 输出示例</h2>
       <p>SSG 渲染后组件以 Declarative Shadow DOM 形式嵌入 HTML：</p>
-      <less-code-block><pre><code>{`<page-home>
+      <open-code-block><pre><code>{`<page-home>
   <template shadowrootmode="open">
     <style>/* 组件样式 */</style>
     <main>内容在 JavaScript 加载前即可见。</main>
   </template>
-</page-home>`}</code></pre></less-code-block>
+</page-home>`}</code></pre></open-code-block>
 
       <div class='nav-row'>
         <a href='/guide/core-concepts' class='nav-link'>&larr; 核心概念</a>
@@ -180,7 +180,7 @@ function RoutingDataEn() {
 
       <h2>Page Contract</h2>
       <p>Each route file must export:</p>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`import { DsdElement } from '@openelement/core';
 
 export class AboutPage extends DsdElement {
   override render() {
@@ -190,7 +190,7 @@ export class AboutPage extends DsdElement {
 
 customElements.define('page-about', AboutPage);
 export default AboutPage;
-export const tagName = 'page-about';`}</code></pre></less-code-block>
+export const tagName = 'page-about';`}</code></pre></open-code-block>
 
       <h2>Dynamic Routes: Bracket Syntax</h2>
       <p>Filenames with <code>[param]</code> map to Hono route params and are injected as component properties during SSR:</p>
@@ -201,7 +201,7 @@ export const tagName = 'page-about';`}</code></pre></less-code-block>
           <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
         </tbody>
       </table>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`import { DsdElement } from '@openelement/core';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -211,7 +211,7 @@ export class PostPage extends DsdElement {
   }
 }
 
-customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
+customElements.define('page-post', PostPage);`}</code></pre></open-code-block>
 
       <h2>Special Files</h2>
       <table>
@@ -234,13 +234,13 @@ customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
         </tbody>
       </table>
       <p>Build command:</p>
-      <less-code-block><pre><code>deno task build</code></pre></less-code-block>
+      <open-code-block><pre><code>deno task build</code></pre></open-code-block>
       <p>Output lands in <code>dist/</code> and can be deployed directly to GitHub Pages, Cloudflare Pages, Netlify, Vercel, or S3.</p>
 
       <h2>Fetching Data at Build Time</h2>
       <p>Perform data fetching at the module top-level. Data is fetched during SSG build and baked into static HTML:</p>
-      <less-code-block><pre><code>{`// app/routes/blog/index.ts
-import { DsdElement } from '@lessjs/core';
+      <open-code-block><pre><code>{`// app/routes/blog/index.ts
+import { DsdElement } from '@openelement/core';
 
 // Fetch at build time
 const posts = await fetch('https://api.example.com/posts')
@@ -261,21 +261,21 @@ export class BlogIndex extends DsdElement {
   }
 }
 
-customElements.define('page-blog-index', BlogIndex);`}</code></pre></less-code-block>
+customElements.define('page-blog-index', BlogIndex);`}</code></pre></open-code-block>
 
-      <less-callout type='info' label='Content System'>
-        For Markdown blogs and similar use cases, use the <code>@lessjs/content</code> plugin.
+      <open-callout type='info' label='Content System'>
+        For Markdown blogs and similar use cases, use the <code>@openelement/content</code> plugin.
         It provides frontmatter parsing, navigation metadata scanning, and sitemap generation.
-      </less-callout>
+      </open-callout>
 
       <h2>SSG Output Example</h2>
       <p>After SSG rendering, components are embedded as Declarative Shadow DOM in HTML:</p>
-      <less-code-block><pre><code>{`<page-home>
+      <open-code-block><pre><code>{`<page-home>
   <template shadowrootmode="open">
     <style>/* component styles */</style>
     <main>Content is visible before JavaScript loads.</main>
   </template>
-</page-home>`}</code></pre></less-code-block>
+</page-home>`}</code></pre></open-code-block>
 
       <div class='nav-row'>
         <a href='/guide/core-concepts' class='nav-link'>&larr; Core Concepts</a>

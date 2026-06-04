@@ -1,4 +1,4 @@
-# LessJS 仓库级深度代码审计 · 最终报告
+﻿# LessJS 仓库级深度代码审计 · 最终报告
 
 > 审计日期：2026-05-27\
 > 仓库基线：origin/dev `3e4a9cdc`\
@@ -181,7 +181,7 @@ return trimmed;
 | ---- | ----------------------------------------------------------------------- |
 | 文件 | `adapter-lit`, `adapter-vanilla`, `adapter-react` 的 `dsd-hydration.ts` |
 | 来源 | Explore-4 代码质量                                                      |
-| 修复 | 提取共享 `WithDsdHydrationBase` 到 `@lessjs/core`                       |
+| 修复 | 提取共享 `WithDsdHydrationBase` 到 `@openelement/core`                       |
 
 ### H-12: packages/style-sheet 零测试 — 手写 CSS 解析器未验证
 

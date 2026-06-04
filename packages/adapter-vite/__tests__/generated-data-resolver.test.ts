@@ -37,12 +37,12 @@ Deno.test('generatedDataPath keeps generated data location consumer-configurable
   );
 });
 
-Deno.test('generated data resolver resolves only @lessjs/generated namespace', () => {
+Deno.test('generated data resolver resolves only @openelement/generated namespace', () => {
   const plugin = createGeneratedDataResolverPlugin({ root: '/site' });
   const resolveId = plugin.resolveId as (id: string) => string | null;
 
-  assertEquals(resolveId(GENERATED_NAV_ID), '\0less:generated-data:@lessjs/generated/nav');
-  assertEquals(resolveId('@lessjs/content/' + 'nav'), null);
+  assertEquals(resolveId(GENERATED_NAV_ID), '\0less:generated-data:@openelement/generated/nav');
+  assertEquals(resolveId('@openelement/content/' + 'nav'), null);
   assertEquals(resolveId('virtual:less-' + 'nav'), null);
 });
 
@@ -51,7 +51,7 @@ Deno.test('generated data resolver provides fallback modules before first genera
   const load = plugin.load as (id: string) => string | null;
 
   assertStringIncludes(
-    load('\0less:generated-data:@lessjs/generated/i18n') ?? '',
+    load('\0less:generated-data:@openelement/generated/i18n') ?? '',
     'getDefaultLocale',
   );
 });

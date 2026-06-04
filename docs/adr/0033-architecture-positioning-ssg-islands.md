@@ -62,17 +62,17 @@ LessJS 三支柱
 
 **不是SSG框架**。SSG只是渲染引擎的当前使用方式。框架层提供的是：
 
-| 能力            | 状态 | 说明                                                       |
-| --------------- | ---- | ---------------------------------------------------------- |
-| 文件约定路由    | ✅   | `app/routes/` 自动扫描 + Hono 挂载                         |
-| API Route       | ✅   | `app/routes/api/*.ts` → Hono sub-app，`/api/term` 已在运行 |
-| 开发服务器      | ✅   | Vite HMR + Hono 中间件                                     |
-| 构建管线        | ✅   | Phase 1 SSR → Phase 2 client → Phase 3 SSG                 |
-| Serverless 部署 | ✅   | CF Pages Functions 天然支持                                |
-| `@lessjs/rpc`   | ✅   | 客户端 fetch 抽象 + retry + abort                          |
-| 请求上下文      | ❌   | 缺 env/auth/DB 注入                                        |
-| ISR             | ❌   | 缺 stale-while-revalidate 缓存层                           |
-| Supabase 集成   | ❌   | 缺 auth/DB/realtime                                        |
+| 能力               | 状态 | 说明                                                       |
+| ------------------ | ---- | ---------------------------------------------------------- |
+| 文件约定路由       | ✅   | `app/routes/` 自动扫描 + Hono 挂载                         |
+| API Route          | ✅   | `app/routes/api/*.ts` → Hono sub-app，`/api/term` 已在运行 |
+| 开发服务器         | ✅   | Vite HMR + Hono 中间件                                     |
+| 构建管线           | ✅   | Phase 1 SSR → Phase 2 client → Phase 3 SSG                 |
+| Serverless 部署    | ✅   | CF Pages Functions 天然支持                                |
+| `@openelement/rpc` | ✅   | 客户端 fetch 抽象 + retry + abort                          |
+| 请求上下文         | ❌   | 缺 env/auth/DB 注入                                        |
+| ISR                | ❌   | 缺 stale-while-revalidate 缓存层                           |
+| Supabase 集成      | ❌   | 缺 auth/DB/realtime                                        |
 
 **vs Fresh**：Fresh 也是全栈框架（Deno + Preact + Island）。LessJS 的差异在
 Pillar 2（WC渲染引擎）和 Pillar 3（Hub），不在框架层本身。

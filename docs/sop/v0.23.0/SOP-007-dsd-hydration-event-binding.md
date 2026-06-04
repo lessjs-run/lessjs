@@ -77,7 +77,7 @@ private _bindCurrentRenderTemplate(): void {
 
 ### Step 3: 将 Search 组件集成到 less-layout（统一放置）
 
-**文件**: `packages/ui/src/less-layout.ts`
+**文件**: `packages/ui/src\/open-layout.ts`
 
 - [ ] 添加 `show-search` 属性支持（布尔属性，默认 true）
 - [ ] 当 `show-search` 为 true 时，`less-layout` 在 header 中渲染 `<less-search>` DSD 模板

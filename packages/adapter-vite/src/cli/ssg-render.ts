@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - SSG Render Pipeline (ADR 0022)
+ * @openelement/adapter-vite - SSG Render Pipeline (ADR 0022)
  *
  * Shared SSG rendering logic used by both:
  *   - build-ssg.ts (Vite inline mode, called from closeBundle)
@@ -26,9 +26,9 @@ import type {
   HydrationHint,
   ManifestDecision,
   RenderError,
-} from '@lessjs/core';
-import { escapeAttr } from '@lessjs/core';
-import { createLogger } from '@lessjs/core/logger';
+} from '@openelement/core';
+import { escapeAttr } from '@openelement/core';
+import { createLogger } from '@openelement/core/logger';
 import { stableHash } from '../island-manifest.js';
 
 const log = createLogger('ssg');
@@ -618,12 +618,12 @@ async function networkFirst(req) {
 
   try {
     if (ctx?.plugins?.sitemapOptions) {
-      // Dynamic import: adapter-vite cannot statically depend on @lessjs/content
+      // Dynamic import: adapter-vite cannot statically depend on @openelement/content
       // (would create a JSR publish-time circular dependency).
       // At runtime, the Deno workspace import map or the SSR bundle's import map
-      // resolves '@lessjs/content/sitemap' correctly.
+      // resolves '@openelement/content/sitemap' correctly.
       const { generateSitemap } = await import(
-        '@lessjs/content/sitemap'
+        '@openelement/content/sitemap'
       ) as { generateSitemap: (dir: string, opts: unknown) => string[] };
       generateSitemap(join(root, outDir), ctx.plugins.sitemapOptions);
     }
@@ -652,7 +652,7 @@ async function networkFirst(req) {
   const totalHints = pageDiagnostics.reduce((sum, p) => sum + p.hydrationHints.length, 0);
   const strategySummary = buildHydrationStrategySummary(ctx);
 
-  const report: import('@lessjs/core').DsdBuildReport = {
+  const report: import('@openelement/core').DsdBuildReport = {
     reportVersion: '1.2.0',
     timestamp: new Date().toISOString(),
     totalPages: pageDiagnostics.length,
@@ -694,8 +694,8 @@ async function networkFirst(req) {
 
 function buildHydrationStrategySummary(
   ctx?: LessBuildContext,
-): import('@lessjs/core').DsdHydrationStrategySummary {
-  const summary: import('@lessjs/core').DsdHydrationStrategySummary = {
+): import('@openelement/core').DsdHydrationStrategySummary {
+  const summary: import('@openelement/core').DsdHydrationStrategySummary = {
     load: 0,
     idle: 0,
     visible: 0,

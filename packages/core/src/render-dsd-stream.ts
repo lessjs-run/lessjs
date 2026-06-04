@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Streaming Dsd Renderer.
+ * @openelement/core - Streaming Dsd Renderer.
  *
  * Progressive Dsd delivery via Web Streams (ReadableStream<Uint8Array>).
  * Extracted from render-dsd.ts in v0.21.0 (SOP-003).
@@ -10,7 +10,7 @@
  *   - RenderDsdStreamChunk, RenderDsdStreamComponent,
  *     RenderDsdStreamMetrics, RenderDsdStreamOptions types
  *
- * @module @lessjs/core/render-dsd-stream
+ * @module @openelement/core/render-dsd-stream
  */
 
 import { renderDsd } from './render-dsd.js';

@@ -1,4 +1,4 @@
-# LessJS v0.27.0 技术审计 — 架构师专项报告
+﻿# LessJS v0.27.0 技术审计 — 架构师专项报告
 
 > 审计人：架构师 (Bob)  
 > 审计日期：2026-06-01  
@@ -13,25 +13,25 @@
 
 ```
                         ┌─────────────────────────────────────────────┐
-                        │            @lessjs/app (Umbrella)           │
+                        │            @openelement/app (Umbrella)           │
                         │  lessjs() → 统一入口, 组合所有子插件          │
                         └───────┬──────────────┬──────────────┬───────┘
                                 │              │              │
                     ┌───────────▼──┐  ┌────────▼───────┐  ┌──▼──────────┐
-                    │ @lessjs/     │  │ @lessjs/       │  │ @lessjs/    │
+                    │ @openelement/     │  │ @openelement/       │  │ @openelement/    │
                     │ adapter-vite │  │ content        │  │ i18n        │
                     │ (Vite Plugin)│  │ (Blog+Nav+Site)│  │ (多语言)     │
                     └──────┬───────┘  └───────┬────────┘  └──────┬──────┘
                            │                  │                   │
                     ┌──────▼──────────────────▼───────────────────▼──────┐
-                    │        @lessjs/protocols (共享契约层)               │
+                    │        @openelement/protocols (共享契约层)               │
                     │   LessBuildContextLike / LessPluginMeta            │
                     └──────────────────────┬────────────────────────────┘
                                            │
               ┌────────────────────────────┼─────────────────────────────┐
               │                            │                             │
     ┌─────────▼─────────┐    ┌─────────────▼──────────────┐  ┌─────────▼─────────┐
-    │  @lessjs/core     │    │  SSR Adapter 层             │  │  @lessjs/         │
+    │  @openelement/core     │    │  SSR Adapter 层             │  │  @openelement/         │
     │  (纯运行时核心)    │    │  ┌──────┐┌──────┐┌──────┐  │  │  style-sheet      │
     │  - renderDsd      │◄───┤  │ Lit  ││Vanilla││React│  │  │  (跨环境CSS抽象)  │
     │  - renderDsdTree  │    │  └──────┘└──────┘└──────┘  │  └───────────────────┘
@@ -88,13 +88,13 @@ Phase 3: SSG Rendering (Vite SSR Build)
 
 | 亮点 | 描述 | 代码位置 |
 |------|------|---------|
-| **纯运行时核心** | `@lessjs/core` 零 `node:*`、零 Vite 依赖，可在 Deno/Node/Bun/Edge 任意运行 | `packages/core/src/index.ts` |
+| **纯运行时核心** | `@openelement/core` 零 `node:*`、零 Vite 依赖，可在 Deno/Node/Bun/Edge 任意运行 | `packages/core/src/index.ts` |
 | **DSD-First SSR** | 不依赖 `@lit-labs/ssr`，用字符串拼接产出标准 DSD HTML，无 `<!--lit-part-->` 污染 | `packages/core/src/render-dsd.ts` |
 | **Entry Descriptor 分离** | `buildEntryDescriptor()` (纯数据) 与 `renderEntry()` (纯渲染) 分离，可测试、可序列化、可 diff | `packages/adapter-vite/src/entry-descriptor.ts` |
 | **Phase Token 编译期保障** | Branded type 防止 Phase 2 在 Phase 1 完成前调用 | `packages/adapter-vite/src/build-context.ts:35-37` |
 | **SSR Admission Plan** | 静态决策岛组件是否进入 SSR bundle，支持 CEM 分类 + Hub 标签 + 保守默认 | `packages/adapter-vite/src/entry-descriptor.ts:497-652` |
 | **Multi-Adapter 模型** | `registerAdapter()` 支持多框架（Lit/React/Vanilla）共存，按 `isTemplate()` 分派 | `packages/core/src/adapter-registry.ts` |
-| **Protocols 共享契约层** | `@lessjs/protocols` 零依赖接口包，解耦 content/i18n 与 adapter-vite | `packages/protocols/src/build-types.ts` |
+| **Protocols 共享契约层** | `@openelement/protocols` 零依赖接口包，解耦 content/i18n 与 adapter-vite | `packages/protocols/src/build-types.ts` |
 | **Idempotent customElements.define** | SSR dom-shim 不幂等，框架在生成代码中 patch 使其幂等 | `entry-renderer.ts:421-439` |
 
 ---
@@ -236,7 +236,7 @@ class PluginMeta implements LessPluginMeta {
   [key: string]: unknown;  // ← 索引签名
 ```
 
-**问题**: 索引签名使得任何 `pluginMeta.anyKey` 都合法，TypeScript 无法捕获拼写错误（如 `pluginMeta.blogOptoins` 不会报错）。这同样影响 `@lessjs/protocols` 中的 `LessPluginMeta`。
+**问题**: 索引签名使得任何 `pluginMeta.anyKey` 都合法，TypeScript 无法捕获拼写错误（如 `pluginMeta.blogOptoins` 不会报错）。这同样影响 `@openelement/protocols` 中的 `LessPluginMeta`。
 
 **影响**: 子插件间通过 ctx 传递数据时，拼写错误只能在运行时发现。
 
@@ -315,7 +315,7 @@ if (origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
 
 **影响**: 部分开发环境无法使用默认 CORS 配置。
 
-**建议**: 提取为 `@lessjs/core` 中的 `defaultCorsOriginValidator()` 函数，支持常见开发域名。
+**建议**: 提取为 `@openelement/core` 中的 `defaultCorsOriginValidator()` 函数，支持常见开发域名。
 
 ---
 
@@ -348,59 +348,59 @@ if (origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
 ### 3.1 模块依赖图
 
 ```
-@lessjs/app
-  ├── @lessjs/adapter-vite (直接依赖)
-  ├── @lessjs/content      (直接依赖)
-  └── @lessjs/i18n         (直接依赖)
+@openelement/app
+  ├── @openelement/adapter-vite (直接依赖)
+  ├── @openelement/content      (直接依赖)
+  └── @openelement/i18n         (直接依赖)
 
-@lessjs/adapter-vite
-  ├── @lessjs/core         (直接依赖 ✓ 单向)
-  ├── @lessjs/protocols    (直接依赖 ✓ 共享契约)
-  └── @lessjs/cem          (动态 import ✓ 延迟加载)
-  └── @lessjs/compat-check (动态 import ✓ 延迟加载)
+@openelement/adapter-vite
+  ├── @openelement/core         (直接依赖 ✓ 单向)
+  ├── @openelement/protocols    (直接依赖 ✓ 共享契约)
+  └── @openelement/cem          (动态 import ✓ 延迟加载)
+  └── @openelement/compat-check (动态 import ✓ 延迟加载)
 
-@lessjs/content
-  ├── @lessjs/core         (直接依赖)
-  └── @lessjs/protocols    (直接依赖 ✓ 通过 LessBuildContextLike)
+@openelement/content
+  ├── @openelement/core         (直接依赖)
+  └── @openelement/protocols    (直接依赖 ✓ 通过 LessBuildContextLike)
 
-@lessjs/adapter-lit
-  ├── @lessjs/core         (直接依赖 ✓ 单向)
-  └── @lessjs/style-sheet  (间接通过 core)
+@openelement/adapter-lit
+  ├── @openelement/core         (直接依赖 ✓ 单向)
+  └── @openelement/style-sheet  (间接通过 core)
 
-@lessjs/adapter-react
-  └── @lessjs/core         (直接依赖 ✓)
+@openelement/adapter-react
+  └── @openelement/core         (直接依赖 ✓)
 
-@lessjs/adapter-vanilla
-  └── @lessjs/core         (直接依赖 ✓)
+@openelement/adapter-vanilla
+  └── @openelement/core         (直接依赖 ✓)
 
-@lessjs/style-sheet
+@openelement/style-sheet
   └── (零依赖 ✓)
 
-@lessjs/protocols
+@openelement/protocols
   └── (零依赖 ✓)
 ```
 
 ### 3.2 发现的耦合问题
 
-#### 耦合-01: entry-renderer.ts 硬编码 @lessjs/ui 和 @lessjs/generated 依赖
+#### 耦合-01: entry-renderer.ts 硬编码 @openelement/ui 和 @openelement/generated 依赖
 
 **路径**: `packages/adapter-vite/src/entry-renderer.ts:357-363`
 
 ```ts
-lines.push(`import '@lessjs/ui/less-layout';`);
-lines.push(`import { headerNav as __headerNav, navSections as __navSections } from '@lessjs/generated/nav';`);
-lines.push(`import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@lessjs/generated/i18n';`);
+lines.push(`import '@openelement/ui/less-layout';`);
+lines.push(`import { headerNav as __headerNav, navSections as __navSections } from '@openelement/generated/nav';`);
+lines.push(`import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@openelement/generated/i18n';`);
 ```
 
-**问题**: 代码生成器硬编码了对 `@lessjs/ui`（布局组件）和 `@lessjs/generated`（导航/国际化数据）的 import。这意味着：
-1. 每个使用 LessJS 的项目都必须安装 `@lessjs/ui` 和 `@lessjs/generated`，即使不使用布局组件
+**问题**: 代码生成器硬编码了对 `@openelement/ui`（布局组件）和 `@openelement/generated`（导航/国际化数据）的 import。这意味着：
+1. 每个使用 LessJS 的项目都必须安装 `@openelement/ui` 和 `@openelement/generated`，即使不使用布局组件
 2. 布局组件的引用方式（`__renderAppShell` 中直接 `renderDsd("less-layout", ...)` 和字符串替换 `</less-layout>`）与框架其他部分的解耦设计矛盾
-3. `@lessjs/generated` 是构建时生成的包，其路径在代码生成时写死
+3. `@openelement/generated` 是构建时生成的包，其路径在代码生成时写死
 
 **影响**: 无法替换布局组件，无法独立使用 adapter-vite，架构灵活性受限。
 
 **重构方案**:
-- 将 `less-layout` 和 `@lessjs/generated/*` 的 import 移入用户可配置的"layout provider"接口
+- 将 `less-layout` 和 `@openelement/generated/*` 的 import 移入用户可配置的"layout provider"接口
 - `__renderAppShell` 通过注册机制获取布局组件，而非硬编码
 - 在 `FrameworkOptions` 中添加 `layout` 配置项
 
@@ -430,9 +430,9 @@ lines.push(`import { getDefaultLocale as __getDefaultLocale, locales as __locale
 
 代码注释中提到了 H-16 已知循环依赖：
 
-> **H-16**: `adapter-vite` 生成代码 import `@lessjs/content/sitemap`，而 `content` 包 import `@lessjs/adapter-vite/build-context`
+> **H-16**: `adapter-vite` 生成代码 import `@openelement/content/sitemap`，而 `content` 包 import `@openelement/adapter-vite/build-context`
 
-当前缓解措施：`@lessjs/protocols` 作为共享契约层。但生成代码中的 `import { generateSitemap } from '@lessjs/content/sitemap'`（entry-renderer.ts line 636）仍是一个硬编码的跨包引用，增加了未来循环依赖的风险。
+当前缓解措施：`@openelement/protocols` 作为共享契约层。但生成代码中的 `import { generateSitemap } from '@openelement/content/sitemap'`（entry-renderer.ts line 636）仍是一个硬编码的跨包引用，增加了未来循环依赖的风险。
 
 ---
 
@@ -485,7 +485,7 @@ interface AdmissionRule {
 
 **缓解**: 在 `renderDsdTree()` 中添加最大深度守卫（如 50 层），超限时降级为客户端渲染。
 
-### 风险-05: @lessjs/ui 硬编码绑定限制框架通用性
+### 风险-05: @openelement/ui 硬编码绑定限制框架通用性
 
 **当前状态**: `__renderAppShell()` 中硬编码了 `less-layout` 组件的渲染和字符串替换。
 
@@ -503,11 +503,11 @@ interface AdmissionRule {
 
 | 冻结项 | 当前状态 | 冻结要求 |
 |--------|---------|---------|
-| `@lessjs/core` 公共 API | 187 行 re-exports | 冻结：核心 API 表面不可变，新增只能通过子路径 |
+| `@openelement/core` 公共 API | 187 行 re-exports | 冻结：核心 API 表面不可变，新增只能通过子路径 |
 | `RendererProtocol` 接口 | `{name, render, isTemplate, extractStyles}` | 冻结：adapter 协议不可变 |
 | `buildEntryDescriptor()` 签名 | routes + options → EntryDescriptor | 冻结：入口描述符构建接口 |
 | `renderDsd()` 输出结构 | `RenderOutput {html, errors, metrics, hydrationHints}` | 冻结：渲染输出结构 |
-| `@lessjs/protocols` 契约 | `LessBuildContextLike`, `LessPluginMeta` | 冻结：跨包通信契约 |
+| `@openelement/protocols` 契约 | `LessBuildContextLike`, `LessPluginMeta` | 冻结：跨包通信契约 |
 
 ### 5.2 优化建议（v1.0 前应完成）
 
@@ -553,7 +553,7 @@ LessPluginRegistry (子插件数据)
 | v1.1 | 解耦化 | Layout Provider、代码生成模板化 |
 | v1.2 | 边缘化 | Adapter Registry 请求作用域、Deno Deploy 适配 |
 | v1.3 | 可扩展化 | AdmissionRule 插件、PluginMeta 类型安全 |
-| v2.0 | 通用化 | 去除 @lessjs/ui 硬绑定，支持第三方布局 |
+| v2.0 | 通用化 | 去除 @openelement/ui 硬绑定，支持第三方布局 |
 
 ---
 

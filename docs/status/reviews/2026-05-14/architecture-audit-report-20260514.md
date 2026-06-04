@@ -24,16 +24,16 @@ The framework is well-architected with clear boundaries, modern technology choic
 The framework uses a Deno workspace monorepo with **10 packages**:
 
 ```
-@lessjs/core (0.14.0)         - Pure runtime: DSD rendering, islands, navigation
-@lessjs/adapter-lit (0.14.0)  - Lit TemplateResult → DSD HTML conversion
-@lessjs/adapter-vite (0.14.0) - Vite build orchestration (3-phase SSG pipeline)
-@lessjs/app (0.14.0)          - Umbrella entry: lessjs() = less() + content + i18n
-@lessjs/content (0.14.0)       - Blog, navigation, sitemap build plugins
-@lessjs/i18n (0.14.0)         - Internationalization locale expansion
-@lessjs/ui (0.14.0)           - 8 Web Components (layout, button, input, etc.)
-@lessjs/signals (0.14.0)      - TC39 Signals polyfill + framework layer
-@lessjs/rpc (0.14.0)          - Zero-dependency fetch RPC controller
-@lessjs/create (0.14.0)       - Scaffolding CLI
+@openelement/core (0.14.0)         - Pure runtime: DSD rendering, islands, navigation
+@openelement/adapter-lit (0.14.0)  - Lit TemplateResult → DSD HTML conversion
+@openelement/adapter-vite (0.14.0) - Vite build orchestration (3-phase SSG pipeline)
+@openelement/app (0.14.0)          - Umbrella entry: lessjs() = less() + content + i18n
+@openelement/content (0.14.0)       - Blog, navigation, sitemap build plugins
+@openelement/i18n (0.14.0)         - Internationalization locale expansion
+@openelement/ui (0.14.0)           - 8 Web Components (layout, button, input, etc.)
+@openelement/signals (0.14.0)      - TC39 Signals polyfill + framework layer
+@openelement/rpc (0.14.0)          - Zero-dependency fetch RPC controller
+@openelement/create (0.14.0)       - Scaffolding CLI
 ```
 
 ### 1.2 Three-Layer Component Model
@@ -90,7 +90,7 @@ Lazy-loaded on demand (4 strategies: eager/lazy/idle/visible)
 
 ### 2.1 Excellent Separation of Concerns ⭐⭐⭐⭐⭐
 
-**Pure Runtime Core:** `@lessjs/core` has:
+**Pure Runtime Core:** `@openelement/core` has:
 
 - ✅ Zero `node:*` imports (no filesystem, no process, no path)
 - ✅ Zero Vite dependency (no Plugin, no build orchestration)
@@ -211,10 +211,10 @@ Key decisions documented (seen in README.md):
 **Problem:**\
 Need to verify that packages don't have circular dependencies. From `deno.json` workspace and package `imports`:
 
-- `@lessjs/adapter-lit` imports from `@lessjs/core`
-- `@lessjs/adapter-vite` imports from `@lessjs/core`, `@lessjs/content`, `@lessjs/i18n`
-- `@lessjs/ui` imports from `@lessjs/core`, `@lessjs/adapter-lit`
-- `@lessjs/app` likely imports from multiple packages (umbrella package)
+- `@openelement/adapter-lit` imports from `@openelement/core`
+- `@openelement/adapter-vite` imports from `@openelement/core`, `@openelement/content`, `@openelement/i18n`
+- `@openelement/ui` imports from `@openelement/core`, `@openelement/adapter-lit`
+- `@openelement/app` likely imports from multiple packages (umbrella package)
 
 **Risk:** Circular dependencies can cause:
 
@@ -273,9 +273,9 @@ Despite the `@dangerous` annotation, developers might:
 **Location:** `packages/adapter-vite/src/index.ts:50-191` (`createCoreResolvePlugin()`)
 
 **Problem:**
-When `@lessjs/core` is loaded from JSR (https:// import), Vite's SSR runner cannot load https:// URLs via Node.js ESM loader. The `createCoreResolvePlugin()` works around this by:
+When `@openelement/core` is loaded from JSR (https:// import), Vite's SSR runner cannot load https:// URLs via Node.js ESM loader. The `createCoreResolvePlugin()` works around this by:
 
-1. Intercepting `@lessjs/core/*` imports
+1. Intercepting `@openelement/core/*` imports
 2. Fetching source code from JSR API
 3. Compiling TypeScript → JavaScript via esbuild
 4. Rewriting `npm:` specifiers to bare specifiers
@@ -522,7 +522,7 @@ const result = (fn as any)(id);
 
 ```typescript
 throw new LessError(
-  `Failed to load @lessjs/core module from JSR: ${filePath}. URL: ${url}. Error: ${
+  `Failed to load @openelement/core module from JSR: ${filePath}. URL: ${url}. Error: ${
     err instanceof Error ? err.message : String(err)
   }`,
   'JSR_FETCH_ERROR',
@@ -561,14 +561,14 @@ The architecture guide (`/guide/architecture`) likely explains concepts well, bu
 
 ### 4.1 Short-Term (Before 1.0 Release)
 
-| Priority | Recommendation                                   | Effort | Impact               |
-| -------- | ------------------------------------------------ | ------ | -------------------- |
-| P0       | Verify no circular dependencies between packages | Low    | High                 |
-| P0       | Remove or secure `headFragments` option          | Low    | High (security)      |
-| P0       | Achieve >80% test coverage for `@lessjs/core`    | Medium | High (reliability)   |
-| P1       | Relax Vite version pin to `~8.0.0`               | Low    | Medium (maintenance) |
-| P1       | Add "Choosing the Right Layer" guide             | Medium | High (DX)            |
-| P2       | Replace `any` types with proper interfaces       | Medium | Medium (type safety) |
+| Priority | Recommendation                                     | Effort | Impact               |
+| -------- | -------------------------------------------------- | ------ | -------------------- |
+| P0       | Verify no circular dependencies between packages   | Low    | High                 |
+| P0       | Remove or secure `headFragments` option            | Low    | High (security)      |
+| P0       | Achieve >80% test coverage for `@openelement/core` | Medium | High (reliability)   |
+| P1       | Relax Vite version pin to `~8.0.0`                 | Low    | Medium (maintenance) |
+| P1       | Add "Choosing the Right Layer" guide               | Medium | High (DX)            |
+| P2       | Replace `any` types with proper interfaces         | Medium | Medium (type safety) |
 
 ### 4.2 Medium-Term (Post 1.0)
 
@@ -639,10 +639,10 @@ www/app/
 **Example:**
 
 ```typescript
-// In @lessjs/adapter-lit:
+// In @openelement/adapter-lit:
 installLitAdapter(); // Calls registerAdapter() internally
 
-// In @lessjs/core:
+// In @openelement/core:
 const adapter = getAdapter();
 if (adapter?.isTemplate?.(result)) {
   return await adapter.render(result, tagName);
@@ -655,18 +655,18 @@ if (adapter?.isTemplate?.(result)) {
 
 **Package Responsibilities:**
 
-| Package                | Responsibility                          | Clarity (/10)           |
-| ---------------------- | --------------------------------------- | ----------------------- |
-| `@lessjs/core`         | Pure runtime (DSD, islands, navigation) | 10/10                   |
-| `@lessjs/adapter-lit`  | Lit-specific rendering                  | 10/10                   |
-| `@lessjs/adapter-vite` | Vite build orchestration                | 9/10 (complex)          |
-| `@lessjs/content`      | Blog, nav, sitemap                      | 10/10                   |
-| `@lessjs/i18n`         | Internationalization                    | 10/10                   |
-| `@lessjs/ui`           | Web Components library                  | 10/10                   |
-| `@lessjs/signals`      | Reactive signals                        | 10/10                   |
-| `@lessjs/rpc`          | RPC controller                          | 10/10                   |
-| `@lessjs/create`       | Scaffolding CLI                         | 10/10                   |
-| `@lessjs/app`          | Umbrella entry                          | 9/10 (opaque internals) |
+| Package                     | Responsibility                          | Clarity (/10)           |
+| --------------------------- | --------------------------------------- | ----------------------- |
+| `@openelement/core`         | Pure runtime (DSD, islands, navigation) | 10/10                   |
+| `@openelement/adapter-lit`  | Lit-specific rendering                  | 10/10                   |
+| `@openelement/adapter-vite` | Vite build orchestration                | 9/10 (complex)          |
+| `@openelement/content`      | Blog, nav, sitemap                      | 10/10                   |
+| `@openelement/i18n`         | Internationalization                    | 10/10                   |
+| `@openelement/ui`           | Web Components library                  | 10/10                   |
+| `@openelement/signals`      | Reactive signals                        | 10/10                   |
+| `@openelement/rpc`          | RPC controller                          | 10/10                   |
+| `@openelement/create`       | Scaffolding CLI                         | 10/10                   |
+| `@openelement/app`          | Umbrella entry                          | 9/10 (opaque internals) |
 
 **Evaluation:** ✅ Clear boundaries, minimal coupling.
 

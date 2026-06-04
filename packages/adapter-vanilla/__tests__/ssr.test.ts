@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vanilla - SSR tests
+ * @openelement/adapter-vanilla - SSR tests
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 import {
@@ -7,7 +7,7 @@ import {
   installVanillaAdapter,
   uninstallVanillaAdapter,
 } from '../src/ssr.ts';
-import { getDefaultRegistry } from '@lessjs/core';
+import { getDefaultRegistry } from '@openelement/core';
 
 Deno.test('installVanillaAdapter registers vanilla adapter', () => {
   installVanillaAdapter();

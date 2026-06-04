@@ -1,4 +1,4 @@
----
+﻿---
 title: 'SOP: ADR 0008 Completion + Single-Plugin Unification'
 date: '2026-05-10'
 type: 'adr'
@@ -20,21 +20,21 @@ All phases (A, B, C, D, E) are now fully implemented via ADR 0010/0011/0012.
 - **Phase B** (globalThis bridges → module vars): ✅ Done
 - **Phase C** (eliminate `createServer()`): ✅ Done — closeBundle inlines Phase 2/3 (ADR 0011)
 - **Phase D** (runtime-shim → virtual module): ✅ Done
-- **Phase E** (single-plugin API): ✅ Done — `lessjs()` extracted to `@lessjs/app` (ADR 0012)
+- **Phase E** (single-plugin API): ✅ Done — `lessjs()` extracted to `@openelement/app` (ADR 0012)
 
 ## Key Changes from Original SOP
 
-- **Phase E updated**: `lessjs()` was originally in `@lessjs/core` with dynamic `import()`. Per ADR 0012, it has been extracted to a new `@lessjs/app` package with static imports for better type safety and correct dependency direction.
+- **Phase E updated**: `lessjs()` was originally in `@openelement/core` with dynamic `import()`. Per ADR 0012, it has been extracted to a new `@openelement/app` package with static imports for better type safety and correct dependency direction.
 - **globalThis fully deleted**: `getActiveContext()`/`setActiveContext()`/`clearActiveContext()` have been removed from `build-context.ts`. ctx is only passed via explicit parameter.
 - **content/i18n require explicit ctx**: `lessContent({ ctx })` and `lessI18n({ ctx })` — no auto-discovery fallback.
 
 ## Architecture Summary
 
 ```
-@lessjs/app (lessjs entry)
-  ├── @lessjs/core       (less(), LessBuildContext)
-  ├── @lessjs/content    (lessContent)
-  └── @lessjs/i18n       (lessI18n)
+@openelement/app (lessjs entry)
+  ├── @openelement/core       (less(), LessBuildContext)
+  ├── @openelement/content    (lessContent)
+  └── @openelement/i18n       (lessI18n)
 ```
 
 Publish order: rpc → ui → adapter-lit → signal → content → i18n → core → app → create
@@ -247,7 +247,7 @@ Replace the `less:core` config hook that writes `.less-runtime.ts` to disk:
 // BEFORE (writes to .less/.less-runtime.ts):
 config() {
   writeFileSync(runtimePath, createRuntimeShimCode(), 'utf-8');
-  return { resolve: { alias: { '@lessjs/core/less-runtime': runtimePath } } };
+  return { resolve: { alias: { '@openelement/core/less-runtime': runtimePath } } };
 }
 
 // AFTER (virtual module):
@@ -259,12 +259,12 @@ resolveId(id) { if (id === VIRTUAL_RUNTIME_ID) return RESOLVED_RUNTIME_ID; }
 load(id) { if (id === RESOLVED_RUNTIME_ID) return createRuntimeShimCode(); }
 
 // In config() hook:
-return { resolve: { alias: { '@lessjs/core/less-runtime': VIRTUAL_RUNTIME_ID } } };
+return { resolve: { alias: { '@openelement/core/less-runtime': VIRTUAL_RUNTIME_ID } } };
 ```
 
 #### D.2: Update `build-ssg.ts` SSR build to include `virtual:less-runtime` plugin
 
-The SSG SSR build also needs to resolve `@lessjs/core/less-runtime`. Add the same virtual module plugin to the SSR `viteBuild()` plugins array.
+The SSG SSR build also needs to resolve `@openelement/core/less-runtime`. Add the same virtual module plugin to the SSR `viteBuild()` plugins array.
 
 #### D.3: Remove `createRuntimeShimCode()` from `runtime-shim.ts`
 
@@ -348,9 +348,9 @@ With a single `build` command that uses the orchestrator from A.5.
 - [x] D.2: Add virtual:less-runtime to SSR build plugins
 - [x] D.3: Remove `.less-runtime.ts` file write
 
-### Phase E (Single-plugin API) — ✅ COMPLETE (extracted to @lessjs/app per ADR 0012)
+### Phase E (Single-plugin API) — ✅ COMPLETE (extracted to @openelement/app per ADR 0012)
 
-- [x] E.1: Create `lessjs()` umbrella function in `@lessjs/app`
+- [x] E.1: Create `lessjs()` umbrella function in `@openelement/app`
 - [x] E.2: Update `less()`, `lessContent()`, `lessI18n()` to accept shared `ctx`
 - [x] E.3: Verify backward compatibility (split-call with explicit `ctx` works)
 - [x] E.4: Update CLI to use unified build command (closeBundle inline per ADR 0011)
@@ -375,6 +375,6 @@ With a single `build` command that uses the orchestrator from A.5.
 - `grep -rn "\.less" packages/ --include="*.ts"` returns 0 results (excluding comments)
 - `grep -rn "globalThis\[" packages/ --include="*.ts"` returns 0 results
 - `grep -rn "getActiveContext\|setActiveContext\|clearActiveContext" packages/ --include="*.ts"` returns 0 results
-- User can write `plugins: [await lessjs({ content: { blog: true }, i18n: { locales: ['en', 'zh'] } })]` from `@lessjs/app`
+- User can write `plugins: [await lessjs({ content: { blog: true }, i18n: { locales: ['en', 'zh'] } })]` from `@openelement/app`
 - `lessjs()` uses static imports, not dynamic `import()` + try/catch
 - Build pipeline: single `viteBuild()` → `closeBundle()` inlines Phase 2/3

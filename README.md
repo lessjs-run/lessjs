@@ -6,13 +6,13 @@ English | [简体中文](./README.zh.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
-[![JSR](https://img.shields.io/badge/JSR-@lessjs/core-blue)](https://jsr.io/@lessjs/core)
-[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
+[![JSR](https://img.shields.io/badge/JSR-@openelement/core-blue)](https://jsr.io/@openelement/core)
+[![CI](https://github.com/open-element/open-element/actions/workflows/test.yml/badge.svg)](https://github.com/open-element/open-element/actions/workflows/test.yml)
 
 ## Quick Start
 
 ```bash
-deno run -A jsr:@lessjs/create my-app
+deno run -A jsr:@openelement/create my-app
 cd my-app && deno task dev
 ```
 
@@ -22,7 +22,7 @@ LessJS renders Web Components on the server via **Declarative Shadow DOM**. The 
 
 ```tsx
 // routes/index/index.tsx
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@openelement/runtime';
 
 export default class HomePage extends DsdElement {
   render() {
@@ -31,7 +31,7 @@ export default class HomePage extends DsdElement {
 }
 ```
 
-The App Shell (`<less-layout>`) is applied automatically by the Builder — pages only declare their content.
+The App Shell (`<open-layout>`) is applied automatically by the Builder — pages only declare their content.
 
 ## Features
 
@@ -54,18 +54,18 @@ The App Shell (`<less-layout>`) is applied automatically by the Builder — page
 
 ## Packages
 
-| Package                | Version | Description                                                 |
-| ---------------------- | ------- | ----------------------------------------------------------- |
-| `@lessjs/core`         | v0.28.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
-| `@lessjs/adapter-vite` | v0.28.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
-| `@lessjs/ui`           | v0.28.0 | DSD-native UI components (button, card, input, dialog...)   |
-| `@lessjs/signals`      | v0.28.0 | Signal primitives (signal, computed, effect)                |
-| `@lessjs/content`      | v0.28.0 | Blog, nav, sitemap build plugins                            |
-| `@lessjs/i18n`         | v0.28.0 | Locales, route expansion                                    |
-| `@lessjs/create`       | v0.28.0 | Project scaffold CLI                                        |
-| `@lessjs/runtime`      | v0.28.0 | Unified component authoring facade (core + signals + style) |
+| Package                     | Version | Description                                                 |
+| --------------------------- | ------- | ----------------------------------------------------------- |
+| `@openelement/core`         | v0.28.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
+| `@openelement/adapter-vite` | v0.28.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
+| `@openelement/ui`           | v0.28.0 | DSD-native UI components (button, card, input, dialog...)   |
+| `@openelement/signals`      | v0.28.0 | Signal primitives (signal, computed, effect)                |
+| `@openelement/content`      | v0.28.0 | Blog, nav, sitemap build plugins                            |
+| `@openelement/i18n`         | v0.28.0 | Locales, route expansion                                    |
+| `@openelement/create`       | v0.28.0 | Project scaffold CLI                                        |
+| `@openelement/runtime`      | v0.28.0 | Unified component authoring facade (core + signals + style) |
 
-[All 19 packages →](https://jsr.io/@lessjs)
+[All 19 packages →](https://jsr.io/@openelement)
 
 ## What's New in v0.28.0
 
@@ -74,7 +74,7 @@ The App Shell (`<less-layout>`) is applied automatically by the Builder — page
 - **CI composite action** — reusable workflow exported, 5-step matrix reduced from 14 to 9 jobs.
 - **Documentation site theme gates** — 80+ test cases covering SSR/CSR theme parity, search/sidebar/TOC color isolation.
 - **Signal-driven registry** — registry index rewritten to zero manual DOM via `data-signal` + `data-signal-attr`.
-- **[Full changelog →](https://github.com/lessjs-run/lessjs/blob/dev/docs/changelog/v0.28.0.md)**
+- **[Full changelog →](https://github.com/open-element/open-element/blob/dev/docs/changelog/v0.28.0.md)**
 
 ## Contributing
 

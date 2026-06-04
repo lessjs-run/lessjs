@@ -4,7 +4,7 @@
   "packages": [
     {
       "name": "ui",
-      "scope": "@lessjs",
+      "scope": "@openelement",
       "version": "0.20.0",
       "description": "LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.",
       "compatibility": "ssr-capable",

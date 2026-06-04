@@ -1,7 +1,7 @@
 /**
- * @lessjs/adapter-vanilla - Vanilla Web Component adapter for LessJS.
+ * @openelement/adapter-vanilla - Vanilla Web Component adapter for openElement.
  *
- * SSR adapter for plain/vanilla Web Components that use the LessJS VNode/null
+ * SSR adapter for plain/vanilla Web Components that use the openElement VNode/null
  * component contract.
  *
  * Provides:
@@ -10,10 +10,10 @@
  * - DsdVanillaElement: base class with DSD detection + hydration event binding
  *
  * Usage:
- *   import { installVanillaAdapter } from '@lessjs/adapter-vanilla';
+ *   import { installVanillaAdapter } from '@openelement/adapter-vanilla';
  *   installVanillaAdapter();
  *
- * @module @lessjs/adapter-vanilla
+ * @module @openelement/adapter-vanilla
  */
 
 export { extractVanillaStyles, installVanillaAdapter, uninstallVanillaAdapter } from './ssr.js';

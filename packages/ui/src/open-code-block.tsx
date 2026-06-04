@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-code-block
+ * @openelement/ui - less-code-block
  *
  * Code block with copy button AND syntax highlighting via Prism.
  *
@@ -14,16 +14,16 @@
  *
  * Usage:
  * ```html
- * <less-code-block>
+ * <open-code-block>
  *   <pre><code>const x = 1;</code></pre>
- * </less-code-block>
+ * </open-code-block>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-export const tagName = 'less-code-block';
+export const tagName = 'open-code-block';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -126,7 +126,7 @@ sheet.replaceSync(`
   .token.entity { cursor: help; }
 `);
 
-export class LessCodeBlock extends DsdElement {
+export class OpenCodeBlock extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
   private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
@@ -176,7 +176,7 @@ export class LessCodeBlock extends DsdElement {
   private _tryHighlight(): void {
     const p = (globalThis as unknown as Record<string, unknown>).Prism;
     if (typeof p === 'undefined') {
-      if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
+      if (this._highlightRetries++ < OpenCodeBlock.MAX_HIGHLIGHT_RETRIES) {
         // Exponential backoff: 10, 20, 40, 80, 160, 320, 500ms cap
         const delay = Math.min(10 * Math.pow(2, Math.min(this._highlightRetries, 6)), 500);
         this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), delay);
@@ -204,7 +204,7 @@ export class LessCodeBlock extends DsdElement {
       | Record<string, unknown>
       | undefined;
     if (!grammar) {
-      if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
+      if (this._highlightRetries++ < OpenCodeBlock.MAX_HIGHLIGHT_RETRIES) {
         const delay = Math.min(20 * Math.pow(2, Math.min(this._highlightRetries, 6)), 1000);
         this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), delay);
       }
@@ -286,9 +286,9 @@ export class LessCodeBlock extends DsdElement {
   }
 }
 
-export default LessCodeBlock;
+export default OpenCodeBlock;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessCodeBlock);
+  customElements.define(tagName, OpenCodeBlock);
 }

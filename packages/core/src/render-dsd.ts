@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - DSD Renderer.
+ * @openelement/core - DSD Renderer.
  *
  * Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
@@ -8,7 +8,7 @@
  * Uses unified serializeAttrs from render-ir. Removed renderDsdByName.
  * Changed renderDsdTree import from jsx-render-string to render-ir.
  *
- * @module @lessjs/core/render-dsd
+ * @module @openelement/core/render-dsd
  */
 
 import {

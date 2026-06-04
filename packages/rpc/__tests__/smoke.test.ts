@@ -1,5 +1,5 @@
 /**
- * @lessjs/rpc - Smoke tests
+ * @openelement/rpc - Smoke tests
  */
 import { RpcController, RpcError } from '../src/index.ts';
 import { assert, assertEquals, assertInstanceOf, assertRejects } from 'jsr:@std/assert@^1.0.0';

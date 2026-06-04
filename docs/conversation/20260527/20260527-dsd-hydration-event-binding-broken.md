@@ -1,4 +1,4 @@
-# DSD Hydration 事件绑定系统性失效分析
+﻿# DSD Hydration 事件绑定系统性失效分析
 
 > 日期：2026-05-27\
 > 严重程度：P0 — 影响所有使用 @click/@keydown 等声明式事件的静态渲染组件\
@@ -178,7 +178,7 @@ private _bindCurrentRenderTemplate(): void {
 
 ### 3.2 辅助修复：Search 统一放置
 
-**文件**：`packages/ui/src/less-layout.ts`
+**文件**：`packages/ui/src\/open-layout.ts`
 
 将 `<less-search>` 作为 `less-layout` 的**内置渲染元素**，而非通过 slot 由各页面手动注入。
 

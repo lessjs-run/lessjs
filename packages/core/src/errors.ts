@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — Unified Error Architecture (ADR-0053 / SOP-011).
+ * @openelement/core — Unified Error Architecture (ADR-0053 / SOP-011).
  */
 
 // ─── Well-known error codes ─────────────────────────────────────────

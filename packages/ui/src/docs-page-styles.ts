@@ -1,9 +1,9 @@
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+﻿import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 
 /**
  * Shared docs page layout styles.
  *
- * Framework-owned docs primitives live in @lessjs/ui so route files do not
+ * Framework-owned docs primitives live in @openelement/ui so route files do not
  * silently break layout when a local www stylesheet import is missed.
  */
 

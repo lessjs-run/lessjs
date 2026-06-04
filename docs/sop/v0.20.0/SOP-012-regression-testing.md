@@ -66,8 +66,8 @@ Run comprehensive regression tests to confirm zero behavioral regressions across
 ```bash
 # For each component, verify DSD template content matches v0.19:
 deno task build
-grep -A5 '<less-button' dist/**/*.html
-grep -A5 '<less-card' dist/**/*.html
+grep -A5 '<open-button' dist/**/*.html
+grep -A5 '<open-card' dist/**/*.html
 # ... all 10 components ...
 ```
 

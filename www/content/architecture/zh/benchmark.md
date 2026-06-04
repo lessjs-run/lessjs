@@ -1,11 +1,11 @@
----
+﻿---
 title: '性能与基准测试'
 section: 'Reference'
 label: 'Performance'
 order: 100
 ---
 
-<less-layout navItems= headerNav= currentPath='/architecture/benchmark' locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
+<open-layout navItems= headerNav= currentPath='/architecture/benchmark' locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
 
           <h1>性能与基准测试</h1>
           <p class='subtitle'>零噪音，实测数据。</p>

@@ -50,16 +50,16 @@ export type HubPackageRecord = {
 };
 
 const _records: Record<string, HubPackageRecord> = {
-  '@lessjs/ui': {
+  '@openelement/ui': {
     'schema': 'hub-package-v1',
     'name': 'ui',
-    'scope': '@lessjs',
+    'scope': '@openelement',
     'version': '0.18.3',
     'source': 'local',
-    'repository': 'https://github.com/lessjs-run/lessjs',
+    'repository': 'https://github.com/open-element/open-element',
     'description':
       'LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.',
-    'homepage': 'https://lessjs.dev',
+    'homepage': 'https://openelement.org',
     'manifestHash': 'a56e4bd90c590baedd7a2a083c6d91939e6849d1f24cb57abc5ddea9009d0df2',
     'compatibility': 'ssr-capable',
     'compatibilityJustification':
@@ -72,8 +72,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-button',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-button',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-button',
           'demoAttrs': {
             'variant': 'primary',
           },
@@ -88,8 +88,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-card',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-card',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-card',
           'demoAttrs': {
             'variant': 'elevated',
           },
@@ -105,8 +105,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-code-block',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-code-block',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-code-block',
           'demoAttrs': {},
           'demoSlots': '<code>console.log("Hello LessJS!")</code>',
           'compatibility': 'ssr-capable',
@@ -119,8 +119,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-dialog',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-dialog',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-dialog',
           'demoAttrs': {
             'open': '',
             'label': 'Dialog',
@@ -136,8 +136,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-hero-ping',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-hero-ping',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-hero-ping',
           'demoAttrs': {},
           'demoSlots': '',
           'compatibility': 'ssr-capable',
@@ -150,8 +150,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-input',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-input',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-input',
           'demoAttrs': {
             'placeholder': 'Type here...',
           },
@@ -166,8 +166,8 @@ const _records: Record<string, HubPackageRecord> = {
         'validationWarnings': 0,
         'snapshotMeta': {
           'tagName': 'less-theme-toggle',
-          'importSpec': '@lessjs/ui',
-          'importUrl': 'https://esm.sh/jsr/@lessjs/ui@0.18.3/less-theme-toggle',
+          'importSpec': '@openelement/ui',
+          'importUrl': 'https://esm.sh/jsr/@openelement/ui@0.18.3/less-theme-toggle',
           'demoAttrs': {},
           'demoSlots': '',
           'compatibility': 'ssr-capable',
@@ -176,14 +176,14 @@ const _records: Record<string, HubPackageRecord> = {
     ],
     'reports': {
       'validation':
-        '{"packageName":"@lessjs/ui","version":"0.18.3","valid":true,"compatibility":"ssr-capable","tags":7,"errors":[],"warnings":[]}',
+        '{"packageName":"@openelement/ui","version":"0.18.3","valid":true,"compatibility":"ssr-capable","tags":7,"errors":[],"warnings":[]}',
     },
     'snapshotPaths': {},
     'installGuidance': {
       'safeToInstall': true,
-      'command': 'less add @lessjs/ui',
+      'command': 'less add @openelement/ui',
       'configChanges': [
-        'packages["@lessjs/ui"] - SSR enabled',
+        'packages["@openelement/ui"] - SSR enabled',
       ],
       'warnings': [],
       'ssrCapable': true,

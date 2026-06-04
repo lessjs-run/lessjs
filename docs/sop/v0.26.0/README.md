@@ -12,15 +12,15 @@
 ┌───────────────────┐                  ┌───────────────────┐
 │   路由文件 (55)     │                  │   路由文件 (55)     │
 │  import from       │                  │  import from       │
-│  virtual:less-nav  │←── Vite耦合       │  @lessjs/content   │←── 框架自身
+│  virtual:less-nav  │←── Vite耦合       │  @openelement/content   │←── 框架自身
 │  virtual:less-blog │                  │  /nav /blog-data   │
 └───────┬───────────┘                  └───────┬───────────┘
         │                                      │
    Vite virtual                         纯 ESM import
    插件注入                                  │
         │                              ┌───────┴───────────┐
-┌───────┴───────────┐                  │   @lessjs/content  │
-│  @lessjs/content   │                  │   nav scanner →    │
+┌───────┴───────────┐                  │   @openelement/content  │
+│  @openelement/content   │                  │   nav scanner →    │
 │  (扫描器)          │                  │   写入_generated   │
 └───────────────────┘                  │   .ts 文件          │
                                        └───────────────────┘

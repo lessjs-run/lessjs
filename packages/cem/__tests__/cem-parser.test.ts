@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - CEM Parser Tests
+ * @openelement/core - CEM Parser Tests
  *
  * Tests for parsing Custom Elements Manifest (CEM) JSON.
  */

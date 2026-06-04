@@ -274,7 +274,7 @@ _islandMetadata.set(componentClass, { isIsland: true, tagName, layer });
 
 ```typescript
 // signal-context.ts
-import type { Signal } from '@lessjs/signals';
+import type { Signal } from '@openelement/signals';
 type SignalValue<T> = Signal<T>;
 ```
 

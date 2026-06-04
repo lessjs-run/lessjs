@@ -72,17 +72,17 @@ grep -r "from 'lit'" packages/ui/src/less-hero-ping.ts
 
 ```bash
 # Should return NO results (except hero-ping)
-grep -r "from '@lessjs/adapter-lit'" packages/ui/src/less-card.ts
+grep -r "from '@openelement/adapter-lit'" packages/ui/src/less-card.ts
 # ... same for all 9 DSD components ...
 
 # This ONE should return results:
-grep -r "from '@lessjs/adapter-lit'" packages/ui/src/less-hero-ping.ts
+grep -r "from '@openelement/adapter-lit'" packages/ui/src/less-hero-ping.ts
 ```
 
 ```bash
 # Should ALL return results:
-grep -r "from '@lessjs/core'" packages/ui/src/less-card.ts
-grep -r "from '@lessjs/core'" packages/ui/src/less-button.ts
+grep -r "from '@openelement/core'" packages/ui/src/less-card.ts
+grep -r "from '@openelement/core'" packages/ui/src/less-button.ts
 # ... all 9 DSD components ...
 ```
 
@@ -95,9 +95,9 @@ Verify `packages/ui/deno.json`:
 ```json
 {
   "imports": {
-    "@lessjs/core": "../core/src/index.ts"
+    "@openelement/core": "../core/src/index.ts"
     // "lit": "..."                    ← REMOVED (was here for DSD components)
-    // "@lessjs/adapter-lit": "..."    ← REMOVED (was here for DSD components)
+    // "@openelement/adapter-lit": "..."    ← REMOVED (was here for DSD components)
   }
 }
 ```
@@ -107,10 +107,10 @@ Verify `www/deno.json`:
 ```json
 {
   "imports": {
-    "@lessjs/ui": "../packages/ui/src/index.ts",
-    "@lessjs/core": "../packages/core/src/index.ts",
+    "@openelement/ui": "../packages/ui/src/index.ts",
+    "@openelement/core": "../packages/core/src/index.ts",
     "lit": "..."                       ← KEPT (for less-hero-ping Island)
-    "@lessjs/adapter-lit": "..."       ← KEPT (for less-hero-ping SSR)
+    "@openelement/adapter-lit": "..."       ← KEPT (for less-hero-ping SSR)
   }
 }
 ```
@@ -175,10 +175,10 @@ NOT acceptable:
 
 - [ ] Bundle gzip ≤ 6KB (≥ 50% reduction from v0.19)
 - [ ] Zero `from 'lit'` imports in 9 DSD components
-- [ ] Zero `from '@lessjs/adapter-lit'` imports in 9 DSD components
-- [ ] All 9 DSD components import from `@lessjs/core`
+- [ ] Zero `from '@openelement/adapter-lit'` imports in 9 DSD components
+- [ ] All 9 DSD components import from `@openelement/core`
 - [ ] `packages/ui/deno.json`: no `lit` dependency
-- [ ] `packages/ui/deno.json`: no `@lessjs/adapter-lit` dependency
+- [ ] `packages/ui/deno.json`: no `@openelement/adapter-lit` dependency
 - [ ] SSG build: zero errors
 - [ ] SSR output diff: only expected differences (CSS variables, formatting)
 - [ ] Hero-ping still imports Lit (verified)

@@ -1,5 +1,5 @@
 /**
- * Tests for the @lessjs/ui package manifest.
+ * Tests for the @openelement/ui package manifest.
  *
  * Verifies that the manifest has correct metadata,
  * validation passes, and declarations have proper SSR/DSD flags.
@@ -16,7 +16,7 @@ Deno.test('ui manifest - passes validation', () => {
 });
 
 Deno.test('ui manifest - has correct package metadata', () => {
-  assertEquals(manifest.packageName, '@lessjs/ui');
+  assertEquals(manifest.packageName, '@openelement/ui');
   assertEquals(typeof manifest.version, 'string');
   assertEquals(manifest.schemaVersion, '1.0.0');
   assertEquals(manifest.declarations.length > 0, true);

@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - CLI: SSG Build
+ * @openelement/adapter-vite - CLI: SSG Build
  *
  * SSG rendering + post-processing.
  * Builds a self-contained SSR bundle via viteBuild(ssr:true, noExternal),
@@ -19,14 +19,14 @@ import { fileURLToPath } from 'node:url';
 import { type Alias, normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
+import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@openelement/core';
 import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
-import { SsrRenderError } from '@lessjs/core/errors';
-import { createLogger } from '@lessjs/core/logger';
+import { SsrRenderError } from '@openelement/core/errors';
+import { createLogger } from '@openelement/core/logger';
 import { ssgRender } from './ssg-render.js';
 import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js';
-import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
+import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
 import { resolveExternalManifest } from '../external-resolver.js';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
@@ -39,7 +39,7 @@ const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
 const FALLBACK_LESSJS_VERSION = '0.23.0';
 
 function getJsrPackageVersion(metaUrl: string): string {
-  const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
+  const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
   return match?.[1] ?? FALLBACK_LESSJS_VERSION;
 }
 
@@ -220,7 +220,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     appShell,
     layouts,
   });
-  // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)
+  // Deno import map resolution handles bare specifiers (e.g. @openelement/ui/less-callout)
   // via the createDenoImportMapPlugin added to the Phase 3 viteBuild plugins below.
   const ssgEntryCode = rawSsgEntryCode;
 
@@ -233,8 +233,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // in non-workspace environments (e.g. CF Pages), causing import(entry.js)
     // to fail and the entire SSG pipeline to produce empty HTML.
     const defaultNoExternal = [
-      /^@lessjs\//,
-      // alien-signals is a hard dependency of @lessjs/signals.
+      /^@openelement\//,
+      // alien-signals is a hard dependency of @openelement/signals.
       // Without noExternal, it leaks as a bare import that Deno can resolve
       // locally (via workspace import map) but CF Pages cannot.
       'alien-signals',
@@ -285,7 +285,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     if (alias) {
       if (Array.isArray(alias)) {
         for (const a of alias) {
-          if (a.find === '@lessjs/ui') {
+          if (a.find === '@openelement/ui') {
             // v0.14.6: Check if replacement is already covered by defaultNoExternal
             const isAlreadyCovered = defaultNoExternal.some(
               (pattern: string | RegExp) =>
@@ -296,13 +296,13 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
             }
           }
         }
-      } else if ('@lessjs/ui' in alias) {
+      } else if ('@openelement/ui' in alias) {
         const isAlreadyCovered = defaultNoExternal.some(
           (pattern: string | RegExp) =>
-            pattern instanceof RegExp && pattern.test(alias['@lessjs/ui']),
+            pattern instanceof RegExp && pattern.test(alias['@openelement/ui']),
         );
         if (!isAlreadyCovered) {
-          allNoExternal.push(alias['@lessjs/ui']);
+          allNoExternal.push(alias['@openelement/ui']);
         }
       }
     }
@@ -371,7 +371,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
             // ADR-0044: customElements polyfill must run before ESM imports.
             // Uses Map-backed define()/get(); renderDsdByName() looks up
             // components via customElements.get(tagName) during SSG rendering.
-            // SOP-016: HTMLElement stub is self-contained in @lessjs/core/dsd-element.ts.
+            // SOP-016: HTMLElement stub is self-contained in @openelement/core/dsd-element.ts.
             banner: `\
 if (typeof globalThis.customElements === 'undefined') {
   const __lessCeRegistry = new Map();
@@ -398,7 +398,7 @@ if (typeof globalThis.customElements === 'undefined') {
         // ADR-0057: JSX automatic runtime, same reason as build-client.ts.
         // SSG build also processes .tsx island files for SSR rendering.
         jsx: 'automatic',
-        jsxImportSource: '@lessjs/core',
+        jsxImportSource: '@openelement/core',
         tsconfigRaw: {
           compilerOptions: {
             useDefineForClassFields: false,
@@ -418,8 +418,8 @@ if (typeof globalThis.customElements === 'undefined') {
           },
         },
         // ADR 0008 Phase C: Provide stubs for optional packages.
-        // The generated entry code statically imports @lessjs/adapter-lit,
-        // @lessjs/content, @lessjs/i18n - but these may not be installed.
+        // The generated entry code statically imports @openelement/adapter-lit,
+        // @openelement/content, @openelement/i18n - but these may not be installed.
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
@@ -427,7 +427,7 @@ if (typeof globalThis.customElements === 'undefined') {
           root,
           name: 'less:ssg-generated-data',
         }),
-        createLessJsrPackageResolverPlugin({
+        createOpenJsrPackageResolverPlugin({
           workspaceRoot,
           version: getJsrPackageVersion(import.meta.url),
           localPackageRoot: getLocalLessjsPackageRoot(import.meta.url),
@@ -510,7 +510,7 @@ if (typeof globalThis.customElements === 'undefined') {
           isrRoutes.push({
             path: r.path,
             revalidate,
-            cacheKey: `lessjs:isr:${r.path}`,
+            cacheKey: `openelement:isr:${r.path}`,
             params: r.params || {},
           });
         }

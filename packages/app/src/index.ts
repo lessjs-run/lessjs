@@ -1,12 +1,12 @@
 /**
- * @lessjs/app - Unified LessJS Vite plugin entry.
+ * @openelement/app - Unified openElement Vite plugin entry.
  *
  * Single entry point that combines lessPipeline() + lessContent() + lessI18n()
  * with a shared LessBuildContext. Explicit ctx passing - no globalThis needed.
  *
  * Usage:
  * ```ts
- * import { lessjs } from '@lessjs/app';
+ * import { lessjs } from '@openelement/app';
  *
  * export default defineConfig({
  *   plugins: [lessjs({
@@ -19,21 +19,21 @@
  */
 
 import type { Plugin } from 'vite';
-import type { FrameworkOptions } from '@lessjs/core';
-import type { LessContentOptions } from '@lessjs/content';
-import type { LessI18nOptions } from '@lessjs/i18n';
+import type { FrameworkOptions } from '@openelement/core';
+import type { LessContentOptions } from '@openelement/content';
+import type { LessI18nOptions } from '@openelement/i18n';
 
-import { LessBuildContext } from '@lessjs/adapter-vite';
+import { LessBuildContext } from '@openelement/adapter-vite';
 // Internal: less() is the raw plugin factory, not part of the public API.
-// lessPipeline() wraps it â€” use that for consumer-facing code.
-import { less } from '@lessjs/adapter-vite/less-plugin';
-import { lessContent } from '@lessjs/content';
-import { lessI18n } from '@lessjs/i18n';
-import { createLogger } from '@lessjs/core/logger';
+// lessPipeline() wraps it ¡ª use that for consumer-facing code.
+import { less } from '@openelement/adapter-vite/less-plugin';
+import { lessContent } from '@openelement/content';
+import { lessI18n } from '@openelement/i18n';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('app');
 
-/** Options for the lessjs() unified entry */
+/** Options for the openElement() unified entry */
 export interface LessjsOptions extends FrameworkOptions {
   /** Content module options (blog + nav + sitemap). Omit to disable. */
   content?: LessContentOptions;
@@ -42,13 +42,13 @@ export interface LessjsOptions extends FrameworkOptions {
 }
 
 /**
- * Unified LessJS Vite plugin - single entry point for all LessJS features.
+ * Unified openElement Vite plugin - single entry point for all LessJS features.
  *
  * Combines lessPipeline() + lessContent() + lessI18n() under one call with a
  * shared LessBuildContext. ctx is explicitly passed to sub-plugins,
  * eliminating the need for globalThis discovery.
  *
- * This is the recommended way to use LessJS.
+ * This is the recommended way to use openElement.
  */
 export function lessjs(options: LessjsOptions = {}): Plugin[] {
   const { content: contentOpts, i18n: i18nOpts, ...coreOpts } = options;

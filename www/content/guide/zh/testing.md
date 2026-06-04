@@ -1,11 +1,11 @@
----
+﻿---
 title: '测试'
 section: 'Production'
 label: 'Testing'
 order: 40
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=

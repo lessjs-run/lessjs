@@ -2,7 +2,7 @@
 
 Status: completed (Phase 1) / in-progress (Phase 2-4)\
 Target version: v0.26.1 (Phase 1) → v0.27.0 (Phase 2-4)\
-Owner: `@lessjs/core` + `@lessjs/ui` + `www/app`\
+Owner: `@openelement/core` + `@openelement/ui` + `www/app`\
 前置: [ADR-0062](../../adr/ADR-0062-dsd-first-rdom-signal-architecture.md)\
 取代: SOP-001（被 ADR-0062 修订）
 
@@ -170,8 +170,8 @@ CSS:
 `packages/core/src/dsd-element.ts`:
 
 ```diff
-- import { effect, signal } from '@lessjs/signals';
-+ import { signal } from '@lessjs/signals';
+- import { effect, signal } from '@openelement/signals';
++ import { signal } from '@openelement/signals';
 
 - private _vnodeEffectDispose?: () => void;
 
@@ -228,14 +228,14 @@ CSS:
 
 ## Gap Status (v0.26.1)
 
-| #  | Gap                                     | 修复方案                                                                                                          | 状态  |
-| -- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----- |
-| G1 | Effect 内存泄漏                         | effectScope 自动捕获 → `_scopeDispose()` 一键清理                                                                 | ✅    |
-| G2 | consumeContext 死拷贝                   | 返回 contexts Map 源 signal，不建副本                                                                             | ✅    |
-| G3 | DSD 文本节点                            | `_walkAndBind` 检测 signal 子节点 → `effect(() => textNode.textContent)`                                          | ✅    |
-| G4 | Show/For DSD                            | SSR 展开或 comment-marker hydration                                                                               | ⚠️ P2 |
-| G5 | effectScope 暴露 + AbortController 清理 | alien-signals → `@lessjs/signals` facade；`dsd-element.ts` 删除 `_templateAbortController`/`_signalUnsubscribers` | ✅    |
-| G6 | JSX.Element 类型                        | `children: unknown[]` → `(string \| VNode)[]`                                                                     | ✅    |
+| #  | Gap                                     | 修复方案                                                                                                               | 状态  |
+| -- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----- |
+| G1 | Effect 内存泄漏                         | effectScope 自动捕获 → `_scopeDispose()` 一键清理                                                                      | ✅    |
+| G2 | consumeContext 死拷贝                   | 返回 contexts Map 源 signal，不建副本                                                                                  | ✅    |
+| G3 | DSD 文本节点                            | `_walkAndBind` 检测 signal 子节点 → `effect(() => textNode.textContent)`                                               | ✅    |
+| G4 | Show/For DSD                            | SSR 展开或 comment-marker hydration                                                                                    | ⚠️ P2 |
+| G5 | effectScope 暴露 + AbortController 清理 | alien-signals → `@openelement/signals` facade；`dsd-element.ts` 删除 `_templateAbortController`/`_signalUnsubscribers` | ✅    |
+| G6 | JSX.Element 类型                        | `children: unknown[]` → `(string \| VNode)[]`                                                                          | ✅    |
 
 ### G5 重构对比
 

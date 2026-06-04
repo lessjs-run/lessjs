@@ -8,19 +8,19 @@
 
 ## Objective
 
-Extract three independent packages from `@lessjs/core`:
+Extract three independent packages from `@openelement/core`:
 
-1. **`@lessjs/compat-check`** — SSR compatibility classifier (tier system, tag validation)
-2. **`@lessjs/cem`** — Custom Elements Manifest parser/reader
-3. **`@lessjs/style-sheet`** — Cross-environment CSSStyleSheet shim
+1. **`@openelement/compat-check`** — SSR compatibility classifier (tier system, tag validation)
+2. **`@openelement/cem`** — Custom Elements Manifest parser/reader
+3. **`@openelement/style-sheet`** — Cross-environment CSSStyleSheet shim
 
 Each package must have its own `deno.json`, publish path, and be importable
-independently without pulling all of `@lessjs/core`.
+independently without pulling all of `@openelement/core`.
 
 ## Non-Goals
 
 - Do not move CLI commands (`less-add`, `validate-manifest`) out of core yet.
-- Do not break existing `@lessjs/core` subpath exports (`/compatibility`, `/cem-parser`).
+- Do not break existing `@openelement/core` subpath exports (`/compatibility`, `/cem-parser`).
 - Do not change public API signatures.
 
 ## Actual Implementation
@@ -31,13 +31,13 @@ All three packages were created in v0.21.0:
 packages/compat-check/
 ├── deno.json          # version: "0.21.0"
 ├── src/
-│   └── index.ts       # Re-exports from @lessjs/core/compatibility
+│   └── index.ts       # Re-exports from @openelement/core/compatibility
 └── README.md
 
 packages/cem/
 ├── deno.json          # version: "0.21.0"
 ├── src/
-│   └── index.ts       # Re-exports from @lessjs/core/cem-parser
+│   └── index.ts       # Re-exports from @openelement/core/cem-parser
 └── README.md
 
 packages/style-sheet/
@@ -50,7 +50,7 @@ packages/style-sheet/
 
 ### Package-by-Package Detail
 
-#### `@lessjs/compat-check`
+#### `@openelement/compat-check`
 
 Exports:
 
@@ -68,7 +68,7 @@ Tiers:
 | `rejected`         | Known issues, cannot be used     |
 | `experimental-dom` | Uses experimental DOM features   |
 
-#### `@lessjs/cem`
+#### `@openelement/cem`
 
 Exports:
 
@@ -79,7 +79,7 @@ Exports:
 - `findModulePathForTag(manifest, tagName)` → resolve module path for a tag
 - `validateModulePaths(manifest)` → validate all module paths
 
-#### `@lessjs/style-sheet`
+#### `@openelement/style-sheet`
 
 Exports:
 
@@ -90,12 +90,12 @@ Exports:
 ## Known Limitation
 
 **Current implementation is a thin re-export layer.** The actual implementation
-lives in `@lessjs/core/src/` (compatibility.ts, cem-parser.ts, style-sheet.ts).
+lives in `@openelement/core/src/` (compatibility.ts, cem-parser.ts, style-sheet.ts).
 The new packages re-export from core via subpath imports:
 
 ```ts
 // packages/compat-check/src/index.ts (actual)
-export { classifyCemManifest, ... } from '@lessjs/core/compatibility';
+export { classifyCemManifest, ... } from '@openelement/core/compatibility';
 ```
 
 This is "logical separation" rather than "physical separation". The

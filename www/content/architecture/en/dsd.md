@@ -5,7 +5,7 @@ label: 'DSD Rendering'
 order: 30
 ---
 
-<less-layout
+<open-layout
         locale="$"
         locales='$'
         nav-items='$'
@@ -26,13 +26,13 @@ order: 30
             <code>shadowrootmode</code>. It lets HTML carry shadow root content so server-rendered Web
             Components are visible before their JavaScript implementation loads.
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <open-code-block><pre><code>&lt;my-card&gt;
 
 &lt;template shadowrootmode="open"&gt;
 &lt;style&gt;:host &lt;/style&gt;
 &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
 &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;</code></pre></open-code-block>
 
           <h2>Why LessJS Uses DSD</h2>
           <div class="comparison">

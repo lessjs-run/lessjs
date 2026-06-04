@@ -29,7 +29,7 @@ LessJS app
 | Included                              | Excluded in v0.22                       |
 | ------------------------------------- | --------------------------------------- |
 | Consumer import surface cleanup       | ISR production handler                  |
-| `@lessjs/core` boundary repair        | CF Workers KV / Deno KV adapters        |
+| `@openelement/core` boundary repair   | CF Workers KV / Deno KV adapters        |
 | Extracted package ownership cleanup   | www Edge Full-Stack Showcase            |
 | `adapter-vite` decomposition          | New 10-component UI expansion           |
 | Signals facade / engine separation    | ORM/database/auth/session abstractions  |
@@ -60,11 +60,11 @@ ADR-0038 remains accepted, but its implementation moves to v0.23.x or later.
 ## Exit Criteria
 
 - Generated consumer projects have a minimal, explainable `deno.json`.
-- `@lessjs/core` no longer owns build-only files or duplicated extracted helper
+- `@openelement/core` no longer owns build-only files or duplicated extracted helper
   implementations.
 - `adapter-vite` has testable modules for plugin assembly, import resolution,
   head injection, optional stubs, and build phases.
-- `@lessjs/signals` has a documented facade/engine boundary.
+- `@openelement/signals` has a documented facade/engine boundary.
 - Hub/CEM/schema validation has one ownership model and no type placeholders.
 - CI emits coverage artifacts, keeps generated-consumer proof meaningful, and
   preserves Playwright traces for failures.

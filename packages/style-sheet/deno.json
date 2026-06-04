@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/style-sheet",
+  "name": "@openelement/style-sheet",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts"

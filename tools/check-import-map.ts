@@ -5,7 +5,7 @@
  * Usage: deno run --allow-read --allow-write --allow-run --allow-env tools/check-import-map.ts
  *
  * Steps:
- *   1. Run @lessjs/create (local workspace) to generate a test project
+ *   1. Run @openelement/create (local workspace) to generate a test project
  *   2. Parse all .ts files and vite.config.ts for bare imports
  *   3. Check each bare import exists in the generated deno.json imports
  *   4. Fail with non-zero exit code if any undeclared imports are found
@@ -102,13 +102,13 @@ async function* walkTsAndConfigFiles(
 /**
  * Check if a specifier is covered by a declared import.
  * Handles both exact matches and trailing-slash prefix matches:
- *   - `@lessjs/core` is covered by `@lessjs/core`
- *   - `@lessjs/core/logger` is covered by `@lessjs/core/` (trailing-slash entry)
- *   - `@lessjs/core/logger` is NOT covered by `@lessjs/core` (exact entry)
+ *   - `@openelement/core` is covered by `@openelement/core`
+ *   - `@openelement/core/logger` is covered by `@openelement/core/` (trailing-slash entry)
+ *   - `@openelement/core/logger` is NOT covered by `@openelement/core` (exact entry)
  */
 function isImportDeclared(specifier: string, declared: Set<string>): boolean {
   if (declared.has(specifier)) return true;
-  // Check trailing-slash prefix: `@lessjs/core/logger` → `@lessjs/core/`
+  // Check trailing-slash prefix: `@openelement/core/logger` → `@openelement/core/`
   const slashIdx = specifier.lastIndexOf('/');
   if (slashIdx > 0) {
     const prefix = specifier.substring(0, slashIdx + 1);

@@ -6,13 +6,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
-[![JSR](https://img.shields.io/badge/JSR-@lessjs/core-blue)](https://jsr.io/@lessjs/core)
-[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
+[![JSR](https://img.shields.io/badge/JSR-@openelement/core-blue)](https://jsr.io/@openelement/core)
+[![CI](https://github.com/open-element/open-element/actions/workflows/test.yml/badge.svg)](https://github.com/open-element/open-element/actions/workflows/test.yml)
 
 ## 快速开始
 
 ```bash
-deno run -A jsr:@lessjs/create my-app
+deno run -A jsr:@openelement/create my-app
 cd my-app && deno task dev
 ```
 
@@ -22,7 +22,7 @@ LessJS 通过 **声明式 Shadow DOM（DSD）** 在服务端渲染 Web Component
 
 ```tsx
 // routes/index/index.tsx
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@openelement/runtime';
 
 export default class HomePage extends DsdElement {
   render() {
@@ -52,17 +52,17 @@ export default class HomePage extends DsdElement {
 
 ## 包列表
 
-| 包名                   | 版本    | 说明                                               |
-| ---------------------- | ------- | -------------------------------------------------- |
-| `@lessjs/core`         | v0.28.0 | DSD 渲染、DsdElement、JSX 运行时、Island、导航     |
-| `@lessjs/adapter-vite` | v0.28.0 | Vite 插件：路由扫描、SSG 管线、Island 入口生成     |
-| `@lessjs/ui`           | v0.28.0 | DSD 原生 UI 组件（button、card、input、dialog...） |
-| `@lessjs/signals`      | v0.28.0 | Signal 原语（signal、computed、effect）            |
-| `@lessjs/content`      | v0.28.0 | Blog、导航、Sitemap 构建插件                       |
-| `@lessjs/i18n`         | v0.28.0 | 多语言、路由展开                                   |
-| `@lessjs/create`       | v0.28.0 | 项目脚手架 CLI                                     |
+| 包名                        | 版本    | 说明                                               |
+| --------------------------- | ------- | -------------------------------------------------- |
+| `@openelement/core`         | v0.28.0 | DSD 渲染、DsdElement、JSX 运行时、Island、导航     |
+| `@openelement/adapter-vite` | v0.28.0 | Vite 插件：路由扫描、SSG 管线、Island 入口生成     |
+| `@openelement/ui`           | v0.28.0 | DSD 原生 UI 组件（button、card、input、dialog...） |
+| `@openelement/signals`      | v0.28.0 | Signal 原语（signal、computed、effect）            |
+| `@openelement/content`      | v0.28.0 | Blog、导航、Sitemap 构建插件                       |
+| `@openelement/i18n`         | v0.28.0 | 多语言、路由展开                                   |
+| `@openelement/create`       | v0.28.0 | 项目脚手架 CLI                                     |
 
-[全部 19 个包 →](https://jsr.io/@lessjs)
+[全部 19 个包 →](https://jsr.io/@openelement)
 
 ## 参与贡献
 

@@ -1,7 +1,7 @@
 /**
- * @lessjs/adapter-vite - LessJS Build Context
+ * @openelement/adapter-vite - LessJS Build Context
  *
- * Shared mutable state for all LessJS Vite plugins.
+ * Shared mutable state for all openElement Vite plugins.
  * Replaces the closure-captured variables (honoEntryCode, scannedIslandTagNames, etc.)
  * with a single object that's explicitly passed around.
  *
@@ -12,7 +12,7 @@
  * - Sub-plugins (lessContent, lessI18n) write their data -> ctx fields
  *
  * ctx is passed via explicit parameter - no globalThis or module-level discovery.
- * Use lessjs() from @lessjs/app for the recommended unified entry.
+ * use openElement() from @openelement/app for the recommended unified entry.
  *
  * Fields are grouped by Phase to improve type safety and maintainability.
  */
@@ -24,11 +24,11 @@ import type {
   HydrationStrategy,
   LessPackageManifest,
   RouteEntry,
-} from '@lessjs/core';
-import type { LessPluginMeta } from '@lessjs/protocols/build-types';
+} from '@openelement/core';
+import type { LessPluginMeta } from '@openelement/protocols/build-types';
 import type { IslandDecl, SsrAdmissionPlan } from './entry-descriptor.js';
 
-// â”€â”€â”€ Phase Branded Types (compile-time ordering enforcement) â”€â”€â”€
+// ©¤©¤©¤ Phase Branded Types (compile-time ordering enforcement) ©¤©¤©¤
 // These branded types ensure Phase 2 can only run after Phase 1,
 // and Phase 3 can only run after Phase 2. The compiler catches
 // out-of-order phase calls at build time.
@@ -36,7 +36,7 @@ export type Phase1Token = { readonly __phase1: unique symbol };
 export type Phase2Token = { readonly __phase2: unique symbol };
 export type Phase3Token = { readonly __phase3: unique symbol };
 
-// â”€â”€â”€ Phase 1: Route scanning & build metadata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Phase 1: Route scanning & build metadata ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase1Meta {
   /** The generated Hono entry module code (virtual module content) */
   honoEntryCode: string = '';
@@ -75,13 +75,13 @@ export class Phase1Meta {
   userResolveAlias: Record<string, string> | Alias[] | null = null;
 }
 
-// â”€â”€â”€ Phase 2: Client island build state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Phase 2: Client island build state ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase2Meta {
   /** Generated client island entry code */
   clientEntryCode: string = '';
 }
 
-// â”€â”€â”€ Phase 3: SSG rendering state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Phase 3: SSG rendering state ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase3Meta {
   /** Generated SSG entry code (for viteBuild SSR input) */
   ssgEntryCode: string = '';
@@ -147,26 +147,26 @@ export class Phase3Meta {
   skipPreResolution?: boolean;
 }
 
-// â”€â”€â”€ Plugin data from content/i18n sub-plugins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Plugin data from content/i18n sub-plugins ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class PluginMeta implements LessPluginMeta {
   /** Index signature to satisfy LessPluginMeta interface */
   [key: string]: unknown;
 
-  /** Blog options from @lessjs/content plugin */
+  /** Blog options from @openelement/content plugin */
   blogOptions: { contentDir?: string; basePath?: string } | null = null;
 
-  /** Navigation sections from @lessjs/content plugin */
+  /** Navigation sections from @openelement/content plugin */
   navSections: Array<
     { section: string; items: Array<{ path: string; label: string; order?: number }> }
   > = [];
 
-  /** Header navigation links from @lessjs/content plugin */
+  /** Header navigation links from @openelement/content plugin */
   headerNav: Array<{ href: string; label: string }> = [];
 
-  /** Sitemap options from @lessjs/content plugin */
+  /** Sitemap options from @openelement/content plugin */
   sitemapOptions: Record<string, unknown> | null = null;
 
-  /** i18n options from @lessjs/i18n plugin */
+  /** i18n options from @openelement/i18n plugin */
   i18nOptions: {
     locales: string[];
     defaultLocale: string;
@@ -174,7 +174,7 @@ export class PluginMeta implements LessPluginMeta {
   } | null = null;
 }
 
-// â”€â”€â”€ Root context â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Root context ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class LessBuildContext {
   /** Phase completion tokens - used for compile-time ordering enforcement */
   readonly _phaseTokens: {

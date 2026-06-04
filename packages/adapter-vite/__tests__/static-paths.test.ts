@@ -9,7 +9,7 @@
 
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor } from '../src/entry-descriptor.ts';
-import type { RouteEntry } from '@lessjs/core';
+import type { RouteEntry } from '@openelement/core';
 
 // ─── Helper: create a RouteEntry ──────────────────────────────
 

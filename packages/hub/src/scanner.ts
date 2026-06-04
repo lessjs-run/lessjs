@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Node Module Scanner
+ * @openelement/hub - Node Module Scanner
  *
  * v0.19.0: Scan node_modules for installed Web Component packages and
  * generate Hub records automatically. No CEM required - discovers
@@ -31,7 +31,7 @@ import type { PlaywrightRenderOptions } from './snapshot-playwright.ts';
 import { DEMO_ATTRS, DEMO_SLOTS } from './demo-config.ts';
 import { toCdnUrl } from './cdn-url.ts';
 
-// â”€â”€â”€ Known WC Packages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Known WC Packages ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 interface KnownWcPackage {
   name: string;
@@ -56,16 +56,16 @@ interface KnownWcPackage {
  * it's classified as ssr-capable. Otherwise client-only.
  */
 const WC_PACKAGES: KnownWcPackage[] = [
-  // â”€â”€ LessJS UI (local, SSR-capable) â”€â”€
+  // ©¤©¤ LessJS UI (local, SSR-capable) ©¤©¤
   {
     name: 'ui',
-    scope: '@lessjs',
+    scope: '@openelement',
     version: LESSJS_UI_VERSION,
     source: 'local',
     description:
       'LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.',
-    repository: 'https://github.com/lessjs-run/lessjs',
-    homepage: 'https://lessjs.dev',
+    repository: 'https://github.com/open-element/open-element',
+    homepage: 'https://openelement.org',
     compatibility: 'ssr-capable',
     justification:
       'First-party LessJS package. Ocean components extend DsdElement with declared SSR metadata.',
@@ -95,7 +95,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
     },
   },
 
-  // â”€â”€ Shoelace (npm, client-only) â”€â”€
+  // ©¤©¤ Shoelace (npm, client-only) ©¤©¤
   {
     name: 'shoelace',
     scope: '@shoelace-style',
@@ -196,19 +196,19 @@ const WC_PACKAGES: KnownWcPackage[] = [
   },
 ];
 
-// â”€â”€â”€ Scanner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Scanner ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
-// â”€â”€â”€ CEM Data Extraction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM Data Extraction ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Raw CEM JSON parsing interface (intentionally loose).
  *
  * This is NOT the authoritative CEM type definition. The canonical CEM schema
- * types live in @lessjs/cem (CemCustomElement, CemAttribute, CemEvent, CemSlot).
+ * types live in @openelement/cem (CemCustomElement, CemAttribute, CemEvent, CemSlot).
  * This interface exists only for parsing arbitrary CEM JSON files where the
  * actual runtime shape may vary (e.g., `type` can be `{ text: string }` or `string`).
  *
- * @see @lessjs/cem/types.ts for authoritative CEM schema types
+ * @see @openelement/cem/types.ts for authoritative CEM schema types
  * @see https://github.com/webcomponents/custom-elements-manifest
  */
 interface CemDeclaration {
@@ -306,9 +306,9 @@ function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
     : `${pkg.name}@${pkg.version}`;
 
   // Determine import URL based on source
-  // IMPORTANT: For local/JSR packages (like @lessjs/ui), use per-component
+  // IMPORTANT: For local/JSR packages (like @openelement/ui), use per-component
   // subpath imports instead of the full package bundle, because importing the
-  // full @lessjs/ui pulls in less-layout which has complex dependencies
+  // full @openelement/ui pulls in less-layout which has complex dependencies
   // and can fail in iframe srcdoc contexts. For npm packages (like Shoelace),
   // the full bundle import works fine in iframes.
   let importUrl = '';
@@ -353,7 +353,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   const records: (HubPackageRecord | null)[] = new Array(numPackages).fill(null);
   const skipSnapshots = Deno.args.includes('--skip-snapshots');
 
-  // â”€â”€ Phase 1: Collect all items to render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ©¤©¤ Phase 1: Collect all items to render ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   // SSR-capable Lit components use renderSnapshotLit (fast, in-process).
   // Client-only npm components use Playwright (batch, one browser instance).
   const playwrightItems: PlaywrightRenderOptions[] = [];
@@ -400,7 +400,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     }
   }
 
-  // â”€â”€ Phase 2: Render SSR-capable Lit components (in-process) â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ©¤©¤ Phase 2: Render SSR-capable Lit components (in-process) ©¤©¤©¤©¤©¤©¤©¤©¤©¤
   for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility !== 'ssr-capable') continue;
@@ -425,7 +425,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
           }
         } catch (e) {
           console.warn(
-            `  âš   Snapshot failed for <${tag}>: ${e instanceof Error ? e.message : String(e)}`,
+            `  ?  Snapshot failed for <${tag}>: ${e instanceof Error ? e.message : String(e)}`,
           );
         }
       }
@@ -446,21 +446,21 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     await buildAndStoreRecord(pkg, tags, records, pkgIdx, errors);
   }
 
-  // â”€â”€ Phase 3: Render client-only components via Playwright â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ©¤©¤ Phase 3: Render client-only components via Playwright ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   let playwrightResults: Map<string, { html: string; success: boolean; error?: string }> =
     new Map();
   if (playwrightItems.length > 0) {
-    console.info(`\nğŸ¬ Rendering ${playwrightItems.length} components via Playwright...`);
+    console.info(`\n?? Rendering ${playwrightItems.length} components via Playwright...`);
     try {
       playwrightResults = await renderBatchWithPlaywright({ items: playwrightItems });
     } catch (e) {
       console.warn(
-        `  âš   Playwright batch rendering failed: ${e instanceof Error ? e.message : String(e)}`,
+        `  ?  Playwright batch rendering failed: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
   }
 
-  // â”€â”€ Phase 4: Assemble records for client-only packages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ©¤©¤ Phase 4: Assemble records for client-only packages ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility === 'ssr-capable') continue; // already handled
@@ -623,14 +623,14 @@ export async function writeScanOutput(
     );
   }
 
-  console.info(`  âœ… Written ${result.records.length} records to ${outputDir}`);
-  console.info(`  ğŸ“„ index.json`);
+  console.info(`  ? Written ${result.records.length} records to ${outputDir}`);
+  console.info(`  ?? index.json`);
   for (const record of result.records) {
     const fullName = record.scope ? `${record.scope}/${record.name}` : record.name;
-    console.info(`  ğŸ“„ packages/${fullName}.json`);
+    console.info(`  ?? packages/${fullName}.json`);
   }
   if (result.errors.length > 0) {
-    console.info(`  âš ï¸  ${result.errors.length} error(s):`);
+    console.info(`  ??  ${result.errors.length} error(s):`);
     for (const err of result.errors) {
       console.info(`     ${err}`);
     }

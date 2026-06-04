@@ -7,8 +7,8 @@ different outer shells.
 ## 1. Create A Shell Component
 
 ```tsx
-/** @jsxImportSource @lessjs/core */
-import { DsdElement } from '@lessjs/core';
+/** @jsxImportSource @openelement/core */
+import { DsdElement } from '@openelement/core';
 
 export const tagName = 'site-layout';
 
@@ -37,7 +37,7 @@ customElements.define(tagName, SiteLayout);
 ## 2. Configure The Shell
 
 ```ts
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -57,7 +57,7 @@ export default defineConfig({
 ```
 
 The SSG entry imports the configured module and renders `<site-layout>`. No alias
-override for `@lessjs/ui/less-layout` is needed.
+override for `@openelement/ui/less-layout` is needed.
 
 ## 3. Add Route-Level Layouts
 

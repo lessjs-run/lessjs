@@ -81,8 +81,8 @@ return html`
   ${unsafeHTML(content)}
 `; // Lit 的 unsafeHTML 不兼容！
 
-// ✅ 使用 @lessjs/core 的 unsafeHTML
-import { unsafeHTML } from '@lessjs/core';
+// ✅ 使用 @openelement/core 的 unsafeHTML
+import { unsafeHTML } from '@openelement/core';
 ```
 
 ### 事件模型

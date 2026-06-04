@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - VNode interface definition.
+ * @openelement/core - VNode interface definition.
  *
  * VNode is the intermediate representation of a component's declarative output.
  * It is a pure JS object — zero DOM dependency, zero runtime binding.
@@ -8,7 +8,7 @@
  * v1.0 前只允许以下 5 个字段，不增加 hooks/memo/suspense/context/portal。
  * 任何新字段提案必须走 ADR 流程，并证明它不引入 VDOM diff 语义。
  *
- * @module @lessjs/core/vnode
+ * @module @openelement/core/vnode
  */
 
 // ─── Component types ─────────────────────────────────────────────────────────

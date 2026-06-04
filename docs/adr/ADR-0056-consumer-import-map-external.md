@@ -32,7 +32,7 @@ SSR 构建时 externalize `parse5`、`entities`、`hono`，通过 AST 方式（A
 const ssrExternalDefaults = ['parse5', 'entities', 'hono'];
 // ADR-0054: AST generates complete specifiers including subpaths
 // → manifest.specifiers = ['hono', 'hono/secure-headers', ..., 'entities', 'entities/lib/escape.js', ...]
-ssr: { noExternal: [/^@lessjs\//], external: manifest.specifiers }
+ssr: { noExternal: [/^@openelement\//], external: manifest.specifiers }
 ```
 
 ### Layer 2: Consumer Import Map Declaration
@@ -47,9 +47,9 @@ Consumer 的 `deno.json` 显式声明这些包。这不是 "workaround"
     "entities": "npm:entities@^4.5.0",
     "hono": "npm:hono@^4",
     "parse5": "npm:parse5@^7.0.0",
-    "@lessjs/app": "...",
-    "@lessjs/runtime": "...",
-    "@lessjs/ui": "...",
+    "@openelement/app": "...",
+    "@openelement/runtime": "...",
+    "@openelement/ui": "...",
     "@deno/vite-plugin": "...",
     "vite": "npm:vite@8.0.10"
   }
@@ -67,14 +67,14 @@ Node.js 标准解析 fallback 找到子路径文件。
 ```
 SSR Build (Rolldown)
 │
-├─ noExternal: [/^@lessjs\//]     → LessJS code bundled inline
+├─ noExternal: [/^@openelement\//]     → LessJS code bundled inline
 ├─ external: manifest.specifiers  → parse5/entities/hono + ALL subpaths
 │                                    covered by ADR-0054 AST
 │
 ▼
 SSR Entry (entry.js)
 │
-├─ import '@lessjs/core'          → bundled inline ✅
+├─ import '@openelement/core'          → bundled inline ✅
 ├─ import 'parse5'                 → top-level import (externalized)
 ├─ import 'entities/lib/escape.js' → top-level import (externalized via AST)
 │
@@ -104,7 +104,7 @@ never needs to understand `parse5`'s internal dependency graph.
 ### Negative
 
 - Consumer 模板有 9 个 imports（比 v0.23.0 的 5 个多 4 个）
-- 新增 @lessjs/runtime → alien-signals 这条传递依赖链暴露给 consumer
+- 新增 @openelement/runtime → alien-signals 这条传递依赖链暴露给 consumer
 - 如果 adapter-vite 新增外部依赖，consumer 模板需同步更新
 
 ### Neutral

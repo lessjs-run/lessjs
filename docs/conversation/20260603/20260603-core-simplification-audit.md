@@ -1,4 +1,4 @@
-# 2026-06-03 Core Simplification Audit
+﻿# 2026-06-03 Core Simplification Audit
 
 ## 1. 审计触发
 
@@ -327,11 +327,11 @@ export async function renderDsdTree(node: unknown): Promise<string> {
 **迁移路径：**
 ```typescript
 // 改前
-import { renderToString } from '@lessjs/core';
+import { renderToString } from '@openelement/core';
 const html = renderToString(vnode);
 
 // 改后
-import { renderDsdTree } from '@lessjs/core';
+import { renderDsdTree } from '@openelement/core';
 const html = await renderDsdTree(vnode);  // 注意：async
 ```
 

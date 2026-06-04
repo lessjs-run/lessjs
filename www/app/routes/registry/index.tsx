@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Registry Hub - Package Search &amp; List
  *
  * v0.19.0: Browse and search validated Web Component packages.
@@ -11,10 +11,10 @@
 
 export const meta = { section: 'Registry', label: 'Package Registry', order: 5 };
 
-import { DsdElement } from '@lessjs/core';
-import { signal, computed } from '@lessjs/signals';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { signal, computed } from '@openelement/signals';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import hubData from '../../data/registry/hub-index.ts';
 import type { HubIndexData, HubIndexEntry } from '../../data/registry/hub-index.ts';
 
@@ -433,7 +433,7 @@ export default class DocsRegistryHome extends DsdElement {
             </p>
             <p class="early-access-note">
               Currently indexing 3 packages. Actively onboarding more Web Components libraries.
-              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package {'->'}</a>
+              <a href="https://github.com/open-element/open-element/issues?q=label%3Ahub-submit">Submit your package {'->'}</a>
             </p>
           </div>
 

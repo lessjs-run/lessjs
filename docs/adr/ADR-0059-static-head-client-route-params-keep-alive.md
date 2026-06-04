@@ -9,7 +9,7 @@
 
 v0.24.3 完成了组件模型迁移（JSX+Signal）和 API 命名统一（Web Platform style）。但 DX 层面仍有硬编码：
 
-1. **页面元数据**：所有页面通过 `<less-layout head-extras='<title>...</title><meta...>'>` 字符串拼接注入 title/meta
+1. **页面元数据**：所有页面通过 `<open-layout head-extras='<title>...</title><meta...>'>` 字符串拼接注入 title/meta
 2. **Island 声明**：`island()` 函数调用是 LessJS 特有的非标准模式，与 `static props` / `static styles` 的声明式风格不一致
 3. **SPA 导航**：`_getRouteParams()` 返回的值在 SPA 导航后仍是旧值——本框架自己的网站就需要修复
 4. **DOM 重渲染**：VNode re-render 是全量 shadow DOM 替换，`<input>` 的 focus 和 CSS transition 在每次 signal 变更时丢失

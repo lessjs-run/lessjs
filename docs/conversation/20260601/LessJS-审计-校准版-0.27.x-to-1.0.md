@@ -1,4 +1,4 @@
-# LessJS 审计校准版：v0.27.x 到 v1.0 项目管理基线
+﻿# LessJS 审计校准版：v0.27.x 到 v1.0 项目管理基线
 
 > 本文件是对 `docs/conversation/20260601/` 审计文件组的二次校准。
 > 原 6 份专项报告和最终汇总报告保留为审计输入；后续 GitHub issue / project / release
@@ -219,7 +219,7 @@ E2E currently fails for stale SEO expectations, not for the three user-facing do
   - navigation failure fallback
 - runtime:
   - public export contract snapshot
-  - `jsx` only via jsx-runtime/runtime package, not root `@lessjs/core`
+  - `jsx` only via jsx-runtime/runtime package, not root `@openelement/core`
 - protocols:
   - build-types shape and key constants.
 

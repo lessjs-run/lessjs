@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Entry Renderer
+ * @openelement/core - Entry Renderer
  *
  * Pure function: EntryDescriptor -> string (virtual module code).
  *
@@ -14,13 +14,13 @@
  * - DSD output must remain plain HTML, without Lit SSR marker comments.
  *
  * H-16 KNOWN ISSUE: Circular dependency between adapter-vite <-> content
- *   adapter-vite generates code that imports @lessjs/content/sitemap
- *   content package imports @lessjs/adapter-vite/build-context
- * Shared contracts now live in @lessjs/protocols. Generated optional package
+ *   adapter-vite generates code that imports @openelement/content/sitemap
+ *   content package imports @openelement/adapter-vite/build-context
+ * Shared contracts now live in @openelement/protocols. Generated optional package
  * imports are still emitted explicitly so consumer import maps can be checked.
  */
 
-// â”€â”€â”€ SSR Import Discovery Audit (Step1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ SSR Import Discovery Audit (Step1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 // This file controls which islands become SSR imports:
 //
 // 1. Local island files:
@@ -40,7 +40,7 @@
 // Audit completed: 2026-05-17
 // Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
 //
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 import type {
   ApiRouteDecl,
@@ -57,14 +57,14 @@ import type {
   HydrationStrategy,
   LessPackageManifest,
   RouteEntry,
-} from '@lessjs/core';
+} from '@openelement/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for consumers that import from entry-renderer.ts
 export { buildEntryDescriptor } from './entry-descriptor.js';
 export type { EntryDescriptor } from './entry-descriptor.js';
 
-// â”€â”€â”€ Import rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Import rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderImport(imp: ImportDecl): string {
   const names = imp.alias ? `${imp.names[0]} as ${imp.alias}` : imp.names.join(', ');
@@ -76,7 +76,7 @@ function routeTagNameExpr(varName: string, fallback: string): string {
   return JSON.stringify(fallback);
 }
 
-// â”€â”€â”€ CORS config rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CORS config rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderCorsOrigin(origin: CorsOriginConfig): string {
   if (typeof origin === 'object' && !Array.isArray(origin)) return origin.body;
@@ -86,7 +86,7 @@ function renderCorsOrigin(origin: CorsOriginConfig): string {
 const CORS_ALLOW =
   "allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], allowHeaders: ['Content-Type', 'Authorization'], credentials: true, maxAge: 86400";
 
-// â”€â”€â”€ Middleware rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Middleware rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
   if (mw.comment) {
@@ -188,7 +188,7 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
   lines.push('');
 }
 
-// â”€â”€â”€ API route rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ API route rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Render an API route using Hono's standard app.route().
@@ -222,7 +222,7 @@ function renderApiRoute(lines: string[], route: ApiRouteDecl): void {
   lines.push('');
 }
 
-// â”€â”€â”€ Page route rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Page route rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderPageRoute(
   lines: string[],
@@ -302,7 +302,7 @@ function renderPageRoute(
   lines.push('');
 }
 
-// â”€â”€â”€ Main renderer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Main renderer ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Render an EntryDescriptor into a complete virtual module string.
@@ -355,14 +355,14 @@ export function renderEntry(desc: EntryDescriptor): string {
 
   // --- Document wrapper ---
   // ADR 0013: import directly from source files instead of less-runtime barrel.
-  lines.push(`import { wrapInDocument } from '@lessjs/core';`);
-  lines.push(`import { jsx } from '@lessjs/core/jsx-runtime';`);
-  lines.push(`import { createLogger } from '@lessjs/core/logger';`);
+  lines.push(`import { wrapInDocument } from '@openelement/core';`);
+  lines.push(`import { jsx } from '@openelement/core/jsx-runtime';`);
+  lines.push(`import { createLogger } from '@openelement/core/logger';`);
   lines.push(
-    `import { headerNav as __headerNav, navSections as __navSections } from '@lessjs/generated/nav';`,
+    `import { headerNav as __headerNav, navSections as __navSections } from '@openelement/generated/nav';`,
   );
   lines.push(
-    `import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@lessjs/generated/i18n';`,
+    `import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@openelement/generated/i18n';`,
   );
   for (const importPath of appShellImports) {
     lines.push(`import '${importPath}';`);
@@ -405,30 +405,30 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('    const install = mod?.[exportName];');
     lines.push('    if (typeof install !== "function") {');
     lines.push(
-      '      log.warn("[LessJS] Optional SSR adapter " + spec + " does not export " + exportName);',
+      '      log.warn("[openElement] Optional SSR adapter " + spec + " does not export " + exportName);',
     );
     lines.push('      return;');
     lines.push('    }');
     lines.push('    install();');
     lines.push('  } catch (error) {');
     lines.push('    if (__isMissingOptionalAdapter(error, spec)) {');
-    lines.push('      log.debug("[LessJS] Optional SSR adapter not installed: " + spec);');
+    lines.push('      log.debug("[openElement] Optional SSR adapter not installed: " + spec);');
     lines.push('      return;');
     lines.push('    }');
     lines.push(
-      '    log.warn("[LessJS] Optional SSR adapter failed: " + spec + " - " + String(error?.stack || error?.message || error));',
+      '    log.warn("[openElement] Optional SSR adapter failed: " + spec + " - " + String(error?.stack || error?.message || error));',
     );
     lines.push('  }');
     lines.push('}');
     lines.push('');
     lines.push(
-      "await __installOptionalAdapter('@lessjs/adapter-lit/ssr', () => import('@lessjs/adapter-lit/ssr'), 'installLitAdapter');",
+      "await __installOptionalAdapter('@openelement/adapter-lit/ssr', () => import('@openelement/adapter-lit/ssr'), 'installLitAdapter');",
     );
     lines.push(
-      "await __installOptionalAdapter('@lessjs/adapter-vanilla/ssr', () => import('@lessjs/adapter-vanilla/ssr'), 'installVanillaAdapter');",
+      "await __installOptionalAdapter('@openelement/adapter-vanilla/ssr', () => import('@openelement/adapter-vanilla/ssr'), 'installVanillaAdapter');",
     );
     lines.push(
-      "await __installOptionalAdapter('@lessjs/adapter-react/ssr', () => import('@lessjs/adapter-react/ssr'), 'installReactAdapter');",
+      "await __installOptionalAdapter('@openelement/adapter-react/ssr', () => import('@openelement/adapter-react/ssr'), 'installReactAdapter');",
     );
     lines.push('');
   }
@@ -540,7 +540,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   );
   lines.push('  if (!tag || !tag.includes("-")) {');
   lines.push(
-    '    throw new Error("[LessJS] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
+    '    throw new Error("[openElement] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
   );
   lines.push('  }');
   lines.push('  const Cls = customElements.get(tag)');
@@ -638,7 +638,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Export ---
   lines.push('export default app');
 
-  // â”€â”€ SSG Utility Re-exports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ©¤©¤ SSG Utility Re-exports ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   // ADR 0008 Phase C: After viteBuild(ssr:true, noExternal) produces a
   // self-contained ESM bundle, build-ssg.ts imports it and needs access
   // to these utility functions from the same module scope.
@@ -647,13 +647,13 @@ export function renderEntry(desc: EntryDescriptor): string {
   // rest of the bundle (e.g., _adapter in types.ts, _posts in blog-data.ts).
   // This eliminates the globalThis[Symbol.for()] bridges from Phase B.
   //
-  // Optional packages (@lessjs/adapter-lit, @lessjs/content, @lessjs/i18n)
+  // Optional packages (@openelement/adapter-lit, @openelement/content, @openelement/i18n)
   // are resolved by the optionalPackageStubsPlugin in build-ssg.ts, which
   // provides empty stubs when the real package is not installed.
   if (desc.isSSG) {
     lines.push('');
     lines.push(
-      '// â”€â”€ SSG Utility Re-exports (ADR 0008 Phase C) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€',
+      '// ©¤©¤ SSG Utility Re-exports (ADR 0008 Phase C) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤',
     );
     lines.push('// Used by build-ssg.ts after importing the SSR bundle.');
     lines.push(
@@ -661,29 +661,29 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { getDefaultRegistry, renderDsd, renderDsdTree, wrapInDocument } from "@lessjs/core"',
+      'export { getDefaultRegistry, renderDsd, renderDsdTree, wrapInDocument } from "@openelement/core"',
     );
     lines.push(
-      'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit/ssr"',
-      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@lessjs/adapter-vanilla/ssr"',
-      'export { installReactAdapter, uninstallReactAdapter } from "@lessjs/adapter-react/ssr"',
+      'export { installLitAdapter, uninstallLitAdapter } from "@openelement/adapter-lit/ssr"',
+      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@openelement/adapter-vanilla/ssr"',
+      'export { installReactAdapter, uninstallReactAdapter } from "@openelement/adapter-react/ssr"',
     );
     lines.push(
-      'export { posts, getPostBySlug, getBlogOptions } from "@lessjs/generated/blog-data"',
+      'export { posts, getPostBySlug, getBlogOptions } from "@openelement/generated/blog-data"',
     );
-    lines.push('export { generateSitemap } from "@lessjs/content/sitemap"');
+    lines.push('export { generateSitemap } from "@openelement/content/sitemap"');
     lines.push(
-      'export { locales, getDefaultLocale, getI18nOptions } from "@lessjs/generated/i18n"',
+      'export { locales, getDefaultLocale, getI18nOptions } from "@openelement/generated/i18n"',
     );
 
-    // â”€â”€ ADR 0014: renderRoute() - DSD-first rendering API â”€â”€â”€â”€â”€â”€â”€
+    // ©¤©¤ ADR 0014: renderRoute() - DSD-first rendering API ©¤©¤©¤©¤©¤©¤©¤
     // The SSR bundle owns all rendering knowledge (tagName -> component
     // mapping, customElements registry, renderDsd, wrapInDocument).
     // build-ssg.ts only calls renderRoute() and getStaticPaths() -
     // no globalThis access, no source file regex, no direct renderDsd().
     lines.push('');
     lines.push(
-      '// â”€â”€ ADR 0014: DSD-first rendering API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€',
+      '// ©¤©¤ ADR 0014: DSD-first rendering API ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤',
     );
     lines.push(
       '// build-ssg.ts calls these - never touches customElements directly.',
@@ -748,7 +748,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('export async function renderRoute(routePath, options = {}) {');
     lines.push('  const info = routeInfo.find(r => r.path === routePath);');
     lines.push(
-      "  if (!info) throw new Error('[LessJS] renderRoute: route not found: ' + routePath);",
+      "  if (!info) throw new Error('[openElement] renderRoute: route not found: ' + routePath);",
     );
     lines.push(
       '  const { params = {}, locale, title, lang, headExtras } = options;',
@@ -822,7 +822,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   return lines.join('\n');
 }
 
-// â”€â”€â”€ Convenience wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ Convenience wrapper ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Options for the Hono entry code generator */
 export interface HonoEntryOptions {

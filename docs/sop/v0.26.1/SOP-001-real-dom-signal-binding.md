@@ -2,7 +2,7 @@
 
 Status: completed\
 Target version: v0.26.1\
-Owner: `@lessjs/core` (dsd-element.ts, jsx-render-dom.ts, jsx-render-string.ts)\
+Owner: `@openelement/core` (dsd-element.ts, jsx-render-dom.ts, jsx-render-string.ts)\
 前置: [ADR-0058](../../adr/0058-real-dom-signal-binding.md)
 
 ---
@@ -111,7 +111,7 @@ function applySingleProp(
 
 **注意**：signal 检测必须在现有 `unwrapSignalLike(value)` 之前。`unwrapSignalLike` 会把 signal `{ value: 'dark' }` 展成 `'dark'` 字符串——此时已经丢失了 signal 身份。
 
-**关键**：`isSignalLike` 和 `effect` 需要 import。`isSignalLike` 来自 `./signal-like.ts`，`effect` 来自 `@lessjs/signals`。
+**关键**：`isSignalLike` 和 `effect` 需要 import。`isSignalLike` 来自 `./signal-like.ts`，`effect` 来自 `@openelement/signals`。
 
 ### Step 2: 处理 `className` 的特殊情况
 
@@ -354,7 +354,7 @@ if (tag === For) {
 
 文件: `packages/core/mod.ts` 或 `packages/core/src/jsx-runtime.ts`
 
-确认 `Show` / `For` 可通过 `@lessjs/core` 导入。
+确认 `Show` / `For` 可通过 `@openelement/core` 导入。
 
 ### Step 15: 运行全量测试
 

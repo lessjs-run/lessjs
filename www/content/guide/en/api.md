@@ -1,4 +1,4 @@
----
+﻿---
 title: 'API Reference'
 section: 'Reference'
 label: 'API'
@@ -12,7 +12,7 @@ order: 70
 The single rendering entry point. Renders a custom element to DSD HTML.
 
 ```ts
-import { renderDsd } from '@lessjs/core';
+import { renderDsd } from '@openelement/core';
 
 // By tag name — auto-looks up from customElements registry
 const result = await renderDsd('less-layout', {
@@ -45,7 +45,7 @@ console.log(result.html);
 Async VNode tree to HTML string renderer. Handles nested custom elements with DSD.
 
 ```ts
-import { renderDsdTree } from '@lessjs/core';
+import { renderDsdTree } from '@openelement/core';
 
 const vnode = jsx('div', { class: 'greeting', children: 'hello' });
 const html = await renderDsdTree(vnode);
@@ -67,8 +67,8 @@ const html = await renderDsdTree(vnode);
 Base class for all DSD-native components.
 
 ```tsx
-import { DsdElement } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
+import { DsdElement } from '@openelement/core';
+import { signal } from '@openelement/signals';
 
 class MyCounter extends DsdElement {
   static override styles = StyleSheet.create(`
@@ -112,10 +112,10 @@ render() {
 
 ## JSX Runtime (Subpath)
 
-Import from `@lessjs/core/jsx-runtime`:
+Import from `@openelement/core/jsx-runtime`:
 
 ```ts
-import { For, jsx, jsxDEV, jsxs, Show } from '@lessjs/core/jsx-runtime';
+import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 ```
 
 ### For
@@ -141,10 +141,10 @@ Conditional rendering:
 
 ## Signals
 
-Import from `@lessjs/signals`:
+Import from `@openelement/signals`:
 
 ```ts
-import { computed, effect, signal } from '@lessjs/signals';
+import { computed, effect, signal } from '@openelement/signals';
 
 const count = signal(0);
 const double = computed(() => count.value * 2);
@@ -158,7 +158,7 @@ effect(() => {
 
 ```tsx
 // Create an island
-import { defineIsland } from '@lessjs/core';
+import { defineIsland } from '@openelement/core';
 
 defineIsland('my-widget', {
   tagName: 'my-widget',
@@ -178,7 +178,7 @@ Hydration strategies: `client:load` (immediate), `client:idle` (requestIdleCallb
 Wraps content in a complete HTML document:
 
 ```ts
-import { wrapInDocument } from '@lessjs/core';
+import { wrapInDocument } from '@openelement/core';
 
 const html = wrapInDocument(content, {
   title: 'My Page',

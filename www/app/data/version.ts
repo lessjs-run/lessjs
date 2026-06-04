@@ -1,2 +1,2 @@
 // Current public line: v0.30
-export const LESSJS_VERSION = 'v0.30.0';
+export const OPENELEMENT_VERSION = 'v0.30.1';

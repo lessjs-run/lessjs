@@ -1,17 +1,17 @@
 /**
- * @lessjs/hub - Snapshot Renderer
+ * @openelement/hub - Snapshot Renderer
  *
  * v0.19.0 Phase 2: Renders Lit components / Web Components to static HTML
  * for Hub previews. Supports three strategies:
  *
- * 1. @lit-labs/ssr-dom-shim: for SSR-capable Lit components (@lessjs/ui)
+ * 1. @lit-labs/ssr-dom-shim: for SSR-capable Lit components (@openelement/ui)
  * 2. Happy DOM: for browser-dependent npm packages (Shoelace, Media Chrome)
  * 3. Placeholder: fallback when rendering fails
  *
  * @see ADR-0031
  */
 
-import { escapeHtml } from '@lessjs/core';
+import { escapeHtml } from '@openelement/core';
 import { renderSnapshotPlaceholderHtml } from './snapshot-placeholder.ts';
 
 // ─── Types ───────────────────────────────────────────────────────────────

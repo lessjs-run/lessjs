@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - head-injection.ts tests (Deno)
+ * @openelement/adapter-vite - head-injection.ts tests (Deno)
  *
  * Tests for HTML head injection safety: script tag validation,
  * URL safety checks, and headExtras serialization.

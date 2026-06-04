@@ -16,7 +16,7 @@ interface PackageInfo {
 const COMMANDS = new Set(['typecheck', 'publish', 'publish:dry-run']);
 
 function normalizeDep(specifier: string, self: string): string | null {
-  const prefix = '@lessjs/';
+  const prefix = '@openelement/';
   if (!specifier.startsWith(prefix)) return null;
   const rest = specifier.slice(prefix.length);
   const slashIndex = rest.indexOf('/');

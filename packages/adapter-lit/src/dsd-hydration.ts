@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-lit - WithDsdHydration Mixin + DsdLitElement base class
+ * @openelement/adapter-lit - WithDsdHydration Mixin + DsdLitElement base class
  *
  * Mixin for Lit components that need DSD hydration (Layer 2).
  * Provides the common DSD detection, event binding, and cleanup pattern
@@ -7,7 +7,7 @@
  *
  * Usage (recommended - extend pre-composed base class):
  * ```ts
- * import { DsdLitElement } from '@lessjs/adapter-lit';
+ * import { DsdLitElement } from '@openelement/adapter-lit';
  *
  * class MyToggle extends DsdLitElement {
  *   static hydrateEvents = [
@@ -23,7 +23,7 @@
  *
  * Usage (advanced - Mixin with custom base class):
  * ```ts
- * import { WithDsdHydration } from '@lessjs/adapter-lit';
+ * import { WithDsdHydration } from '@openelement/adapter-lit';
  *
  * class MyToggle extends WithDsdHydration(SomeOtherBase) { ... }
  * ```
@@ -39,12 +39,12 @@
  *   - `static hydrateEvents: HydrateEventDescriptor[]` (declarative event bindings)
  *   - `render()` override (must check `_dsdHydrated` and return `nothing`)
  *
- * @module @lessjs/adapter-lit/dsd-hydration
+ * @module @openelement/adapter-lit/dsd-hydration
  */
 
 import { LitElement } from 'lit';
-import { bindHydrateEvents } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
+import { bindHydrateEvents } from '@openelement/core';
+import type { HydrateEventDescriptor } from '@openelement/core';
 
 /** Constructor type for Mixin pattern - `any[]` is standard TS Mixin signature */
 // deno-lint-ignore no-explicit-any
@@ -189,7 +189,7 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
  *
  * @example
  * ```ts
- * import { DsdLitElement } from '@lessjs/adapter-lit';
+ * import { DsdLitElement } from '@openelement/adapter-lit';
  *
  * class MyToggle extends DsdLitElement {
  *   static hydrateEvents = [

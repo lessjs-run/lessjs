@@ -1,4 +1,4 @@
-# 2026-06-04: Type Safety Deep Dive
+﻿# 2026-06-04: Type Safety Deep Dive
 
 ## Context
 
@@ -102,7 +102,7 @@ _elementMetadata.set(el, { key: value });
 scoped = signal<T>(initialValue) as unknown as SignalValue<T>;
 ```
 
-**Root cause**: `@lessjs/signals`' `signal()` return type doesn't structurally match local `SignalValue<T>` alias.
+**Root cause**: `@openelement/signals`' `signal()` return type doesn't structurally match local `SignalValue<T>` alias.
 
 **Solution**: Align `SignalValue<T>` with actual alien-signals type, or use the library's exported type directly.
 

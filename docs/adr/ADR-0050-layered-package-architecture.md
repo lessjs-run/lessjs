@@ -7,13 +7,13 @@
 
 The v0.22 release work exposed a deeper pattern than ordinary cleanup:
 
-- `@lessjs/core` is still the default place for rendering, public types,
+- `@openelement/core` is still the default place for rendering, public types,
   compatibility bridges, and convenience exports.
-- `@lessjs/adapter-vite` owns build context, virtual module ids, import
+- `@openelement/adapter-vite` owns build context, virtual module ids, import
   resolution, SSG phases, generated entry code, and Vite plugin assembly.
-- `@lessjs/content` and `@lessjs/i18n` depend on adapter-owned build contracts
+- `@openelement/content` and `@openelement/i18n` depend on adapter-owned build contracts
   even though they are feature packages.
-- `@lessjs/signals` is a LessJS facade over `alien-signals`, not an owned
+- `@openelement/signals` is a LessJS facade over `alien-signals`, not an owned
   reactive engine.
 - Generated projects are now a release contract. Recent failures came from
   published package graphs and consumer import maps, not from local source
@@ -59,21 +59,21 @@ tools and ecosystem
   create CLI, Hub, compatibility evidence, submission and validation tools
 ```
 
-`@lessjs/core` is the runtime kernel. It should not become the all-purpose DX
+`@openelement/core` is the runtime kernel. It should not become the all-purpose DX
 barrel. v0.23 architecture work does not preserve incorrectly owned public
 paths. Removed paths should be replaced by their canonical owner and documented
 as intentional architecture breakage.
 
-`@lessjs/signals` remains the LessJS signal API facade powered by
+`@openelement/signals` remains the LessJS signal API facade powered by
 `alien-signals`. LessJS owns the public `.value` / `subscribe()` contract and
 framework integration semantics, not the low-level reactive algorithm.
 
-`@lessjs/core` must not import `alien-signals` as the canonical engine path.
+`@openelement/core` must not import `alien-signals` as the canonical engine path.
 The owner of signal creation, computed values, effects, and engine wrapping is
-`@lessjs/signals`.
+`@openelement/signals`.
 
-`@lessjs/app` remains the configuration facade for `lessjs()` and Vite plugin
-composition. A separate authoring facade such as `@lessjs/runtime` may be added
+`@openelement/app` remains the configuration facade for `lessjs()` and Vite plugin
+composition. A separate authoring facade such as `@openelement/runtime` may be added
 if single-import component authoring remains important.
 
 Build contracts shared by `adapter-vite`, `content`, `i18n`, `create`, and
@@ -94,7 +94,7 @@ v0.25.x.
 
 - Package responsibilities become explainable to external contributors.
 - Publish order and JSR dependency graphs become easier to verify.
-- `@lessjs/core` can stay small, stable, and standards-focused.
+- `@openelement/core` can stay small, stable, and standards-focused.
 - `adapter-vite` can evolve without pulling feature packages into adapter
   internals.
 - Generated projects can remain small while still listing every direct import
@@ -127,20 +127,20 @@ v0.25.x.
 v0.23 implementation must classify the current packages as follows before
 moving code:
 
-| Package                | Target role                         | v0.23 pressure                                              |
-| ---------------------- | ----------------------------------- | ----------------------------------------------------------- |
-| `@lessjs/core`         | runtime kernel                      | remove engine/build/compat drift                            |
-| `@lessjs/signals`      | LessJS facade over `alien-signals`  | own signal creation and framework semantics                 |
-| `@lessjs/style-sheet`  | CSSStyleSheet abstraction           | remain canonical owner                                      |
-| `@lessjs/adapter-vite` | Vite adapter and SSG implementation | stop owning shared contracts                                |
-| `@lessjs/app`          | configuration facade                | avoid runtime authoring exports                             |
-| `@lessjs/content`      | content feature package             | depend on contracts, not adapter internals                  |
-| `@lessjs/i18n`         | i18n feature package                | depend on contracts, not adapter internals                  |
-| `@lessjs/cem`          | CEM parser/shape owner              | stop routing canonical CEM ownership through core           |
-| `@lessjs/compat-check` | compatibility classifier            | stop routing canonical compatibility ownership through core |
-| `@lessjs/hub`          | registry and trust evidence         | consume public contracts, not core internals                |
-| `@lessjs/create`       | generated project contract          | declare every direct import it emits                        |
-| `@lessjs/ui`           | DSD component library               | use authoring facade if accepted                            |
+| Package                     | Target role                         | v0.23 pressure                                              |
+| --------------------------- | ----------------------------------- | ----------------------------------------------------------- |
+| `@openelement/core`         | runtime kernel                      | remove engine/build/compat drift                            |
+| `@openelement/signals`      | LessJS facade over `alien-signals`  | own signal creation and framework semantics                 |
+| `@openelement/style-sheet`  | CSSStyleSheet abstraction           | remain canonical owner                                      |
+| `@openelement/adapter-vite` | Vite adapter and SSG implementation | stop owning shared contracts                                |
+| `@openelement/app`          | configuration facade                | avoid runtime authoring exports                             |
+| `@openelement/content`      | content feature package             | depend on contracts, not adapter internals                  |
+| `@openelement/i18n`         | i18n feature package                | depend on contracts, not adapter internals                  |
+| `@openelement/cem`          | CEM parser/shape owner              | stop routing canonical CEM ownership through core           |
+| `@openelement/compat-check` | compatibility classifier            | stop routing canonical compatibility ownership through core |
+| `@openelement/hub`          | registry and trust evidence         | consume public contracts, not core internals                |
+| `@openelement/create`       | generated project contract          | declare every direct import it emits                        |
+| `@openelement/ui`           | DSD component library               | use authoring facade if accepted                            |
 
 ## Rejected Alternatives
 
@@ -162,7 +162,7 @@ without depending on Vite adapter implementation.
 ### Replace `alien-signals`
 
 Rejected for v0.23. The debt is not the engine choice; the debt is that the
-engine ownership boundary is unclear. `@lessjs/signals` should wrap
+engine ownership boundary is unclear. `@openelement/signals` should wrap
 `alien-signals` cleanly.
 
 ## Acceptance
@@ -172,7 +172,7 @@ engine ownership boundary is unclear. `@lessjs/signals` should wrap
 - `docs/sop/v0.23.0/` contains SOPs for contracts, core boundary, facades,
   adapter modularity, release graph gates, and docs governance.
 - `docs/status/STATUS.md` explains the new version order.
-- `@lessjs/create` post-publish smoke runs the just-published create version,
+- `@openelement/create` post-publish smoke runs the just-published create version,
   not an ambiguous latest version.
 - Future v0.23 code changes start from the SOPs in `docs/sop/v0.23.0/`.
 - Old paths with wrong ownership are removed rather than maintained as

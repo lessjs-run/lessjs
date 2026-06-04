@@ -1,4 +1,4 @@
-# LessJS v0.27.0 安全工程师专项审计报告
+﻿# LessJS v0.27.0 安全工程师专项审计报告
 
 **审计人**：安全工程师  
 **审计日期**：2026-06-01  
@@ -164,12 +164,12 @@ content.innerHTML = html;
 
 2. **`hub:validate`**：审查其代码确认是否真正需要 `-A`。如果只是读取文件和验证 JSON，可降级为 `--allow-read --allow-write`。
 
-3. **`@lessjs/create` 的 `run` 任务**：脚手架工具使用 `-A` 是因为需要创建目录和文件。建议降级为 `--allow-read --allow-write --allow-net`（网络权限用于获取 JSR 版本）。
+3. **`@openelement/create` 的 `run` 任务**：脚手架工具使用 `-A` 是因为需要创建目录和文件。建议降级为 `--allow-read --allow-write --allow-net`（网络权限用于获取 JSR 版本）。
 
 4. **CI 中的 `-A` 使用**：
    - `.github/workflows/test.yml:211`：`deno run -A npm:playwright@1.59.1 install chromium --with-deps` — Playwright 安装确实需要完整权限，可接受。
    - `.github/workflows/sop-gate.yml:153`：同上。
-   - `.github/workflows/publish-jsr.yml:111`：`deno run -A "jsr:@lessjs/create@${CREATE_VERSION}" test-blog` — 发布后 smoke test 使用第三方包 + `-A`，存在供应链攻击风险。建议在隔离环境中运行。
+   - `.github/workflows/publish-jsr.yml:111`：`deno run -A "jsr:@openelement/create@${CREATE_VERSION}" test-blog` — 发布后 smoke test 使用第三方包 + `-A`，存在供应链攻击风险。建议在隔离环境中运行。
 
 5. **消费者项目模板**（`packages/create/cli.ts:133-138`）：模板中所有任务使用 `-A`，这是 Deno 生态的常见做法但不符合最小权限。建议在文档中引导消费者按需收窄权限。
 

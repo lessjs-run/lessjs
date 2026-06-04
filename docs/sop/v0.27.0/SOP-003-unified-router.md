@@ -1,4 +1,4 @@
-# SOP-003: @lessjs/router — Hono + URLPattern Unified Routing
+# SOP-003: @openelement/router 鈥?Hono + URLPattern Unified Routing
 
 **Target**: v0.27.0\
 **ADR**: [ADR-0063](./ADR-0063-unified-router-hono-urlpattern.md)\
@@ -10,7 +10,7 @@
 
 ```bash
 packages/router/
-  deno.json                        # name: @lessjs/router, exports: ./mod.ts
+  deno.json                        # name: @openelement/router, exports: ./mod.ts
   src/
     mod.ts                         # re-exports
     define-routes.ts               # RouteConfig type + defineRoutes()
@@ -46,7 +46,7 @@ export function defineRoutes(routes: RouteConfig[]): RouteConfig[] {
 ```ts
 // packages/router/src/pattern-translate.ts
 export function toHono(pattern: string): string {
-  // URLPattern regex: (\\d+) → Hono regex: {\\d+}
+  // URLPattern regex: (\\d+) 鈫?Hono regex: {\\d+}
   return pattern.replace(/\(([^)]+)\)/g, '{$1}');
 }
 
@@ -55,7 +55,7 @@ export function toURLPattern(pattern: string): string {
 }
 ```
 
-### Task 1.4: `page-loader.ts` — MD Content Loader
+### Task 1.4: `page-loader.ts` 鈥?MD Content Loader
 
 ```ts
 // packages/router/src/page-loader.ts
@@ -132,7 +132,7 @@ private _switchLocale(): void {
 
 ### Task 2.3: Delete `navigation.ts`
 
-`navigation.ts` (~158 lines) — 完全被 `client-router.ts` 的 URLPattern + Navigation API 替代。
+`navigation.ts` (~158 lines) 鈥?瀹屽叏琚?`client-router.ts` 鐨?URLPattern + Navigation API 鏇夸唬銆?
 
 ### Task 2.4: SPA Handler
 
@@ -195,10 +195,10 @@ www/content/
 
 ```tsx
 // www/app/routes/guide/[page].tsx (~60 lines)
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@openelement/core';
 import { pageStyles } from '../../components/page-styles.js';
-import { loadPage, openPropsTokenSheet, PATTERN } from '@lessjs/router';
-import '@lessjs/ui/less-layout';
+import { loadPage, openPropsTokenSheet, PATTERN } from '@openelement/router';
+import '@openelement/ui\/open-layout';
 
 export default class GuidePage extends DsdElement {
   static styles = [openPropsTokenSheet];
@@ -209,25 +209,25 @@ export default class GuidePage extends DsdElement {
       ?.pathname?.groups ?? {};
 
     const data = await loadPage('www/content/guide', locale, page);
-    if (!data) return '<less-layout><h1>404</h1></less-layout>';
+    if (!data) return '<open-layout><h1>404</h1></open-layout>';
 
     return `
-      <less-layout locale="${locale}" current-path="/${locale}/guide/${page}">
+      <open-layout locale="${locale}" current-path="/${locale}/guide/${page}">
         <div class="container">
           <h1>${data.meta.title}</h1>
           ${data.html}
         </div>
-      </less-layout>`;
+      </open-layout>`;
   }
 }
 ```
 
 ### Task 3.3: SSG Integration
 
-`ssg-render.ts` 新增 content-driven 路径发现：
+`ssg-render.ts` 鏂板 content-driven 璺緞鍙戠幇锛?
 
 ```ts
-// Walk content directory, generate all locale × page combinations
+// Walk content directory, generate all locale 脳 page combinations
 async function discoverContentPaths(
   contentDir: string,
   locales: string[],
@@ -275,9 +275,9 @@ export async function scanNavFromContent(
 
 ### Task 4.1: Remove old route files
 
-- 删除 17 个 guide/architecture TSX 文件
-- 删除 `route-scanner.ts` 中的文件系统路由发现
-- 删除 `_renderEn()`/`_renderZh()` 模式
+- 鍒犻櫎 17 涓?guide/architecture TSX 鏂囦欢
+- 鍒犻櫎 `route-scanner.ts` 涓殑鏂囦欢绯荤粺璺敱鍙戠幇
+- 鍒犻櫎 `_renderEn()`/`_renderZh()` 妯″紡
 
 ### Task 4.2: Full Programmatic Routes
 
@@ -302,9 +302,9 @@ export const routes = defineRoutes([
 ## Verification Checklist
 
 - [ ] Build: `deno task build` passes
-- [ ] SSR: All locale×page combinations generate
+- [ ] SSR: All locale脳page combinations generate
 - [ ] SPA: Client navigation uses URLPattern, no manual string ops
-- [ ] Locale switch: EN↔ZH label updates correctly
+- [ ] Locale switch: EN鈫擹H label updates correctly
 - [ ] Nav: Sidebar populated from MD frontmatter
 - [ ] Dynamic params: `:page` extracts correctly from URL
 - [ ] 404: Unknown pages return proper 404
@@ -321,6 +321,6 @@ export const routes = defineRoutes([
 | `route-scanner.ts`               | ~125      | ~85            | -40       |
 | `entry-renderer.ts`              | ~90       | ~60            | -30       |
 | 17 route files                   | ~5000     | ~300 (3 files) | -4700     |
-| **New**: `@lessjs/router`        | 0         | ~190           | +190      |
+| **New**: `@openelement/router`   | 0         | ~190           | +190      |
 | **New**: `www/content/` MD files | 0         | ~2000          | +2000     |
 | **Net**                          | **~5833** | **~2715**      | **-3118** |

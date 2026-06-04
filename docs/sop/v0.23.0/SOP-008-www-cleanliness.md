@@ -29,7 +29,7 @@ From the v0.23.0 audit (`docs/conversation/20260527/20260527-framework-audit-v0.
 
 ### Step 1: Make less-layout footer text configurable
 
-**File**: `packages/ui/src/less-layout.ts`
+**File**: `packages/ui/src\/open-layout.ts`
 
 - [ ] Add `footer-text` attribute (string, default: current marketing text)
 - [ ] Move footer text from hardcoded to attribute-driven
@@ -39,7 +39,7 @@ From the v0.23.0 audit (`docs/conversation/20260527/20260527-framework-audit-v0.
 
 ### Step 2: Rename "home" → "full-width"
 
-**File**: `packages/ui/src/less-layout.ts`
+**File**: `packages/ui/src\/open-layout.ts`
 **Affected files**: `index/index.ts`, `contributing.ts`, `changelog.ts`, `404.ts`, `roadmap.ts`
 
 - [ ] Add `full-width` boolean attribute (same behavior as current `home`)
@@ -55,7 +55,7 @@ From the v0.23.0 audit (`docs/conversation/20260527/20260527-framework-audit-v0.
 
 - [ ] Create `createLayoutAttrs()` helper that returns common less-layout attribute strings
 - [ ] Returns: `locale`, `locales`, `nav-items`, `header-nav`, `current-path` as formatted attribute string
-- [ ] Route files call: `` `<less-layout ${createLayoutAttrs(this, { currentPath: '/guide/foo' })}>` ``
+- [ ] Route files call: `` `<open-layout ${createLayoutAttrs(this, { currentPath: '/guide/foo' })}>` ``
 
 **Acceptance**: Route files reduced from ~10 lines of attribute boilerplate to 1 function call. All tests pass.
 

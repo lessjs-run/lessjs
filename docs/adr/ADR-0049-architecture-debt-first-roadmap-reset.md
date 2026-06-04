@@ -9,11 +9,11 @@ The 2026-05-26 review set exposed a pattern that is more important than the
 next feature line:
 
 - consumer projects carry framework internals in `deno.json`;
-- `@lessjs/core` still owns build-time types and duplicated helpers;
-- extracted packages such as `@lessjs/style-sheet` are not yet cleanly owned;
+- `@openelement/core` still owns build-time types and duplicated helpers;
+- extracted packages such as `@openelement/style-sheet` are not yet cleanly owned;
 - `adapter-vite` mixes plugin assembly, dependency resolution, head injection,
   optional stubs, and phase orchestration in one large module;
-- `@lessjs/signals` has useful public API value, but its engine/facade boundary
+- `@openelement/signals` has useful public API value, but its engine/facade boundary
   is unclear;
 - Hub, CEM, and manifest validation repeat schema concepts across packages;
 - CI proves many things, but coverage artifacts, consumer E2E depth, traces, and
@@ -42,11 +42,11 @@ claims resume:
 
 2. **Package boundary repair**
    Runtime packages, build packages, extracted helper packages, and public API
-   facades must have explicit ownership. `@lessjs/core` should not keep
+   facades must have explicit ownership. `@openelement/core` should not keep
    adapter-only types or duplicated extracted implementations.
 
 3. **Adapter decomposition**
-   `@lessjs/adapter-vite` must split plugin assembly, import-map resolution,
+   `@openelement/adapter-vite` must split plugin assembly, import-map resolution,
    optional package stubs, head injection, and SSG phase logic into testable
    modules.
 

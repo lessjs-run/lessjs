@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Submitter Tests
+ * @openelement/hub - Submitter Tests
  *
  * v0.19.0: Test submission bundling, serialization, and validation.
  * GitHub PR creation is tested via integration tests only.

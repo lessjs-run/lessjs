@@ -23,7 +23,7 @@
 ```ts
 import { defineConfig } from 'vite';
 import deno from '@deno/vite-plugin';
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 
 export default defineConfig({
   plugins: [

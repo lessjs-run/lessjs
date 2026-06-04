@@ -1,5 +1,5 @@
----
-title: 'ADR 0017: 框架运行时与构建编排解耦 — 拆分 @lessjs/adapter-vite'
+﻿---
+title: 'ADR 0017: 框架运行时与构建编排解耦 — 拆分 @openelement/adapter-vite'
 date: '2026-05-11'
 type: 'adr'
 tags: ['architecture', 'decision']
@@ -15,15 +15,15 @@ hidden: true
 
 ### 问题本质
 
-Bug #11（`npm:` specifier 无法解析）暴露了一个更深层的架构问题：`@lessjs/core` 同时承担了两个职责——
+Bug #11（`npm:` specifier 无法解析）暴露了一个更深层的架构问题：`@openelement/core` 同时承担了两个职责——
 
 1. **框架运行时**：`renderDSD()`、`island()`、`escapeHtml()`、`adapterRegistry` 等纯逻辑
 2. **构建编排**：Vite 插件集合、路由扫描、HMR、SSG 三阶段流水线
 
-当 Vite 的 SSR runner 需要加载 `@lessjs/core` 的源码时，它实际上只需要运行时部分。但因为是同一个包，Vite 不得不加载整个包——包括 Vite 插件 API 本身。这导致了一系列连锁问题：
+当 Vite 的 SSR runner 需要加载 `@openelement/core` 的源码时，它实际上只需要运行时部分。但因为是同一个包，Vite 不得不加载整个包——包括 Vite 插件 API 本身。这导致了一系列连锁问题：
 
 ```
-@lessjs/core 是一个 Vite Plugin
+@openelement/core 是一个 Vite Plugin
     ↓
 JSR 发布后源码含 npm: specifier (Deno 生态语义)
     ↓
@@ -36,13 +36,13 @@ Vite SSR runner 不认识 npm: 协议
 
 | # | 补丁                          | 存在原因                                | 如果 core 不含 Vite 插件 |
 | - | ----------------------------- | --------------------------------------- | ------------------------ |
-| 1 | `less:core-resolve` resolveId | Vite 不认识 JSR 包的 `@lessjs/core`     | 不需要                   |
+| 1 | `less:core-resolve` resolveId | Vite 不认识 JSR 包的 `@openelement/core`     | 不需要                   |
 | 2 | `load()` 从 JSR fetch 源码    | Vite SSR runner 不认识 `https://` URL   | 不需要                   |
 | 3 | esbuild 编译 TS→JS            | 虚拟模块绕过了 Vite 的 transform 管线   | 不需要                   |
 | 4 | npm: → bare 正则替换          | Vite 不认识 Deno 的 `npm:` specifier    | 不需要                   |
 | 5 | resolveId Case 3 委托解析     | 虚拟模块无真实路径，找不到 node_modules | 不需要                   |
 
-**如果 `@lessjs/core` 只包含纯 Web Standard 运行时代码，这 5 个补丁全部不需要。** 因为运行时代码不会被 Vite 的 SSR runner 当作"源码"加载——它就是一段普通 ESM，Deno / Node / Bun / Edge 都能直接 `import`。
+**如果 `@openelement/core` 只包含纯 Web Standard 运行时代码，这 5 个补丁全部不需要。** 因为运行时代码不会被 Vite 的 SSR runner 当作"源码"加载——它就是一段普通 ESM，Deno / Node / Bun / Edge 都能直接 `import`。
 
 ### 与已有架构模式的一致性
 
@@ -62,12 +62,12 @@ LessJS 已经有 `adapter-lit` 的先例：core 定义 `RenderAdapter` 接口，
 ### 方案：将 core 拆为运行时 + 构建适配器
 
 ```
-@lessjs/core          纯运行时，零 node:*，零 npm:，零 Vite 依赖
+@openelement/core          纯运行时，零 node:*，零 npm:，零 Vite 依赖
                       renderDSD / island / escape / adapter-registry / ...
                       标准 Web API：URL, fetch, import.meta.url, crypto
                       任何 ESM 运行时都能直接 import
 
-@lessjs/adapter-vite  Vite 构建编排适配器
+@openelement/adapter-vite  Vite 构建编排适配器
                       less() → Plugin[]，路由扫描，HMR，SSG 三阶段
                       coreResolvePlugin（npm: 翻译，虚拟模块解析）
                       所有 node:* 和 Vite API 依赖都在这里
@@ -77,20 +77,20 @@ LessJS 已经有 `adapter-lit` 的先例：core 定义 `RenderAdapter` 接口，
 
 ```
 Before:
-  用户项目 → @lessjs/app → @lessjs/core (运行时 + Vite 编排混在一起)
-                                       → @lessjs/content
-                                       → @lessjs/i18n
+  用户项目 → @openelement/app → @openelement/core (运行时 + Vite 编排混在一起)
+                                       → @openelement/content
+                                       → @openelement/i18n
 
 After:
-  用户项目 → @lessjs/app → @lessjs/core (纯运行时)
-                          → @lessjs/adapter-vite (构建编排)
-                          → @lessjs/content
-                          → @lessjs/i18n
+  用户项目 → @openelement/app → @openelement/core (纯运行时)
+                          → @openelement/adapter-vite (构建编排)
+                          → @openelement/content
+                          → @openelement/i18n
 ```
 
 ### 代码拆分边界
 
-#### @lessjs/core（保留，纯化）
+#### @openelement/core（保留，纯化）
 
 ```
 packages/core/src/
@@ -112,7 +112,7 @@ packages/core/src/
 - **零** `npm:` / `deno:` 依赖
 - `parse5` 是唯一的外部依赖（纯 JS HTML parser，所有运行时都支持）
 
-#### @lessjs/adapter-vite（新包）
+#### @openelement/adapter-vite（新包）
 
 ```
 packages/adapter-vite/src/
@@ -137,7 +137,7 @@ packages/adapter-vite/src/
 如果未来要支持非 Vite 构建工具（Deno native build、esbuild），core 可以定义一个最小接口：
 
 ```ts
-// @lessjs/core — 可选，按需引入
+// @openelement/core — 可选，按需引入
 export interface BuildAdapter {
   name: string;
   build(options: BuildOptions): Promise<BuildResult>;
@@ -151,23 +151,23 @@ export interface BuildAdapter {
 
 ```ts
 // Before
-import { less } from '@lessjs/core';
-import { lessjs } from '@lessjs/app';
+import { less } from '@openelement/core';
+import { lessjs } from '@openelement/app';
 
 // After（方案 A：最小变化）
-import { less } from '@lessjs/adapter-vite'; // 构建编排
-import { island, renderDSD } from '@lessjs/core'; // 运行时（不变）
-import { lessjs } from '@lessjs/app'; // 不变
+import { less } from '@openelement/adapter-vite'; // 构建编排
+import { island, renderDSD } from '@openelement/core'; // 运行时（不变）
+import { lessjs } from '@openelement/app'; // 不变
 
 // After（方案 B：app 内部重导出，用户零改动）
-import { lessjs } from '@lessjs/app'; // app 内部改为 import adapter-vite
+import { lessjs } from '@openelement/app'; // app 内部改为 import adapter-vite
 ```
 
-**推荐方案 B**：`@lessjs/app` 内部重导出 `less()`，用户代码零改动。只有直接 `import { less } from '@lessjs/core'` 的用户需要改路径。
+**推荐方案 B**：`@openelement/app` 内部重导出 `less()`，用户代码零改动。只有直接 `import { less } from '@openelement/core'` 的用户需要改路径。
 
 ### 包数量变化
 
-9 个包 → 10 个包。新增 `@lessjs/adapter-vite`。
+9 个包 → 10 个包。新增 `@openelement/adapter-vite`。
 
 发布顺序更新：
 
@@ -201,26 +201,26 @@ rpc → ui → adapter-lit → signal → content → i18n → core → adapter-
 - **5 个补丁自然失效**：core 不含 Vite 插件，不需要被 SSR runner 当源码加载，specifier 翻译问题消失
 - **core 可移植**：纯 Web Std ESM，Deno / Node 18+ / Bun / Cloudflare Workers / Vercel Edge 都能直接 import
 - **架构与 adapter-lit 一致**：渲染有 `RenderAdapter`，构建有 `BuildAdapter`，模式统一
-- **未来可扩展**：`@lessjs/adapter-deno`、`@lessjs/adapter-esbuild` 可按需实现
+- **未来可扩展**：`@openelement/adapter-deno`、`@openelement/adapter-esbuild` 可按需实现
 - **职责清晰**：core 只关心"怎么渲染"，adapter 只关心"怎么构建"
 
 ### Negative
 
 - **多一个包**：9 → 10，发布流程多一步
-- **迁移成本**：直接 `import { less } from '@lessjs/core'` 的用户需改为 `@lessjs/adapter-vite`
+- **迁移成本**：直接 `import { less } from '@openelement/core'` 的用户需改为 `@openelement/adapter-vite`
 - **core-resolve 补丁仍在 adapter-vite 中**：但管辖范围缩小——只处理用户项目代码的 specifier，不处理框架自身
 - **parse5 仍是外部依赖**：core 的 render-nested.ts 依赖 parse5，这是纯 JS 库但仍是 npm 包。如果追求零 npm 依赖，需要自行实现一个最小 HTML parser 或将 render-nested 也拆出
 
 ### Neutral
 
-- `@lessjs/app` 可以重导出 `less()`，让大多数用户无感迁移
+- `@openelement/app` 可以重导出 `less()`，让大多数用户无感迁移
 - `BuildAdapter` 接口是可选的远期目标，不影响本次拆分
 - 包名 `adapter-vite` 遵循已有的 `adapter-lit` 命名惯例
 
 ## 参考
 
 - [ADR 0016: 双模式子路径解析](/blog/0016-dual-mode-subpath-resolution) — 当前补丁方案的完整描述
-- [ADR 0012: 拆分 @lessjs/app](/blog/0012-extract-lessjs-umbrella-to-app-package) — 类似的"拆分以消除依赖倒挂"决策
+- [ADR 0012: 拆分 @openelement/app](/blog/0012-extract-lessjs-umbrella-to-app-package) — 类似的"拆分以消除依赖倒挂"决策
 - [Fresh 2.0](https://github.com/denoland/fresh) — Deno native 构建框架的参考实现
 
 ---

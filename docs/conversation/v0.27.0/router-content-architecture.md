@@ -1,6 +1,6 @@
 # LessJS Router Content Architecture
 
-> v0.27.0 — MD-based content with `@lessjs/router` dynamic routes\
+> v0.27.0 — MD-based content with `@openelement/router` dynamic routes\
 > Designed: 2026-05-30 | Migration target: v0.28.0
 
 ---
@@ -34,13 +34,13 @@ www/app/routes/
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 
 // lines 2-9: imports (always same set)
-import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-import '@lessjs/ui/less-code-block';
-import '@lessjs/ui/less-callout';
+import { headerNav, navSections } from '@openelement/content/nav';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-layout';
+import '@openelement/ui\/open-code-block';
+import '@openelement/ui\/open-callout';
 
 // lines 12-49: route-specific CSS via StyleSheet.replaceSync
 const routeSheet = new StyleSheet();
@@ -53,10 +53,10 @@ export class GettingStartedPage extends DsdElement {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
   private _renderZh() {
-    return `<less-layout ...>...html content...</less-layout>`;
+    return `<open-layout ...>...html content...</open-layout>`;
   }
   private _renderEn() {
-    return `<less-layout ...>...html content...</less-layout>`;
+    return `<open-layout ...>...html content...</open-layout>`;
   }
 }
 ```
@@ -68,14 +68,14 @@ export class GettingStartedPage extends DsdElement {
 The blog system demonstrates the target pattern:
 
 - **Content**: `www/content/blog/*.md` — grey-matter frontmatter + markdown body
-- **Processing**: `@lessjs/content` `parseMarkdownFile()` — matter + marked + sanitize-html
+- **Processing**: `@openelement/content` `parseMarkdownFile()` — matter + marked + sanitize-html
 - **Data bridge**: `virtual:less-blog-data` Vite virtual module → `getPostBySlug(slug)`
 - **SSG discovery**: `getStaticPaths()` in `blog/[slug].tsx` returns `[{slug}, ...]`
-- **Route**: 160-line `DsdElement` that constructs `<less-layout>` + injects `post.html` via `innerHTML`
+- **Route**: 160-line `DsdElement` that constructs `<open-layout>` + injects `post.html` via `innerHTML`
 
 ### 1.3 Navigation Scanning
 
-`@lessjs/content/nav/scanner.ts` `scanNavData()`:
+`@openelement/content/nav/scanner.ts` `scanNavData()`:
 
 - Walks `app/routes/` directory
 - Parses `export const meta = { section, label, order }` from each route file
@@ -276,15 +276,15 @@ This is the target pattern — each section has exactly one thin route file:
  * Guide Section Route — MD Content Loader
  * Maps /:locale?/guide/:page to www/content/guide/{locale}/{page}.md
  */
-import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-import '@lessjs/ui/less-code-block';
-import '@lessjs/ui/less-callout';
-import { resolveRoute } from '@lessjs/router';
-import { loadPage } from '@lessjs/content/page-loader';
+import { headerNav, navSections } from '@openelement/content/nav';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-layout';
+import '@openelement/ui\/open-code-block';
+import '@openelement/ui\/open-callout';
+import { resolveRoute } from '@openelement/router';
+import { loadPage } from '@openelement/content/page-loader';
 
 interface GuideRouteParams {
   locale: string;
@@ -316,7 +316,7 @@ customElements.define(
       const doc = loadPage('guide', locale, page);
 
       if (!doc) {
-        return `<less-layout ...>${loadPage.render404('guide', locale)}</less-layout>`;
+        return `<open-layout ...>${loadPage.render404('guide', locale)}</open-layout>`;
       }
 
       // Inject page-specific styles from frontmatter
@@ -325,7 +325,7 @@ customElements.define(
       }
 
       return `
-      <less-layout
+      <open-layout
         locale="${locale}"
         locales='["en","zh"]'
         nav-items='${JSON.stringify(navSections)}'
@@ -355,7 +355,7 @@ customElements.define(
       }
         </div>
         <less-toc></less-toc>
-      </less-layout>
+      </open-layout>
     `;
     }
   },
@@ -367,12 +367,12 @@ export const tagName = 'page-guide';
 
 **Total: ~60 lines** (down from ~300 lines for a single page)
 
-### 3.2 `@lessjs/content/page-loader` API
+### 3.2 `@openelement/content/page-loader` API
 
-A new module in `@lessjs/content` that provides the MD loading infrastructure:
+A new module in `@openelement/content` that provides the MD loading infrastructure:
 
 ```typescript
-// @lessjs/content/page-loader — MD content loading for doc pages
+// @openelement/content/page-loader — MD content loading for doc pages
 
 /** Simplified loader for SSR — synchronous for DsdElement.render() compatibility */
 export function loadPage(
@@ -440,7 +440,7 @@ A Vite plugin that at build-time reads all MD files and inlines the generated HT
 Current SSG depends on `getStaticPaths()` in each route file. With MD-based content, the SSG pipeline instead walks the content directory:
 
 ```typescript
-// @lessjs/content/page-loader: SSG discovery
+// @openelement/content/page-loader: SSG discovery
 
 /**
  * Discover all static paths from the content directory.
@@ -476,7 +476,7 @@ export function getStaticPaths(section: string): Array<Record<string, string>> {
 
 ### 4.2 Integration with SSG Pipeline
 
-The existing `ssg-render.ts` pipeline needs one change: route-level `getStaticPaths()` for MD-based sections calls through to `@lessjs/content`:
+The existing `ssg-render.ts` pipeline needs one change: route-level `getStaticPaths()` for MD-based sections calls through to `@openelement/content`:
 
 ```
 ssg-render.ts
@@ -531,7 +531,7 @@ function scanNavData(options: NavOptions): NavSection[] { ... }
 
 ### 5.2 Target: Content MD Frontmatter Extraction
 
-A new scanner in `@lessjs/content/nav/content-scanner.ts`:
+A new scanner in `@openelement/content/nav/content-scanner.ts`:
 
 ```typescript
 /**
@@ -603,14 +603,14 @@ export function scanNavData(options: NavOptions & { contentDir?: string }): NavS
 
 **Goal**: Build the supporting infrastructure without changing any existing routes.
 
-1. **Create `@lessjs/content/page-loader` module**
+1. **Create `@openelement/content/page-loader` module**
    - `loadPage()` — MD file reader + matter + marked + sanitize pipeline
    - `getStaticPaths()` — content directory walker
    - `getSharedStyles()` — shared section CSS provider
    - Unit tests for all functions
 
 2. **Create dual-mode nav scanner**
-   - `scanNavFromContent()` in `@lessjs/content/nav`
+   - `scanNavFromContent()` in `@openelement/content/nav`
    - `mergeNavSections()` with route-level dedup
    - Integration test: identical nav output from both sources
 
@@ -631,7 +631,7 @@ export function scanNavData(options: NavOptions & { contentDir?: string }): NavS
    - Add YAML frontmatter with section/label/order from `export const meta`
 
 3. **Create thin loader**: `www/app/routes/guide/[page].tsx` (~60 lines)
-   - Uses `loadPage()` from `@lessjs/content/page-loader`
+   - Uses `loadPage()` from `@openelement/content/page-loader`
    - Implements `getStaticPaths()` via directory discovery
 
 4. **Keep old route files as fallback**
@@ -716,7 +716,7 @@ A build-time utility that extracts content from existing TSX files:
 ```typescript
 // scripts/extract-page-content.ts
 // For each guide/*.tsx file:
-//   1. Parse _renderEn() template string → extract inner HTML (between <less-layout> and </less-layout>)
+//   1. Parse _renderEn() template string → extract inner HTML (between <open-layout> and </open-layout>)
 //   2. Parse _renderZh() template string → extract inner HTML
 //   3. Parse export const meta → convert to YAML frontmatter
 //   4. Write en/{page}.md and zh/{page}.md
@@ -775,7 +775,7 @@ Content volume is identical — it just moves from template strings to `.md` fil
 
 ### v0.27.0-alpha
 
-- [ ] Create `@lessjs/content/page-loader` module
+- [ ] Create `@openelement/content/page-loader` module
   - [ ] `loadPage()` — MD file read + parse + sanitize
   - [ ] `getStaticPaths()` — content directory walker
   - [ ] `getSharedStyles()` — section-level shared CSS
@@ -826,7 +826,7 @@ tags: ['quickstart', 'setup']
 ## 1. Create a Project
 
 ```bash
-deno run -A jsr:@lessjs/create my-app
+deno run -A jsr:@openelement/create my-app
 cd my-app
 ```
 ````
@@ -866,9 +866,9 @@ my-app/
 └-- vite.config.ts            # LessJS plugin config
 ```
 
-<less-callout type="info" label="Recommended">
+<open-callout type="info" label="Recommended">
 Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed through `deno.json`, and all dev/build commands use Deno tasks.
-</less-callout>
+</open-callout>
 
 ## Next Steps
 
@@ -887,15 +887,15 @@ Read [Core Concepts](/guide/core-concepts), then [Routing & Data](/guide/routing
  * Route: /:locale?/guide/:page → www/content/guide/{locale}/{page}.md
  * ADR: v0.27.0 router-content-architecture
  */
-import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-import '@lessjs/ui/less-code-block';
-import '@lessjs/ui/less-callout';
+import { headerNav, navSections } from '@openelement/content/nav';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-layout';
+import '@openelement/ui\/open-code-block';
+import '@openelement/ui\/open-callout';
 import '../../islands/less-toc.tsx';
-import { loadPage } from '@lessjs/content/page-loader';
+import { loadPage } from '@openelement/content/page-loader';
 
 export function getStaticPaths(): Array<Record<string, string>> {
   return loadPage.getStaticPaths('guide');
@@ -913,7 +913,7 @@ customElements.define('page-guide', class GuidePage extends DsdElement {
     const doc = loadPage('guide', locale, page);
 
     if (!doc) {
-      return `<less-layout locale="${locale}" ...><div class="container"><h1>404</h1>Page not found: ${page}</div></less-layout>`;
+      return `<open-layout locale="${locale}" ...><div class="container"><h1>404</h1>Page not found: ${page}</div></open-layout>`;
     }
 
     if (doc.frontmatter?.style) {
@@ -927,7 +927,7 @@ customElements.define('page-guide', class GuidePage extends DsdElement {
       </div>` : '';
 
     return `
-      <less-layout
+      <open-layout
         locale="${locale}"
         locales='["en","zh"]'
         nav-items='${JSON.stringify(navSections)}'
@@ -943,7 +943,7 @@ customElements.define('page-guide', class GuidePage extends DsdElement {
           </div>
           <less-toc></less-toc>
         </div>
-      </less-layout>
+      </open-layout>
     `;
   }
 });

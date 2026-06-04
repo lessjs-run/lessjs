@@ -1,4 +1,4 @@
-# Dead Code Audit — LessJS v0.26.1
+﻿# Dead Code Audit — LessJS v0.26.1
 
 **Date**: 2026-05-30\
 **Auditor**: deadcode-auditor\
@@ -14,11 +14,11 @@ The following deprecated methods only appear in **vendor copies**, **docs/ADRs**
 
 | Method                          | Source Code Location                                 | Comment                                 |
 | ------------------------------- | ---------------------------------------------------- | --------------------------------------- |
-| `_disposeTemplateRuntime()`     | Only in `vendor/jsr.io/@lessjs/core/0.23.6/`         | Vendor copy, not current code           |
+| `_disposeTemplateRuntime()`     | Only in `vendor/jsr.io/@openelement/core/0.23.6/`         | Vendor copy, not current code           |
 | `_disposeSignalSubscriptions()` | Only in vendor + docs                                | Removed in v0.26.1                      |
 | `_templateAbortController`      | Only in vendor + docs                                | Replaced by `_scopeDispose`             |
 | `_signalUnsubscribers`          | Only in vendor + docs                                | Unused array removed                    |
-| `_bindCurrentRenderTemplate()`  | Only in `vendor/jsr.io/@lessjs/core/0.23.6/`         | Gone from current code                  |
+| `_bindCurrentRenderTemplate()`  | Only in `vendor/jsr.io/@openelement/core/0.23.6/`         | Gone from current code                  |
 | `_hydrateEvents()`              | In adapter packages (lit/vanilla/react) + test files | **Still active** in adapters — NOT dead |
 
 ### Action: LOW
@@ -77,7 +77,7 @@ Line 9 and line 10 are identical duplicate imports. One should be removed.
 
 | File                     | Import                                              | Suspicion                                                     |
 | ------------------------ | --------------------------------------------------- | ------------------------------------------------------------- |
-| `routes/blog/[slug].tsx` | `import { navSections } from '@lessjs/content/nav'` | Used only as `const nav = navSections` — can be used directly |
+| `routes/blog/[slug].tsx` | `import { navSections } from '@openelement/content/nav'` | Used only as `const nav = navSections` — can be used directly |
 
 ### 3c. Missing `pageStyles` Import
 
@@ -176,7 +176,7 @@ These are version tags in documentation content — not dead code, but stale:
 
 - Template literals don't benefit from JSX type checking
 - Template literals can't use JSX expressions (`{variable}`)
-- Each template literal page embeds `<less-layout>` as a raw HTML string with `${JSON.stringify(...)}` for all props
+- Each template literal page embeds `<open-layout>` as a raw HTML string with `${JSON.stringify(...)}` for all props
 
 ### Action: MEDIUM
 
@@ -195,11 +195,11 @@ These are version tags in documentation content — not dead code, but stale:
 
 | File                                 | Lines                                  | Usage Count |
 | ------------------------------------ | -------------------------------------- | ----------- |
-| `packages/ui/src/less-layout.tsx`    | 693, 694, 702, 775, 800, 820, 835, 883 | 8 uses      |
-| `packages/ui/src/less-step-card.tsx` | 95, 102                                | 2 uses      |
-| `packages/ui/src/less-input.tsx`     | 139, 163                               | 2 uses      |
-| `packages/ui/src/less-dialog.tsx`    | 124                                    | 1 use       |
-| `packages/ui/src/less-callout.tsx`   | 73                                     | 1 use       |
+| `packages/ui/src\/open-layout.tsx`    | 693, 694, 702, 775, 800, 820, 835, 883 | 8 uses      |
+| `packages/ui/src\/open-step-card.tsx` | 95, 102                                | 2 uses      |
+| `packages/ui/src\/open-input.tsx`     | 139, 163                               | 2 uses      |
+| `packages/ui/src\/open-dialog.tsx`    | 124                                    | 1 use       |
+| `packages/ui/src\/open-callout.tsx`   | 73                                     | 1 use       |
 
 ### Note
 
@@ -252,7 +252,7 @@ These are version tags in documentation content — not dead code, but stale:
 
 **Total usage count**: 130+ `JSON.stringify()` calls across ALL route files
 
-All pages pass nav data to `<less-layout>` via `JSON.stringify()`:
+All pages pass nav data to `<open-layout>` via `JSON.stringify()`:
 
 ```js
 nav-items='${JSON.stringify(navSections)}'
@@ -270,7 +270,7 @@ locales={JSON.stringify(['en', 'zh'])}
 
 ### Identified Anti-patterns
 
-1. **Inconsistent attribute naming**: Template-literal pages use `nav-items`/`header-nav` (kebab-case); JSX pages use `navItems`/`headerNav` (camelCase). The `<less-layout>` component must handle both.
+1. **Inconsistent attribute naming**: Template-literal pages use `nav-items`/`header-nav` (kebab-case); JSX pages use `navItems`/`headerNav` (camelCase). The `<open-layout>` component must handle both.
 2. **Repetitive locales stringify**: `JSON.stringify(['en', 'zh'])` appears in nearly every file — could be a shared constant.
 3. **benchmark.tsx line 57**: Uses manual quoting `locales='[&quot;en&quot;,&quot;zh&quot;]'` instead of `JSON.stringify`
 
@@ -342,7 +342,7 @@ The first arg is the **default** — pattern 1 defaults Chinese ("zh"), pattern 
 
 ## 12. Additional Findings
 
-### 12a. Inconsistent `<less-layout>` Attribute Naming
+### 12a. Inconsistent `<open-layout>` Attribute Naming
 
 Template-literal (kebab-case):
 
@@ -371,7 +371,7 @@ Note: `index.tsx` uses JSX with kebab-case attribute names — unusual.
 return this._getLocale('zh') === 'zh' ? this._renderZh() : this._renderEn();
 
 // Line 57: Hardcoded locale, manual HTML-encoded locales
-<less-layout ... locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]' ...>
+<open-layout ... locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]' ...>
 ```
 
 **Bug**: `this._getLocale('zh') === 'zh'` will **always** be true because the default is 'zh'. The English version can never be rendered.
@@ -416,7 +416,7 @@ return this._getLocale('zh') === 'zh' ? this._renderZh() : this._renderEn();
 
 6. **Migrate template-literal renders to JSX** (completes ADR-0057 migration)
 7. **Standardize `_getLocale()` check pattern** across all routes
-8. **Standardize `<less-layout>` attribute naming** (kebab vs camel)
+8. **Standardize `<open-layout>` attribute naming** (kebab vs camel)
 
 ### P3 — Low Priority
 

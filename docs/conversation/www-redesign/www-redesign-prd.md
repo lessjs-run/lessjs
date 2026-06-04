@@ -1,4 +1,4 @@
-# LessJS www 全站重设计 PRD
+﻿# LessJS www 全站重设计 PRD
 
 > 文档版本: 1.0 | 作者: 产品经理许清楚 (Xu) | 日期: 2025-05-19
 
@@ -544,7 +544,7 @@ LessJS 官网存在三个结构性问题：(1) 首页多框架共存展示只有
 | Q7  | 页面过渡是否依赖 View Transitions API？旧浏览器不支持                | 兼容性           | 建议渐进增强：支持时用品牌色过渡，不支持时直接切换                    |
 | Q8  | 首页 Benchmark 数据是否需要实时获取？还是保持硬编码？                | 数据维护         | 建议保持硬编码，但标注数据来源和测试日期                              |
 | Q9  | i18n 策略：重设计是否同时覆盖中英文两个 locale？                     | 工作量           | 建议先做中文，英文同步跟进但不阻塞                                    |
-| Q10 | 是否需要新增 `@lessjs/ui` 组件来支撑设计系统？                       | 架构决策         | 建议将 callout、code-block、copy-button 等通用组件提取到 `@lessjs/ui` |
+| Q10 | 是否需要新增 `@openelement/ui` 组件来支撑设计系统？                       | 架构决策         | 建议将 callout、code-block、copy-button 等通用组件提取到 `@openelement/ui` |
 
 ---
 

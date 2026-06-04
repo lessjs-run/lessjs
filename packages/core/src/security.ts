@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - SSR Security Guards.
+ * @openelement/core - SSR Security Guards.
  *
  * Properties that MUST NOT be injected from untrusted SSR props.
  * These are Object.prototype internals and dangerous overrides that
@@ -9,7 +9,7 @@
  * (SSR injectProps). Previously defined in island.ts and imported by
  * render-instantiate.ts (v0.29.1: merged into render-dsd.ts).
  *
- * @module @lessjs/core/security
+ * @module @openelement/core/security
  */
 
 /** Object prototype keys that must never be injected as SSR props. */
@@ -34,7 +34,7 @@ export const DANGEROUS_KEYS: ReadonlySet<string> = new Set([
  *
  * `trustedHtml` is an explicit trust boundary, not a sanitizer. Core escapes
  * untrusted text by default; callers that cross this boundary must sanitize or
- * otherwise trust the HTML before passing it to LessJS.
+ * otherwise trust the HTML before passing it to openElement.
  */
 let _warnedTrustedHtml = false;
 
@@ -42,8 +42,8 @@ export function trustRenderHtml(html: string): string {
   if (!_warnedTrustedHtml) {
     _warnedTrustedHtml = true;
     console.warn(
-      '[LessJS] trustRenderHtml is a trust boundary, not a sanitizer. ' +
-        'Caller must ensure HTML content is safe before passing to LessJS.',
+      '[openElement] trustRenderHtml is a trust boundary, not a sanitizer. ' +
+        'Caller must ensure HTML content is safe before passing to openElement.',
     );
   }
   return html;

@@ -1,6 +1,6 @@
-// deno-lint-ignore-file no-explicit-any no-unused-vars require-await
+﻿// deno-lint-ignore-file no-explicit-any no-unused-vars require-await
 /**
- * @lessjs/ui - Comprehensive component tests (Deno)
+ * @openelement/ui - Comprehensive component tests (Deno)
  *
  * Tests all 6 UI components for:
  * - Export shape (tagName, class)
@@ -186,7 +186,7 @@ Deno.test('index: manifest has correct declarations', async () => {
   const { manifest } = await import('../src/index.ts');
   assertExists(manifest);
   assertEquals(typeof manifest, 'object');
-  assertEquals(manifest.packageName, '@lessjs/ui');
+  assertEquals(manifest.packageName, '@openelement/ui');
   assertEquals(Array.isArray(manifest.declarations), true);
 
   // Each declaration with `less.module` is an island entry
@@ -1149,7 +1149,7 @@ Deno.test('less-layout: blocks unsafe URL schemes in rendered links', async () =
     ]),
   );
 
-  const { renderDsdTree } = await import('@lessjs/core');
+  const { renderDsdTree } = await import('@openelement/core');
   const html = await renderDsdTree(instance.render());
   assertEquals(html.includes('javascript:'), false);
   assertEquals(html.includes('data:text/html'), false);

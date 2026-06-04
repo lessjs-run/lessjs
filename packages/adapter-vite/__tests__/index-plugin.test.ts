@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - index.ts main entry tests (Deno)
+ * @openelement/adapter-vite - index.ts main entry tests (Deno)
  *
  * Tests that the public lessPipeline() entry and internal plugin factory
  * return valid plugin arrays with correct structure and re-exports.
@@ -15,10 +15,10 @@ import {
 import { join } from 'node:path';
 import { less } from '../src/less-plugin.ts';
 
-// Verify core re-exports work (imported via @lessjs/core subpaths)
-import { LessError, SsrRenderError } from '@lessjs/core/errors';
-import { createSsrContext, extractParams, parseQuery } from '@lessjs/core/context';
-import { renderSsrError, wrapInDocument } from '@lessjs/core';
+// Verify core re-exports work (imported via @openelement/core subpaths)
+import { LessError, SsrRenderError } from '@openelement/core/errors';
+import { createSsrContext, extractParams, parseQuery } from '@openelement/core/context';
+import { renderSsrError, wrapInDocument } from '@openelement/core';
 
 import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
 
@@ -84,7 +84,7 @@ Deno.test('less() accepts options without error', () => {
     islandsDir: 'widgets',
     headExtras: '<link rel="stylesheet" />',
     html: { title: 'Test', lang: 'ja' },
-    packageIslands: ['@lessjs/ui'],
+    packageIslands: ['@openelement/ui'],
     island: { upgradeStrategy: 'load' },
     middleware: { corsOrigin: '*' },
   });
@@ -269,7 +269,7 @@ Deno.test('less() with all options branches covered', () => {
   const plugins = less({
     routesDir: 'pages',
     islandsDir: 'islands',
-    packageIslands: ['@lessjs/ui'],
+    packageIslands: ['@openelement/ui'],
     island: { upgradeStrategy: 'load' },
     middleware: { corsOrigin: ['http://localhost:3000'] },
     html: { title: 'Test', lang: 'ja' },

@@ -7,7 +7,7 @@
 
 ## Objective
 
-Keep `@lessjs/adapter-vite` as the Vite adapter, but stop it from being the
+Keep `@openelement/adapter-vite` as the Vite adapter, but stop it from being the
 implicit owner of every build-time concept in the repository.
 
 ## Current Problem
@@ -71,8 +71,8 @@ Acceptance:
 
 ### Step 2: Move Shared Contracts Out
 
-- [ ] Replace external imports of `@lessjs/adapter-vite/build-types`.
-- [ ] Replace external imports of `@lessjs/adapter-vite/virtual-ids`.
+- [ ] Replace external imports of `@openelement/adapter-vite/build-types`.
+- [ ] Replace external imports of `@openelement/adapter-vite/virtual-ids`.
 - [ ] Keep adapter compatibility exports for one minor release if needed.
 
 Acceptance:
@@ -126,7 +126,7 @@ deno task test:e2e
 
 ## v0.23.0 Result
 
-- Shared build contracts moved out of adapter-vite to `@lessjs/protocols`.
+- Shared build contracts moved out of adapter-vite to `@openelement/protocols`.
 - Removed stale adapter-vite exports for old `build-types` and `virtual-ids`
   ownership paths.
 - Adapter-vite declares the LessJS packages it actually imports, including

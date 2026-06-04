@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - context.ts tests (Deno)
+ * @openelement/core - context.ts tests (Deno)
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { createSsrContext, extractParams, parseQuery } from '../src/context.ts';

@@ -1,5 +1,5 @@
 /**
- * @lessjs/content navigation tools - Navigation scanner
+ * @openelement/content navigation tools - Navigation scanner
  *
  * Scans route files, extracts `meta` exports, and aggregates NavSection[].
  * Build-time only - data stored in ctx.navSections (ADR 0010: no .less/ temp files).
@@ -8,7 +8,7 @@
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import type { HeaderNavLink, NavItem, NavOptions, NavSection, RouteMeta } from '../types.ts';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 import * as ts from 'typescript';
 
 /** Aggregated navigation data ready for module generation */

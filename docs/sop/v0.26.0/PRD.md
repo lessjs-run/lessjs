@@ -36,17 +36,17 @@
 
 ### 2.1 产品目标
 
-1. **框架层实现零构建工具依赖**：`@lessjs/content` 和 `@lessjs/i18n` 的数据通过标准 ESM 子路径导出暴露，不依赖 Vite 虚拟模块机制
-2. **用户 import 路径标准化**：路由组件中的 `virtual:less-*` import 全部替换为 `@lessjs/*` 子路径 import，IDE 可正常跳转和类型检查
+1. **框架层实现零构建工具依赖**：`@openelement/content` 和 `@openelement/i18n` 的数据通过标准 ESM 子路径导出暴露，不依赖 Vite 虚拟模块机制
+2. **用户 import 路径标准化**：路由组件中的 `virtual:less-*` import 全部替换为 `@openelement/*` 子路径 import，IDE 可正常跳转和类型检查
 3. **构建适配器职责收缩**：Vite 插件不再做数据注入，只负责 alias 映射、打包和 tree-shaking
 
 ### 2.2 用户故事
 
-1. **As a** LessJS 框架用户，**I want** 从 `@lessjs/content/nav` 导入导航数据而不是 `virtual:less-nav`，**so that** 我的 IDE 可以跳转到定义、自动补全，且不依赖 Vite 构建工具的特殊机制。
+1. **As a** LessJS 框架用户，**I want** 从 `@openelement/content/nav` 导入导航数据而不是 `virtual:less-nav`，**so that** 我的 IDE 可以跳转到定义、自动补全，且不依赖 Vite 构建工具的特殊机制。
 
-2. **As a** LessJS 框架用户，**I want** 从 `@lessjs/content/blog` 导入博客数据，**so that** 博客路由组件可以在任何 ESM 环境（Deno/Node/Bun）独立运行和测试。
+2. **As a** LessJS 框架用户，**I want** 从 `@openelement/content/blog` 导入博客数据，**so that** 博客路由组件可以在任何 ESM 环境（Deno/Node/Bun）独立运行和测试。
 
-3. **As a** LessJS 框架用户，**I want** 从 `@lessjs/i18n/data` 导入国际化配置，**so that** i18n 数据不依赖 Vite 虚拟模块，dev 模式下数据刷新行为保持一致。
+3. **As a** LessJS 框架用户，**I want** 从 `@openelement/i18n/data` 导入国际化配置，**so that** i18n 数据不依赖 Vite 虚拟模块，dev 模式下数据刷新行为保持一致。
 
 4. **As a** LessJS 框架维护者，**I want** entry-renderer 生成的代码使用标准 ESM import 而不是 `virtual:less-*`，**so that** 框架生成代码不再泄露构建工具实现细节。
 
@@ -58,33 +58,33 @@
 
 ### P0 — Must Have（阻塞发布）
 
-| ID    | 功能                              | 描述                                                                      | 验收标准                                                       |
-| ----- | --------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| F-001 | `@lessjs/content/nav` 子路径导出  | 新增 `/nav` 子路径，导出 `navSections`、`headerNav`                       | `import { navSections } from '@lessjs/content/nav'` 可正常工作 |
-| F-002 | `@lessjs/content/blog` 子路径导出 | 新增 `/blog` 子路径，导出 `posts`、`getPostBySlug`、`getBlogOptions`      | `import { posts } from '@lessjs/content/blog'` 可正常工作      |
-| F-003 | `@lessjs/i18n/data` 子路径导出    | 新增 `/data` 子路径，导出 `locales`、`getDefaultLocale`、`getI18nOptions` | `import { locales } from '@lessjs/i18n/data'` 可正常工作       |
-| F-004 | 路由文件 import 迁移（55 个文件） | `virtual:less-nav` → `@lessjs/content/nav`                                | codemod 自动化，typecheck 验证通过                             |
-| F-005 | 路由文件 import 迁移（5 个文件）  | `virtual:less-blog-data` → `@lessjs/content/blog`                         | codemod 自动化，typecheck 验证通过                             |
-| F-006 | entry-renderer 生成代码迁移       | 生成的 entry 代码不再包含 `virtual:less-*` import                         | `deno task build` 生成的 entry 文件中无 `virtual:` 前缀        |
-| F-007 | 全量回归测试                      | typecheck、lint、test、build、e2e 全部门禁通过                            | 14 个门禁命令全部 pass                                         |
+| ID    | 功能                                   | 描述                                                                      | 验收标准                                                            |
+| ----- | -------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| F-001 | `@openelement/content/nav` 子路径导出  | 新增 `/nav` 子路径，导出 `navSections`、`headerNav`                       | `import { navSections } from '@openelement/content/nav'` 可正常工作 |
+| F-002 | `@openelement/content/blog` 子路径导出 | 新增 `/blog` 子路径，导出 `posts`、`getPostBySlug`、`getBlogOptions`      | `import { posts } from '@openelement/content/blog'` 可正常工作      |
+| F-003 | `@openelement/i18n/data` 子路径导出    | 新增 `/data` 子路径，导出 `locales`、`getDefaultLocale`、`getI18nOptions` | `import { locales } from '@openelement/i18n/data'` 可正常工作       |
+| F-004 | 路由文件 import 迁移（55 个文件）      | `virtual:less-nav` → `@openelement/content/nav`                           | codemod 自动化，typecheck 验证通过                                  |
+| F-005 | 路由文件 import 迁移（5 个文件）       | `virtual:less-blog-data` → `@openelement/content/blog`                    | codemod 自动化，typecheck 验证通过                                  |
+| F-006 | entry-renderer 生成代码迁移            | 生成的 entry 代码不再包含 `virtual:less-*` import                         | `deno task build` 生成的 entry 文件中无 `virtual:` 前缀             |
+| F-007 | 全量回归测试                           | typecheck、lint、test、build、e2e 全部门禁通过                            | 14 个门禁命令全部 pass                                              |
 
 ### P1 — Should Have（本版本完成）
 
-| ID    | 功能                           | 描述                                                                                 | 验收标准                                                      |
-| ----- | ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| F-101 | Vite alias 兼容层              | Vite 插件将 `virtual:less-nav` 映射到 `@lessjs/content/nav`，打印 deprecated warning | 使用旧 import 路径时不报错，但显示 deprecated 警告            |
-| F-102 | 移除 content 虚拟模块插件      | 移除 `@lessjs/content` 中的 `virtualNavPlugin` 和 blog-data-plugin 虚拟模块注册      | `@lessjs/content` 不再注册任何 `virtual:less-*` 模块          |
-| F-103 | 移除 i18n 虚拟模块插件         | 移除 `@lessjs/i18n` 中的 i18n-data-plugin 虚拟模块注册                               | `@lessjs/i18n` 不再注册任何 `virtual:less-*` 模块             |
-| F-104 | 移除 adapter-vite 虚拟模块处理 | 清理 `build-ssg.ts` 和 `phase-context.ts` 中的虚拟模块 resolveId/load 逻辑           | adapter-vite 中不再有 `virtual:less-nav/blog/i18n` 的特殊处理 |
-| F-105 | migration codemod 脚本         | 提供自动化脚本批量迁移 `virtual:less-*` → `@lessjs/*` import                         | 脚本可重复执行，幂等，覆盖所有受影响文件                      |
+| ID    | 功能                           | 描述                                                                                      | 验收标准                                                      |
+| ----- | ------------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| F-101 | Vite alias 兼容层              | Vite 插件将 `virtual:less-nav` 映射到 `@openelement/content/nav`，打印 deprecated warning | 使用旧 import 路径时不报错，但显示 deprecated 警告            |
+| F-102 | 移除 content 虚拟模块插件      | 移除 `@openelement/content` 中的 `virtualNavPlugin` 和 blog-data-plugin 虚拟模块注册      | `@openelement/content` 不再注册任何 `virtual:less-*` 模块     |
+| F-103 | 移除 i18n 虚拟模块插件         | 移除 `@openelement/i18n` 中的 i18n-data-plugin 虚拟模块注册                               | `@openelement/i18n` 不再注册任何 `virtual:less-*` 模块        |
+| F-104 | 移除 adapter-vite 虚拟模块处理 | 清理 `build-ssg.ts` 和 `phase-context.ts` 中的虚拟模块 resolveId/load 逻辑                | adapter-vite 中不再有 `virtual:less-nav/blog/i18n` 的特殊处理 |
+| F-105 | migration codemod 脚本         | 提供自动化脚本批量迁移 `virtual:less-*` → `@openelement/*` import                         | 脚本可重复执行，幂等，覆盖所有受影响文件                      |
 
 ### P2 — Nice to Have（可延后）
 
-| ID    | 功能                                     | 描述                                                             | 验收标准                                   |
-| ----- | ---------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------ |
-| F-201 | dev 模式零 bundler 原型验证              | 验证 Deno serve 直接跑路由源码（不经过 Vite dev server）的可行性 | 至少一个路由文件可在 Deno serve 下正常运行 |
-| F-202 | 用户文档更新                             | 更新文档中所有 `virtual:less-*` 引用为新路径                     | docs/ 下无 `virtual:less-nav` 等过时引用   |
-| F-203 | `@lessjs/protocols/virtual-ids` 常量清理 | 移除废弃的 VIRTUAL_NAV_ID 等常量                                 | 无废弃常量残留                             |
+| ID    | 功能                                          | 描述                                                             | 验收标准                                   |
+| ----- | --------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------ |
+| F-201 | dev 模式零 bundler 原型验证                   | 验证 Deno serve 直接跑路由源码（不经过 Vite dev server）的可行性 | 至少一个路由文件可在 Deno serve 下正常运行 |
+| F-202 | 用户文档更新                                  | 更新文档中所有 `virtual:less-*` 引用为新路径                     | docs/ 下无 `virtual:less-nav` 等过时引用   |
+| F-203 | `@openelement/protocols/virtual-ids` 常量清理 | 移除废弃的 VIRTUAL_NAV_ID 等常量                                 | 无废弃常量残留                             |
 
 ---
 
@@ -105,7 +105,7 @@
 ### 4.2 子路径导出结构设计
 
 ```
-@lessjs/content
+@openelement/content
 ├── index.ts              → lessContent() 插件（不变）
 ├── nav                   → 新增子路径
 │   └── 导出: navSections, headerNav
@@ -114,7 +114,7 @@
 ├── sitemap               → 已有子路径（不变）
 │   └── 导出: generateSitemap, renderSitemapXml, renderRobotsTxt
 
-@lessjs/i18n
+@openelement/i18n
 ├── index.ts              → lessI18n() 插件（不变）
 ├── data                  → 新增子路径
 │   └── 导出: locales, getDefaultLocale, getI18nOptions
@@ -127,7 +127,7 @@
 虚拟模块的 `load()` 钩子在每次 SSR 请求时重新执行，保证数据新鲜。迁移到子路径导出后：
 
 - **dev 模式**：Vite HMR 在 content/i18n 源文件变更时 invalidate 相关模块，触发重新加载
-- **SSG 构建**：每次构建启动时，`@lessjs/content/nav` 和 `@lessjs/content/blog` 通过惰性函数重新扫描数据源
+- **SSG 构建**：每次构建启动时，`@openelement/content/nav` 和 `@openelement/content/blog` 通过惰性函数重新扫描数据源
 - **实现方案**：子路径导出的入口文件使用 getter 函数而非顶层静态对象，利用 ESM live binding 特性
 
 ### 4.4 Open Questions
@@ -141,7 +141,7 @@
 3. **entry-renderer 中生成的 import 语句何时切换？**\
    建议与路由文件迁移同步进行（同一次 PR），通过 feature flag 确保安全回滚
 
-4. **已发布到 JSR 的 `@lessjs/content` 是否允许新增子路径？**\
+4. **已发布到 JSR 的 `@openelement/content` 是否允许新增子路径？**\
    JSR 的子路径导出需要在 `deno.json` 中声明，需要确认发布流程
 
 ---
@@ -168,15 +168,15 @@ deno task test:e2e     → 92+ tests pass, PASS
 
 - [ ] 所有路由文件（60+ 个）的 import 语句不包含 `virtual:less-` 前缀
 - [ ] `entry-renderer.ts` 生成的代码不包含 `virtual:less-` 前缀
-- [ ] `@lessjs/content` 的 `deno.json` 声明了 `./nav` 和 `./blog` 子路径导出
-- [ ] `@lessjs/i18n` 的 `deno.json` 声明了 `./data` 子路径导出
+- [ ] `@openelement/content` 的 `deno.json` 声明了 `./nav` 和 `./blog` 子路径导出
+- [ ] `@openelement/i18n` 的 `deno.json` 声明了 `./data` 子路径导出
 - [ ] 新旧 import 路径在 `deno task build` 产出的 HTML 内容一致（diff 验证）
 - [ ] migration codemod 脚本可正确迁移所有受影响的文件
 
 ### 5.3 发布检查清单
 
 - [ ] JSR publish dry-run 通过
-- [ ] `@lessjs/create` 生成的新项目使用新 import 路径
+- [ ] `@openelement/create` 生成的新项目使用新 import 路径
 - [ ] 生成项目 smoke test（typecheck + build）通过
 - [ ] changelog 记录为 breaking change（import 路径变更）
 

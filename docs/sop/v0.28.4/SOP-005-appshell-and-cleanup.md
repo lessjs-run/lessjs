@@ -19,7 +19,7 @@ Hub client-only discovery consumes generated data as structured module data, SSR
 adapter import failures are diagnosable, and the DSD report gate defaults to zero
 native non-recoverable errors.
 
-Second, it promotes application shells from an implicit `@lessjs/ui/less-layout`
+Second, it promotes application shells from an implicit `@openelement/ui\/open-layout`
 implementation detail into framework configuration. Applications can now use the
 default shell, no shell, a custom shell, or route-selected named layouts without
 aliasing internal framework packages.
@@ -30,25 +30,25 @@ aliasing internal framework packages.
 
 Root release tasks now follow the 19-package graph order:
 
-1. `@lessjs/rpc`
-2. `@lessjs/protocols`
-3. `@lessjs/router`
-4. `@lessjs/style-sheet`
-5. `@lessjs/create`
-6. `@lessjs/signals`
-7. `@lessjs/core`
-8. `@lessjs/runtime`
-9. `@lessjs/cem`
-10. `@lessjs/compat-check`
-11. `@lessjs/content`
-12. `@lessjs/i18n`
-13. `@lessjs/adapter-lit`
-14. `@lessjs/adapter-react`
-15. `@lessjs/adapter-vanilla`
-16. `@lessjs/adapter-vite`
-17. `@lessjs/ui`
-18. `@lessjs/hub`
-19. `@lessjs/app`
+1. `@openelement/rpc`
+2. `@openelement/protocols`
+3. `@openelement/router`
+4. `@openelement/style-sheet`
+5. `@openelement/create`
+6. `@openelement/signals`
+7. `@openelement/core`
+8. `@openelement/runtime`
+9. `@openelement/cem`
+10. `@openelement/compat-check`
+11. `@openelement/content`
+12. `@openelement/i18n`
+13. `@openelement/adapter-lit`
+14. `@openelement/adapter-react`
+15. `@openelement/adapter-vanilla`
+16. `@openelement/adapter-vite`
+17. `@openelement/ui`
+18. `@openelement/hub`
+19. `@openelement/app`
 
 Updated tasks:
 
@@ -78,7 +78,7 @@ Tests and generated entry code now construct the options object explicitly.
 
 ### 3. Adapter-Lit Public Surface Cleanup
 
-`@lessjs/adapter-lit` now exposes only current SSR adapter APIs from its package
+`@openelement/adapter-lit` now exposes only current SSR adapter APIs from its package
 root:
 
 - `installLitAdapter`
@@ -141,7 +141,7 @@ layouts?: Record<string, AppShellConfig | undefined>;
 
 Supported modes:
 
-- `appShell: 'default'` or omitted: render `<less-layout>`
+- `appShell: 'default'` or omitted: render `<open-layout>`
 - `appShell: false`: render route content directly
 - object form: import and render a custom shell
 - `layouts.default`: default shell override
@@ -155,8 +155,8 @@ only the shells described by that plan and renders the selected shell through
 ### 9. Alias Priority
 
 The SSG package resolver now checks exact user aliases before resolving
-`@lessjs/*` packages. This lets an explicit alias such as
-`@lessjs/ui/less-layout` win instead of being swallowed by the pre resolver.
+`@openelement/*` packages. This lets an explicit alias such as
+`@openelement/ui\/open-layout` win instead of being swallowed by the pre resolver.
 
 ### 10. Neutral Default Layout
 

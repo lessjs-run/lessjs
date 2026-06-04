@@ -14,7 +14,7 @@ checks that had been treated as one release signal:
 - platform compatibility checks that monitor JSR latest on non-Linux runners.
 
 The old SOP Gate included a `JSR consumer build (ubuntu + windows)` job that
-ran `deno run -A jsr:@lessjs/create test-blog`. That job used the already
+ran `deno run -A jsr:@openelement/create test-blog`. That job used the already
 published latest JSR version, not the current commit. It was useful as a public
 path monitor, but it could not validate unpublished release candidates. The
 Ubuntu half also duplicated the post-publish consumer smoke in `publish.yml`,
@@ -32,7 +32,7 @@ LessJS CI is split into three explicit layers:
 
 2. **Publish Gate**
    Runs after publishing missing JSR package versions. It generates a fresh
-   consumer project from `jsr:@lessjs/create` on Ubuntu and builds it. This is
+   consumer project from `jsr:@openelement/create` on Ubuntu and builds it. This is
    the authoritative release gate for immutable JSR packages.
 
 3. **JSR Consumer Monitor**

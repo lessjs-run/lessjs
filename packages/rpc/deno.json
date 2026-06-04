@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/rpc",
+  "name": "@openelement/rpc",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts"

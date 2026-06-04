@@ -118,12 +118,12 @@ Exit criteria: met for MVP. Not yet a mature marketplace.
 
 Delivered:
 
-- `DsdElement` in `@lessjs/core`
+- `DsdElement` in `@openelement/core`
 - SSR-safe `StyleSheet` abstraction
-- DSD-native `@lessjs/ui` migration for ocean components
+- DSD-native `@openelement/ui` migration for ocean components
 - Open Props token migration
 - CSS Parts coverage
-- `@lessjs/adapter-lit` deprecation for DSD components
+- `@openelement/adapter-lit` deprecation for DSD components
 - `less-hero-ping` retained as the Lit island example
 - DSD report gate tightened to finite thresholds
 - ADR-0037 strategic boundary and SOP-015 docs alignment

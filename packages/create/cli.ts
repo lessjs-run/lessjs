@@ -1,7 +1,7 @@
 /**
- * @lessjs/create - Minimal project scaffold for LessJS framework.
+ * @openelement/create - Minimal project scaffold for LessJS framework.
  *
- * Usage: deno run -A jsr:@lessjs/create my-app
+ * Usage: deno run -A jsr:@openelement/create my-app
  *
  * LessJS Architecture: Keep It Simple, Stupid.
  * One template, zero prompts, instant start.
@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 // - Local:  read version from workspace deno.json (single source of truth)
 // - Remote: query JSR Registry API for latest version (zero hardcoding)
 
-const JSR_SCOPE = '@lessjs';
+const JSR_SCOPE = '@openelement';
 const PKG_DIR_MAP: Record<string, string> = {
   core: 'core',
   adapterLit: 'adapter-lit',
@@ -50,7 +50,7 @@ function loadWorkspaceVersion(pkg: string): string {
     return version;
   } catch (e) {
     throw new Error(
-      `Failed to read version for @lessjs/${dir} from ${wsPath}. ` +
+      `Failed to read version for @openelement/${dir} from ${wsPath}. ` +
         `Run this script from the LessJS workspace or ensure deno.json is accessible.\n` +
         `Original error: ${e}`,
     );
@@ -123,24 +123,24 @@ node_modules/
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
     "entities": "npm:entities@^4.5.0",
     "hono": "npm:hono@4.12.23",
-    "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
-    "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
-    "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
+    "@openelement/app": "jsr:@openelement/app@^${v.app}",
+    "@openelement/runtime": "jsr:@openelement/runtime@^${v.runtime}",
+    "@openelement/ui": "jsr:@openelement/ui@^${v.ui}",
     "vite": "npm:vite@8.0.10"
   },
   "nodeModulesDir": "auto",
   "tasks": {
     "dev": "deno run --config deno.json -A npm:vite",
-    "build": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build",
+    "build": "deno run --config deno.json -A jsr:@openelement/adapter-vite@^${v.adapterVite}/cli/build",
     "build:ssr": "deno run --config deno.json -A npm:vite build",
-    "build:client": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build-client",
-    "build:ssg": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build-ssg",
+    "build:client": "deno run --config deno.json -A jsr:@openelement/adapter-vite@^${v.adapterVite}/cli/build-client",
+    "build:ssg": "deno run --config deno.json -A jsr:@openelement/adapter-vite@^${v.adapterVite}/cli/build-ssg",
     "preview": "deno run --config deno.json -A npm:vite preview"
   },
-  "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"], "jsx": "react-jsx", "jsxImportSource": "@lessjs/core" }
+  "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"], "jsx": "react-jsx", "jsxImportSource": "@openelement/core" }
 }
 `,
-    'vite.config.ts': `import { lessjs } from '@lessjs/app';
+    'vite.config.ts': `import { lessjs } from '@openelement/app';
 import { defineConfig } from 'vite';
 import deno from '@deno/vite-plugin';
 
@@ -162,20 +162,20 @@ export default defineConfig({
     deno(),
     lessjs({
     html: { title: 'My LessJS App' },
-    // Use pre-built UI components from @lessjs/ui
+    // Use pre-built UI components from @openelement/ui
     // (JSR distributes compiled JS - no decorator errors)
-    packageIslands: ['@lessjs/ui'],
-    // SSR must bundle @lessjs/ui (decorators need compilation)
+    packageIslands: ['@openelement/ui'],
+    // SSR must bundle @openelement/ui (decorators need compilation)
     ssr: {
-      noExternal: ['@lessjs/ui'],
+      noExternal: ['@openelement/ui'],
     },
     inject: {
       headFragments: [
-        // Design tokens - DRY: values from @lessjs/ui/open-props-tokens.ts
+        // Design tokens - DRY: values from @openelement/ui/open-props-tokens.ts
         colorTokensStyle,
       ],
     },
-    // Blog + Navigation + Sitemap (from @lessjs/content)
+    // Blog + Navigation + Sitemap (from @openelement/content)
     content: {
       blog: {
         contentDir: 'content/blog',
@@ -192,8 +192,8 @@ export default defineConfig({
   })],
 });
 `,
-    'app/routes/index.tsx': `/** @jsxImportSource @lessjs/core */
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+    'app/routes/index.tsx': `/** @jsxImportSource @openelement/core */
+import { DsdElement, StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'home-page';
 
@@ -221,8 +221,8 @@ export default class HomePage extends DsdElement {
   }
 }
 `,
-    'app/islands/my-counter.tsx': `/** @jsxImportSource @lessjs/core */
-import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
+    'app/islands/my-counter.tsx': `/** @jsxImportSource @openelement/core */
+import { DsdElement, signal, StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'my-counter';
 
@@ -258,7 +258,7 @@ if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
 async function main() {
   const name = Deno.args[0];
   if (!name) {
-    console.error('Usage: deno run -A jsr:@lessjs/create <project-name>');
+    console.error('Usage: deno run -A jsr:@openelement/create <project-name>');
     Deno.exit(1);
   }
 

@@ -25,7 +25,7 @@
 ### 目标
 
 消除 `virtual:less-nav`, `virtual:less-blog-data`, `virtual:less-i18n-data` 三个数据 virtual，
-改为 `less-layout` 静态 import `@lessjs/content/nav`（读磁盘文件 `_generated-nav.ts`）。
+改为 `less-layout` 静态 import `@openelement/content/nav`（读磁盘文件 `_generated-nav.ts`）。
 
 ### 尝试的方法（3 种，全部失败）
 
@@ -33,17 +33,17 @@
 
 ```typescript
 // less-layout.tsx
-const navMod = await import('@lessjs/content/nav');
+const navMod = await import('@openelement/content/nav');
 ```
 
-**失败原因**: Phase 3 SSG 重建时，Vite 将 `@lessjs/content/nav` 提前解析为磁盘路径，
-且在 SSR bundle 的重建中作为 `@lessjs/ui` 的依赖被 JSR package resolver 改写。
+**失败原因**: Phase 3 SSG 重建时，Vite 将 `@openelement/content/nav` 提前解析为磁盘路径，
+且在 SSR bundle 的重建中作为 `@openelement/ui` 的依赖被 JSR package resolver 改写。
 
 #### 尝试 2: 静态 import ESM
 
 ```typescript
 // less-layout.tsx
-import { headerNav, navSections } from '@lessjs/content/nav';
+import { headerNav, navSections } from '@openelement/content/nav';
 ```
 
 **失败原因**: 同上。静态 import 在 Phase 3 重构建中遭遇相同的 JSR resolver 重写。
@@ -53,16 +53,16 @@ import { headerNav, navSections } from '@lessjs/content/nav';
 将 `generatedDataPlugin`（Phase 1）和 `less:ssg-data-dispatch`（Phase 3）
 改为统一的 `\0less:gen-nav` virtual ID，两边都用 `load()` 读磁盘文件。
 
-**失败原因**: `less-layout.tsx` 属于 `@lessjs/ui` package。
+**失败原因**: `less-layout.tsx` 属于 `@openelement/ui` package。
 Phase 3 SSG 重建时，`createLessJsrPackageResolverPlugin` 以 `enforce:'pre'` 拦截
-`@lessjs/ui` 内部所有 import，将其放入自己的内部依赖图管理。
+`@openelement/ui` 内部所有 import，将其放入自己的内部依赖图管理。
 即使用了 `\0` 前缀的 virtual ID，经过 JSR resolver 的内部重写后仍然无法正确解析。
 
 ### 根因
 
 `ssg-package-resolver.ts` 的 `createLessJsrPackageResolverPlugin`（`enforce:'pre'`）
-管理 `@lessjs/ui` 包内所有 import 的解析。当 `less-layout.tsx`（inside `@lessjs/ui`）
-import 任何 `@lessjs/content/*` 路径时，JSR resolver 将其视为 `@lessjs/ui` 的
+管理 `@openelement/ui` 包内所有 import 的解析。当 `less-layout.tsx`（inside `@openelement/ui`）
+import 任何 `@openelement/content/*` 路径时，JSR resolver 将其视为 `@openelement/ui` 的
 monorepo 内依赖，按 workspace alias 逻辑重写为 `packages/ui/src/app/data/...`（错误路径）。
 
 修复这个需要重构 JSR resolver 的内部依赖图管理逻辑。不是小改。

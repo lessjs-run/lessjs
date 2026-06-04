@@ -8,14 +8,14 @@
 
 ## Objective
 
-为 `@lessjs/signals` 和 `@lessjs/style-sheet` 补全测试覆盖（当前零测试），并为 SOP-009~011 新增代码编写配套测试，使整体行覆盖率 > 80%。
+为 `@openelement/signals` 和 `@openelement/style-sheet` 补全测试覆盖（当前零测试），并为 SOP-009~011 新增代码编写配套测试，使整体行覆盖率 > 80%。
 
 ## Current Problem
 
 评估报告认定的 **P0 级工程债务**：
 
-1. **`@lessjs/signals` 零测试**：该包是框架响应式的核心，但没有任何测试文件
-2. **`@lessjs/style-sheet` 零测试**：该包处理 CSS 构建，同样零测试
+1. **`@openelement/signals` 零测试**：该包是框架响应式的核心，但没有任何测试文件
+2. **`@openelement/style-sheet` 零测试**：该包处理 CSS 构建，同样零测试
 3. **核心包新增代码无测试**：SOP-009~011 新增的 classMap/when/repeat/ref/@prop/错误架构需要测试
 4. **CI 无覆盖率门槛**：当前 CI 不检查覆盖率
 
@@ -38,7 +38,7 @@
 
 ## Procedure
 
-### Step 1: @lessjs/signals 核心测试
+### Step 1: @openelement/signals 核心测试
 
 **目标**：为 Signal 创建/订阅/读取/写入编写完整测试套件。
 
@@ -103,7 +103,7 @@ deno test packages/signals/__tests__/signals.test.ts --allow-read
 
 ---
 
-### Step 2: @lessjs/signals Computed + Effect 测试
+### Step 2: @openelement/signals Computed + Effect 测试
 
 **目标**：测试 Computed Signal 派生和 Effect 副作用。
 
@@ -149,13 +149,13 @@ deno test packages/signals/__tests__/ --allow-read
 - [ ] Effect 在 Signal 变更时触发
 - [ ] Computed 缓存：多次读取只计算一次
 
-**失败处理**：如果 `computed`/`effect` 不在 `@lessjs/signals` 导出中，先确认实际导出列表。
+**失败处理**：如果 `computed`/`effect` 不在 `@openelement/signals` 导出中，先确认实际导出列表。
 
 **是否污染工作区**：否
 
 ---
 
-### Step 3: @lessjs/signals 批处理测试
+### Step 3: @openelement/signals 批处理测试
 
 **目标**：测试 Signal 的微任务批处理行为。
 
@@ -201,7 +201,7 @@ deno test packages/signals/__tests__/batch.test.ts --allow-read
 
 ---
 
-### Step 4: @lessjs/style-sheet 测试
+### Step 4: @openelement/style-sheet 测试
 
 **目标**：为 ShimStyleSheet 和 CSS 解析编写测试。
 
@@ -286,8 +286,8 @@ deno test --coverage=coverage packages/ && deno coverage coverage --threshold=80
 **通过标准**：
 
 - [ ] 整体行覆盖率 > 80%
-- [ ] `@lessjs/signals` 覆盖率 > 80%
-- [ ] `@lessjs/style-sheet` 覆盖率 > 80%
+- [ ] `@openelement/signals` 覆盖率 > 80%
+- [ ] `@openelement/style-sheet` 覆盖率 > 80%
 - [ ] CI 构建在覆盖率低于 80% 时失败
 
 **失败处理**：如果 Deno 覆盖率工具不成熟，先手动运行覆盖率检查，CI 门槛后续添加。
@@ -296,13 +296,13 @@ deno test --coverage=coverage packages/ && deno coverage coverage --threshold=80
 
 ## Quality Gates
 
-| Gate | Criteria                                   |
-| ---- | ------------------------------------------ |
-| G1   | `@lessjs/signals` 测试文件存在且全通过     |
-| G2   | `@lessjs/style-sheet` 测试文件存在且全通过 |
-| G3   | SOP-009~011 所有验收测试通过               |
-| G4   | 整体行覆盖率 > 80%                         |
-| G5   | CI 覆盖率门禁生效                          |
+| Gate | Criteria                                        |
+| ---- | ----------------------------------------------- |
+| G1   | `@openelement/signals` 测试文件存在且全通过     |
+| G2   | `@openelement/style-sheet` 测试文件存在且全通过 |
+| G3   | SOP-009~011 所有验收测试通过                    |
+| G4   | 整体行覆盖率 > 80%                              |
+| G5   | CI 覆盖率门禁生效                               |
 
 ## Risk Assessment
 

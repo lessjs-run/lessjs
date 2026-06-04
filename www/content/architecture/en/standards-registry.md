@@ -1,11 +1,11 @@
----
+﻿---
 title: 'Standards & Registry Strategy'
 section: 'Compatibility'
 label: 'Standards & Registry'
 order: 20
 ---
 
-<less-layout
+<open-layout
         nav-items='$'
         header-nav='$'
         current-path="/$/architecture/standards-registry"

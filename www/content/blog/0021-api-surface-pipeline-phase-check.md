@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0021: A+ 架构冲刺 — API 表面收敛 + 管道化 + 参数校验'
 date: '2026-05-12'
 type: 'adr'
@@ -11,7 +11,7 @@ hidden: true
 
 **IMPLEMENTED** (v0.13.0)
 
-> 注意：`build-context.ts` 和 `build.ts` 实际于 v0.11 迁移至 `@lessjs/adapter-vite`，ADR 撰写时 core 尚未拆分完毕。最终实现中 virtual-ids 也位于 `@lessjs/adapter-vite/virtual-ids` 而非 `@lessjs/core/constants`。
+> 注意：`build-context.ts` 和 `build.ts` 实际于 v0.11 迁移至 `@openelement/adapter-vite`，ADR 撰写时 core 尚未拆分完毕。最终实现中 virtual-ids 也位于 `@openelement/adapter-vite/virtual-ids` 而非 `@openelement/core/constants`。
 
 ## 日期
 
@@ -37,7 +37,7 @@ hidden: true
 1. **core 公共 API 表面过大**：10 个 subpath exports 中 4 个是内部实现细节，因生成代码需要而被迫公开
 2. **无测试覆盖率度量**：CI 有 452 测试但无 `--coverage`
 3. **3 个 barrel 文件仅聚合导出**：`content/src/nav/index.ts`、`content/src/sitemap/index.ts`、`content/src/pages/index.ts`
-4. **`@lessjs/core/constants` 包含 Vite 虚拟模块 ID**：core 不应知道 Vite 的内部机制
+4. **`@openelement/core/constants` 包含 Vite 虚拟模块 ID**：core 不应知道 Vite 的内部机制
 5. **Phase 顺序无编译期保证**：`build()` 能在 Phase1 就绪前被调用
 
 ## 决策
@@ -72,7 +72,7 @@ hidden: true
 
 ### 4. core-Vite 分离
 
-`@lessjs/core/constants` 只保留纯配置常量。Vite 虚拟模块 ID（`VIRTUAL_BLOG_DATA_ID`、`RESOLVED_NAV_ID` 等）迁到 `@lessjs/adapter-vite` 的 `virtual-ids.ts`。
+`@openelement/core/constants` 只保留纯配置常量。Vite 虚拟模块 ID（`VIRTUAL_BLOG_DATA_ID`、`RESOLVED_NAV_ID` 等）迁到 `@openelement/adapter-vite` 的 `virtual-ids.ts`。
 
 ### 5. 编译期 Phase 顺序校验 (Branded Type 状态机)
 

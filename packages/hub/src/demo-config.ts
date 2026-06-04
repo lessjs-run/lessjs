@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Demo Configuration for Snapshot Rendering
+ * @openelement/hub - Demo Configuration for Snapshot Rendering
  *
  * Centralized configuration for rendering component previews.
  * Shared by all snapshot renderers (Playwright, Lit SSR, etc.)
@@ -90,5 +90,5 @@ export const DEMO_SLOTS: Record<string, string> = {
     '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot="footer">Card Footer</div>',
   'less-input': '',
   'less-dialog': '<div>Dialog body content</div>',
-  'less-code-block': '<code>console.info("Hello LessJS!")</code>',
+  'less-code-block': '<code>console.info("Hello openElement!")</code>',
 };

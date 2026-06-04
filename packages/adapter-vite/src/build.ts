@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Build plugin
+ * @openelement/adapter-vite - Build plugin
  * LessJS Architecture (K·I·S·S): Knowledge · Isolated · Semantic · Static
  * Build produces only static files (K+S), Islands are the only JS (I).
  * API Routes (S - Serverless extension) deploy separately.
@@ -11,11 +11,11 @@
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
-import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@lessjs/core';
+import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@openelement/core';
 import type { LessBuildContext, Phase1Token, Phase2Token, Phase3Token } from './build-context.js';
 import { join } from 'node:path';
 import process from 'node:process';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('core');
 

@@ -47,9 +47,9 @@ class MyCounter extends LitElement {
 ## LessJS Native Counter
 
 ```tsx
-import { DsdElement, type VNode } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
-import { StyleSheet } from '@lessjs/style-sheet';
+import { DsdElement, type VNode } from '@openelement/core';
+import { signal } from '@openelement/signals';
+import { StyleSheet } from '@openelement/style-sheet';
 
 class MyCounter extends DsdElement {
   #count = signal(0);
@@ -84,5 +84,5 @@ customElements.define('my-counter', MyCounter);
 - Replace Lit event expressions with JSX event props such as `onClick`.
 - Replace Lit `css` templates with `StyleSheet`.
 - Return `VNode | null` from native LessJS `render()`.
-- Keep Lit TemplateResult values inside `@lessjs/adapter-lit`; do not pass them
+- Keep Lit TemplateResult values inside `@openelement/adapter-lit`; do not pass them
   into core as native LessJS component output.

@@ -5,7 +5,7 @@ label: 'Package Compatibility'
 order: 10
 ---
 
-<less-layout
+<open-layout
         nav-items='$'
         header-nav='$'
         current-path="/$/architecture/package-compatibility"
@@ -73,10 +73,10 @@ order: 10
             During the Vite plugin's <code>buildStart()</code> phase, LessJS automatically scans
             <code>node_modules</code> for <code>custom-elements.json</code> files:
           </p>
-          <less-code-block><pre><code>// Pseudocode - actual implementation in route-scanner.ts
+          <open-code-block><pre><code>// Pseudocode - actual implementation in route-scanner.ts
 
 for (const pkg of node_modules)
-}</code></pre></less-code-block>
+}</code></pre></open-code-block>
 
           <h3>Key properties</h3>
           <ul>
@@ -90,11 +90,11 @@ for (const pkg of node_modules)
           <p>
             The build report now includes a <code>cemCompatibility</code> section:
           </p>
-          <less-code-block><pre><code>
+          <open-code-block><pre><code>
     ]
 
 }
-}</code></pre></less-code-block>
+}</code></pre></open-code-block>
 
 <p>
 Each entry includes the package name, compatibility tier, reason, and component count

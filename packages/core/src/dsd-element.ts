@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - DsdElement base class.
+ * @openelement/core - DsdElement base class.
  *
  * Zero-dependency Custom Element base class providing:
  *   - Declarative Shadow DOM (DSD) detection at upgrade time
@@ -44,11 +44,11 @@
  * }
  * ```
  *
- * @module @lessjs/core/dsd-element
+ * @module @openelement/core/dsd-element
  */
 
 import type { ReactiveHost } from './types.js';
-import type { StyleSheetLike } from '@lessjs/style-sheet';
+import type { StyleSheetLike } from '@openelement/style-sheet';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 import {
   disposeStaticProps,
@@ -60,7 +60,7 @@ import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
 import { trustRenderHtml } from './security.js';
-import { effect, type Signal, signal } from '@lessjs/signals';
+import { effect, type Signal, signal } from '@openelement/signals';
 
 /**
  * SSR-safe base class for DsdElement.
@@ -398,6 +398,29 @@ export class DsdElement extends _Base implements ReactiveHost {
       this.#effectDisposers.add(dispose);
     }
 
+    // --- Signal → VNode rendering: data-signal-render="signalName" (v0.30.1 / ADR-0081) ---
+    // Signal value is VNode | VNode[] — renderToDom handles event binding + XSS escape.
+    const renderEls = this.shadowRoot.querySelectorAll('[data-signal-render]');
+    for (const el of renderEls) {
+      const name = el.getAttribute('data-signal-render');
+      if (!name) continue;
+      const sig = this.signalRegistry.get(name);
+      if (!sig) continue;
+
+      const renderTarget = () => {
+        while (el.firstChild) el.removeChild(el.firstChild);
+        const v = sig.value;
+        if (v != null) {
+          const nodes = Array.isArray(v) ? v : [v];
+          for (const node of nodes) {
+            el.appendChild(renderToDom(node, undefined, this.#effectDisposers));
+          }
+        }
+      };
+      renderTarget();
+      this.#effectDisposers.add(effect(() => renderTarget()));
+    }
+
     // v0.28.1: Cache VNode so SSR and hydration use the same event IDs.
     // render() may have been called at build time for SSR — reuse cached VNode
     // if available, otherwise call render() once and cache for hydration.
@@ -555,7 +578,7 @@ export class DsdElement extends _Base implements ReactiveHost {
   /**
    * ReactiveController-compatible update hook.
    *
-   * `@lessjs/rpc` calls this method when async state changes. Keeping this
+   * `@openelement/rpc` calls this method when async state changes. Keeping this
    * tiny alias lets DsdElement host controllers without inheriting Lit or a
    * scheduler.
    */

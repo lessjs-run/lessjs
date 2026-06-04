@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A
 /**
- * @lessjs/hub - `less add` CLI
+ * @openelement/hub - `less add` CLI
  *
  * v0.19.0: One-command package installation for LessJS projects.
  *
@@ -108,7 +108,7 @@ Options:
 Examples:
   less add @shoelace-style/shoelace
   less add @shoelace-style/shoelace --apply
-  less add @lessjs/ui --source jsr
+  less add @openelement/ui --source jsr
 `);
 }
 

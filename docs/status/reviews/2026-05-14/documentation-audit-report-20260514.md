@@ -24,15 +24,15 @@ LessJS has a **solid documentation foundation** with good README files, package-
 
 ### 1.1 Existing Documentation ✅
 
-| Document              | Status       | Quality  | Location             |
-| --------------------- | ------------ | -------- | -------------------- |
-| README.md             | ✅ Exists    | Good     | Root                 |
-| README.en.md          | ✅ Exists    | Good     | Root                 |
-| CONTRIBUTING.md       | ✅ Exists    | Good     | Root                 |
-| LICENSE               | ✅ Exists    | Complete | Root                 |
-| Package READMEs       | ✅ 10/10     | Moderate | packages/*/README.md |
-| Architecture/ADR Blog | ✅ 41 files  | Good     | www/content/blog/    |
-| JSR Publication       | ✅ Published | Good     | jsr.io/@lessjs/*     |
+| Document              | Status       | Quality  | Location              |
+| --------------------- | ------------ | -------- | --------------------- |
+| README.md             | ✅ Exists    | Good     | Root                  |
+| README.en.md          | ✅ Exists    | Good     | Root                  |
+| CONTRIBUTING.md       | ✅ Exists    | Good     | Root                  |
+| LICENSE               | ✅ Exists    | Complete | Root                  |
+| Package READMEs       | ✅ 10/10     | Moderate | packages/*/README.md  |
+| Architecture/ADR Blog | ✅ 41 files  | Good     | www/content/blog/     |
+| JSR Publication       | ✅ Published | Good     | jsr.io/@openelement/* |
 
 ### 1.2 Missing Documentation ❌
 
@@ -74,7 +74,7 @@ LessJS has a **solid documentation foundation** with good README files, package-
 
 ```bash
 # ✅ Valid - matches actual CLI
-deno run -A jsr:@lessjs/create my-app
+deno run -A jsr:@openelement/create my-app
 cd my-app
 deno task dev
 deno task build
@@ -127,26 +127,26 @@ deno task build
 
 **Packages with READMEs (10/10):** ✅
 
-- @lessjs/core
-- @lessjs/adapter-vite
-- @lessjs/adapter-lit
-- @lessjs/app
-- @lessjs/content
-- @lessjs/i18n
-- @lessjs/ui
-- @lessjs/signals
-- @lessjs/rpc
-- @lessjs/create
+- @openelement/core
+- @openelement/adapter-vite
+- @openelement/adapter-lit
+- @openelement/app
+- @openelement/content
+- @openelement/i18n
+- @openelement/ui
+- @openelement/signals
+- @openelement/rpc
+- @openelement/create
 
 **Quality Assessment:**
 
-| Package              | Export Docs | Code Examples | API Signatures | Score |
-| -------------------- | ----------- | ------------- | -------------- | ----- |
-| @lessjs/core         | ✅          | ✅            | ⚠️ Partial     | 7/10  |
-| @lessjs/adapter-vite | ✅          | ✅            | ⚠️ Partial     | 7/10  |
-| @lessjs/ui           | ✅          | ✅            | ❌ Missing     | 6/10  |
-| @lessjs/signals      | ✅          | ✅            | ❌ Missing     | 6/10  |
-| Others               | ⚠️ Basic    | ⚠️ Basic      | ❌ Missing     | 5/10  |
+| Package                   | Export Docs | Code Examples | API Signatures | Score |
+| ------------------------- | ----------- | ------------- | -------------- | ----- |
+| @openelement/core         | ✅          | ✅            | ⚠️ Partial     | 7/10  |
+| @openelement/adapter-vite | ✅          | ✅            | ⚠️ Partial     | 7/10  |
+| @openelement/ui           | ✅          | ✅            | ❌ Missing     | 6/10  |
+| @openelement/signals      | ✅          | ✅            | ❌ Missing     | 6/10  |
+| Others                    | ⚠️ Basic    | ⚠️ Basic      | ❌ Missing     | 5/10  |
 
 **Common Issues:**
 
@@ -157,10 +157,16 @@ deno task build
 
 **Example of Missing API Documentation:**
 
-Current `@lessjs/core/README.md`:
+Current `@openelement/core/README.md`:
 
 ```ts
-import { escapeAttr, escapeAttrValue, escapeHtml, renderDsd, renderDSDByName } from '@lessjs/core';
+import {
+  escapeAttr,
+  escapeAttrValue,
+  escapeHtml,
+  renderDsd,
+  renderDSDByName,
+} from '@openelement/core';
 ```
 
 **Should include:**
@@ -265,7 +271,7 @@ examples/
 
 ### Breaking Changes
 
-- ssr-handler.ts removed (use @lessjs/core directly)
+- ssr-handler.ts removed (use @openelement/core directly)
 ```
 
 **Verdict:** This is the **#1 priority** for documentation completion.

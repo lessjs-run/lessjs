@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - render-dsd.ts unit tests (Deno)
+ * @openelement/core - render-dsd.ts unit tests (Deno)
  *
  * Tests for the core DSD renderer: escape functions, attribute serialization,
  * DSD rendering pipeline, DSD options, pure-island layer, adapter protocol,

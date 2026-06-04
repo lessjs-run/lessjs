@@ -22,7 +22,7 @@ function cleanup() {
 
 Deno.test('extractCustomElementTags: extracts hyphenated tags', () => {
   const html =
-    '<div><less-theme-toggle></less-theme-toggle><less-hero-ping auto></less-hero-ping></div>';
+    '<div><open-theme-toggle></open-theme-toggle><open-hero-ping auto></open-hero-ping></div>';
   const tags = extractCustomElementTags(html);
   assertEquals(tags.sort(), ['less-hero-ping', 'less-theme-toggle']);
 });
@@ -34,14 +34,14 @@ Deno.test('extractCustomElementTags: ignores non-custom elements', () => {
 });
 
 Deno.test('extractCustomElementTags: handles tags with attributes', () => {
-  const html = '<less-button disabled>Click</less-button><less-input type="text" />';
+  const html = '<open-button disabled>Click</open-button><open-input type="text" />';
   const tags = extractCustomElementTags(html);
   assertEquals(tags.sort(), ['less-button', 'less-input']);
 });
 
 Deno.test('generateIslandManifests: produces manifests with known islands', () => {
   setup();
-  writeFileSync(join(TMP_DIR, 'index.html'), '<less-theme-toggle></less-theme-toggle>');
+  writeFileSync(join(TMP_DIR, 'index.html'), '<open-theme-toggle></open-theme-toggle>');
 
   const chunkMap = { 'less-theme-toggle': '/client/islands/island-less-theme-toggle-abc.js' };
   const strategyMap = { 'less-theme-toggle': 'idle' as const };
@@ -75,7 +75,7 @@ Deno.test('generateIslandManifests: empty islands for pages without custom eleme
 
 Deno.test('generateIslandManifests: defaults strategy to idle and layer to dsd-static', () => {
   setup();
-  writeFileSync(join(TMP_DIR, 'guide.html'), '<less-button>Click</less-button>');
+  writeFileSync(join(TMP_DIR, 'guide.html'), '<open-button>Click</open-button>');
 
   const chunkMap = { 'less-button': '/client/islands/island-less-button-xyz.js' };
   const manifests = generateIslandManifests(TMP_DIR, chunkMap);

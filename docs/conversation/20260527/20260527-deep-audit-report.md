@@ -1,4 +1,4 @@
-# LessJS 仓库级深度代码审计报告
+﻿# LessJS 仓库级深度代码审计报告
 
 > 审计日期：2026-05-27\
 > 仓库基线：origin/dev `3e4a9cdc`\
@@ -259,7 +259,7 @@ export async function renderNestedCustomElements(
 | 严重度 | 🟡 MEDIUM               |
 | 类型   | 包体积                  |
 
-**问题**：`packageIslands: ['@lessjs/ui', '@shoelace-style/shoelace']` 可能导致未使用的组件被包含进 client bundle。
+**问题**：`packageIslands: ['@openelement/ui', '@shoelace-style/shoelace']` 可能导致未使用的组件被包含进 client bundle。
 
 **建议**：仅 import 实际使用的组件，或确认 tree-shaking 正确工作。
 

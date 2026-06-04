@@ -1,5 +1,5 @@
-/**
- * @lessjs/signals - signal() unit tests
+﻿/**
+ * @openelement/signals - signal() unit tests
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { signal } from '../src/index.ts';

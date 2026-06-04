@@ -1,5 +1,5 @@
 /**
- * @lessjs/app - Unified entry tests
+ * @openelement/app - Unified entry tests
  *
  * Tests that lessjs() correctly combines lessPipeline() + lessContent() + lessI18n()
  * with a shared LessBuildContext. This is the primary user-facing API.
@@ -109,7 +109,7 @@ Deno.test('lessjs() accepts html config', () => {
 });
 
 Deno.test('lessjs() accepts packageIslands config', () => {
-  const plugins = lessjs({ packageIslands: ['@lessjs/ui'] });
+  const plugins = lessjs({ packageIslands: ['@openelement/ui'] });
   assertExists(plugins);
 });
 

@@ -1,6 +1,6 @@
-# @lessjs/adapter-react
+# @openelement/adapter-react
 
-React SSR adapter for [LessJS](https://github.com/lessjs-run/lessjs).
+React SSR adapter for [LessJS](https://github.com/open-element/open-element).
 
 ## Overview
 
@@ -18,7 +18,7 @@ Provides:
 ## Installation
 
 ```bash
-npx jsr add @lessjs/adapter-react
+npx jsr add @openelement/adapter-react
 ```
 
 ## Usage
@@ -26,14 +26,14 @@ npx jsr add @lessjs/adapter-react
 ### Install the adapter
 
 ```ts
-import { installReactAdapter } from '@lessjs/adapter-react';
+import { installReactAdapter } from '@openelement/adapter-react';
 installReactAdapter();
 ```
 
 ### Create a React-wrapped Web Component
 
 ```ts
-import { DsdReactElement } from '@lessjs/adapter-react';
+import { DsdReactElement } from '@openelement/adapter-react';
 import { createElement } from 'react';
 
 function Greeting({ name }: { name: string }) {
@@ -62,7 +62,7 @@ React's hydration markers - the browser handles DOM from the template.
 
 ### `installReactAdapter()`
 
-Registers the `'react'` adapter with `@lessjs/core`'s render pipeline.
+Registers the `'react'` adapter with `@openelement/core`'s render pipeline.
 Idempotent - safe to call multiple times.
 
 ### `uninstallReactAdapter()`

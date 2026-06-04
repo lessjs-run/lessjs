@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - less-plugin.ts tests (Deno)
+ * @openelement/adapter-vite - less-plugin.ts tests (Deno)
  *
  * Focused tests for the internal plugin factory (less-plugin.ts):
  * Tests the raw `less()` function which is NOT part of the public API —
@@ -316,7 +316,7 @@ Deno.test('lessPlugin: dev server plugin is @hono/vite-dev-server', () => {
 // ─── packageIslands Option ────────────────────────────────────
 
 Deno.test('lessPlugin: accepts packageIslands option', () => {
-  const plugins = less({ packageIslands: ['@lessjs/ui'] });
+  const plugins = less({ packageIslands: ['@openelement/ui'] });
   assertExists(plugins);
   assertEquals(plugins.length, 10);
 });
@@ -328,7 +328,7 @@ Deno.test('lessPlugin: accepts empty packageIslands', () => {
 });
 
 Deno.test('lessPlugin: accepts multiple packageIslands', () => {
-  const plugins = less({ packageIslands: ['@lessjs/ui', '@shoelace-style/shoelace'] });
+  const plugins = less({ packageIslands: ['@openelement/ui', '@shoelace-style/shoelace'] });
   assertExists(plugins);
 });
 

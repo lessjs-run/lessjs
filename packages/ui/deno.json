@@ -1,32 +1,32 @@
 {
-  "name": "@lessjs/ui",
+  "name": "@openelement/ui",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",
-    "./less-button": "./src/less-button.tsx",
-    "./less-card": "./src/less-card.tsx",
-    "./less-input": "./src/less-input.tsx",
-    "./less-code-block": "./src/less-code-block.tsx",
-    "./less-layout": "./src/less-layout.tsx",
-    "./less-theme-toggle": "./src/less-theme-toggle.tsx",
-    "./less-hero-ping": "./src/less-hero-ping.tsx",
-    "./less-dialog": "./src/less-dialog.tsx",
-    "./less-callout": "./src/less-callout.tsx",
-    "./less-step-card": "./src/less-step-card.tsx",
+    "./open-button": "./src/open-button.tsx",
+    "./open-card": "./src/open-card.tsx",
+    "./open-input": "./src/open-input.tsx",
+    "./open-code-block": "./src/open-code-block.tsx",
+    "./open-layout": "./src/open-layout.tsx",
+    "./open-theme-toggle": "./src/open-theme-toggle.tsx",
+    "./open-hero-ping": "./src/open-hero-ping.tsx",
+    "./open-dialog": "./src/open-dialog.tsx",
+    "./open-callout": "./src/open-callout.tsx",
+    "./open-step-card": "./src/open-step-card.tsx",
     "./docs-page-styles": "./src/docs-page-styles.ts",
     "./open-props-tokens": "./src/open-props-tokens.ts",
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.30.0",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.30.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.30.0",
-    "@lessjs/router": "jsr:@lessjs/router@^0.30.0",
-    "@lessjs/router/client-router": "jsr:@lessjs/router@^0.30.0/client-router"
+    "@openelement/core": "jsr:@openelement/core@^0.30.0",
+    "@openelement/signals": "jsr:@openelement/signals@^0.30.0",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.30.0",
+    "@openelement/router": "jsr:@openelement/router@^0.30.0",
+    "@openelement/router/client-router": "jsr:@openelement/router@^0.30.0/client-router"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@lessjs/core",
+    "jsxImportSource": "@openelement/core",
     "skipLibCheck": true
   },
   "publish": {

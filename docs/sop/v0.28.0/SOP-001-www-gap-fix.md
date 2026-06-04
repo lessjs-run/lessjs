@@ -15,7 +15,7 @@
 
 **最终交付**：
 
-- `@lessjs/core`: `_hydrateSignals()` 新增 `data-signal-attr` + `data-signal-html` + textContent 冲突修复
+- `@openelement/core`: `_hydrateSignals()` 新增 `data-signal-attr` + `data-signal-html` + textContent 冲突修复
 - `www`: 3 个组件 **零 effect / 零 createElement / 零 innerHTML 手写**
 
 ---
@@ -94,7 +94,7 @@
 | Gap | 描述                                   | Phase 1 | Phase 2 | 最终方案                                  |
 | --- | -------------------------------------- | ------- | ------- | ----------------------------------------- |
 | G1  | `document.createElement` + `innerHTML` | 🟡 保持 | ✅ 修复 | `computed()` → `data-signal-html`         |
-| G2  | 手写 `_esc()`                          | ✅ 修复 | —       | `escapeHtml` from `@lessjs/core`          |
+| G2  | 手写 `_esc()`                          | ✅ 修复 | —       | `escapeHtml` from `@openelement/core`     |
 | G3  | `effect()` + `classList.toggle`        | 🟡 保持 | ✅ 修复 | `computed()` → `data-signal-attr="class"` |
 | G4  | `onClick` 闭包参数                     | ✅ 修复 | —       | `data-on-click` + `dataset`               |
 | G5  | `computed()` 属性绑定                  | ✅ 修复 | —       | `data-signal-attr`                        |

@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-layout
+ * @openelement/ui - less-layout
  *
  * App layout component with header, sidebar, and footer.
  * Swiss International Style: Pure B&W, minimal.
@@ -23,21 +23,21 @@
  *
  * Usage:
  * ```html
- * <less-layout current-path="/guide/getting-started"
+ * <open-layout current-path="/guide/getting-started"
  *   nav-items='[{"section":"Guide","items":[{"path":"/guide/getting-started","label":"Getting Started"}]}]'>
- * </less-layout>
+ * </open-layout>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
-import { type Context, createContext, provideContext } from '@lessjs/core';
-import { Router } from '@lessjs/router/client-router';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { type Context, createContext, provideContext } from '@openelement/core';
+import { Router } from '@openelement/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
-import './less-theme-toggle.js';
+import '.\/open-theme-toggle.js';
 
-export const tagName = 'less-layout';
+export const tagName = 'open-layout';
 const SAFE_URL_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:', 'sms:']);
 
 function isSafeLayoutUrl(url: string): boolean {
@@ -52,7 +52,7 @@ function isSafeLayoutUrl(url: string): boolean {
     return true;
   }
   try {
-    const parsed = new URL(trimmed, 'https://lessjs.com/');
+    const parsed = new URL(trimmed, 'https://openelement.org/');
     return SAFE_URL_SCHEMES.has(parsed.protocol);
   } catch {
     return false;
@@ -87,10 +87,10 @@ sheet.replaceSync(`
     display: block;
   }
 
-  /* ─── Global font stack ─── */
+  /* ?????? Global font stack ?????? */
   * { font-family: var(--font-sans); }
 
-  /* ─── Keyframes ─── */
+  /* ?????? Keyframes ?????? */
   @keyframes nav-pulse {
     0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
@@ -100,7 +100,7 @@ sheet.replaceSync(`
     50% { filter: brightness(1.15) drop-shadow(0 0 12px var(--brand-glow)); }
   }
 
-  /* ─── Base ─── */
+  /* ?????? Base ?????? */
   .app-layout {
     display: flex;
     flex-direction: column;
@@ -137,7 +137,7 @@ sheet.replaceSync(`
     flex: 1;
   }
 
-  /* ─── Header — Glassmorphic Swiss ─── */
+  /* ?????? Header ?? Glassmorphic Swiss ?????? */
   .app-header {
     position: sticky;
     top: 0;
@@ -179,7 +179,7 @@ sheet.replaceSync(`
     border-color: var(--brand);
   }
 
-  /* ─── Logo — Swiss uppercase ─── */
+  /* ?????? Logo ?? Swiss uppercase ?????? */
   .logo {
     font-size: var(--font-size-7);
     font-weight: var(--font-weight-9);
@@ -205,7 +205,7 @@ sheet.replaceSync(`
     text-transform: uppercase;
   }
 
-  /* ─── Header Nav ─── */
+  /* ?????? Header Nav ?????? */
   .header-nav {
     display: flex;
     gap: var(--size-1);
@@ -252,7 +252,7 @@ sheet.replaceSync(`
     margin-left: auto;
   }
 
-  /* ─── GitHub link ─── */
+  /* ?????? GitHub link ?????? */
   .github-link {
     display: inline-flex;
     align-items: center;
@@ -298,7 +298,7 @@ sheet.replaceSync(`
     background: var(--bg-surface);
   }
 
-  /* ─── Sidebar — Swiss vertical indicator ─── */
+  /* ?????? Sidebar ?? Swiss vertical indicator ?????? */
   .docs-sidebar {
     width: clamp(200px, 20vw, 260px);
     flex-shrink: 0;
@@ -357,7 +357,7 @@ sheet.replaceSync(`
     font-weight: 600;
   }
 
-  /* ─── Footer ─── */
+  /* ?????? Footer ?????? */
   .app-footer {
     padding: var(--size-12);
     border-top: 0.5px solid var(--border);
@@ -381,7 +381,7 @@ sheet.replaceSync(`
     margin: 0 1rem;
   }
 
-  /* ─── Mobile backdrop ─── */
+  /* ?????? Mobile backdrop ?????? */
   .mobile-backdrop {
     position: fixed; inset: 0; top: 64px;
     background: rgba(0,0,0,0.6);
@@ -389,7 +389,7 @@ sheet.replaceSync(`
     transition: opacity 0.3s ease;
   }
 
-  /* ─── Responsive ─── */
+  /* ?????? Responsive ?????? */
   @media (max-width: 900px) {
     .mobile-menu-btn { display: flex; }
     .header-inner { padding: 0 1rem; gap: var(--size-3); }
@@ -454,7 +454,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessLayout extends DsdElement {
+export class OpenLayout extends DsdElement {
   private routing = new Router(this);
 
   static override styles = [openPropsTokenSheet, sheet];
@@ -493,7 +493,7 @@ export class LessLayout extends DsdElement {
 
   // _routeParams(), _locale(), _locales(), _switchPath(),
   // _switchLabel(), _updateSwitch(), _localize()
-  // → all delegated to this.routing (Router instance)
+  // ?? all delegated to this.routing (Router instance)
 
   private _currentPath(): string {
     // SSR-safe: prefer attribute/prop set by renderDsd over Router
@@ -502,7 +502,7 @@ export class LessLayout extends DsdElement {
     if (typeof prop === 'string' && prop.length > 0) return prop;
     const attr = this.getAttribute('current-path');
     if (attr && attr.length > 0) return attr;
-    // Fall back to Router (CSR only — requires location global)
+    // Fall back to Router (CSR only ?? requires location global)
     try {
       return this.routing.path;
     } catch {
@@ -514,7 +514,7 @@ export class LessLayout extends DsdElement {
   private _computeEditUrl(): string {
     const path = this._currentPath();
     if (!path || path === '/') return '';
-    const EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
+    const EDIT_BASE = 'https://github.com/open-element/open-element/edit/main/www/app/routes';
     const clean = path.replace(/\/$/, '').split('/').filter(Boolean);
     // Remove locale prefix if present (en/, zh/)
     if (['en', 'zh'].includes(clean[0])) clean.shift();
@@ -585,7 +585,7 @@ export class LessLayout extends DsdElement {
 
   /** v0.24.1: Render mobile tab icon as JSX SVG. Falls back to a generic shape. */
   private _renderIcon(label: string) {
-    const a = LessLayout._ICON_ATTRS;
+    const a = OpenLayout._ICON_ATTRS;
     switch (label) {
       case 'Home':
         return (
@@ -667,8 +667,8 @@ export class LessLayout extends DsdElement {
 
   private _isExternalHref(href: string): boolean {
     try {
-      const parsed = new URL(href, 'https://lessjs.com/');
-      return parsed.origin !== 'https://lessjs.com' && SAFE_URL_SCHEMES.has(parsed.protocol);
+      const parsed = new URL(href, 'https://openelement.org/');
+      return parsed.origin !== 'https://openelement.org' && SAFE_URL_SCHEMES.has(parsed.protocol);
     } catch {
       return false;
     }
@@ -733,7 +733,7 @@ export class LessLayout extends DsdElement {
                   </svg>
                 </button>
               )}
-              <less-theme-toggle></less-theme-toggle>
+              <open-theme-toggle></open-theme-toggle>
               {locales.length > 1 && (
                 <a
                   className='lang-switch'
@@ -956,7 +956,7 @@ export class LessLayout extends DsdElement {
   // v0.31 UI-shell debt: replace _replaceShadowRootFromLayout with signal-driven SPA nav.
   // Currently SPA navigation destroys the entire shadow DOM and rebuilds it from
   // fetched HTML, then manually re-attaches events in _setupDetailsToggle. This is
-  // incompatible with the signal architecture — we should make currentPath/navItems
+  // incompatible with the signal architecture ?? we should make currentPath/navItems
   // signals and let data-signal markers handle DOM updates reactively. Then the
   // _setupDetailsToggle hack (and this entire method) can be deleted.
   private _menuBtnHandler: ((e: Event) => void) | null = null;
@@ -1054,16 +1054,16 @@ export class LessLayout extends DsdElement {
    *
    * querySelector does not traverse template content, but SSG pages
    * wrap page output in a page component whose shadow root contains
-   * the <less-layout>.
+   * the <open-layout>.
    */
-  private _findLessLayout(root: Element | DocumentFragment): HTMLElement | null {
+  private _findOpenLayout(root: Element | DocumentFragment): HTMLElement | null {
     for (const child of Array.from(root.children)) {
-      if (child.tagName.toLowerCase() === 'less-layout') return child as HTMLElement;
+      if (child.tagName.toLowerCase() === 'open-layout') return child as HTMLElement;
       if (child.tagName === 'TEMPLATE') {
-        const found = this._findLessLayout((child as HTMLTemplateElement).content);
+        const found = this._findOpenLayout((child as HTMLTemplateElement).content);
         if (found) return found;
       }
-      const found = this._findLessLayout(child);
+      const found = this._findOpenLayout(child);
       if (found) return found;
     }
     return null;
@@ -1143,7 +1143,7 @@ export class LessLayout extends DsdElement {
       const html = await resp.text();
       const parsed = new DOMParser().parseFromString(html, 'text/html');
       const tmp = parsed.body;
-      const newLayout = this._findLessLayout(tmp);
+      const newLayout = this._findOpenLayout(tmp);
       if (!newLayout) throw new Error('No less-layout found');
 
       document.documentElement.lang = parsed.documentElement.lang || locale;
@@ -1224,9 +1224,9 @@ export class LessLayout extends DsdElement {
   private _escAttr = _escAttr;
 }
 
-export default LessLayout;
+export default OpenLayout;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessLayout);
+  customElements.define(tagName, OpenLayout);
 }

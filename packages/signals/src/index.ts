@@ -1,5 +1,5 @@
-/**
- * @lessjs/signals - Reactive signals powered by alien-signals.
+﻿/**
+ * @openelement/signals - Reactive signals powered by alien-signals.
  *
  * v0.22: Alien-signals is the sole engine. TC39 polyfill removed.
  *
@@ -7,7 +7,7 @@
  *   Engine layer    -> alien-signals adapter (alien-engine.ts)
  *   Framework layer -> User-friendly API: signal(), computed(), effect()
  *
- * @module @lessjs/signals
+ * @module @openelement/signals
  */
 
 // ─── Public types ───────────────────────────────────────────────

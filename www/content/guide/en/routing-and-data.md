@@ -5,7 +5,7 @@ label: 'Routing & Data'
 order: 3
 ---
 
-<less-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/en/guide/routing-and-data">
+<open-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/en/guide/routing-and-data">
 
           <h1>Routing &amp; Data</h1>
           <p class="subtitle">
@@ -30,14 +30,14 @@ order: 3
 
           <h2>Page Contract</h2>
           <p>Each route file must export:</p>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 export class AboutPage extends DsdElement
 }
 
 customElements.define('page-about', AboutPage);
 export default AboutPage;
-export const tagName = 'page-about';</code></pre></less-code-block>
+export const tagName = 'page-about';</code></pre></open-code-block>
 
     <h2>Dynamic Routes: Bracket Syntax</h2>
     <p>Filenames with <code>[param]</code> map to Hono route params and are injected as component properties during SSR:</p>
@@ -48,6 +48,6 @@ export const tagName = 'page-about';</code></pre></less-code-block>
         <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
       </tbody>
     </table>
-    <less-code-block><pre><code>import  from '@lessjs/core';
+    <open-code-block><pre><code>import  from '@openelement/core';
 
 export class PostPage extends DsdElement &lt;/article&gt;\

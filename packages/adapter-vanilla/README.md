@@ -1,6 +1,6 @@
-# @lessjs/adapter-vanilla
+# @openelement/adapter-vanilla
 
-Vanilla Web Component SSR adapter for [LessJS](https://github.com/lessjs-run/lessjs).
+Vanilla Web Component SSR adapter for [LessJS](https://github.com/open-element/open-element).
 
 ## Overview
 
@@ -16,7 +16,7 @@ Provides:
 ## Installation
 
 ```bash
-npx jsr add @lessjs/adapter-vanilla
+npx jsr add @openelement/adapter-vanilla
 ```
 
 ## Usage
@@ -24,15 +24,15 @@ npx jsr add @lessjs/adapter-vanilla
 ### Install the adapter
 
 ```ts
-import { installVanillaAdapter } from '@lessjs/adapter-vanilla';
+import { installVanillaAdapter } from '@openelement/adapter-vanilla';
 installVanillaAdapter();
 ```
 
 ### Create a DSD-compatible component
 
 ```tsx
-import { DsdVanillaElement } from '@lessjs/adapter-vanilla';
-import type { VNode } from '@lessjs/core';
+import { DsdVanillaElement } from '@openelement/adapter-vanilla';
+import type { VNode } from '@openelement/core';
 
 class MyToggle extends DsdVanillaElement {
   static hydrateEvents = [
@@ -56,7 +56,7 @@ customElements.define('my-toggle', MyToggle);
 
 ### `installVanillaAdapter()`
 
-Registers the `'vanilla'` adapter with `@lessjs/core`'s render pipeline.
+Registers the `'vanilla'` adapter with `@openelement/core`'s render pipeline.
 Idempotent - safe to call multiple times.
 
 ### `uninstallVanillaAdapter()`

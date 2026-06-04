@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - JSX renderDsdTree tests.
+ * @openelement/core - JSX renderDsdTree tests.
  *
  * v0.24.3: Direct tests for SSR renderer: Signal unwrap, SVG attrs,
  * boolean attrs, style serialisation, event exclusion.
@@ -8,7 +8,7 @@
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
-import { signal } from '@lessjs/signals';
+import { signal } from '@openelement/signals';
 
 Deno.test('renderDsdTree renders text', async () => {
   assertEquals(await renderDsdTree('hello'), 'hello');

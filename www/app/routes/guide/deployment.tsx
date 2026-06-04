@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Production', label: 'Deployment', order: 5 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+export const meta = { section: 'Production', label: 'Deployment', order: 5 };
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-code-block';
+import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(
@@ -50,9 +50,9 @@ export class DeploymentPage extends DsdElement {
             adapter 单独部署。
           </p>
           <h2>Build Once</h2>
-          <less-code-block>
+          <open-code-block>
             <pre><code>deno task build</code></pre>
-          </less-code-block>
+          </open-code-block>
           <p>
             构建输出{' '}
             <span class='inline-code'>dist/</span>：带 Declarative Shadow DOM 的静态 HTML、client
@@ -122,8 +122,8 @@ export class DeploymentPage extends DsdElement {
             LessJS 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
             构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
           </p>
-          <less-code-block><pre><code>{`// vite.config.ts
-import { lessjs } from '@lessjs/app';
+          <open-code-block><pre><code>{`// vite.config.ts
+import { lessjs } from '@openelement/app';
 
 export default defineConfig({
   plugins: [lessjs({
@@ -131,7 +131,7 @@ export default defineConfig({
       injectManifest: true,
     },
   })],
-});`}</code></pre></less-code-block>
+});`}</code></pre></open-code-block>
 
           <h2>Deployment Checklist</h2>
           <ul>
@@ -163,9 +163,9 @@ export default defineConfig({
             via serverless or edge adapters when the app needs dynamic behavior.
           </p>
           <h2>Build Once</h2>
-          <less-code-block>
+          <open-code-block>
             <pre><code>deno task build</code></pre>
-          </less-code-block>
+          </open-code-block>
           <p>
             The build outputs{' '}
             <span class='inline-code'>dist/</span>: static HTML with Declarative Shadow DOM, client
@@ -211,8 +211,8 @@ export default defineConfig({
             <code>public/</code> directory — they're automatically copied to the output during build.
             CSP meta and view transition metadata can be auto-injected via the Vite plugin.
           </p>
-          <less-code-block><pre><code>{`// vite.config.ts
-import { lessjs } from '@lessjs/app';
+          <open-code-block><pre><code>{`// vite.config.ts
+import { lessjs } from '@openelement/app';
 
 export default defineConfig({
   plugins: [lessjs({
@@ -220,7 +220,7 @@ export default defineConfig({
       injectManifest: true,
     },
   })],
-});`}</code></pre></less-code-block>
+});`}</code></pre></open-code-block>
 
           <h2>Deployment Checklist</h2>
           <ul>

@@ -1,18 +1,18 @@
 /**
- * @lessjs/protocols — Shared LessJS build-time contract types.
+ * @openelement/protocols — Shared LessJS build-time contract types.
  *
  * Zero-dependency contract layer. These are pure data interfaces consumed
- * by feature packages (@lessjs/content, @lessjs/i18n) and implemented by
- * build adapters (@lessjs/adapter-vite).
+ * by feature packages (@openelement/content, @openelement/i18n) and implemented by
+ * build adapters (@openelement/adapter-vite).
  */
 
-/** Blog options stored in the build context by @lessjs/content. */
+/** Blog options stored in the build context by @openelement/content. */
 export interface LessBlogOptions {
   contentDir?: string;
   basePath?: string;
 }
 
-/** Navigation section from @lessjs/content. */
+/** Navigation section from @openelement/content. */
 export interface LessNavSection {
   section: string;
   items: Array<{ path: string; label: string; order?: number }>;
@@ -24,7 +24,7 @@ export interface LessHeaderNavLink {
   label: string;
 }
 
-/** i18n options stored in the build context by @lessjs/i18n. */
+/** i18n options stored in the build context by @openelement/i18n. */
 export interface LessI18nContextOptions {
   locales: string[];
   defaultLocale: string;

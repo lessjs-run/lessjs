@@ -1,8 +1,8 @@
-﻿export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
+export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
 
@@ -110,10 +110,10 @@ export class IslandsGuidePage extends DsdElement {
             本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，生成 client
             entry，并在静态 HTML 中注入 entry script。
           </p>
-          <less-code-block><pre><code>{`// app/islands/my-counter.ts
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { signal } from '@lessjs/signals';
+          <open-code-block><pre><code>{`// app/islands/my-counter.ts
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { signal } from '@openelement/signals';
 
 export const tagName = 'my-counter';
 
@@ -133,7 +133,7 @@ export default class MyCounter extends DsdElement {
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</code></pre></less-code-block>
+if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</code></pre></open-code-block>
           <h2>Package Islands</h2>
           <p>
             可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry

@@ -161,6 +161,6 @@ v0.29.0 is complete only when:
 - No UI Shell component expansion.
 - No package rebrand.
 - No new public JSX syntax.
-- No bundled sanitizer in `@lessjs/core`.
+- No bundled sanitizer in `@openelement/core`.
 - No router rewrite.
 - No AppShell API expansion.

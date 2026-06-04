@@ -1,10 +1,10 @@
 ﻿/**
- * @lessjs/docs - Comparison: LessJS vs Alternatives
+ * @openelement/docs - Comparison: LessJS vs Alternatives
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 export const tagName = 'comparison-page';
 
 export const meta = { section: 'Principles', label: 'Comparison', order: 20 };

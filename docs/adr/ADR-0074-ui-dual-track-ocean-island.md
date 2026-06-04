@@ -1,4 +1,4 @@
-# ADR-0074: @lessjs/ui Dual-Track Ocean and Island Architecture
+# ADR-0074: @openelement/ui Dual-Track Ocean and Island Architecture
 
 > Status: Proposed\
 > Date: 2026-06-03\
@@ -6,7 +6,7 @@
 
 ## Context
 
-`@lessjs/ui` currently contains JSX + `DsdElement` components. They are useful
+`@openelement/ui` currently contains JSX + `DsdElement` components. They are useful
 for interactive UI, but they are not a zero-JS Shell component system. LessJS
 needs a UI layer that matches its DSD-first positioning:
 
@@ -21,9 +21,9 @@ This means one component model is not enough.
 
 Adopt a dual-track UI architecture.
 
-### Track 1: `@lessjs/ui/css`
+### Track 1: `@openelement/ui/css`
 
-`@lessjs/ui/css` is the Ocean Shell track:
+`@openelement/ui/css` is the Ocean Shell track:
 
 - CSS-only
 - DSD and Shadow DOM friendly
@@ -33,9 +33,9 @@ Adopt a dual-track UI architecture.
 
 It is intended for static Shell components and native HTML interaction.
 
-### Track 2: `@lessjs/ui`
+### Track 2: `@openelement/ui`
 
-`@lessjs/ui` remains the Island track:
+`@openelement/ui` remains the Island track:
 
 - JSX + `DsdElement`
 - JavaScript hydration when needed

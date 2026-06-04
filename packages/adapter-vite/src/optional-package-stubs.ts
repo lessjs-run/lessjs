@@ -1,9 +1,9 @@
 /**
- * @lessjs/adapter-vite — Optional Package Stubs.
+ * @openelement/adapter-vite — Optional Package Stubs.
  *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
- * When a consumer project imports package islands (e.g. @lessjs/adapter-lit)
+ * When a consumer project imports package islands (e.g. @openelement/adapter-lit)
  * but hasn't installed the package, Vite would normally fail to resolve
  * the bare specifier. These stubs provide no-op implementations so the
  * build doesn't break — the consumer gets a build warning instead of an error.
@@ -19,28 +19,28 @@ import type { Plugin } from 'vite';
  * functions so the import resolves without error.
  */
 export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
-  '@lessjs/adapter-lit': [
+  '@openelement/adapter-lit': [
     'class DsdLitElement extends (globalThis.HTMLElement || class{}) {}',
     'export { DsdLitElement };',
     'export function installLitAdapter() {}',
     'export function uninstallLitAdapter() {}',
     'export const WithDsdHydration = undefined;',
   ].join('\n'),
-  '@lessjs/adapter-lit/ssr': [
+  '@openelement/adapter-lit/ssr': [
     'export function installLitAdapter() {}',
     'export function uninstallLitAdapter() {}',
   ].join('\n'),
-  '@lessjs/adapter-vanilla': [
+  '@openelement/adapter-vanilla': [
     'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
     'export { DsdVanillaElement };',
     'export function installVanillaAdapter() {}',
     'export function uninstallVanillaAdapter() {}',
   ].join('\n'),
-  '@lessjs/adapter-vanilla/ssr': [
+  '@openelement/adapter-vanilla/ssr': [
     'export function installVanillaAdapter() {}',
     'export function uninstallVanillaAdapter() {}',
   ].join('\n'),
-  '@lessjs/adapter-react': [
+  '@openelement/adapter-react': [
     'class DsdReactElement extends (globalThis.HTMLElement || class{}) {}',
     'export { DsdReactElement };',
     'export function installReactAdapter() {}',
@@ -49,17 +49,17 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
     'export function renderReactToString() { return ""; }',
     'export function isReactElement() { return false; }',
   ].join('\n'),
-  '@lessjs/adapter-react/ssr': [
+  '@openelement/adapter-react/ssr': [
     'export function installReactAdapter() {}',
     'export function uninstallReactAdapter() {}',
   ].join('\n'),
-  '@lessjs/content': [
+  '@openelement/content': [
     'export async function loadBlogData() { return { posts: [], basePath: "" }; }',
   ].join('\n'),
-  '@lessjs/content/sitemap': [
+  '@openelement/content/sitemap': [
     'export function generateSitemap() { return []; }',
   ].join('\n'),
-  '@lessjs/i18n': [
+  '@openelement/i18n': [
     'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
   ].join('\n'),
 };

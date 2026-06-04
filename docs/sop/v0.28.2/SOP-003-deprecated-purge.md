@@ -22,7 +22,7 @@ intermediate state with lockfile and MDX work still open.
 ### Adapter Registry Purge
 
 - Removed module-level `registerAdapter`, `getAdapter`, and
-  `getRegisteredAdapters` exports from `@lessjs/core`.
+  `getRegisteredAdapters` exports from `@openelement/core`.
 - Added `getDefaultRegistry()` for the shared registry path.
 - Updated Lit, React, Vanilla, Vite SSR generation, and tests to register
   adapters through `getDefaultRegistry().register(...)`.

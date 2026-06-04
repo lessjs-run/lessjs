@@ -1,24 +1,24 @@
 /**
- * @lessjs/ui - Package Manifest
+ * @openelement/ui - Package Manifest
  *
- * CEM-compatible LessPackageManifest for the @lessjs/ui package.
+ * CEM-compatible LessPackageManifest for the @openelement/ui package.
  * Consumers (adapter-vite) read manifest.declarations to derive
  * island metadata (tagName, module, hydrate, ssr, dsd).
  *
  * v0.20.0: All components use DsdElement (zero framework).
  */
 
-import type { LessPackageManifest } from '@lessjs/core';
+import type { LessPackageManifest } from '@openelement/core';
 
 export const manifest: LessPackageManifest = {
   schemaVersion: '1.0.0',
-  packageName: '@lessjs/ui',
+  packageName: '@openelement/ui',
   version: '0.20.0',
-  description: 'Swiss International Style Web Component library for LessJS',
+  description: 'Swiss International Style Web Component library for openElement',
   author: 'LessJS',
   license: 'MIT',
   homepage: 'https://lessjs.run',
-  repository: 'https://github.com/lessjs-run/lessjs',
+  repository: 'https://github.com/open-element/open-element',
   less: {
     adapter: 'vanilla', // v0.20.0: DSD components use DsdElement (zero framework)
     hasStylesheet: true,
@@ -27,8 +27,8 @@ export const manifest: LessPackageManifest = {
   declarations: [
     // -- Ocean (DSD, DsdElement) --
     {
-      tagName: 'less-card',
-      className: 'LessCard',
+      tagName: 'open-card',
+      className: 'OpenCard',
       superclassName: 'DsdElement',
       description: 'Card container with header and footer slots',
       attributes: [
@@ -53,13 +53,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-static',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-card',
-        export: 'LessCard',
+        module: '@openelement/ui/open-card',
+        export: 'OpenCard',
       },
     },
     {
-      tagName: 'less-callout',
-      className: 'LessCallout',
+      tagName: 'open-callout',
+      className: 'OpenCallout',
       superclassName: 'DsdElement',
       description: 'Callout notice box (info, warning, danger, tip)',
       attributes: [
@@ -76,13 +76,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-static',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-callout',
-        export: 'LessCallout',
+        module: '@openelement/ui/open-callout',
+        export: 'OpenCallout',
       },
     },
     {
-      tagName: 'less-step-card',
-      className: 'LessStepCard',
+      tagName: 'open-step-card',
+      className: 'OpenStepCard',
       superclassName: 'DsdElement',
       description: 'Step card with numbered indicator',
       attributes: [
@@ -102,13 +102,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-static',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-step-card',
-        export: 'LessStepCard',
+        module: '@openelement/ui/open-step-card',
+        export: 'OpenStepCard',
       },
     },
     {
-      tagName: 'less-button',
-      className: 'LessButton',
+      tagName: 'open-button',
+      className: 'OpenButton',
       superclassName: 'DsdElement',
       description: 'Button with variants (default, primary, ghost, accent)',
       attributes: [
@@ -128,13 +128,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'load',
-        module: '@lessjs/ui/less-button',
-        export: 'LessButton',
+        module: '@openelement/ui/open-button',
+        export: 'OpenButton',
       },
     },
     {
-      tagName: 'less-input',
-      className: 'LessInput',
+      tagName: 'open-input',
+      className: 'OpenInput',
       superclassName: 'DsdElement',
       description: 'Input field with label and error states',
       attributes: [
@@ -147,7 +147,7 @@ export const manifest: LessPackageManifest = {
       ],
       events: [
         {
-          name: 'less-input',
+          name: 'open-input',
           type: 'CustomEvent<{ value: string }>',
           description: 'Fired on input change',
         },
@@ -163,13 +163,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'load',
-        module: '@lessjs/ui/less-input',
-        export: 'LessInput',
+        module: '@openelement/ui/open-input',
+        export: 'OpenInput',
       },
     },
     {
-      tagName: 'less-theme-toggle',
-      className: 'LessThemeToggle',
+      tagName: 'open-theme-toggle',
+      className: 'OpenThemeToggle',
       superclassName: 'DsdElement',
       description: 'Dark/Light theme toggle',
       attributes: [
@@ -185,13 +185,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'load',
-        module: '@lessjs/ui/less-theme-toggle',
-        export: 'LessThemeToggle',
+        module: '@openelement/ui/open-theme-toggle',
+        export: 'OpenThemeToggle',
       },
     },
     {
-      tagName: 'less-code-block',
-      className: 'LessCodeBlock',
+      tagName: 'open-code-block',
+      className: 'OpenCodeBlock',
       superclassName: 'DsdElement',
       description: 'Code block with syntax highlighting and copy button',
       cssParts: [
@@ -204,13 +204,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-code-block',
-        export: 'LessCodeBlock',
+        module: '@openelement/ui/open-code-block',
+        export: 'OpenCodeBlock',
       },
     },
     {
-      tagName: 'less-dialog',
-      className: 'LessDialog',
+      tagName: 'open-dialog',
+      className: 'OpenDialog',
       superclassName: 'DsdElement',
       description: 'Modal dialog component using native <dialog>',
       attributes: [
@@ -223,7 +223,7 @@ export const manifest: LessPackageManifest = {
         { name: 'label', type: 'string', description: 'Dialog heading' },
       ],
       events: [
-        { name: 'less-dialog-close', type: 'CustomEvent', description: 'Fired when dialog closes' },
+        { name: 'open-dialog-close', type: 'CustomEvent', description: 'Fired when dialog closes' },
       ],
       slots: [
         { name: '', description: 'Default slot for dialog content' },
@@ -242,13 +242,13 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-dialog',
-        export: 'LessDialog',
+        module: '@openelement/ui/open-dialog',
+        export: 'OpenDialog',
       },
     },
     {
-      tagName: 'less-layout',
-      className: 'LessLayout',
+      tagName: 'open-layout',
+      className: 'OpenLayout',
       superclassName: 'DsdElement',
       description: 'App layout with header, sidebar, footer, and SPA navigation',
       attributes: [
@@ -276,14 +276,14 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'load',
-        module: '@lessjs/ui/less-layout',
-        export: 'LessLayout',
+        module: '@openelement/ui/open-layout',
+        export: 'OpenLayout',
       },
     },
     // -- Island-style DsdElement component --
     {
-      tagName: 'less-hero-ping',
-      className: 'LessHeroPing',
+      tagName: 'open-hero-ping',
+      className: 'OpenHeroPing',
       superclassName: 'DsdElement',
       description: 'Animated hero ping indicator (Island)',
       cssParts: [
@@ -295,61 +295,61 @@ export const manifest: LessPackageManifest = {
         dsd: true,
         layer: 'dsd-interactive',
         hydrate: 'idle',
-        module: '@lessjs/ui/less-hero-ping',
-        export: 'LessHeroPing',
+        module: '@openelement/ui/open-hero-ping',
+        export: 'OpenHeroPing',
       },
     },
   ],
   modules: [
     {
-      path: './less-button.js',
-      exports: [{ name: 'LessButton', path: './less-button.js' }],
-      declarations: ['less-button'],
+      path: './open-button.js',
+      exports: [{ name: 'OpenButton', path: './open-button.js' }],
+      declarations: ['open-button'],
     },
     {
-      path: './less-card.js',
-      exports: [{ name: 'LessCard', path: './less-card.js' }],
-      declarations: ['less-card'],
+      path: './open-card.js',
+      exports: [{ name: 'OpenCard', path: './open-card.js' }],
+      declarations: ['open-card'],
     },
     {
-      path: './less-callout.js',
-      exports: [{ name: 'LessCallout', path: './less-callout.js' }],
-      declarations: ['less-callout'],
+      path: './open-callout.js',
+      exports: [{ name: 'OpenCallout', path: './open-callout.js' }],
+      declarations: ['open-callout'],
     },
     {
-      path: './less-step-card.js',
-      exports: [{ name: 'LessStepCard', path: './less-step-card.js' }],
-      declarations: ['less-step-card'],
+      path: './open-step-card.js',
+      exports: [{ name: 'OpenStepCard', path: './open-step-card.js' }],
+      declarations: ['open-step-card'],
     },
     {
-      path: './less-code-block.js',
-      exports: [{ name: 'LessCodeBlock', path: './less-code-block.js' }],
-      declarations: ['less-code-block'],
+      path: './open-code-block.js',
+      exports: [{ name: 'OpenCodeBlock', path: './open-code-block.js' }],
+      declarations: ['open-code-block'],
     },
     {
-      path: './less-dialog.js',
-      exports: [{ name: 'LessDialog', path: './less-dialog.js' }],
-      declarations: ['less-dialog'],
+      path: './open-dialog.js',
+      exports: [{ name: 'OpenDialog', path: './open-dialog.js' }],
+      declarations: ['open-dialog'],
     },
     {
-      path: './less-hero-ping.js',
-      exports: [{ name: 'LessHeroPing', path: './less-hero-ping.js' }],
-      declarations: ['less-hero-ping'],
+      path: './open-hero-ping.js',
+      exports: [{ name: 'OpenHeroPing', path: './open-hero-ping.js' }],
+      declarations: ['open-hero-ping'],
     },
     {
-      path: './less-input.js',
-      exports: [{ name: 'LessInput', path: './less-input.js' }],
-      declarations: ['less-input'],
+      path: './open-input.js',
+      exports: [{ name: 'OpenInput', path: './open-input.js' }],
+      declarations: ['open-input'],
     },
     {
-      path: './less-layout.js',
-      exports: [{ name: 'LessLayout', path: './less-layout.js' }],
-      declarations: ['less-layout'],
+      path: './open-layout.js',
+      exports: [{ name: 'OpenLayout', path: './open-layout.js' }],
+      declarations: ['open-layout'],
     },
     {
-      path: './less-theme-toggle.js',
-      exports: [{ name: 'LessThemeToggle', path: './less-theme-toggle.js' }],
-      declarations: ['less-theme-toggle'],
+      path: './open-theme-toggle.js',
+      exports: [{ name: 'OpenThemeToggle', path: './open-theme-toggle.js' }],
+      declarations: ['open-theme-toggle'],
     },
   ],
 };

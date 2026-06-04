@@ -1,4 +1,4 @@
-/**
+﻿/**
  * v0.27.0 Regression Tests — Build Output Integrity
  *
  * Prevents recurrence of the three production bugs discovered in v0.27.0:
@@ -7,7 +7,7 @@
  *   Bug 3: Search panel theme not following (dialog::backdrop isolation)
  *
  * Also guards against API surface regressions:
- *   - jsx/jsxDEV/jsxs must NOT be in @lessjs/core root export
+ *   - jsx/jsxDEV/jsxs must NOT be in @openelement/core root export
  *   - parse5 must NOT be a dependency
  *
  * Run: deno test www/__tests__/v0.27.0-regression.test.ts --allow-read --allow-run
@@ -54,7 +54,7 @@ Deno.test('v0.27.0 regression: less-search is present in output', () => {
 Deno.test('v0.27.0 regression: less-theme-toggle is present in output', () => {
   for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
     const html = readPage(page);
-    assert(html.includes('<less-theme-toggle'), `less-theme-toggle missing in ${page}`);
+    assert(html.includes('<open-theme-toggle'), `less-theme-toggle missing in ${page}`);
   }
 });
 
@@ -85,7 +85,7 @@ Deno.test('v0.27.0 regression: no <dialog> in rendered HTML', () => {
 
 // ─── API Surface: jsx NOT in root export ────────────────────────────
 
-Deno.test('v0.27.0 regression: jsx not exported from @lessjs/core root', () => {
+Deno.test('v0.27.0 regression: jsx not exported from @openelement/core root', () => {
   const indexPath = join(
     import.meta.dirname ?? '.',
     '..',
@@ -123,7 +123,7 @@ Deno.test('v0.27.0 regression: parse5 not in core deno.json', () => {
 // ─── Registry Hub iframe ─────────────────────────────────────────────
 
 Deno.test('v0.27.0 regression: Registry iframe has data-srcdoc', () => {
-  const page = join(DIST, 'en', 'registry', '@lessjs~ui', 'less-card', 'index.html');
+  const page = join(DIST, 'en', 'registry', '@openelement~ui', 'less-card', 'index.html');
   if (!existsSync(page)) return; // skip if not built
   const html = readPage(page);
   assert(html.includes('data-srcdoc'), 'data-srcdoc missing from registry component page');
@@ -134,8 +134,8 @@ Deno.test('v0.27.0 regression: Registry iframe has data-srcdoc', () => {
 Deno.test('v0.27.0 regression: less-layout tags not duplicated', () => {
   const html = readPage(DOCS_PAGE);
   // less-layout should appear exactly once as the wrapper (opening + closing)
-  const opens = (html.match(/<less-layout/g) || []).length;
-  const closes = (html.match(/<\/less-layout>/g) || []).length;
+  const opens = (html.match(/<open-layout/g) || []).length;
+  const closes = (html.match(/<\\/open-layout>/g) || []).length;
   assertEquals(opens, closes, 'Mismatched less-layout tags');
   assert(opens >= 1 && opens <= 3, `less-layout appears ${opens} times, expected 1-3`);
 });

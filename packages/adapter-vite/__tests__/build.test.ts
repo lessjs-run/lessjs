@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 /**
- * @lessjs/adapter-vite - build / entry-generators tests (Deno)
+ * @openelement/adapter-vite - build / entry-generators tests (Deno)
  *
  * ADR 0011: closeBundle writes metadata to ctx, not .less/build-metadata.json.
  * Tests verify LessBuildContext fields instead of filesystem.
@@ -254,7 +254,7 @@ Deno.test({
   async fn(t) {
     const ctx = new LessBuildContext({});
     const options = {
-      ssr: { noExternal: [/@lessjs\/.*/, 'lit'] },
+      ssr: { noExternal: [/@openelement\/.*/, 'lit'] },
     };
     const plugin = buildPlugin(options as never, ctx);
     const config = makeConfig('build');
@@ -270,7 +270,7 @@ Deno.test({
       assertExists(ctx.phase3.ssrNoExternal);
       const first = ctx.phase3.ssrNoExternal[0] as { __type?: string; source?: string };
       assertEquals(first.__type, 'RegExp');
-      assertEquals(first.source, '@lessjs\\/.*');
+      assertEquals(first.source, '@openelement\\/.*');
       assertEquals(ctx.phase3.ssrNoExternal[1], 'lit');
     });
   },

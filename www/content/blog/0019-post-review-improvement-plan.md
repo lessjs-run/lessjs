@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0019: Post-Review Comprehensive Improvement Plan'
 date: '2026-05-12'
 type: 'adr'
@@ -13,7 +13,7 @@ hidden: true
 
 > 2026-05-13 更新：ADR 0022 (ESM-Native SSG pipeline) + ADR 0023 (Phase reordering) 在 v0.14.0 中落地。Phase 3 从 Vite closeBundle 中抽出为独立模块，URLPattern 替换手写路由解析。
 > 
-> 2026-05-12 更新：ADR 0021 (API surface convergence) 在 v0.13.0 中落地，解决了 `ssr-handler.ts` 删除、导出收敛等问题。`@lessjs/app` 测试从 0 增加到 16 个。
+> 2026-05-12 更新：ADR 0021 (API surface convergence) 在 v0.13.0 中落地，解决了 `ssr-handler.ts` 删除、导出收敛等问题。`@openelement/app` 测试从 0 增加到 16 个。
 
 ## Context
 
@@ -38,15 +38,15 @@ hidden: true
      高
       │
 影    │  P0 (需立即行动)
-响    │    ├── @lessjs/app 零测试              [测试]
+响    │    ├── @openelement/app 零测试              [测试]
 力    │    ├── DSD 差异化不突出                 [产品]
       │    └── 社区生态真空                     [产品]
       │
 中    │  P1 (本轮迭代必须解决)
       │    ├── LessBuildContext 巨型对象重构      [架构]
       │    ├── closeBundle 职责超载              [架构]
-      │    ├── @lessjs/rpc 测试严重不足          [测试]
-      │    ├── @lessjs/ui 组件测试不足           [测试]
+      │    ├── @openelement/rpc 测试严重不足          [测试]
+      │    ├── @openelement/ui 组件测试不足           [测试]
       │    └── 4 项代码质量 Major 问题           [代码]
       │
 低    │  P2 (下轮迭代)
@@ -84,13 +84,13 @@ hidden: true
 
 | #      | 行动                                                                     | 参考来源       | 工作量估计 |
 | ------ | ------------------------------------------------------------------------ | -------------- | ---------- |
-| FIX-01 | 补齐 `@lessjs/app` 整合测试（lessjs() 组合 core+content+i18n）           | 测试审查-C1    | 1-2 天     |
+| FIX-01 | 补齐 `@openelement/app` 整合测试（lessjs() 组合 core+content+i18n）           | 测试审查-C1    | 1-2 天     |
 | FIX-02 | 修复 `less-layout.ts` innerHTML 使用，改用 `DOMParser.parseFromString()` | 代码审查-C1    | 0.5 天     |
-| FIX-03 | 补充 `@lessjs/rpc` 基本测试（请求/响应/错误处理）                        | 测试审查-C2    | 1 天       |
+| FIX-03 | 补充 `@openelement/rpc` 基本测试（请求/响应/错误处理）                        | 测试审查-C2    | 1 天       |
 | FIX-04 | 治理 signals 模块 `no-explicit-any`（50+ 处，按模块分治）                | 代码审查-M1    | 2 天       |
 | FIX-05 | 删除 `ssr-handler.ts` 冗余重导出层                                       | 架构审查-T1    | 0.5 天     |
 | FIX-06 | 修复空 catch block 和未使用变量                                          | 代码审查-M2~M4 | 1 天       |
-| FIX-07 | 补充 `@lessjs/create` CLI 测试                                           | 测试审查-M1    | 1 天       |
+| FIX-07 | 补充 `@openelement/create` CLI 测试                                           | 测试审查-M1    | 1 天       |
 
 **总计工作量：约 7-9 天**（单人全职）
 

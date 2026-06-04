@@ -125,7 +125,7 @@ Changes:
 - Shadows: 3-tier shadow system (sm/md/lg) added to `tokens/effects.ts`
 - Border radius: unify to `6px` cards, `8px` containers
 
-**B2. Component upgrades — `@lessjs/ui`**
+**B2. Component upgrades — `@openelement/ui`**
 
 - `less-layout`: Frosted glass nav (`backdrop-filter: blur(12px)`), active sidebar highlight
 - `less-code-block`: Dark code theme, language badge, copy animation

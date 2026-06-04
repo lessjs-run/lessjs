@@ -1,4 +1,4 @@
-# LessJS 首页 v8 叙事结构重构 PRD
+﻿# LessJS 首页 v8 叙事结构重构 PRD
 
 > 文档版本: 1.0 | 作者: 产品经理许清楚 (Xu) | 日期: 2026-05-19
 > 状态: PROPOSED | 范围: 仅首页叙事结构 + 视觉规范，不改动技术栈
@@ -223,8 +223,8 @@ Footer        ─── 自然衔接
 │  │  (showcase)      │  (code block)         │   │
 │  │                  │                       │   │
 │  ├──────────────────┴───────────────────────┤   │
-│  │ @lessjs/adapter-lit — DSD 原生渲染       │   │
-│  │ npm i @lessjs/adapter-lit               │   │
+│  │ @openelement/adapter-lit — DSD 原生渲染       │   │
+│  │ npm i @openelement/adapter-lit               │   │
 │  └──────────────────────────────────────────┘   │
 │                                                 │
 │  一行解释：浏览器只加载当前 Tab 组件的 JS，       │
@@ -308,7 +308,7 @@ v7（三卡平等）：               v8（WC Engine 主导）：
 │                                                  │
 │  ┌─────────────────────────────────────────────┐ │
 │  │ ① 创建                                       │ │
-│  │   deno run -A jsr:@lessjs/create my-app     │ │  ← 保留 less-step-card
+│  │   deno run -A jsr:@openelement/create my-app     │ │  ← 保留 less-step-card
 │  │   脚手架包含：路由 + SSG + Island 示例        │ │  ← 新增：每个步骤加一行说明
 │  ├─────────────────────────────────────────────┤ │
 │  │ ② 开发                                       │ │

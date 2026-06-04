@@ -25,7 +25,7 @@ outdated comments, and API docs still documenting the removed `renderToString`.
 
 ```bash
 # deno.json
-- "@lessjs/core/api": "./packages/core/src/api.ts"  # removed
+- "@openelement/core/api": "./packages/core/src/api.ts"  # removed
 
 # ssg-package-resolver.ts
 - api: 'src/api.ts'  # removed
@@ -35,7 +35,7 @@ outdated comments, and API docs still documenting the removed `renderToString`.
 
 ```bash
 # create/__tests__/cli.test.ts
-- @lessjs/core/render-instantiate → @lessjs/core/render-ir
+- @openelement/core/render-instantiate → @openelement/core/render-ir
 
 # adapter-vite/__tests__/ssg-package-resolver.test.ts
 - src/jsx-render-string.ts → src/render-ir.ts

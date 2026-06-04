@@ -29,7 +29,7 @@
 | #  | 挑战                                                                                                                 | 难度 | 方案                                                                                                                                                                                             |
 | -- | -------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | C1 | **首页多框架交互展示**：3 个 showcase island（shoelace/react/media-chrome）需与源代码左右并排，且 Tab 切换需即时响应 | L    | 新建 `less-showcase-panel` 容器组件，内部管理 Tab 状态和双栏布局。左侧 slot 放 showcase island，右侧放 `less-code-block`。利用 Lit reactive property 驱动 Tab 切换                               |
-| C2 | **全站设计令牌体系**：品牌色光谱/灰阶/间距/圆角/阴影需在 `@lessjs/ui` tokens 层统一定义，且支持亮/暗色模式           | M    | 扩展现有 `packages/ui/src/tokens/` 体系。在 `color-values.ts` 增加 `--less-brand-*` 光谱变量，在 `spacing.ts` 增加 `--space-*` 10 级间距 token，新增 `tokens/radius.ts` 和 `tokens/animation.ts` |
+| C2 | **全站设计令牌体系**：品牌色光谱/灰阶/间距/圆角/阴影需在 `@openelement/ui` tokens 层统一定义，且支持亮/暗色模式           | M    | 扩展现有 `packages/ui/src/tokens/` 体系。在 `color-values.ts` 增加 `--less-brand-*` 光谱变量，在 `spacing.ts` 增加 `--space-*` 10 级间距 token，新增 `tokens/radius.ts` 和 `tokens/animation.ts` |
 | C3 | **Hero 视觉冲击力**：渐变光效增强、品牌色戏剧性使用、字号放大至 Display 级                                           | M    | 利用新增的 `--less-brand-*` 光谱 token 重写 Hero CSS。新增 `--less-font-size-display` (clamp 3-5rem) token。品牌色渐变从硬编码改为 token 引用                                                    |
 | C4 | **Guide/Engine 内页视觉层次**：section label / callout 系统 / 代码块暗色主题 / 步骤卡片                              | M    | 新建 `less-callout` island 组件，新建 `less-step-card` island 组件。升级 `page-styles.ts` 引入新 token。callout 组件支持 info/warning/danger/tip 四种类型                                        |
 | C5 | **Registry 卡片视觉升级**：品牌色渐变边框 / 兼容性徽章 / 搜索框发光                                                  | S    | 纯 CSS 升级，利用新品牌色 token 实现渐变边框和发光效果，无需新建组件                                                                                                                             |
@@ -39,7 +39,7 @@
 | 用途           | 选型                                               | 理由                                    |
 | -------------- | -------------------------------------------------- | --------------------------------------- |
 | Web Components | Lit + DsdLitElement                                | 项目已有，零新增依赖                    |
-| CSS 架构       | CSS Custom Properties (Design Tokens)              | 已有 `@lessjs/ui/tokens` 体系，扩展即可 |
+| CSS 架构       | CSS Custom Properties (Design Tokens)              | 已有 `@openelement/ui/tokens` 体系，扩展即可 |
 | 动效           | 纯 CSS animation/transition + scroll-reveal island | 零重依赖，PRD 约束                      |
 | 代码高亮       | Prism.js (已有)                                    | 已集成在 less-code-block 中             |
 | 图标           | 内联 SVG                                           | 零依赖，现有模式                        |
@@ -48,10 +48,10 @@
 
 沿用项目已有模式：
 
-- **组件层**：`@lessjs/ui` — 全局共享 UI 组件（less-layout, less-code-block, etc.）
+- **组件层**：`@openelement/ui` — 全局共享 UI 组件（less-layout, less-code-block, etc.）
 - **Island 层**：`www/app/islands/` — 页面级交互组件（SSG 零 JS，客户端升级）
 - **路由层**：`www/app/routes/` — 页面组件，使用 Lit + DsdLitElement
-- **Token 层**：`@lessjs/ui/tokens/` — CSS Custom Properties 单一事实来源
+- **Token 层**：`@openelement/ui/tokens/` — CSS Custom Properties 单一事实来源
 
 ```
 :root (headFragments)
@@ -261,7 +261,7 @@ interface ShowcaseTab {
 **LessCallout** — 提示框组件
 
 ```typescript
-// packages/ui/src/less-callout.ts
+// packages/ui/src\/open-callout.ts
 export class LessCallout extends LitElement {
   @property({ type: String }) type: 'info' | 'warning' | 'danger' | 'tip' = 'info';
   @property({ type: String }) title = '';
@@ -273,7 +273,7 @@ export class LessCallout extends LitElement {
 **LessStepCard** — 步骤卡片组件
 
 ```typescript
-// packages/ui/src/less-step-card.ts
+// packages/ui/src\/open-step-card.ts
 export class LessStepCard extends LitElement {
   @property({ type: Number }) step = 1;
   @property({ type: String }) label = '';
@@ -302,7 +302,7 @@ sequenceDiagram
     DH->>DH: render() — 初始 _mfaTab=0
     DH->>SP: 渲染 <less-showcase-panel .tabs="${tabs}" .activeTab="0">
     SP->>SC: 渲染 <shoelace-showcase> (Tab 0 的 island)
-    SP->>CB: 渲染 <less-code-block> (Tab 0 的源代码)
+    SP->>CB: 渲染 <open-code-block> (Tab 0 的源代码)
     Note over SC: Shoelace 按钮可交互（client upgrade）
     Note over CB: 代码块带 Copy 按钮 + Prism 高亮
 
@@ -351,7 +351,7 @@ sequenceDiagram
 | # | 事项                                                              | 假设                                                                                                               | 影响范围 |
 | - | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------- |
 | 1 | `less-showcase-panel` 是否作为 Island (SSR) 还是纯客户端组件？    | 假设为 **Island**（SSR 渲染 Tab 标签和代码，client upgrade 交互）。showcase island 本身已有 `less.ssr: false` 配置 | 首页     |
-| 2 | `less-callout` 和 `less-step-card` 是否需要 SSR？                 | 假设为 **UI 组件**（非 Island），放在 `@lessjs/ui` 中，走 DSD 渲染管道                                             | 全站内页 |
+| 2 | `less-callout` 和 `less-step-card` 是否需要 SSR？                 | 假设为 **UI 组件**（非 Island），放在 `@openelement/ui` 中，走 DSD 渲染管道                                             | 全站内页 |
 | 3 | `less-toc` island 是否需要视觉升级？                              | PRD 未明确提及，假设保持现状                                                                                       | —        |
 | 4 | 博客/404/changelog/roadmap/decisions 页面是否在本次重设计范围内？ | PRD 仅提及 Guide/Engine/Registry + 首页，假设博客等页面仅继承全局 token 升级，不做专门修改                         | —        |
 | 5 | View Transitions API 的具体使用场景？                             | 已在 `vite.config.ts` 启用 `viewTransition: true`，假设只需确保页面间导航时 token 一致即可                         | —        |
@@ -368,8 +368,8 @@ sequenceDiagram
 所有实现基于项目已有依赖：
 
 - `lit` — 已有
-- `@lessjs/adapter-lit` (DsdLitElement) — 已有
-- `@lessjs/ui` (lessDesignTokens, less-layout, less-code-block) — 已有
+- `@openelement/adapter-lit` (DsdLitElement) — 已有
+- `@openelement/ui` (lessDesignTokens, less-layout, less-code-block) — 已有
 - `@shoelace-style/shoelace` — 已有（showcase island 使用）
 - `media-chrome` — 已有（showcase island 使用）
 - `react` / `react-dom` — 已有（showcase island 使用）
@@ -467,8 +467,8 @@ sequenceDiagram
 **涉及文件**（3 个）：
 
 - `www/app/islands/less-showcase-panel.ts` — **新增**：多框架 Tab 切换容器 Island
-- `packages/ui/src/less-callout.ts` — **新增**：callout 提示框组件
-- `packages/ui/src/less-step-card.ts` — **新增**：步骤卡片组件
+- `packages/ui/src\/open-callout.ts` — **新增**：callout 提示框组件
+- `packages/ui/src\/open-step-card.ts` — **新增**：步骤卡片组件
 
 **依赖**：T01（需要设计 token）
 
@@ -579,15 +579,15 @@ sequenceDiagram
 
 1. **page-styles.ts 升级**：
    - 引入新 token 引用替代硬编码值
-   - `.callout` → `<less-callout>` 组件
+   - `.callout` → `<open-callout>` 组件
    - `.section-label` 使用 `--less-brand` token
    - 代码块暗色主题使用 `--less-shadow-md` + 新圆角 token
    - 新增 `.section-divider` 使用 `--less-brand` 渐变
 
 2. **Guide/Engine 页面改造模式**（统一模式，批量执行）：
-   - 将 `<div class="callout">` → `<less-callout type="info">`
-   - 将 `<div class="callout warn">` → `<less-callout type="warning">`
-   - 将 `.qs-card` 步骤 → `<less-step-card step="N" label="...">`
+   - 将 `<div class="callout">` → `<open-callout type="info">`
+   - 将 `<div class="callout warn">` → `<open-callout type="warning">`
+   - 将 `.qs-card` 步骤 → `<open-step-card step="N" label="...">`
    - 确保所有页面 import 新组件
 
 3. **Registry 视觉升级**：
@@ -640,7 +640,7 @@ CSS Custom Properties:
   --less-shadow-{variant}              # 阴影
 
 组件 tagName:
-  less-{name}                          # @lessjs/ui 组件
+  less-{name}                          # @openelement/ui 组件
   {name}-showcase                      # showcase island
   docs-{section}-{page}                # 页面组件
 
@@ -652,8 +652,8 @@ CSS Custom Properties:
 #### 组件注册约定
 
 ```typescript
-// @lessjs/ui 组件 — DSD 管道
-import { DsdLitElement } from '@lessjs/adapter-lit';
+// @openelement/ui 组件 — DSD 管道
+import { DsdLitElement } from '@openelement/adapter-lit';
 export class LessXxx extends DsdLitElement { ... }
 // Guard: idempotent across SSR paths
 if (!customElements.get('less-xxx')) customElements.define('less-xxx', LessXxx);
@@ -681,9 +681,9 @@ customElements.define('docs-xxx', DocsXxx);
 
 #### 内容渲染约定
 
-- 代码块统一使用 `<less-code-block><pre><code>...</code></pre></less-code-block>`
-- 提示框统一使用 `<less-callout type="info|warning|danger|tip">`
-- 步骤卡片统一使用 `<less-step-card step="N" label="...">`
+- 代码块统一使用 `<open-code-block><pre><code>...</code></pre></open-code-block>`
+- 提示框统一使用 `<open-callout type="info|warning|danger|tip">`
+- 步骤卡片统一使用 `<open-step-card step="N" label="...">`
 - 滚动揭示统一使用 `<scroll-reveal>...</scroll-reveal>`
 - 页面使用 `pageStyles` 导入共享样式 + 组件级 `css` 覆盖
 

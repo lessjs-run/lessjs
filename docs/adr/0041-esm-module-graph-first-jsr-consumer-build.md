@@ -8,12 +8,12 @@
 ## Context
 
 LessJS v0.21.x is a Deno workspace published to JSR and consumed by generated
-applications through `deno run -A jsr:@lessjs/create`. The intended architecture
+applications through `deno run -A jsr:@openelement/create`. The intended architecture
 is standards-first ESM:
 
 1. LessJS packages expose TypeScript ESM entrypoints through JSR exports.
-2. Application source imports stable bare specifiers such as `@lessjs/core`,
-   `@lessjs/ui/less-card`, and `@lessjs/signals/framework`.
+2. Application source imports stable bare specifiers such as `@openelement/core`,
+   `@openelement/ui/less-card`, and `@openelement/signals/framework`.
 3. Vite/Rolldown performs the final production bundle, tree-shaking, and code
    splitting.
 
@@ -23,7 +23,7 @@ modules to Vite. Source that was valid under Deno/JSR package resolution could
 still contain metadata-resolved specifiers such as:
 
 ```text
-jsr:@lessjs/signals@^0.21/framework
+jsr:@openelement/signals@^0.21/framework
 ```
 
 Vite/Rolldown does not natively own Deno's `jsr:` package scheme. When the SSG
@@ -51,7 +51,7 @@ This means:
 
 ```
 Generated app source
-  imports @lessjs/app, @lessjs/core, @lessjs/ui/*
+  imports @openelement/app, @openelement/core, @openelement/ui/*
         |
         v
 Deno / JSR package resolution
@@ -79,7 +79,7 @@ bundler-consumable ESM.
 - Published LessJS package versions are unified for a release train.
 - Public package entrypoints are declared through `exports`.
 - Internal monorepo dependencies use stable LessJS bare specifiers in source.
-- `jsr:@lessjs/*` may appear in Deno package metadata, but not in generated
+- `jsr:@openelement/*` may appear in Deno package metadata, but not in generated
   Vite virtual entries or unresolved Vite/Rolldown logs.
 - adapter-vite SSG resolution must not be a list of one-off special cases.
 - Consumer smoke tests must exercise the JSR-published path, not only the local
@@ -119,7 +119,7 @@ v0.21.9 is accepted only when:
 
 1. all `packages/*/deno.json` LessJS dependency imports are version-aligned;
 2. a generated JSR consumer app builds from outside the workspace;
-3. Vite/Rolldown receives no unresolved `jsr:@lessjs/*` specifier;
+3. Vite/Rolldown receives no unresolved `jsr:@openelement/*` specifier;
 4. the SSG package graph bridge is centralized and tested;
 5. release docs record the exact consumer validation command.
 

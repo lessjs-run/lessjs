@@ -1,21 +1,21 @@
-# @lessjs/adapter-lit
+# @openelement/adapter-lit
 
 Lit adapter for LessJS DSD rendering.
 
-The adapter lets `@lessjs/core` render Lit `TemplateResult` values into clean
+The adapter lets `@openelement/core` render Lit `TemplateResult` values into clean
 Declarative Shadow DOM HTML. It does not use `@lit-labs/ssr` and does not emit
 Lit marker comments in the final DSD output.
 
 ## Install
 
 ```bash
-deno add jsr:@lessjs/adapter-lit
+deno add jsr:@openelement/adapter-lit
 ```
 
 ## Usage
 
 ```ts
-import { installLitAdapter } from '@lessjs/adapter-lit';
+import { installLitAdapter } from '@openelement/adapter-lit';
 
 installLitAdapter();
 ```
@@ -26,7 +26,7 @@ handle Lit templates.
 ## DSD Interactive Components
 
 ```ts
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdLitElement } from '@openelement/adapter-lit';
 import { html } from 'lit';
 
 class MyToggle extends DsdLitElement {
@@ -52,9 +52,9 @@ binds only declared events. It is not full-page hydration.
 ## Exports
 
 ```text
-@lessjs/adapter-lit
-@lessjs/adapter-lit/ssr
-@lessjs/adapter-lit/dsd-hydration
+@openelement/adapter-lit
+@openelement/adapter-lit/ssr
+@openelement/adapter-lit/dsd-hydration
 ```
 
 ## Boundary

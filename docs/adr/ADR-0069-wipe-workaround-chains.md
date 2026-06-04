@@ -18,12 +18,12 @@ The root cause pattern is identical across multiple chains: a **single Vite plug
 
 ### What we found
 
-**Root cause**: `createLessJsrPackageResolverPlugin` (`ssg-package-resolver.ts:176`) runs with `enforce:'pre'` and intercepts ALL `@lessjs/content/*` and `@lessjs/i18n/*` imports, redirecting them to source directories instead of allowing the generated-data dispatch plugins to resolve them to the correct disk files.
+**Root cause**: `createLessJsrPackageResolverPlugin` (`ssg-package-resolver.ts:176`) runs with `enforce:'pre'` and intercepts ALL `@openelement/content/*` and `@openelement/i18n/*` imports, redirecting them to source directories instead of allowing the generated-data dispatch plugins to resolve them to the correct disk files.
 
 **Cascade effect**:
 
 ```
-ssg-package-resolver intercepts @lessjs/content/nav
+ssg-package-resolver intercepts @openelement/content/nav
   ↓ can't resolve _generated-nav.ts
 Workaround 1: virtual:less-nav (SOP-008)
   ↓ same problem for blog/i18n
@@ -61,8 +61,8 @@ We will eliminate all 23 chains in P0 → P1 → P2 → P3 order:
 
 **One fix, 5 chains die.**
 
-1. Fix `ssg-package-resolver.ts` to NOT intercept `@lessjs/content/nav`, `@lessjs/content/blog-data`, `@lessjs/i18n/data`
-2. Replace `virtual:less-nav` in `less-layout.tsx` with `import from '@lessjs/content/nav'`
+1. Fix `ssg-package-resolver.ts` to NOT intercept `@openelement/content/nav`, `@openelement/content/blog-data`, `@openelement/i18n/data`
+2. Replace `virtual:less-nav` in `less-layout.tsx` with `import from '@openelement/content/nav'`
 3. Delete `virtual:less-nav` resolver from `less-plugin.ts` (+ client/ssg build files)
 4. Delete `virtual:less-blog-data` and `virtual:less-i18n-data` resolvers from `phase-context.ts` + `build-ssg.ts`
 5. Delete `phase-context.ts` lazy dispatch (no longer needed)
@@ -79,9 +79,9 @@ ctx.plugins.navSections / headerNav
   ↓ buildEnd()
 _generated-nav.ts (on disk)
   ↓ generatedDataPlugin (Phase 1) / less:ssg-data-dispatch (Phase 3)
-@lessjs/content/nav (ESM import)
+@openelement/content/nav (ESM import)
   ↓
-less-layout.tsx: import { navSections, headerNav } from '@lessjs/content/nav'
+less-layout.tsx: import { navSections, headerNav } from '@openelement/content/nav'
 ```
 
 #### P1: Brand Name Cleanup (chains 2, 3, 14, 19)
@@ -169,7 +169,7 @@ All brand-leakage chains (2, 3, 14, 19) + dead code (15) + deprecated API (17) +
 
 **Attempted 3 different approaches to eliminate `virtual:less-nav/blog-data/i18n-data` as data bridges from the content layer to the UI layer. All failed at Phase 3 SSG rebuild.**
 
-The root cause is structural: `createLessJsrPackageResolverPlugin` (in `ssg-package-resolver.ts`) manages internal dependency graph for `@lessjs/ui` package during SSG rebuild. Any import of `@lessjs/content/*` from within `@lessjs/ui/src/less-layout.tsx` gets rewritten as a relative path inside `@lessjs/ui` — even when redirected through `\0`-prefixed virtual IDs.
+The root cause is structural: `createLessJsrPackageResolverPlugin` (in `ssg-package-resolver.ts`) manages internal dependency graph for `@openelement/ui` package during SSG rebuild. Any import of `@openelement/content/*` from within `@openelement/ui/src/less-layout.tsx` gets rewritten as a relative path inside `@openelement/ui` — even when redirected through `\0`-prefixed virtual IDs.
 
 The 3 data virtual modules are NOT conceptual flaws — the disk files exist, the ESM path is technically correct. They are **symptoms of a pipeline ordering constraint** that would require refactoring the JSR resolver's dependency graph management. This was underestimated in the original ADR.
 

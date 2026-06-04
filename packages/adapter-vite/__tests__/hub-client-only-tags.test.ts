@@ -1,6 +1,6 @@
 import { assertEquals, assertRejects } from 'jsr:@std/assert@1';
 import { extractHubClientOnlyTags, loadHubClientOnlyTags } from '../src/hub-client-only-tags.ts';
-import { LessError } from '@lessjs/core/errors';
+import { LessError } from '@openelement/core/errors';
 
 Deno.test('extractHubClientOnlyTags returns unique client-only tag names', () => {
   const tags = extractHubClientOnlyTags({

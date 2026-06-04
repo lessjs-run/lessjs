@@ -1,4 +1,4 @@
----
+﻿---
 title: 'Repo-wide Simplification Roadmap: ADR 0008 + ADR 0009'
 date: '2026-05-11'
 type: 'adr'
@@ -26,13 +26,13 @@ Eliminate `createServer()`, `globalThis[Symbol.for()]` bridges, `.less/` temp fi
 **Key result**: 3→2 Vite calls, 8+→0 temp files, 4→0 globalThis keys, SSR bundle actually consumed
 
 **Phase D detail — `virtual:less-runtime`**:
-Delete physical `less-runtime.ts` and the entire alias infrastructure (`writeFileSync` → `userResolveAlias` → `resolve.alias`). Replace with a `virtual:less-runtime` module implemented in the `less()` Vite plugin's `resolveId`/`load` hooks. Consumers keep the same import path (`@lessjs/core/less-runtime`), zero code changes needed. Also removes `export { Hono } from 'hono'` — consumers import `Hono` directly.
+Delete physical `less-runtime.ts` and the entire alias infrastructure (`writeFileSync` → `userResolveAlias` → `resolve.alias`). Replace with a `virtual:less-runtime` module implemented in the `less()` Vite plugin's `resolveId`/`load` hooks. Consumers keep the same import path (`@openelement/core/less-runtime`), zero code changes needed. Also removes `export { Hono } from 'hono'` — consumers import `Hono` directly.
 
 ---
 
 ### ADR 0009 — Repo-wide Simplification (on top of ADR 0008)
 
-Layered simplification across `@lessjs/core` and cross-package boundaries.
+Layered simplification across `@openelement/core` and cross-package boundaries.
 
 **Layer 1 — Core internal simplification** (6 independent + 2 dependent items):
 

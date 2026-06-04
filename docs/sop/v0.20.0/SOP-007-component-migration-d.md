@@ -118,8 +118,8 @@ Remove Lit entirely. Replace `@property`, `updated()`, `render() → nothing` wi
 
 1. Change base class:
    ```diff
-   - import { DsdLitElement } from '@lessjs/adapter-lit';
-   + import { DsdElement } from '@lessjs/core';
+   - import { DsdLitElement } from '@openelement/adapter-lit';
+   + import { DsdElement } from '@openelement/core';
 
    - class LessLayout extends DsdLitElement {
    + export class LessLayout extends DsdElement {

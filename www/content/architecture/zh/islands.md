@@ -1,11 +1,11 @@
----
+﻿---
 title: 'Island Upgrade'
 section: 'Principles'
 label: 'Island Upgrade'
 order: 40
 ---
 
-<less-layout
+<open-layout
         locale="$"
         locales='$'
         nav-items='$'
@@ -76,9 +76,9 @@ order: 40
       本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，生成 client
       entry，并在静态 HTML 中注入 entry script。
     </p>
-    <less-code-block><pre><code>// app/islands/my-counter.ts
+    <open-code-block><pre><code>// app/islands/my-counter.ts
 
-import from '@lessjs/runtime';
+import from '@openelement/runtime';
 
 export const tagName = 'my-counter';
 

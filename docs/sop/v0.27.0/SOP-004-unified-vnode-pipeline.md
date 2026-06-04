@@ -41,7 +41,7 @@ git branch --show-current
 ### 1.1 Import `BaseSignal` type
 
 ```ts
-import { type BaseSignal } from '@lessjs/signals';
+import { type BaseSignal } from '@openelement/signals';
 ```
 
 ### 1.2 Add `signalRegistry` property to `DsdElement` class
@@ -335,7 +335,7 @@ grep -r "data-less-s" www/dist/*.html | wc -l  # Should be non-zero
 
 `_walkAndBind` is retained but simplified — it now only applies non-signal props (class, id, aria, etc.) and recurses into child elements. Signal detection and event detection are handled by `hydrateSignals`/`hydrateEvents`.
 
-### 7.2 Remove `@lessjs/core/navigation` module
+### 7.2 Remove `@openelement/core/navigation` module
 
 Already unused. Delete:
 
@@ -408,7 +408,7 @@ ADR-0065: Eliminate dual renderer architecture.
 - Add data-less-s attributes to SSR HTML (signal identity preserved)
 - Replace _walkAndBind traversal with querySelector hydration
 - Delete _layoutWorkaroundReRender (Chromium bug: RAF offsetHeight)
-- Delete @lessjs/core/navigation module (fully replaced by Router)
+- Delete @openelement/core/navigation module (fully replaced by Router)
 - Add signalRegistry + _registerSignal to DsdElement
 - Update home-console + reactive-showcase with signal registration
 - Remove workaround effect() bindings in connectedCallback
@@ -427,7 +427,7 @@ If SSR `data-less-s` attributes cause issues:
 1. Revert `jsx-render-string.ts` changes (remove data-less-s generation)
 2. Revert `dsd-element.ts` hydration changes (restore _walkAndBind)
 3. Restore `_layoutWorkaroundReRender` as fallback
-4. Re-add `@lessjs/core/navigation` module
+4. Re-add `@openelement/core/navigation` module
 
 Rollback is a single `git revert` of the v0.27.0 commit.
 
@@ -443,5 +443,5 @@ Rollback is a single `git revert` of the v0.27.0 commit.
 - [ ] Zero console errors in deployed app
 - [ ] `_layoutWorkaroundReRender` deleted from codebase
 - [ ] `_walkAndBind` traversal logic simplified (no index alignment)
-- [ ] `@lessjs/core/navigation` deleted
+- [ ] `@openelement/core/navigation` deleted
 - [ ] `data-less-s` attributes present in SSR HTML

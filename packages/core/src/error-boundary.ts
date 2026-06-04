@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — ErrorBoundary (ADR-0053 Layer 2).
+ * @openelement/core — ErrorBoundary (ADR-0053 Layer 2).
  *
  * Catches child component render() errors and displays a fallback
  * UI instead of a bare tag or broken DOM. Errors bubble up through

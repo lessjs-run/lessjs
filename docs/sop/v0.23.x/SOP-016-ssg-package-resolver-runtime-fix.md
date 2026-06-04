@@ -8,7 +8,7 @@
 
 ## Objective
 
-修复 JSR post-publish consumer smoke test 中 SSG/SSR 构建阶段 `@lessjs/runtime`
+修复 JSR post-publish consumer smoke test 中 SSG/SSR 构建阶段 `@openelement/runtime`
 无法被 Rolldown 解析的问题。
 
 ## Background
@@ -20,13 +20,13 @@ v0.23.0 发布后，CI 三个 workflow 失败：
 1. **Lint & Format** — `deno fmt` 格式不一致（2 个 ADR 文档未格式化）
 2. **SOP Gate** — 同上，fmt:check 失败
 3. **Publish to JSR (consumer-smoke)** — SSR build 阶段 Rolldown 无法解析
-   `@lessjs/runtime`
+   `@openelement/runtime`
 
 ### 根因
 
 `packages/adapter-vite/src/ssg-package-resolver.ts` 的 `DEFAULT_LESSJS_PACKAGES` Set
-是 SSG 构建时解析 `@lessjs/*` JSR 包的白名单。`runtime` 包在 v0.23.0 中未加入该白名单，
-导致 `createLessJsrPackageResolverPlugin` 对 `@lessjs/runtime` 的 import 返回 `null`，
+是 SSG 构建时解析 `@openelement/*` JSR 包的白名单。`runtime` 包在 v0.23.0 中未加入该白名单，
+导致 `createLessJsrPackageResolverPlugin` 对 `@openelement/runtime` 的 import 返回 `null`，
 Rolldown 回退到 Node.js 标准解析失败。
 
 ```ts
@@ -65,7 +65,7 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
 
 ### 影响范围
 
-- Consumer 项目（通过 `@lessjs/create` 生成的用户项目）的 SSG/SSR 构建
+- Consumer 项目（通过 `@openelement/create` 生成的用户项目）的 SSG/SSR 构建
 - 不影响 workspace 内开发（workspace 内走 Deno 原生模块解析）
 
 ## Procedure
@@ -91,7 +91,7 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
 ### Step 2: 统一版本号 bump
 
 **目标**：由于 `ssg-package-resolver.ts` 使用 adapter-vite 自身版本号解析所有
-`@lessjs/*` 包，必须保证所有包版本一致。
+`@openelement/*` 包，必须保证所有包版本一致。
 
 **涉及文件**：
 
@@ -125,7 +125,7 @@ done
 import map 解析。
 
 **背景**：
-`@lessjs/signals` 内部依赖 `alien-signals`（经 `rewriteNpmSpecifiers`
+`@openelement/signals` 内部依赖 `alien-signals`（经 `rewriteNpmSpecifiers`
 将 `npm:alien-signals@3.2.1` 还原为裸 `alien-signals`）。SSR bundle
 构建成功但运行时 Deno `import()` 查 consumer 的 import map → 找不到 →
 `ERR_MODULE_NOT_FOUND`。
@@ -153,10 +153,10 @@ import map 解析。
 
 **维护规则（已记录到 `.workbuddy/memory/MEMORY.md`）**：
 
-> 新增任何 `@lessjs/*` 包时必须同步更新 3 处：
+> 新增任何 `@openelement/*` 包时必须同步更新 3 处：
 >
 > 1. `SSG Package Resolver` 的 `DEFAULT_LESSJS_PACKAGES` Set
 > 2. `SSG Package Resolver` 的 `LESSJS_EXPORT_FILES` 映射表
-> 3. `@lessjs/create` CLI 中的 `PKG_DIR_MAP`（如果用于项目模板生成）
+> 3. `@openelement/create` CLI 中的 `PKG_DIR_MAP`（如果用于项目模板生成）
 
 遗漏会导致 consumer smoke test 的 SSR build 阶段无法解析新包。

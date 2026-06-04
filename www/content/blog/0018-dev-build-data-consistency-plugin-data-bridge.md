@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0018: Eliminate Plugin Module State — Virtual Data Modules + @deno/vite-plugin'
 date: '2026-05-11'
 type: 'adr'
@@ -15,7 +15,7 @@ hidden: true
 
 ### 问题本质
 
-LessJS 的 `@lessjs/content` 和 `@lessjs/i18n` 使用**模块级状态**存储数据：
+LessJS 的 `@openelement/content` 和 `@openelement/i18n` 使用**模块级状态**存储数据：
 
 ```
 content/blog-data.ts:    let _posts: BlogPost[] = [];    // 模块级变量
@@ -36,8 +36,8 @@ i18n/i18n-data.ts:       let _options: LessI18nOptions;  // 模块级变量
 
 1. `EntryDescriptor.blog` 字段——每个插件都要加字段，`EntryDescriptor` 侵入性增长
 2. `entry-renderer.ts` 承载业务逻辑——不再是纯函数
-3. `@lessjs/adapter-vite` 对 content 包的硬依赖知识——需要知道导出名、参数格式
-4. `@lessjs/i18n` 还没修——同样的问题，还没加 ad-hoc 修复
+3. `@openelement/adapter-vite` 对 content 包的硬依赖知识——需要知道导出名、参数格式
+4. `@openelement/i18n` 还没修——同样的问题，还没加 ad-hoc 修复
 5. 内容 HMR 不工作——`_posts` 变量停留在首次加载时的状态
 
 ### 根因不是"需要桥"，而是"不该有状态"
@@ -53,7 +53,7 @@ i18n/i18n-data.ts:       let _options: LessI18nOptions;  // 模块级变量
 | 1 | Dev 模式 blog 数据空 | 模块级状态 + Vite 模块隔离 | P0 |
 | 2 | 17 行 resolve.alias 样板代码 | Deno workspace 包不在 node_modules | P1 |
 | 3 | 内容 HMR 不工作 | 缺 configureServer + watcher | P1 |
-| 4 | @lessjs/i18n dev 数据空 | 同 #1 模式 | P2 |
+| 4 | @openelement/i18n dev 数据空 | 同 #1 模式 | P2 |
 | 5 | About 页使用 node:fs | content 只管 blog，缺静态内容方案 | P2 |
 | 6 | About 页手写 md 转换器 | 同 #5，用户被迫 workaround | P2 |
 
@@ -65,7 +65,7 @@ i18n/i18n-data.ts:       let _options: LessI18nOptions;  // 模块级变量
 
 1. 插件提供**纯函数**（`loadBlogData()` → `BlogPost[]`），不持有状态
 2. `adapter-vite` 提供虚拟数据模块（`virtual:less-blog-data`），`load()` 钩子调用纯函数并生成导出代码
-3. 路由组件从虚拟模块 import 数据，不从 `@lessjs/content` 的模块状态读取
+3. 路由组件从虚拟模块 import 数据，不从 `@openelement/content` 的模块状态读取
 4. `@deno/vite-plugin` 处理 bare specifier 解析，消除用户 `vite.config.ts` 中的 alias
 
 **不需要 `onSSRInit`，不需要 Data Bridge 协议，不需要双重初始化路径。**
@@ -74,14 +74,14 @@ i18n/i18n-data.ts:       let _options: LessI18nOptions;  // 模块级变量
 
 ```
 Before (stateful):
-  @lessjs/content:  initBlogData() → _posts       (module state, needs bridge)
+  @openelement/content:  initBlogData() → _posts       (module state, needs bridge)
                     getPosts()     → _posts          (reads state)
   adapter-vite:     inject initBlogData() into entry (ad-hoc bridge)
-  route component:  import { getPosts } from '@lessjs/content'
+  route component:  import { getPosts } from '@openelement/content'
   问题：_posts 在两个模块空间各一份 → 需要桥
 
 After (stateless):
-  @lessjs/content:  loadBlogData(dir) → BlogPost[]  (pure function, zero state)
+  @openelement/content:  loadBlogData(dir) → BlogPost[]  (pure function, zero state)
   adapter-vite:     virtual:less-blog-data           (resolveId + load)
                     load() calls loadBlogData() → generates export code
   route component:  import { posts, getPostBySlug } from 'virtual:less-blog-data'
@@ -115,7 +115,7 @@ Phase 5: 静态内容页 → Phase 2 的扩展
 
 ### Phase 0: @deno/vite-plugin 集成
 
-**目标**：消除用户 `vite.config.ts` 中的 resolve.alias，让 Deno import map 处理 `@lessjs/*` 解析。
+**目标**：消除用户 `vite.config.ts` 中的 resolve.alias，让 Deno import map 处理 `@openelement/*` 解析。
 
 **原理**：`@deno/vite-plugin` 使用 `import.meta.resolve()` 将 bare specifier 解析为 Deno workspace 中的实际路径。用户的 `deno.json` 已经定义了 workspace imports，Vite 不需要知道这些映射。
 
@@ -153,12 +153,12 @@ sequenceDiagram
 
     User->>Vite: plugins: [lessjs()]
     Note over User: Zero resolve.alias
-    Vite->>Deno: resolveId('@lessjs/content')
-    Deno->>FS: import.meta.resolve('@lessjs/content')
+    Vite->>Deno: resolveId('@openelement/content')
+    Deno->>FS: import.meta.resolve('@openelement/content')
     FS-->>Deno: file:///.../packages/content/src/index.ts
     Deno-->>Vite: resolved path
-    Vite->>Deno: resolveId('@lessjs/core/ssr-handler')
-    Deno->>FS: import.meta.resolve('@lessjs/core/ssr-handler')
+    Vite->>Deno: resolveId('@openelement/core/ssr-handler')
+    Deno->>FS: import.meta.resolve('@openelement/core/ssr-handler')
     FS-->>Deno: file:///.../packages/core/src/ssr-handler.ts
     Deno-->>Vite: resolved path
 ```
@@ -167,7 +167,7 @@ sequenceDiagram
 
 ---
 
-### Phase 1: @lessjs/content 纯函数拆分
+### Phase 1: @openelement/content 纯函数拆分
 
 **目标**：将 `blog-data.ts` 的模块级状态 + init/getter 模式，重构为纯函数 + 虚拟模块导出模式。
 
@@ -255,7 +255,7 @@ cd packages/content && deno test
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
-    participant Content as @lessjs/content
+    participant Content as @openelement/content
     participant FS as File System
 
     Note over Dev: Phase 1: Pure function only
@@ -290,9 +290,9 @@ sequenceDiagram
 
 ```ts
 /**
- * @lessjs/adapter-vite - Virtual data module plugins
+ * @openelement/adapter-vite - Virtual data module plugins
  *
- * Replaces module-level state in @lessjs/content and @lessjs/i18n
+ * Replaces module-level state in @openelement/content and @openelement/i18n
  * with virtual module data exports. The load() hook runs in the
  * Vite plugin process and generates code that executes in the
  * SSR runner — this IS the data bridge.
@@ -306,8 +306,8 @@ sequenceDiagram
 
 import type { Plugin } from 'vite';
 import type { LessBuildContext } from './build-context.js';
-import { loadBlogData } from '@lessjs/content/blog-data';
-import type { LessBlogOptions } from '@lessjs/content/types';
+import { loadBlogData } from '@openelement/content/blog-data';
+import type { LessBlogOptions } from '@openelement/content/types';
 
 // ─── Virtual module IDs ────────────────────────────────────────
 
@@ -384,9 +384,9 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
 -  if (!desc.isSSG && desc.blog) {
 -    lines.push('// Dev mode: Initialize blog data in SSR runner module space');
 -    lines.push('try {');
--    lines.push("  const { initBlogData } = await import('@lessjs/content');");
+-    lines.push("  const { initBlogData } = await import('@openelement/content');");
 -    lines.push(`  await initBlogData(${JSON.stringify(desc.blog)});`);
--    lines.push('} catch { /* @lessjs/content not available */ }');
+-    lines.push('} catch { /* @openelement/content not available */ }');
 -    lines.push('');
 -  }
 ```
@@ -403,10 +403,10 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
 
 **SSG bundle re-exports 更新**：
 
-`entry-renderer.ts` 中 SSG 模式的 re-exports 需要更新。因为 `virtual:less-blog-data` 在 build 模式下也是通过 `load()` 钩子解析的，Vite 会将其内联进 bundle。所以 SSG bundle 中的 re-export 从 `@lessjs/content` 改为 `virtual:less-blog-data`：
+`entry-renderer.ts` 中 SSG 模式的 re-exports 需要更新。因为 `virtual:less-blog-data` 在 build 模式下也是通过 `load()` 钩子解析的，Vite 会将其内联进 bundle。所以 SSG bundle 中的 re-export 从 `@openelement/content` 改为 `virtual:less-blog-data`：
 
 ```diff
-- export { initBlogData, getPosts, getPostBySlug, getBlogOptions } from "@lessjs/content"
+- export { initBlogData, getPosts, getPostBySlug, getBlogOptions } from "@openelement/content"
 + export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"
 ```
 
@@ -417,7 +417,7 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
   export async function getStaticPaths(routePath) {
     // ...
     if (routePath === '/blog/:slug') {
--     const { getPosts } = await import('@lessjs/content');
+-     const { getPosts } = await import('@openelement/content');
 -     return getPosts().map(p => ({ slug: p.slug }));
 +     return posts.map(p => ({ slug: p.slug }));
     }
@@ -428,7 +428,7 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
 
 ```diff
   // my-tech-blog/app/routes/blog/[slug].ts
-- import { getPostBySlug } from '@lessjs/content';
+- import { getPostBySlug } from '@openelement/content';
 + import { getPostBySlug } from 'virtual:less-blog-data';
 ```
 
@@ -437,7 +437,7 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
 ```ts
 // packages/adapter-vite/src/virtual-data.d.ts
 declare module 'virtual:less-blog-data' {
-  import type { BlogPost, LessBlogOptions } from '@lessjs/content';
+  import type { BlogPost, LessBlogOptions } from '@openelement/content';
   export const posts: BlogPost[];
   export function getPostBySlug(slug: string): BlogPost | undefined;
   export function getBlogOptions(): LessBlogOptions;
@@ -466,7 +466,7 @@ sequenceDiagram
     participant HonoVite as @hono/vite-dev-server
     participant Vite as Vite SSR Runner
     participant Plugin as less:blog-data (load)
-    participant Content as @lessjs/content
+    participant Content as @openelement/content
     participant FS as File System
 
     Browser->>HonoVite: GET /blog
@@ -494,7 +494,7 @@ sequenceDiagram
     participant CLI as deno task build
     participant Vite as viteBuild(ssr:true)
     participant Plugin as less:blog-data (load)
-    participant Content as @lessjs/content
+    participant Content as @openelement/content
     participant FS as File System
 
     CLI->>Vite: start SSR build
@@ -594,7 +594,7 @@ sequenceDiagram
 
 ---
 
-### Phase 4: @lessjs/i18n 同模式改造
+### Phase 4: @openelement/i18n 同模式改造
 
 **目标**：将 i18n 的模块级状态模式改为与 content 相同的虚拟数据模块模式。
 
@@ -651,7 +651,7 @@ export function createI18nDataPlugin(ctx: LessBuildContext): Plugin {
 
 ```ts
 declare module 'virtual:less-i18n-data' {
-  import type { LessI18nOptions } from '@lessjs/i18n';
+  import type { LessI18nOptions } from '@openelement/i18n';
   export const locales: string[];
   export function getDefaultLocale(): string;
   export function getI18nOptions(): LessI18nOptions | null;
@@ -778,7 +778,7 @@ export default class AboutPage extends LitElement {
 
 - **大数据集序列化**：100 篇博文含 HTML body 时，`JSON.stringify(posts)` 可能达到 MB 级。但 SSG build 模式同样需要处理这个量级（bundle 大小），且 dev 模式每次请求重新生成，不会有内存累积
 - **虚拟模块 ID 不是标准路径**：IDE 可能不识别 `virtual:less-blog-data` 的 import，需要 TypeScript `.d.ts` 声明文件
-- **迁移成本**：路由组件需要将 `import { getPosts } from '@lessjs/content'` 改为 `import { posts } from 'virtual:less-blog-data'`
+- **迁移成本**：路由组件需要将 `import { getPosts } from '@openelement/content'` 改为 `import { posts } from 'virtual:less-blog-data'`
 
 ### Neutral
 

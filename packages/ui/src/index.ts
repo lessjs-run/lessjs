@@ -1,48 +1,48 @@
 /**
- * @lessjs/ui - LessJS UI Component Library
+ * @openelement/ui - LessJS UI Component Library
  *
  * Swiss International Style: Pure B&W, minimal, typography-driven.
  * Zero Lit dependency - built on DsdElement (native HTMLElement).
  *
  * Components:
- * - less-button: Button with variants (default, primary, ghost, accent)
- * - less-card: Card container with optional header/footer
- * - less-input: Input field with label and error states
- * - less-code-block: Code block with copy button
- * - less-layout: App layout with header, sidebar, footer
- * - less-theme-toggle: Theme toggle Island (Dark/Light)
- * - less-dialog: Dialog component using native <dialog>
- * - less-callout: Callout/notice box (info/warning/danger/tip)
- * - less-step-card: Step card with numbered indicator
- * - less-hero-ping: Hero ping Island (API health check)
+ * - open-button: Button with variants (default, primary, ghost, accent)
+ * - open-card: Card container with optional header/footer
+ * - open-input: Input field with label and error states
+ * - open-code-block: Code block with copy button
+ * - open-layout: App layout with header, sidebar, footer
+ * - open-theme-toggle: Theme toggle Island (Dark/Light)
+ * - open-dialog: Dialog component using native <dialog>
+ * - open-callout: Callout/notice box (info/warning/danger/tip)
+ * - open-step-card: Step card with numbered indicator
+ * - open-hero-ping: Hero ping Island (API health check)
  *
  * Usage:
  * ```ts
  * // Import all components
- * import '@lessjs/ui';
+ * import '@openelement/ui';
  *
  * // Or import specific components
- * import { LessButton } from '@lessjs/ui/less-button';
+ * import { LessButton } from '@openelement/ui/open-button';
  * ```
  *
- * @module @lessjs/ui
+ * @module @openelement/ui
  */
 
 // Design tokens (CSSStyleSheet, zero Lit dependency)
 export { openPropsTokenSheet } from './open-props-tokens.js';
 
 // Components
-export { LessButton, tagName as lessButtonTagName } from './less-button.js';
-export { LessCard, tagName as lessCardTagName } from './less-card.js';
-export { LessInput, tagName as lessInputTagName } from './less-input.js';
-export { LessCodeBlock, tagName as lessCodeBlockTagName } from './less-code-block.js';
-export { LessLayout, tagName as lessLayoutTagName } from './less-layout.js';
-export type { HeaderNavLink, NavItem, NavSection } from './less-layout.js';
-export { LessThemeToggle, tagName as lessThemeToggleTagName } from './less-theme-toggle.js';
-export { default as LessHeroPing, tagName as lessHeroPingTagName } from './less-hero-ping.js';
-export { LessDialog, tagName as lessDialogTagName } from './less-dialog.js';
-export { LessCallout, tagName as lessCalloutTagName } from './less-callout.js';
-export { LessStepCard, tagName as lessStepCardTagName } from './less-step-card.js';
+export { OpenButton, tagName as openButtonTagName } from './open-button.js';
+export { OpenCard, tagName as openCardTagName } from './open-card.js';
+export { OpenInput, tagName as openInputTagName } from './open-input.js';
+export { OpenCodeBlock, tagName as openCodeBlockTagName } from './open-code-block.js';
+export { OpenLayout, tagName as openLayoutTagName } from './open-layout.js';
+export type { HeaderNavLink, NavItem, NavSection } from './open-layout.js';
+export { OpenThemeToggle, tagName as openThemeToggleTagName } from './open-theme-toggle.js';
+export { default as OpenHeroPing, tagName as openHeroPingTagName } from './open-hero-ping.js';
+export { OpenDialog, tagName as openDialogTagName } from './open-dialog.js';
+export { OpenCallout, tagName as openCalloutTagName } from './open-callout.js';
+export { OpenStepCard, tagName as openStepCardTagName } from './open-step-card.js';
 
 // Package manifest (WC Package Protocol)
 // Consumers (adapter-vite) read manifest.declarations to derive island metadata.

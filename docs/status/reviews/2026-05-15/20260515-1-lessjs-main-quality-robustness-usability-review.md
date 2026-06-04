@@ -33,8 +33,8 @@ Commands run from `C:\Users\Administrator\WorkBuddy\Claw\lessjs-origin-main`:
 | `deno install --node-modules-dir`               | Installed cached npm dependencies. It also wanted to update `deno.lock` workspace member deps from `~0.14.2` to `~0.14.6`. That lockfile drift was reverted after validation and is recorded as a finding. |
 | `deno task typecheck` after dependency install  | Passed.                                                                                                                                                                                                    |
 | `deno task test`                                | Passed: `481 passed (217 steps), 0 failed`.                                                                                                                                                                |
-| JSR meta check                                  | `https://jsr.io/@lessjs/core/meta.json` and `@lessjs/create/meta.json` currently report latest `0.14.2`, while repo source is `0.14.6`.                                                                    |
-| JSR endpoint used by create                     | `https://jsr.io/@lessjs/core/meta` returns 404; the current API shape observed during review is `/meta.json` with `latest`, not `/meta` with `latestVersion`.                                              |
+| JSR meta check                                  | `https://jsr.io/@openelement/core/meta.json` and `@openelement/create/meta.json` currently report latest `0.14.2`, while repo source is `0.14.6`.                                                          |
+| JSR endpoint used by create                     | `https://jsr.io/@openelement/core/meta` returns 404; the current API shape observed during review is `/meta.json` with `latest`, not `/meta` with `latestVersion`.                                         |
 
 ## High-priority findings
 
@@ -43,8 +43,8 @@ Commands run from `C:\Users\Administrator\WorkBuddy\Claw\lessjs-origin-main`:
 Evidence:
 
 - `packages/*/deno.json` versions are `0.14.6`.
-- `deno install --node-modules-dir` attempted to update `deno.lock` workspace member deps from `jsr:@lessjs/*@~0.14.2` to `~0.14.6`.
-- JSR metadata currently reports latest `0.14.2` for `@lessjs/core` and `@lessjs/create`.
+- `deno install --node-modules-dir` attempted to update `deno.lock` workspace member deps from `jsr:@openelement/*@~0.14.2` to `~0.14.6`.
+- JSR metadata currently reports latest `0.14.2` for `@openelement/core` and `@openelement/create`.
 - `packages/adapter-vite/src/cli/build-ssg.ts` still has `FALLBACK_LESSJS_VERSION = '0.14.2'`.
 
 Impact:
@@ -58,17 +58,17 @@ Recommended action:
 3. Replace hardcoded fallback versions with the workspace version reader or a generated release constant.
 4. Add a CI gate that fails when `packages/*/deno.json`, `deno.lock`, changelog, and registry metadata disagree after release.
 
-### P0 - `@lessjs/create` remote version resolution is currently unreliable
+### P0 - `@openelement/create` remote version resolution is currently unreliable
 
 Evidence:
 
-- `packages/create/cli.ts` fetches `https://jsr.io/@lessjs/${pkg}/meta`, which returned 404 during review.
+- `packages/create/cli.ts` fetches `https://jsr.io/@openelement/${pkg}/meta`, which returned 404 during review.
 - The observed JSR metadata endpoint is `/meta.json`, and its field is `latest`, not `latestVersion`.
 - `resolveVersions()` iterates every key in `PKG_DIR_MAP`, including `adapterVite`, but `jsrNames` omits `adapterVite`; remote execution would try to resolve an undefined package name.
 
 Impact:
 
-`deno run -A jsr:@lessjs/create my-app` can fail before writing a project or generate stale package versions. That undermines the "one command install" experience.
+`deno run -A jsr:@openelement/create my-app` can fail before writing a project or generate stale package versions. That undermines the "one command install" experience.
 
 Recommended action:
 
@@ -83,7 +83,7 @@ Evidence:
 
 - `packages/adapter-vite/src/entry-renderer.ts` builds `ssrIslands = desc.islands.filter((island) => !island.isPackage)`.
 - Package islands are included in the client entry, but SSR imports and `customElements.define()` only cover local islands.
-- `@lessjs/ui` works partially because `less-layout` imports `less-theme-toggle` as an implementation detail. That is not a generic package island SSR contract.
+- `@openelement/ui` works partially because `less-layout` imports `less-theme-toggle` as an implementation detail. That is not a generic package island SSR contract.
 
 Impact:
 
@@ -159,7 +159,7 @@ Recommended action:
 Evidence:
 
 - Current interface has `tagName`, `modulePath`, and optional `strategy`.
-- `@lessjs/ui` exports enough metadata for client import but not enough for scoring, documentation, accessibility reporting, form participation, CSS parts, events, slots, or SSR diagnostics.
+- `@openelement/ui` exports enough metadata for client import but not enough for scoring, documentation, accessibility reporting, form participation, CSS parts, events, slots, or SSR diagnostics.
 - The wider ecosystem already has Custom Elements Manifest as a known manifest shape.
 
 Impact:
@@ -192,7 +192,7 @@ That wedge is defensible because it ties directly to the repo's existing strengt
 
 Exit criteria:
 
-- `@lessjs/create` remote mode resolves correct JSR versions and has real CLI help/name validation.
+- `@openelement/create` remote mode resolves correct JSR versions and has real CLI help/name validation.
 - Package islands can SSR-register from metadata, not only client-upgrade.
 - SSG emits or explicitly defers page island manifests; no half-implemented manifest utilities remain hidden.
 - `deno.lock`, package versions, changelog, and registry versions are aligned.

@@ -35,9 +35,9 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/deno';
 
-import 'jsr:@lessjs/adapter-lit/ssr';
-import 'jsr:@lessjs/adapter-vanilla/ssr';
-import 'jsr:@lessjs/adapter-react/ssr';
+import 'jsr:@openelement/adapter-lit/ssr';
+import 'jsr:@openelement/adapter-vanilla/ssr';
+import 'jsr:@openelement/adapter-react/ssr';
 
 const app = new Hono();
 

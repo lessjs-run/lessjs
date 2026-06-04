@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite — SSR data stubs.
+ * @openelement/adapter-vite — SSR data stubs.
  *
  * Single source of truth for empty data patterns used when
  * blog/i18n content plugins are not configured. Previously

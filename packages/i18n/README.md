@@ -1,11 +1,11 @@
-# @lessjs/i18n
+# @openelement/i18n
 
 国际化插件 - SSG locale 展开、路径辅助、语言切换。
 
 ## 安装
 
 ```bash
-deno add jsr:@lessjs/i18n
+deno add jsr:@openelement/i18n
 ```
 
 ## 功能
@@ -17,11 +17,11 @@ deno add jsr:@lessjs/i18n
 
 ## 使用
 
-### 推荐方式（通过 @lessjs/app）
+### 推荐方式（通过 @openelement/app）
 
 ```ts
 // vite.config.ts
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -40,7 +40,7 @@ export default defineConfig({
 
 ```ts
 // app/routes/[locale]/index.ts
-import { i18nStaticPaths, switchLocale } from '@lessjs/i18n';
+import { i18nStaticPaths, switchLocale } from '@openelement/i18n';
 
 export function getStaticPaths() {
   return i18nStaticPaths(); // 展开所有 locale 路径
@@ -53,9 +53,9 @@ const enPath = switchLocale('/zh/about', 'en'); // -> '/en/about'
 ### 独立使用（需显式传递 ctx）
 
 ```ts
-import { lessI18n } from '@lessjs/i18n';
-import { less } from '@lessjs/adapter-vite';
-import { LessBuildContext } from '@lessjs/adapter-vite/build-context';
+import { lessI18n } from '@openelement/i18n';
+import { less } from '@openelement/adapter-vite';
+import { LessBuildContext } from '@openelement/adapter-vite/build-context';
 import { defineConfig } from 'vite';
 
 const ctx = new LessBuildContext({});

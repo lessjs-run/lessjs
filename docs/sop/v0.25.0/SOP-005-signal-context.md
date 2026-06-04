@@ -14,7 +14,7 @@ DOM-tree-based 跨组件 signal 共享：provider 暴露 symbolic 属性，consu
 **文件**: `packages/core/src/signal-context.ts`
 
 ```typescript
-import { effect, type Signal, signal } from '@lessjs/signals';
+import { effect, type Signal, signal } from '@openelement/signals';
 
 const contexts = new Map<symbol, unknown>();
 

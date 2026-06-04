@@ -14,10 +14,10 @@
 
 评估报告指出 Package README 严重过时（评分 5/10）：
 
-1. **`@lessjs/signals`**：仍声称 "TC39 polyfill" 和 "islandEffect"（v0.22 已删除）
-2. **`@lessjs/core`**：示例使用 `hydrateEvents`（v0.21 已移除），缺少 `html`/`unsafeHTML`/`isTemplateResult` 文档
-3. **`@lessjs/core`**：缺少 `classMap`/`when`/`choose`/`repeat`/`ref` 文档（SOP-009 新增）
-4. **`@lessjs/core`**：缺少 `@prop()`/`Ref` 文档（SOP-010 新增）
+1. **`@openelement/signals`**：仍声称 "TC39 polyfill" 和 "islandEffect"（v0.22 已删除）
+2. **`@openelement/core`**：示例使用 `hydrateEvents`（v0.21 已移除），缺少 `html`/`unsafeHTML`/`isTemplateResult` 文档
+3. **`@openelement/core`**：缺少 `classMap`/`when`/`choose`/`repeat`/`ref` 文档（SOP-009 新增）
+4. **`@openelement/core`**：缺少 `@prop()`/`Ref` 文档（SOP-010 新增）
 
 ## Target Files
 
@@ -32,7 +32,7 @@
 
 ## Procedure
 
-### Step 1: @lessjs/signals README
+### Step 1: @openelement/signals README
 
 **目标**：删除 TC39 polyfill 和 islandEffect 引用，更新为 alien-signals API。
 
@@ -74,7 +74,7 @@ rg 'TC39|islandEffect|Signal\.subtle' packages/signals/README.md
 
 ---
 
-### Step 2: @lessjs/core README
+### Step 2: @openelement/core README
 
 **目标**：更新为 v0.23.x API，包含新增模板原语和 @prop()。
 
@@ -138,7 +138,7 @@ rg 'hydrateEvents' packages/core/README.md
 
 - [ ] 逐一读取各 README
 - [ ] 检查过时 API 引用
-- [ ] 检查安装命令正确性（`deno add @lessjs/xxx`）
+- [ ] 检查安装命令正确性（`deno add @openelement/xxx`）
 - [ ] 检查示例代码可运行性
 - [ ] 必要时更新
 
@@ -160,12 +160,12 @@ rg 'hydrateEvents' packages/*/README.md
 
 ## Quality Gates
 
-| Gate | Criteria                                                              |
-| ---- | --------------------------------------------------------------------- |
-| G1   | `@lessjs/signals` README 无 TC39/islandEffect 引用                    |
-| G2   | `@lessjs/core` README 包含 classMap/when/choose/repeat/ref/@prop 文档 |
-| G3   | 所有 Package README 无 hydrateEvents 推荐用法                         |
-| G4   | 示例代码可运行                                                        |
+| Gate | Criteria                                                                   |
+| ---- | -------------------------------------------------------------------------- |
+| G1   | `@openelement/signals` README 无 TC39/islandEffect 引用                    |
+| G2   | `@openelement/core` README 包含 classMap/when/choose/repeat/ref/@prop 文档 |
+| G3   | 所有 Package README 无 hydrateEvents 推荐用法                              |
+| G4   | 示例代码可运行                                                             |
 
 ## Risk Assessment
 

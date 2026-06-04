@@ -20,10 +20,10 @@ jobs:
           DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
         run: |
           # Copy to a clean dir (no workspace config)
-          cp -r demo /tmp/less-api
-          cd /tmp/less-api
+          cp -r demo /tmp/open-api
+          cd /tmp/open-api
           deno deploy \
-            --app=less-demo-api \
+            --app=open-demo-api \
             --prod \
             --token="$DENO_DEPLOY_TOKEN" \
             .

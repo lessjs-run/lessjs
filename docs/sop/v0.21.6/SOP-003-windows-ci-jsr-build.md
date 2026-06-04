@@ -16,7 +16,7 @@ undetected in CI.
 The existing `create` integration test (`cli.test.ts:161`) works by:
 
 1. Generating a project via `less create`
-2. Patching `deno.json` to replace all `jsr:@lessjs/*` with local `file://` paths
+2. Patching `deno.json` to replace all `jsr:@openelement/*` with local `file://` paths
 3. Patching `vite.config.ts` to replace all JSR URL aliases with local aliases
 4. Running `deno task build`
 
@@ -47,7 +47,7 @@ test-create-jsr:
     - uses: actions/checkout@v4
     - uses: denoland/setup-deno@v2
       with: { deno-version: '2' }
-    - run: deno run -A jsr:@lessjs/create test-blog
+    - run: deno run -A jsr:@openelement/create test-blog
     - run: cd test-blog && deno task build
     - run: test -f test-blog/dist/index.html
 ```

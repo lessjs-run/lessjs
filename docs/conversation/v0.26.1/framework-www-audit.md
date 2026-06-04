@@ -1,4 +1,4 @@
-# LessJS v0.26.1 Framework & WWW Code Quality Audit
+﻿# LessJS v0.26.1 Framework & WWW Code Quality Audit
 
 > **哲学**: 不要堆屎山
 > **日期**: 2026-05-30
@@ -13,7 +13,7 @@
 
 | # | 行号  | 问题                                                                                                                                                                                                                                                                              | 建议                                                                         | 严重度 |
 | - | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------ |
-| 1 | 62-63 | `@lessjs/signals` 被 import 了两次：`import { signal, effectScope } from '@lessjs/signals';` + `import { effect } from '@lessjs/signals';`                                                                                                                                        | 合并为一行：`import { effect, effectScope, signal } from '@lessjs/signals';` | LOW    |
+| 1 | 62-63 | `@openelement/signals` 被 import 了两次：`import { signal, effectScope } from '@openelement/signals';` + `import { effect } from '@openelement/signals';`                                                                                                                                        | 合并为一行：`import { effect, effectScope, signal } from '@openelement/signals';` | LOW    |
 | 2 | 80-95 | `_SsrHTMLElementStub` 类从未被实例化或引用——它的唯一用途是赋值给 `globalThis.HTMLElement`。实际上 `globalThis.HTMLElement = _SsrHTMLElementStub` 只在 `typeof HTMLElement === 'undefined'` 时发生。该 stub 缺少 `connectedCallback` 和 `observedAttributes`，这会导致继承链错误。 | 审计该 stub 是否被 SSR 使用。如果 SSR 使用 happy-dom，这个 stub 应该被删除。 | MEDIUM |
 
 **render() 信号访问**: dsd-element.ts 自身不在 render() 中读 signal.value。它使用 effectScope 模式——正确。
@@ -232,7 +232,7 @@ const #themeClass = computed(() => `theme-preview ${this.#isDark.value ? 'dark' 
 | ---- | ----------------------- | ------------------------- |
 | core | `render-dsd.ts`         | 删除 `_textEncoder`       |
 | core | `signal-context.ts`     | 移除 `_host` 参数         |
-| core | `dsd-element.ts`        | 合并 @lessjs/signals 导入 |
+| core | `dsd-element.ts`        | 合并 @openelement/signals 导入 |
 | core | `jsx-render-dom.ts`     | 审计/移除 `signal` 参数   |
 | www  | `reactive-showcase.tsx` | 修复 4 处 signal.value    |
 | www  | `less-toc.tsx`          | 修复 2 处 signal.value    |
@@ -253,7 +253,7 @@ const #themeClass = computed(() => `theme-preview ${this.#isDark.value ? 'dark' 
 | 项目                                                      | 位置                           | 类型     |
 | --------------------------------------------------------- | ------------------------------ | -------- |
 | `jsxs` 与 `jsx` 相同                                      | jsx-runtime.ts:95-114          | 函数重复 |
-| 双重导入 `@lessjs/signals`                                | dsd-element.ts:62-63           | 导入重复 |
+| 双重导入 `@openelement/signals`                                | dsd-element.ts:62-63           | 导入重复 |
 | 重复的 `.nav-row` / `.nav-link` CSS                       | page-styles.ts:235-241,318-331 | CSS 重复 |
 | `signal` 参数（AbortSignal）重复了现有的 effectScope 清理 | jsx-render-dom.ts:140-186      | 双重清理 |
 
@@ -262,7 +262,7 @@ const #themeClass = computed(() => `theme-preview ${this.#isDark.value ? 'dark' 
 #### 立即（删除死代码——零风险）
 
 1. 删除 `render-dsd.ts:77` 的 `_textEncoder`
-2. 合并 `dsd-element.ts:62-63` 的 `@lessjs/signals` 导入
+2. 合并 `dsd-element.ts:62-63` 的 `@openelement/signals` 导入
 3. 移除 `page-styles.ts:235-255` 的重复 CSS
 4. 删除 `dsd-element.ts:400-402` 的注释残留
 

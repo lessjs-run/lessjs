@@ -1,20 +1,20 @@
-# @lessjs/app
+# @openelement/app
 
 Recommended LessJS application entry.
 
-`lessjs()` combines `@lessjs/adapter-vite`, `@lessjs/content`, and
-`@lessjs/i18n` with one shared build context. Use this package for normal apps.
+`lessjs()` combines `@openelement/adapter-vite`, `@openelement/content`, and
+`@openelement/i18n` with one shared build context. Use this package for normal apps.
 
 ## Install
 
 ```bash
-deno add jsr:@lessjs/app
+deno add jsr:@openelement/app
 ```
 
 ## Usage
 
 ```ts
-import { lessjs } from '@lessjs/app';
+import { lessjs } from '@openelement/app';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -22,7 +22,7 @@ export default defineConfig({
     lessjs({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
-      packageIslands: ['@lessjs/ui'],
+      packageIslands: ['@openelement/ui'],
       content: { blog: { contentDir: 'content/blog' } },
       i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
     }),

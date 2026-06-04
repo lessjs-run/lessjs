@@ -12,7 +12,7 @@ tools: ['search', 'read']
 
 这些约束来自 `docs/adr/` 中的架构决策记录。违反任何一条都是 P0 阻断：
 
-1. **Core + Adapter 分离** — `@lessjs/core` 不依赖任何 UI 框架。Lit/React/Vue 交互走 adapter。
+1. **Core + Adapter 分离** — `@openelement/core` 不依赖任何 UI 框架。Lit/React/Vue 交互走 adapter。
 2. **DSD-first** — HTML 在 JS 之前存在。Shadow DOM 封装是默认。
 3. **SSR bundle 边界** — `build-ssg.ts` 只通过 `renderRoute()` / `getStaticPaths()` / `routeInfo[]` 与 SSR bundle 交互。
 4. **无 globalThis** — 跨模块通信走 Vite 插件 ctx，不走 `globalThis.__less*`。

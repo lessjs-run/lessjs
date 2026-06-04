@@ -5,7 +5,7 @@ label: 'Deployment'
 order: 5
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -18,9 +18,9 @@ currentPath='/en/guide/deployment'
       via serverless or edge adapters when the app needs dynamic behavior.
     </p>
     <h2>Build Once</h2>
-    <less-code-block>
+    <open-code-block>
       <pre><code>deno task build</code></pre>
-    </less-code-block>
+    </open-code-block>
     <p>
       The build outputs 
       <span class='inline-code'>dist/</span>: static HTML with Declarative Shadow DOM, client
@@ -66,11 +66,11 @@ currentPath='/en/guide/deployment'
       <code>public/</code> directory — they're automatically copied to the output during build.
       CSP meta and view transition metadata can be auto-injected via the Vite plugin.
     </p>
-    <less-code-block><pre><code> from '@lessjs/app';
+    <open-code-block><pre><code> from '@openelement/app';
 
 export default defineConfig(,
 })],
-});`}</code></pre></less-code-block>
+});`}</code></pre></open-code-block>
 
     <h2>Deployment Checklist</h2>
     <ul>

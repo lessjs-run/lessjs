@@ -1,12 +1,12 @@
 /**
- * @lessjs/rpc - Framework-agnostic fetch abstraction
+ * @openelement/rpc - Framework-agnostic fetch abstraction
  *
  * Zero-dependency RPC controller using native Web APIs (fetch, AbortController).
  * Works with any framework: Lit, HTMLElement, Preact, or vanilla JS.
  *
  * @example
  * ```typescript
- * import { RpcController } from '@lessjs/rpc'
+ * import { RpcController } from '@openelement/rpc'
  *
  * class MyElement extends HTMLElement {
  *   private rpc = new RpcController(this)
@@ -55,7 +55,7 @@ interface ReactiveElement {
 /**
  * RPC Error - thrown when an API call fails.
  *
- * Aligned with @lessjs/core LessError structure:
+ * Aligned with @openelement/core LessError structure:
  * provides status, code, and message for structured error handling.
  */
 export class RpcError extends Error {

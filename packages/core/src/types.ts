@@ -1,7 +1,7 @@
 import type { VNode } from './vnode.js';
 
 /**
- * @lessjs/core - Public types.
+ * @openelement/core - Public types.
  *
  * LessJS Architecture types:
  * - SSG is always on (no ssr.preRender option)
@@ -9,7 +9,7 @@ import type { VNode } from './vnode.js';
  * - UI is generic head injection, not tied to one component library
  * - Islands are the only client JS allowed
  *
- * â”€â”€â”€ SSR Import Discovery Audit (Step1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * ©¤©¤©¤ SSR Import Discovery Audit (Step1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
  *
  * This file ONLY defines types. It does NOT handle SSR imports.
  * For SSR import logic, see:
@@ -22,7 +22,7 @@ import type { VNode } from './vnode.js';
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
-// â”€â”€â”€ WC Package Protocol (v0.16+) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ WC Package Protocol (v0.16+) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** API route context passed to simple handlers */
 export interface LessApiContext {
@@ -116,7 +116,7 @@ export interface LessElementExtensions {
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
   hydrate?: HydrationStrategy;
-  /** Module path for import (e.g. '@lessjs/ui/less-button') */
+  /** Module path for import (e.g. '@openelement/ui/less-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
   export?: string;
@@ -180,14 +180,14 @@ export interface LessModule {
   declarations?: string[];
 }
 
-/** CEM-compatible package manifest for LessJS Web Component packages.
+/** CEM-compatible package manifest for openElement Web Component packages.
  *
  * Structured, tool-consumable metadata for an entire WC package.
  */
 export interface LessPackageManifest {
   /** Schema version of the manifest format */
   schemaVersion: string;
-  /** Package name on JSR/npm (e.g. '@lessjs/ui') */
+  /** Package name on JSR/npm (e.g. '@openelement/ui') */
   packageName: string;
   /** Package version (semver) */
   version: string;
@@ -295,13 +295,13 @@ export interface FrameworkOptions {
   /**
    * Package names to scan for WC manifests.
    * Each package should export a `manifest` LessPackageManifest in its main entry.
-   * Example: ['@lessjs/ui'] will scan package.main.manifest.
+   * Example: ['@openelement/ui'] will scan package.main.manifest.
    */
   packageIslands?: string[];
 
   /**
    * Application shell rendered around routes during SSG/SSR.
-   * - undefined/'default': import and render @lessjs/ui/less-layout.
+   * - undefined/'default': import and render @openelement/ui/less-layout.
    * - false: render route content directly.
    * - object: import and render a user-provided custom element shell.
    */
@@ -503,7 +503,7 @@ export type SpecialFileType = 'renderer' | 'middleware';
  * Usage:
  * ```ts
  * // app/routes/_renderer.ts
- * import type { LessRenderer } from '@lessjs/core';
+ * import type { LessRenderer } from '@openelement/core';
  *
  * const renderer: LessRenderer = {
  *   wrap(child, ctx) {
@@ -535,7 +535,7 @@ export interface LessRenderer {
  * Usage:
  * ```ts
  * // app/routes/api/_middleware.ts
- * import type { LessMiddleware } from '@lessjs/core';
+ * import type { LessMiddleware } from '@openelement/core';
  * import type { MiddlewareHandler } from 'hono';
  *
  * const middleware: MiddlewareHandler = async (c, next) => {
@@ -599,7 +599,7 @@ export interface RouteEntry {
 
 export type { SsrContext } from './context.js';
 
-// â”€â”€â”€ DSD Render Types (from render-dsd.ts refactoring) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ DSD Render Types (from render-dsd.ts refactoring) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Component layer in the three-layer model */
 export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
@@ -631,7 +631,7 @@ export interface HydrateEventDescriptor {
 export type Unsubscribe = () => void;
 
 /**
- * ReactiveHost protocol â€” explicit interface for DsdElement Signal integration.
+ * ReactiveHost protocol ¡ª explicit interface for DsdElement Signal integration.
  *
  * Instead of Duck Typing signals via `isSignalLike()`, external signal libraries
  * and reactive sources target this protocol. DsdElement implements ReactiveHost,
@@ -1071,7 +1071,7 @@ export class DsdRenderCollector {
   }
 }
 
-// â”€â”€â”€ CEM (Custom Elements Manifest) Types (v0.18.0) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM (Custom Elements Manifest) Types (v0.18.0) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * CEM compatibility report section in dsd-report.json.
@@ -1378,7 +1378,7 @@ export interface CustomElementsManifest {
   [key: string]: unknown;
 }
 
-// â”€â”€â”€ CEM Parse Result Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM Parse Result Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Result of parsing a CEM file */
 export interface CemParseResult {
@@ -1435,7 +1435,7 @@ export interface CompatibilityClassification {
   hydrate?: string;
 }
 
-// â”€â”€â”€ CEM Validation Types (v0.18.1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM Validation Types (v0.18.1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * A single validation diagnostic - either an error or warning.
@@ -1507,12 +1507,12 @@ export interface ManifestValidationReport {
   tags: ValidatedTag[];
 }
 
-// v0.29.6: DsdComponentConstructor â€” precise type for component constructors
+// v0.29.6: DsdComponentConstructor ¡ª precise type for component constructors
 // with framework-convention static properties (styles, tagName, observedAttributes)
 export interface DsdComponentConstructor extends CustomElementConstructor {
   styles?:
-    | import('@lessjs/style-sheet').StyleSheetLike
-    | import('@lessjs/style-sheet').StyleSheetLike[];
+    | import('@openelement/style-sheet').StyleSheetLike
+    | import('@openelement/style-sheet').StyleSheetLike[];
   tagName?: string;
   observedAttributes?: string[];
 }

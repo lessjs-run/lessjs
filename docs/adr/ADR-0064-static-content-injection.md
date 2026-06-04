@@ -18,7 +18,7 @@ The tension: signal binding for immutable content is wasteful (allocate signal, 
 ### Two Approved Injection Paths
 
 1. **Signal-driven** (dynamic UI): `data-theme={signal}` → effect → `setAttribute` — for reactive bindings that may change over time.
-2. **Static HTML injection** (build-time content): `innerHTML={html}` where `html` comes from the `@lessjs/content` pipeline (marked + sanitize-html). No signal needed.
+2. **Static HTML injection** (build-time content): `innerHTML={html}` where `html` comes from the `@openelement/content` pipeline (marked + sanitize-html). No signal needed.
 
 ### SSR Path: `renderToString` treats `innerHTML` as raw children
 
@@ -97,7 +97,7 @@ Blog/guide pages consume this at build time:
 
 ```tsx
 // www/app/routes/guide/[page].tsx
-import { renderMd } from '@lessjs/content';
+import { renderMd } from '@openelement/content';
 
 export default async function GuidePage({ params }: { params: { page: string } }) {
   const html = await renderMd(`www/content/guide/en/${params.page}.md`);
@@ -123,7 +123,7 @@ export default async function GuidePage({ params }: { params: { page: string } }
 
 ## Constraints
 
-- **Only allowed for content from `@lessjs/content`** (marked + sanitize-html). Content is sanitized at build time; no runtime XSS risk.
+- **Only allowed for content from `@openelement/content`** (marked + sanitize-html). Content is sanitized at build time; no runtime XSS risk.
 - **Not for user-generated content** — any `innerHTML` assignment involving runtime user input must go through explicit sanitization and a separate review.
 - **Not for content that changes** — if content needs to update based on signal state, use signal-driven DOM children (e.g., `<div>{signalContent}</div>`), not `innerHTML`.
 - **SSR and CSR must handle it consistently** — the `innerHTML` prop must produce identical HTML output in both paths (SSR: inline in HTML string; CSR: `el.innerHTML = value`).
@@ -135,18 +135,18 @@ export default async function GuidePage({ params }: { params: { page: string } }
 - **No wasted signal allocations** — blog/guide pages skip signal creation for immutable content
 - **Explicit intent** — `innerHTML` in JSX is a clear visual marker for injected HTML
 - **Aligns with ecosystem standards** — React, Vue, Solid all provide equivalent mechanisms
-- **Zero new dependencies** — relies on existing marked + sanitize-html in `@lessjs/content`
+- **Zero new dependencies** — relies on existing marked + sanitize-html in `@openelement/content`
 
 ### Negative
 
-- **XSS footgun potential** — `innerHTML` is inherently dangerous. The pipeline constraint (only from `@lessjs/content`) is a convention, not a compiler-enforced guarantee. Future developers could misuse it.
+- **XSS footgun potential** — `innerHTML` is inherently dangerous. The pipeline constraint (only from `@openelement/content`) is a convention, not a compiler-enforced guarantee. Future developers could misuse it.
 - **Rich children not supported** — `innerHTML` replaces all children; you cannot combine static injected HTML with signal-driven children on the same element.
 - **SSR/CSR duplication risk** — if the two paths diverge in behavior, content rendered server-side may differ from client-side hydration.
 
 ### Neutral
 
 - `innerHTML` assignment does not interact with the signal system — no effect tracking, no dependency graph entry, no re-render triggers
-- The `sanitize-html` config in `@lessjs/content` is the single source of truth for allowed tags/attributes
+- The `sanitize-html` config in `@openelement/content` is the single source of truth for allowed tags/attributes
 - Content authors write standard markdown; the `innerHTML` prop is invisible to them
 
 ## Implementation Notes

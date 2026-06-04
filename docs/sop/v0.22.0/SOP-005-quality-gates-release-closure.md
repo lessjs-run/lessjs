@@ -51,7 +51,7 @@ deno task test:e2e
 
 ### Package Boundaries
 
-- [ ] `@lessjs/core` no longer owns build-only contracts.
+- [ ] `@openelement/core` no longer owns build-only contracts.
 - [ ] Extracted helper packages have one authoritative implementation.
 - [ ] Hub scanner has no `null!` placeholder.
 - [ ] Public docs describe extracted packages accurately.
@@ -65,7 +65,7 @@ deno task test:e2e
 ### Signals and Validation
 
 - [ ] Signal facade tests pass.
-- [ ] `@lessjs/signals` public paths remain stable.
+- [ ] `@openelement/signals` public paths remain stable.
 - [ ] Validation strictness is unchanged or stronger.
 - [ ] Schema/library experiments are documented if adopted.
 

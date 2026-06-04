@@ -19,20 +19,20 @@ condition: **a generated project builds cleanly from JSR on Windows**.
 
 ### P0 — ADR-0015 JSR-mode alias generation
 
-When `@lessjs/adapter-vite` runs from JSR (not monorepo workspace), its `import.meta.url`
+When `@openelement/adapter-vite` runs from JSR (not monorepo workspace), its `import.meta.url`
 is an HTTPS URL. The plugin's `config()` hook uses `import.meta.url` to find package
 directories and generate Vite resolve aliases — but this logic only works for
 `file://` URLs. From JSR, no aliases are generated, and Vite SSR can't resolve
-`@lessjs/core` imports in the virtual SSR entry.
+`@openelement/core` imports in the virtual SSR entry.
 
-**Manifestation**: `Rolldown failed to resolve import "@lessjs/core" from "virtual:less-ssg-entry"`
+**Manifestation**: `Rolldown failed to resolve import "@openelement/core" from "virtual:less-ssg-entry"`
 
 **Affects**: All standalone JSR consumer projects (any platform, not just Windows).
 
 ### P0 — create template hardcoded JSR URL aliases
 
 The `create/cli.ts` template generates `vite.config.ts` with hardcoded JSR URL
-aliases for each UI component (e.g., `'https://jsr.io/@lessjs/ui/0.21.5/src/less-card.ts'`).
+aliases for each UI component (e.g., `'https://jsr.io/@openelement/ui/0.21.5/src/less-card.ts'`).
 Three problems:
 
 1. **Redundant** — the plugin should auto-generate these (see P0 above).
@@ -63,13 +63,13 @@ in CONTRIBUTING.md.
 
 ## SOP List
 
-| SOP     | Target                                                | Owner                | Priority | Status     |
-| ------- | ----------------------------------------------------- | -------------------- | -------- | ---------- |
-| SOP-001 | Fix ADR-0015 JSR-mode alias generation                | @lessjs/adapter-vite | P0       | ✅ Done    |
-| SOP-002 | Remove hardcoded JSR URL aliases from create template | @lessjs/create       | P0       | ✅ Done    |
-| SOP-003 | Add Windows + ubuntu CI for JSR consumer build        | CI config            | P1       | ✅ Done    |
-| SOP-004 | ~~Document CodeQL setup conflict resolution~~         | —                    | —        | ❌ Removed |
-| SOP-005 | Document PowerShell git commit workaround             | docs                 | P2       | ✅ Done    |
+| SOP     | Target                                                | Owner                     | Priority | Status     |
+| ------- | ----------------------------------------------------- | ------------------------- | -------- | ---------- |
+| SOP-001 | Fix ADR-0015 JSR-mode alias generation                | @openelement/adapter-vite | P0       | ✅ Done    |
+| SOP-002 | Remove hardcoded JSR URL aliases from create template | @openelement/create       | P0       | ✅ Done    |
+| SOP-003 | Add Windows + ubuntu CI for JSR consumer build        | CI config                 | P1       | ✅ Done    |
+| SOP-004 | ~~Document CodeQL setup conflict resolution~~         | —                         | —        | ❌ Removed |
+| SOP-005 | Document PowerShell git commit workaround             | docs                      | P2       | ✅ Done    |
 
 ## Non-Goals
 
@@ -84,7 +84,7 @@ v0.21.6 must NOT:
 
 ```powershell
 # In a temp directory, simulate the user journey:
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 cd test-blog
 deno task build          # must exit 0
 ls dist/index.html       # must exist and contain valid HTML

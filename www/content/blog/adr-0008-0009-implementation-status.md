@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0008/0009/0010/0011/0012 — Implementation Status'
 date: '2026-05-11'
 type: 'adr'
@@ -13,7 +13,7 @@ ADR 0008 + 0009 + 0010 + 0011 + 0012 fully implemented on the `dev` branch.
 
 - All `.less/` temp files eliminated (ADR 0010)
 - All `globalThis[Symbol.for()]` bridges eliminated (ADR 0011 + 0012)
-- `lessjs()` unified entry extracted to `@lessjs/app` (ADR 0012)
+- `lessjs()` unified entry extracted to `@openelement/app` (ADR 0012)
 - Build pipeline: single `viteBuild()` + closeBundle inline Phase 2/3 (ADR 0011)
 
 ## Completed Phases
@@ -38,11 +38,11 @@ ADR 0008 + 0009 + 0010 + 0011 + 0012 fully implemented on the `dev` branch.
 | D.1+D.3 | ✅     | `1bf6d6a` | `virtual:less-runtime` replaces `.less-runtime.ts` file write |
 | D.2     | ✅     | `52f9e11` | Virtual runtime plugin added to SSR build                     |
 
-### Phase E: Single-Plugin API (`lessjs()`) → Extracted to `@lessjs/app`
+### Phase E: Single-Plugin API (`lessjs()`) → Extracted to `@openelement/app`
 
 | Step | Status | Description                                                |
 | ---- | ------ | ---------------------------------------------------------- |
-| E.1  | ✅     | `lessjs()` umbrella function created in `@lessjs/app`      |
+| E.1  | ✅     | `lessjs()` umbrella function created in `@openelement/app`      |
 | E.2  | ✅     | `less()` accepts optional `externalCtx` parameter          |
 | E.3  | ✅     | Backward compat: split-call mode works with explicit `ctx` |
 | E.4  | ✅     | Unified `build` command via closeBundle (ADR 0011)         |
@@ -55,16 +55,16 @@ ADR 0008 + 0009 + 0010 + 0011 + 0012 fully implemented on the `dev` branch.
 | 2    | ✅     | globalThis write removed from less() in index.ts            |
 | 3    | ✅     | clearActiveContext() removed from build.ts                  |
 
-### ADR 0012: Extract lessjs() Umbrella to @lessjs/app
+### ADR 0012: Extract lessjs() Umbrella to @openelement/app
 
 | Step | Status | Description                                                                              |
 | ---- | ------ | ---------------------------------------------------------------------------------------- |
-| 1    | ✅     | New `@lessjs/app` package with static imports                                            |
+| 1    | ✅     | New `@openelement/app` package with static imports                                            |
 | 2    | ✅     | `lessjs()` removed from core/index.ts                                                    |
 | 3    | ✅     | `getActiveContext`/`setActiveContext`/`clearActiveContext` deleted from build-context.ts |
 | 4    | ✅     | content/i18n: `options.ctx                                                               |
-| 5    | ✅     | docs/vite.config.ts switched to `lessjs()` from `@lessjs/app`                            |
-| 6    | ✅     | `LessContentOptions` exported from `@lessjs/content`                                     |
+| 5    | ✅     | docs/vite.config.ts switched to `lessjs()` from `@openelement/app`                            |
+| 6    | ✅     | `LessContentOptions` exported from `@openelement/content`                                     |
 
 ### ADR 0010: Eliminate All Remaining `.less/` Temp Files
 
@@ -81,7 +81,7 @@ ADR 0008 + 0009 + 0010 + 0011 + 0012 fully implemented on the `dev` branch.
 - **`.less/` files reduced**: 10 → 3 → **0** (zero filesystem IPC)
 - **`globalThis` bridges**: 4 → 1 → **0** (all deleted, ctx via explicit parameter only)
 - **Virtual modules**: `virtual:less-runtime`, `virtual:less-nav`, `virtual:less-client-entry`, `virtual:less-ssg-entry`
-- **`lessjs({ content, i18n })`**: Single-call API in `@lessjs/app`, static imports, type-safe
+- **`lessjs({ content, i18n })`**: Single-call API in `@openelement/app`, static imports, type-safe
 - **`buildClient()`/`buildSSG()` require `ctx`**: No standalone split-phase execution
 - **Build pipeline**: Single `viteBuild()` → `closeBundle()` inlines Phase 2/3
 - **All pre-commit checks pass** (deno fmt, deno lint, deno check)

@@ -1,4 +1,4 @@
-# LessJS v0.27.0 — 测试工程师专项审计报告
+﻿# LessJS v0.27.0 — 测试工程师专项审计报告
 
 > **审计人**: Edward (QA Engineer)  
 > **审计日期**: 2026-06-01  
@@ -245,7 +245,7 @@ requestAnimationFrame(() => {
 
 `ssr-polyfills.ts` 采用分层策略：
 - Output banner（`build-ssg.ts`）: HTMLElement + customElements stub
-- Entry code body: CSSStyleSheet polyfill via `@lessjs/style-sheet`
+- Entry code body: CSSStyleSheet polyfill via `@openelement/style-sheet`
 
 **评价**: ✅ 设计合理，分离了必须在模块求值前执行的 polyfill 和可延迟的 polyfill。
 

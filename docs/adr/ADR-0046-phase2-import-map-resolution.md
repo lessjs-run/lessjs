@@ -12,7 +12,7 @@ Phase 2 client island build (`buildClient()`) uses `configFile: false` and only 
 including `@deno/vite-plugin` (import map resolution), `resolve.extensions`, and other
 plugins — is not inherited.
 
-As a result, bare specifiers like `@lessjs/ui/less-card` in the generated
+As a result, bare specifiers like `@openelement/ui/less-card` in the generated
 `virtual:less-client-entry` cannot be resolved. The build fails with Rolldown
 resolution errors.
 
@@ -30,11 +30,11 @@ Specifically:
 With this change, all three build phases share the same resolution source —
 the `deno.json` import map:
 
-| Phase   | Resolution                                                  | Bundler role       |
-| ------- | ----------------------------------------------------------- | ------------------ |
-| Phase 1 | import map (@deno/vite-plugin)                              | compile + optimize |
-| Phase 2 | import map (deno.json)                                      | compile + optimize |
-| Phase 3 | import map (Deno ESM Runtime + @lessjs/ssg-package-resolve) | compile + optimize |
+| Phase   | Resolution                                                       | Bundler role       |
+| ------- | ---------------------------------------------------------------- | ------------------ |
+| Phase 1 | import map (@deno/vite-plugin)                                   | compile + optimize |
+| Phase 2 | import map (deno.json)                                           | compile + optimize |
+| Phase 3 | import map (Deno ESM Runtime + @openelement/ssg-package-resolve) | compile + optimize |
 
 ## Consequences
 
@@ -42,7 +42,7 @@ the `deno.json` import map:
   configurations needed for client island builds.
 - **Positive**: Consumer projects benefit from the same import map they
   already maintain for development and Phase 1/3.
-- **Positive**: Resolves the pre-existing `@lessjs/ui/less-card` resolution
+- **Positive**: Resolves the pre-existing `@openelement/ui/less-card` resolution
   failure that was masked by earlier Phase 3 failures.
 - **Neutral**: Slightly different code path between workspace (local source)
   and JSR consumer (published packages), but resolution semantics are identical.

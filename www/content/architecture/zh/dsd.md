@@ -5,7 +5,7 @@ label: 'DSD Rendering'
 order: 30
 ---
 
-<less-layout
+<open-layout
         locale="$"
         locales='$'
         nav-items='$'
@@ -25,13 +25,13 @@ order: 30
             DSD 是 WHATWG HTML 中的 template 语义，核心属性是 <code>shadowrootmode</code>。它允许 HTML
             直接携带 shadow root 内容，使服务端渲染的 Web Components 在 JS 加载前已经可见。
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <open-code-block><pre><code>&lt;my-card&gt;
 
 &lt;template shadowrootmode="open"&gt;
 &lt;style&gt;:host &lt;/style&gt;
 &lt;p&gt;内容在 JavaScript 加载前可见。&lt;/p&gt;
 &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;</code></pre></open-code-block>
 
           <h2>为什么 LessJS 选择 DSD</h2>
           <div class="comparison">

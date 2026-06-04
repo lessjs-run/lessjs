@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Vite build orchestration adapter.
+ * @openelement/adapter-vite - Vite build orchestration adapter.
  *
  * Provides the `lessPipeline()` Vite plugin that handles:
  * - Route scanning and virtual Hono entry generation
@@ -8,10 +8,10 @@
  * - SSG build pipeline (Phase 1/2/3)
  * - Core subpath resolution (ADR 0016)
  *
- * Runtime code (renderDsd, defineIsland, escapeHtml, etc.) lives in @lessjs/core.
+ * Runtime code (renderDsd, defineIsland, escapeHtml, etc.) lives in @openelement/core.
  * This package only contains Vite-specific build orchestration.
  *
- * For the unified lessjs() entry, use @lessjs/app instead.
+ * For the unified lessjs() entry, use @openelement/app instead.
  *
  * v0.22 (SOP-004): Decomposed into 5 focused modules:
  *   head-injection.ts      — HTML fragment validation & serialization

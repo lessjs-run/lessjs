@@ -1,5 +1,5 @@
 /**
- * @lessjs/protocols — Shared build-time contracts.
+ * @openelement/protocols — Shared build-time contracts.
  *
  * Zero-dependency package. Pure TypeScript interfaces and constants
  * consumed by feature packages and build adapters.

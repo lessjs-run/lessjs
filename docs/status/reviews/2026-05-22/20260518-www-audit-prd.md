@@ -27,16 +27,16 @@
 
 **顶部导航栏（headerNav）**— 来自 `vite.config.ts`:
 
-| 序号 | 标签         | 链接                          | 分类        |
-| ---- | ------------ | ----------------------------- | ----------- |
-| 1    | Docs         | `/guide/positioning`          | 框架        |
-| 2    | Architecture | `/guide/architecture`         | 框架        |
-| 3    | Registry     | `/registry`                   | RegistryHub |
-| 4    | Blog         | `/blog`                       | Blog        |
-| 5    | UI           | `/ui`                         | 孤立        |
-| 6    | Roadmap      | `/roadmap`                    | 孤立        |
-| 7    | Community    | `/community`                  | 孤立        |
-| 8    | JSR          | `https://jsr.io/@lessjs/core` | 外链        |
+| 序号 | 标签         | 链接                               | 分类        |
+| ---- | ------------ | ---------------------------------- | ----------- |
+| 1    | Docs         | `/guide/positioning`               | 框架        |
+| 2    | Architecture | `/guide/architecture`              | 框架        |
+| 3    | Registry     | `/registry`                        | RegistryHub |
+| 4    | Blog         | `/blog`                            | Blog        |
+| 5    | UI           | `/ui`                              | 孤立        |
+| 6    | Roadmap      | `/roadmap`                         | 孤立        |
+| 7    | Community    | `/community`                       | 孤立        |
+| 8    | JSR          | `https://jsr.io/@openelement/core` | 外链        |
 
 **侧边栏导航（navSections）**— 由路由文件 `meta.section` 自动生成:
 
@@ -46,7 +46,7 @@
 | Core Model          | Routing, SSG Rendering, DSD Rendering, Island Upgrade, Island Deep Dive, Package Compatibility, API Routes, RPC |
 | Strategy            | Content System, Comparison                                                                                      |
 | Production          | Security & Middleware, Configuration, Error Handling, Testing, Deployment, PWA Support                          |
-| Packages            | Design System (@lessjs/ui), Web Awesome                                                                         |
+| Packages            | Design System (@openelement/ui), Web Awesome                                                                    |
 | Roadmap & Decisions | Roadmap, Community                                                                                              |
 | History             | Contributing, Changelog                                                                                         |
 
@@ -114,11 +114,11 @@
 
 #### 引擎（Engine）侧边栏
 
-| Section  | 页面                                                          |
-| -------- | ------------------------------------------------------------- |
-| 核心原理 | Architecture, DSD Rendering, Island Upgrade, Island Deep Dive |
-| 兼容性   | Package Compatibility, Standards & Registry                   |
-| 参考     | API Reference (@lessjs/core), Design System (@lessjs/ui)      |
+| Section  | 页面                                                               |
+| -------- | ------------------------------------------------------------------ |
+| 核心原理 | Architecture, DSD Rendering, Island Upgrade, Island Deep Dive      |
+| 兼容性   | Package Compatibility, Standards & Registry                        |
+| 参考     | API Reference (@openelement/core), Design System (@openelement/ui) |
 
 #### RegistryHub 侧边栏
 

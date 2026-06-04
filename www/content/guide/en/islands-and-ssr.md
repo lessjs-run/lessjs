@@ -5,7 +5,7 @@ label: 'Islands & SSR'
 order: 4
 ---
 
-<less-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/en/guide/islands-and-ssr">
+<open-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/en/guide/islands-and-ssr">
 
           <h1>Islands &amp; SSR</h1>
           <p class="subtitle">
@@ -43,13 +43,13 @@ order: 4
             Declarative Shadow DOM lets server-rendered Web Components have their shadow root during
             HTML parsing. Users see content immediately — no JavaScript required.
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <open-code-block><pre><code>&lt;my-card&gt;
 
 &lt;template shadowrootmode="open"&gt;
 &lt;style&gt;:host &lt;/style&gt;
 &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
 &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;</code></pre></open-code-block>
 
           <h2>Three-Layer Component Model</h2>
           <table>
@@ -65,7 +65,7 @@ order: 4
           <p>
             Declare islands via <code>defineIsland()</code> API with four hydration strategies:
           </p>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 export class MyChart extends DsdElement
 
@@ -79,7 +79,7 @@ defineIsland(MyChart, );
 defineIsland(MyChart, );
 
 // Client-only render (no DSD, no SSR)
-defineIsland(MyChart, );</code></pre></less-code-block>
+defineIsland(MyChart, );</code></pre></open-code-block>
 
           <table>
             <thead><tr><th>Strategy</th><th>Trigger</th><th>Recommended Use</th></tr></thead>
@@ -93,9 +93,9 @@ defineIsland(MyChart, );</code></pre></less-code-block>
 
           <h2>Creating an Island</h2>
           <p>Place components that need client-side behavior in the <code>app/islands/</code> directory:</p>
-          <less-code-block><pre><code>// app/islands/counter.ts
+          <open-code-block><pre><code>// app/islands/counter.ts
 
-import from '@lessjs/core';
+import from '@openelement/core';
 
 export class Counter extends DsdElement &gt;-&lt;/button&gt;
 &lt;span&gt;&lt;/span&gt;
@@ -105,10 +105,10 @@ export class Counter extends DsdElement &gt;-&lt;/button&gt;
 }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);</code></pre></open-code-block>
 
 <p>Usage in pages:</p>
-<less-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
+<open-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></open-code-block>
 <p>
 The builder automatically scans <code>app/islands/</code>, generates a client entry,
 and injects it into the static HTML. Page HTML renders first; the browser upgrades
@@ -127,11 +127,11 @@ components after loading the island entry.
             </tbody>
           </table>
 
-          <less-callout type="info" label="Upgrade, Not Hydration">
+          <open-callout type="info" label="Upgrade, Not Hydration">
             LessJS uses Island Upgrade instead of traditional hydration. When the browser parses HTML,
             DSD has already populated the content. The client entry calls <code>customElements.define()</code>
             to upgrade existing elements into real Custom Elements.
-          </less-callout>
+          </open-callout>
 
           <div class="nav-row">
             <a href="/guide/routing-and-data" class="nav-link">&larr; Routing &amp; Data</a>

@@ -1,15 +1,14 @@
-/**
- * @lessjs/docs - Search island
+﻿/**
+ * @openelement/docs - Search island
  *
  * Full-text search using FlexSearch.
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * v0.28 (ADR-0068): Zero-effect / zero-createElement / zero-innerHTML implementation.
- *   - Overlay visibility: computed signal → data-signal-attr="class"
- *   - Search results: computed signal → data-signal-html
- *   - All escaping via @lessjs/core escapeHtml/escapeAttr
- *   - All events via data-on-* markers
+ * v0.30.1 (ADR-0081): VNode full-path event binding via data-signal-render.
+ *   - All data-on-* attributes replaced with JSX onClick/onInput.
+ *   - String concatenation replaced with JSX VNode generation.
+ *   - XSS protection via JSX auto-escaping (no manual escapeHtml/escapeAttr).
  *
  * @csspart trigger - The search trigger button
  * @csspart icon - The search SVG icon
@@ -17,10 +16,11 @@
  * @csspart shortcut - The keyboard shortcut kbd
  */
 
-import { defineCustomElement, DsdElement, escapeAttr, escapeHtml } from '@lessjs/core';
-import { computed, signal } from '@lessjs/signals';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { defineCustomElement, DsdElement } from '@openelement/core';
+import type { VNode } from '@openelement/core';
+import { computed, signal } from '@openelement/signals';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 
 interface SearchEntry {
   path: string;
@@ -179,8 +179,8 @@ export default class LessSearch extends DsdElement {
   /** v0.28: Computed overlay class string for data-signal-attr binding. */
   #overlayClass = computed(() => this.#open.value ? 'overlay open' : 'overlay');
 
-  /** v0.28: Computed results HTML for data-signal-html binding. */
-  #resultsHtml = computed(() => this._buildResultsHtml());
+  /** v0.30.1 (ADR-0081): Computed results VNodes for data-signal-render binding. */
+  #resultsNodes = computed(() => this._buildResultsNodes());
 
   // ── Internal state ───────────────────────────────────────────────────────
 
@@ -194,7 +194,7 @@ export default class LessSearch extends DsdElement {
     this.registerSignal('open', this.#open);
     this.registerSignal('query', this.#query);
     this.registerSignal('overlayClass', this.#overlayClass);
-    this.registerSignal('resultsHtml', this.#resultsHtml);
+    this.registerSignal('resultsNodes', this.#resultsNodes);
   }
 
   // ── Keyboard shortcut ────────────────────────────────────────────────────
@@ -218,31 +218,30 @@ export default class LessSearch extends DsdElement {
     globalThis.removeEventListener('keydown', this._onKeydown);
   }
 
-  // ── Public handlers (bound via data-on-* in render) ──────────────────────
+  // ── Event handlers ───────────────────────────────────────────────────────
 
-  _open(): void {
+  private _open(): void {
     this.#open.value = true;
     this._loadIndex();
     requestAnimationFrame(() => this._inputRef?.focus());
   }
 
-  _close(): void {
+  private _close(): void {
     this.#open.value = false;
     this.#query.value = '';
     this.#results.value = [];
     this._inputRef = null;
   }
 
-  _closeOnBackdrop(e: Event): void {
+  private _closeOnBackdrop(e: Event): void {
     if (e.target === e.currentTarget) this._close();
   }
 
-  /** Prevent clicks inside the panel from propagating to overlay. */
-  __stopPropagation(e: Event): void {
+  private _stopPropagation(e: Event): void {
     e.stopPropagation();
   }
 
-  _onInput(e: Event): void {
+  private _onInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.#query.value = target.value;
     this._runSearch();
@@ -290,36 +289,35 @@ export default class LessSearch extends DsdElement {
     }
   }
 
-  // ── Computed HTML builder (v0.28) ────────────────────────────────────────
+  // ── VNode builder (v0.30.1 / ADR-0081) ───────────────────────────────────
 
   /**
-   * Build results HTML string from current signals.
-   * Called by the #resultsHtml computed signal — zero manual effect,
-   * zero document.createElement, zero innerHTML outside hydration.
+   * Build results VNode array from current signals.
+   * Called by the #resultsNodes computed signal — zero manual escape,
+   * zero document.createElement, zero innerHTML.
+   * XSS protection via JSX auto-escaping; events via VNode onClick.
    */
-  private _buildResultsHtml(): string {
+  private _buildResultsNodes(): VNode[] {
     const results = this.#results.value;
 
     if (results.length > 0) {
-      return results.map((r) =>
-        `<a href="${escapeAttr(r.path)}" class="result item" data-on-click="_close">` +
-        `<div class="item-section">${escapeHtml(r.section)}</div>` +
-        `<div class="item-title">${escapeHtml(r.title)}</div>` +
-        `<div class="item-text">${escapeHtml(r.text)}</div>` +
-        `</a>`
-      ).join('');
+      return results.map((r) => (
+        <a href={r.path} class='result item' onClick={() => this._close()}>
+          <div class='item-section'>{r.section}</div>
+          <div class='item-title'>{r.title}</div>
+          <div class='item-text'>{r.text}</div>
+        </a>
+      ));
     }
 
     if (this.#query.value.length >= 2) {
-      return `<div class="empty">No results found for &ldquo;${
-        escapeHtml(this.#query.value)
-      }&rdquo;</div>`;
+      return [<div class='empty'>No results found for &ldquo;{this.#query.value}&rdquo;</div>];
     }
 
-    return `<div class="empty">Type at least 2 characters to search</div>`;
+    return [<div class='empty'>Type at least 2 characters to search</div>];
   }
 
-  // ── Render (SSR: overlay hidden, results empty; hydration binds signals) ─
+  // ── Render ───────────────────────────────────────────────────────────────
 
   override render() {
     return (
@@ -329,7 +327,7 @@ export default class LessSearch extends DsdElement {
           class='search-trigger'
           part='trigger'
           aria-label='Search'
-          data-on-click='_open'
+          onClick={() => this._open()}
         >
           <svg
             class='search-icon'
@@ -347,37 +345,23 @@ export default class LessSearch extends DsdElement {
           <kbd part='shortcut'>&#x2318;K</kbd>
         </button>
 
-        {
-          /* v0.28: class driven by computed signal via data-signal-attr.
-            No effect(), no classList.toggle. */
-        }
         <div
           class={this.#overlayClass}
           data-signal='overlayClass'
           data-signal-attr='class'
-          data-on-click='_closeOnBackdrop'
+          onClick={(e: Event) => this._closeOnBackdrop(e)}
         >
-          <div class='panel' data-on-click='__stopPropagation'>
+          <div class='panel' onClick={(e: Event) => this._stopPropagation(e)}>
             <input
               type='text'
               class='search-input'
               placeholder='Search documentation...'
-              data-on-input='_onInput'
+              onInput={(e: Event) => this._onInput(e)}
               ref={(el: HTMLInputElement) => {
                 this._inputRef = el;
               }}
             />
-            {
-              /* v0.28: innerHTML driven by computed signal via data-signal-html.
-                No effect(), no document.createElement, no _renderResultsTo. */
-            }
-            <div
-              class='results'
-              data-signal-html='resultsHtml'
-              innerHTML={this.#resultsHtml.value}
-              trustedHtml
-            >
-            </div>
+            <div class='results' data-signal-render='resultsNodes' />
           </div>
         </div>
       </>

@@ -1,6 +1,6 @@
 # CodeQL Security Analysis
 #
-# Analyzes LessJS TypeScript source code for security vulnerabilities
+# Analyzes openElement TypeScript source code for security vulnerabilities
 # and code quality issues using GitHub's CodeQL engine.
 #
 # For Deno/TypeScript projects, CodeQL's JS/TS extractor can analyze
@@ -40,7 +40,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Deno project â€” no build step needed for TS source analysis
+          # Deno project â€?no build step needed for TS source analysis
           # CodeQL JS/TS extractor works on raw source files
           queries: security-extended,security-and-quality
 

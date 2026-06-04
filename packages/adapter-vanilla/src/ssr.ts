@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vanilla - SSR Adapter
+ * @openelement/adapter-vanilla - SSR Adapter
  *
  * Registers the 'vanilla' adapter for plain Web Components.
  * v0.30.0 removes string render compatibility from core; this adapter now
@@ -9,11 +9,11 @@
  *   - extractStyles(): reads the static `styles` property (string or
  *     string array) from the component class.
  *
- * @module @lessjs/adapter-vanilla/ssr
+ * @module @openelement/adapter-vanilla/ssr
  */
 
-import { getDefaultRegistry } from '@lessjs/core';
-import { createLogger } from '@lessjs/core/logger';
+import { getDefaultRegistry } from '@openelement/core';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('adapter-vanilla');
 
@@ -58,7 +58,7 @@ export function extractVanillaStyles(
 let _installed = false;
 
 /**
- * Install the vanilla SSR adapter into @lessjs/core's renderDsd.
+ * Install the vanilla SSR adapter into @openelement/core's renderDsd.
  *
  * The vanilla adapter provides style extraction from the static `styles`
  * property. Component output itself must use core's VNode/null contract.

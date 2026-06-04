@@ -102,7 +102,7 @@ Current `_handleKeydown` for arrow keys + Enter + Escape. Keep the same logic �
 ## Migration Template
 
 ```typescript
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor } from '@openelement/core';
 
 // ── Shadow DOM styles (search trigger button) ──
 const sheet = new CSSStyleSheet();

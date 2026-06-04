@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - types.ts tests (Deno)
+ * @openelement/core - types.ts tests (Deno)
  *
  * Tests type exports and interface structure (compile-time checks).
  */
@@ -34,7 +34,7 @@ Deno.test('types: FrameworkOptions has expected shape', () => {
     html: { title: 'Test', lang: 'en' },
     island: { upgradeStrategy: 'idle' },
     middleware: { corsOrigin: '*' },
-    packageIslands: ['@lessjs/ui'],
+    packageIslands: ['@openelement/ui'],
     ssr: { noExternal: [/^lit/] },
   };
   assertExists(optsWithAll);

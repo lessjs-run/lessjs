@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/content",
+  "name": "@openelement/content",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",
@@ -14,8 +14,8 @@
     "gray-matter": "npm:gray-matter@^4.0.3",
     "@mdx-js/mdx": "npm:@mdx-js/mdx@^3.1.1",
     "section-matter": "npm:section-matter@^1.0.0",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.30.0/logger",
-    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.30.0/build-types",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.30.0/logger",
+    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.30.0/build-types",
     "typescript": "npm:typescript@^5.9.0",
     "vite": "npm:vite@8.0.10"
   },

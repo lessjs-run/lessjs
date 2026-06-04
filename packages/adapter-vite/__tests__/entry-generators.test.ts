@@ -7,9 +7,13 @@ Deno.test('empty -> zero JS', () => {
 
 Deno.test('client:load island loads immediately', () => {
   const code = generateClientEntry([
-    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'load' },
+    {
+      tagName: 'less-theme-toggle',
+      modulePath: '@openelement/ui/less-theme-toggle',
+      strategy: 'load',
+    },
   ]);
-  assert(code.includes('import("@lessjs/ui/less-theme-toggle")'));
+  assert(code.includes('import("@openelement/ui/less-theme-toggle")'));
   assert(code.includes('client:load islands'));
   try {
     new Function(code);
@@ -33,8 +37,12 @@ Deno.test('client:idle island deferred to idle', () => {
 
 Deno.test('mixed load+idle', () => {
   const code = generateClientEntry([
-    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'load' },
-    { tagName: 'less-hero-ping', modulePath: '@lessjs/ui/less-hero-ping', strategy: 'idle' },
+    {
+      tagName: 'less-theme-toggle',
+      modulePath: '@openelement/ui/less-theme-toggle',
+      strategy: 'load',
+    },
+    { tagName: 'less-hero-ping', modulePath: '@openelement/ui/less-hero-ping', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
   assert(code.includes('less:ready'));
@@ -102,13 +110,13 @@ Deno.test('package island strategy:load is preserved in client entry', () => {
   const code = generateClientEntry([
     {
       tagName: 'less-theme-toggle',
-      modulePath: '@lessjs/ui/less-theme-toggle',
+      modulePath: '@openelement/ui/less-theme-toggle',
       strategy: 'load',
       isPackage: true,
     },
     {
       tagName: 'less-button',
-      modulePath: '@lessjs/ui/less-button',
+      modulePath: '@openelement/ui/less-button',
       strategy: 'idle',
       isPackage: true,
     },
@@ -117,8 +125,8 @@ Deno.test('package island strategy:load is preserved in client entry', () => {
   // Load island must appear in the immediate-load array
   assert(code.includes('"less-theme-toggle"'));
   // Both must appear in the island map
-  assert(code.includes('import("@lessjs/ui/less-theme-toggle")'));
-  assert(code.includes('import("@lessjs/ui/less-button")'));
+  assert(code.includes('import("@openelement/ui/less-theme-toggle")'));
+  assert(code.includes('import("@openelement/ui/less-button")'));
 });
 
 Deno.test('client entry safely escapes tag names and module paths', () => {

@@ -79,7 +79,7 @@ LessJS 的核心架构创新在于将 **Declarative Shadow DOM (DSD)** 与 **Isl
 
 **不足**：
 
-1. **无响应式系统**：DsdElement 没有内置的属性变化检测机制（无 `observedAttributes` / `attributeChangedCallback` 自动映射，无 Lit 式的响应式属性）。这意味着需要 `@lessjs/signals` 来实现数据驱动的 UI 更新，但 signals 与 DsdElement 的集成路径尚未在基类层面标准化。
+1. **无响应式系统**：DsdElement 没有内置的属性变化检测机制（无 `observedAttributes` / `attributeChangedCallback` 自动映射，无 Lit 式的响应式属性）。这意味着需要 `@openelement/signals` 来实现数据驱动的 UI 更新，但 signals 与 DsdElement 的集成路径尚未在基类层面标准化。
 
 2. **手动 XSS 转义**：在 `less-layout.ts`（965 行，最大的 UI 组件）中可以看到 `_esc()` 和 `_escAttr()` 手动转义函数。这是 DsdElement 纯字符串渲染的固有代价——没有 Lit 的 `html` 模板标签自动转义保护。
 
@@ -278,7 +278,7 @@ packages/
 
 - **67 个测试文件**，覆盖所有 13 个包
 - **737+ 测试用例**（deno.json 注释提及）
-- 核心 `@lessjs/core` 有 16 个测试文件
+- 核心 `@openelement/core` 有 16 个测试文件
 - 适配器各有 2 个测试文件（dsd-hydration.test.ts + ssr.test.ts）
 - adapter-vite 有 17+ 个测试文件（覆盖构建管线各个阶段）
 - E2E 测试使用 Playwright
@@ -321,7 +321,7 @@ packages/
 
 **Island 按需加载**：`build-client.ts` 使用 `manualChunks` 将每个 island 拆分为独立 chunk（`island-{name}.js`），确保只有页面使用的 island 才被加载。
 
-**Signals 性能**：`@lessjs/signals` 优先使用浏览器原生 `Signal` API（`globalThis.Signal`），回退到自定义 polyfill。`effect()` 使用 `queueMicrotask` 批处理 + `pendingCount` 防抖，避免同步更新级联。
+**Signals 性能**：`@openelement/signals` 优先使用浏览器原生 `Signal` API（`globalThis.Signal`），回退到自定义 polyfill。`effect()` 使用 `queueMicrotask` 批处理 + `pendingCount` 防抖，避免同步更新级联。
 
 ### 6.4 缺失的基准
 
@@ -345,7 +345,7 @@ packages/
 
 **D1: DsdElement 响应式缺口**
 
-DsdElement 没有内置响应式系统，组件状态变化需要手动更新 DOM。`@lessjs/signals` 提供了 TC39 Signal 实现，但两者之间的集成路径（Signal → DOM 更新 → DSD 兼容）尚未标准化。当前 `less-layout.ts` 使用 `_loadContent()` 手动 fetch + innerHTML，没有利用 signals 的响应式能力。
+DsdElement 没有内置响应式系统，组件状态变化需要手动更新 DOM。`@openelement/signals` 提供了 TC39 Signal 实现，但两者之间的集成路径（Signal → DOM 更新 → DSD 兼容）尚未标准化。当前 `less-layout.ts` 使用 `_loadContent()` 手动 fetch + innerHTML，没有利用 signals 的响应式能力。
 
 **风险**：开发者需要在每个组件中自行解决"信号变化 → DOM 更新"的绑定问题，这会显著降低 DX。
 

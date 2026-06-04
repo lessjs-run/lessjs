@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-card
+ * @openelement/ui - less-card
  *
  * Minimal card container with optional header and footer.
  * Swiss International Style: borders are whispers, not shouts.
@@ -13,21 +13,21 @@
  *
  * Usage:
  * ```html
- * <less-card>
+ * <open-card>
  *   <h3 slot="header">Card Title</h3>
  *   <p>Card content goes here.</p>
- * </less-card>
+ * </open-card>
  *
- * <less-card variant="elevated">
+ * <open-card variant="elevated">
  *   <p>Elevated card with shadow.</p>
- * </less-card>
+ * </open-card>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-export const tagName = 'less-card';
+export const tagName = 'open-card';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -76,7 +76,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessCard extends DsdElement {
+export class OpenCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
@@ -93,9 +93,9 @@ export class LessCard extends DsdElement {
   }
 }
 
-export default LessCard;
+export default OpenCard;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessCard);
+  customElements.define(tagName, OpenCard);
 }

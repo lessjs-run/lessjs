@@ -4,7 +4,7 @@
 > Date: 2026-05-31
 > Version: v0.27.0
 > Related: ADR-0069, SOP-008, SOP-009, SOP-010
-> Supersedes: the ADR-0069 P0 assumption that `@lessjs/ui` should import
+> Supersedes: the ADR-0069 P0 assumption that `@openelement/ui` should import
 > app-generated content data directly.
 
 ## Context
@@ -14,15 +14,15 @@ global mixed route metadata, UI navigation data, i18n data, and layout state in
 one browser-side object. It was a framework-layer leak into the docs site.
 
 SOP-009 then tried to remove the remaining data virtual modules by making
-`less-layout` import generated data from `@lessjs/content/nav`. That direction
-is also wrong. `@lessjs/ui` is a package-level UI library. It must not import
-app-specific generated files, and it must not depend on the `@lessjs/content`
+`less-layout` import generated data from `@openelement/content/nav`. That direction
+is also wrong. `@openelement/ui` is a package-level UI library. It must not import
+app-specific generated files, and it must not depend on the `@openelement/content`
 package to render its default shell.
 
 The repo audit found four separate issues that were being treated as one
 resolver bug:
 
-1. `@lessjs/content/nav`, `@lessjs/content/blog-data`, and `@lessjs/i18n/data`
+1. `@openelement/content/nav`, `@openelement/content/blog-data`, and `@openelement/i18n/data`
    are overloaded. Package `deno.json` files expose them as package API
    subpaths, while `www/deno.json` remaps the same specifiers to app-generated
    files.
@@ -30,13 +30,13 @@ resolver bug:
    inside the UI package import graph.
 3. `adapter-vite` resolves generated data in several places with duplicated
    logic and hardcoded `www/app/data` paths.
-4. `www` still manually renders `<less-layout>` in route components and passes
+4. `www` still manually renders `<open-layout>` in route components and passes
    locale data per page, even though the framework already supports
    `_renderer.ts` route wrapping.
 
 The current checkout also shows that the root-cause text in ADR-0069 is now
 stale. `createLessJsrPackageResolverPlugin` no longer intercepts
-`@lessjs/content/*` or `@lessjs/i18n/*`; optional packages are explicitly left
+`@openelement/content/*` or `@openelement/i18n/*`; optional packages are explicitly left
 to other resolver layers. The remaining problem is package/app boundary
 overloading, not merely resolver order.
 
@@ -48,9 +48,9 @@ subpaths and generated application modules must not share the same specifier.
 The new generated data contract is:
 
 ```text
-@lessjs/generated/nav
-@lessjs/generated/blog-data
-@lessjs/generated/i18n
+@openelement/generated/nav
+@openelement/generated/blog-data
+@openelement/generated/i18n
 ```
 
 These specifiers are not package exports. They are app-local build products
@@ -63,33 +63,33 @@ app/data/_generated-blog-data.ts
 app/data/_generated-i18n-data.ts
 ```
 
-`@lessjs/content/nav`, `@lessjs/content/blog-data`, and `@lessjs/i18n/data`
+`@openelement/content/nav`, `@openelement/content/blog-data`, and `@openelement/i18n/data`
 remain package API subpaths only. They must not be remapped to app-generated
 files in new code.
 
-`@lessjs/ui/less-layout` remains a pure UI component. It accepts data through
+`@openelement/ui\/open-layout` remains a pure UI component. It accepts data through
 properties, attributes, or framework-owned context. It must not import:
 
 ```text
 virtual:less-nav
-@lessjs/content/nav
-@lessjs/generated/nav
+@openelement/content/nav
+@openelement/generated/nav
 ```
 
 The app shell boundary owns the connection between generated app data and UI
 layout. The framework should use the existing renderer wrapping model, or an
-auto-generated equivalent, to wrap route output with `<less-layout>` and inject
+auto-generated equivalent, to wrap route output with `<open-layout>` and inject
 nav, header nav, locale, locale list, and current path.
 
 The target data flow is:
 
 ```text
-@lessjs/content and @lessjs/i18n plugins
+@openelement/content and @openelement/i18n plugins
   -> scan routes/content/config
   -> write app/data/_generated-*.ts
-  -> @lessjs/generated/* resolver
+  -> @openelement/generated/* resolver
   -> app shell renderer
-  -> <less-layout ...>
+  -> <open-layout ...>
   -> page content
 ```
 
@@ -104,9 +104,9 @@ data.
 Package APIs are stable source APIs published by LessJS packages:
 
 ```text
-@lessjs/content/nav
-@lessjs/content/blog-data
-@lessjs/i18n/data
+@openelement/content/nav
+@openelement/content/blog-data
+@openelement/i18n/data
 ```
 
 They expose scanner, loader, writer, and helper code. They do not mean "the
@@ -117,9 +117,9 @@ current app's generated data".
 Generated app data is owned by the active app build:
 
 ```text
-@lessjs/generated/nav
-@lessjs/generated/blog-data
-@lessjs/generated/i18n
+@openelement/generated/nav
+@openelement/generated/blog-data
+@openelement/generated/i18n
 ```
 
 It is resolved from app root and data directory settings. It can be consumed by
@@ -128,7 +128,7 @@ components.
 
 ### UI Components
 
-`@lessjs/ui` must remain reusable outside the docs site. Its dependency graph
+`@openelement/ui` must remain reusable outside the docs site. Its dependency graph
 may include core UI/runtime packages, but it must not depend on content/i18n
 generated app data.
 
@@ -150,7 +150,7 @@ translate generated nav/i18n data into `less-layout` attributes.
    without every route component hand-authoring layout tags.
 5. Migrate `www` routes so route components return page content only.
 6. Remove data virtual modules after all generated-data consumers use
-   `@lessjs/generated/*`.
+   `@openelement/generated/*`.
 
 Builder virtual modules remain acceptable when they represent generated code
 entries or build triggers:
@@ -176,7 +176,7 @@ virtual:less-i18n-data
 ### Positive
 
 - Removes app-data meaning from package API subpaths.
-- Keeps `@lessjs/ui` reusable and package-pure.
+- Keeps `@openelement/ui` reusable and package-pure.
 - Gives `www` a framework-level path to zero manual layout wiring.
 - Removes duplicated resolver snippets and hardcoded data paths.
 - Makes SSG, dev, and client builds share one generated-data contract.
@@ -186,7 +186,7 @@ virtual:less-i18n-data
 ### Negative
 
 - Requires a controlled migration of route imports and `www/deno.json`.
-- Requires route components to stop wrapping themselves in `<less-layout>`.
+- Requires route components to stop wrapping themselves in `<open-layout>`.
 - Requires renderer/app-shell tests because route output shape changes.
 - Existing virtual-data imports need temporary compatibility while the migration
   is in progress.
@@ -195,7 +195,7 @@ virtual:less-i18n-data
 
 - The generated data still lives on disk. That remains the correct durable
   contract for build-known app data.
-- `@lessjs/content` and `@lessjs/i18n` remain optional framework features.
+- `@openelement/content` and `@openelement/i18n` remain optional framework features.
 - Existing explicit `_renderer.ts` files must continue to work; auto app-shell
   wrapping should compose with user renderers or be disabled when a user opts
   out.
@@ -207,13 +207,13 @@ virtual:less-i18n-data
 Rejected. It builds today, but it keeps app data inside package UI resolution
 and forces client stubs, SSG dispatch, and phase-context style bridges.
 
-### Make `less-layout` import `@lessjs/content/nav`
+### Make `less-layout` import `@openelement/content/nav`
 
-Rejected. This couples `@lessjs/ui` to an optional content package and to an
+Rejected. This couples `@openelement/ui` to an optional content package and to an
 app-specific generated file. It also makes the UI package depend on app import
 maps to load.
 
-### Keep remapping `@lessjs/content/*` in `www/deno.json`
+### Keep remapping `@openelement/content/*` in `www/deno.json`
 
 Rejected. The same specifier cannot safely mean "package API" in one graph and
 "this app's generated data" in another. That ambiguity is the source of the
@@ -235,7 +235,7 @@ packages/ and www/app source contain no data virtual imports:
   virtual:less-i18n-data
 
 www route files contain no framework layout wiring:
-  <less-layout
+  <open-layout
   locale=
   locales=
   nav-items=
@@ -244,9 +244,9 @@ www route files contain no framework layout wiring:
 adapter-vite contains no hardcoded generated-data path:
   www/app/data
 
-@lessjs/ui contains no content/generated-data imports:
-  @lessjs/content/nav
-  @lessjs/generated/nav
+@openelement/ui contains no content/generated-data imports:
+  @openelement/content/nav
+  @openelement/generated/nav
   virtual:less-nav
 ```
 

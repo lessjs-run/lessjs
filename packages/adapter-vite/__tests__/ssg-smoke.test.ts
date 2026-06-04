@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - SSG smoke build test
+ * @openelement/adapter-vite - SSG smoke build test
  *
  * End-to-end verification of the official one-command build path:
  *   deno task build
@@ -142,7 +142,7 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
       indexHtml.includes('shadowrootmode="open"') || indexHtml.includes('<template shadowroot'),
       'SSG output should preserve Declarative Shadow DOM',
     );
-    assertStringIncludes(indexHtml, '<less-layout');
+    assertStringIncludes(indexHtml, '<open-layout');
     assert(hasIslandChunk('less-layout-'), 'UI package island chunk should exist');
     assert(existsSync(join(WWW_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
     assert(existsSync(join(WWW_DIST, 'en', 'roadmap', 'index.html')), 'i18n roadmap should exist');

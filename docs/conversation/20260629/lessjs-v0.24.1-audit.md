@@ -1,4 +1,4 @@
-# LessJS v0.24.1 JSX+Signal 迁移深度审计报告
+﻿# LessJS v0.24.1 JSX+Signal 迁移深度审计报告
 
 - **审计对象**: LessJS monorepo 当前工作区
 - **审计重点**: v0.24.1 从 `html` tagged template DSL / `@prop()` 到 JSX + Signal 组件模型的迁移完整性
@@ -7,7 +7,7 @@
 
 ## 结论摘要
 
-v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`renderToString`、`renderToDOM`、`DsdElement` VNode 渲染分支、SVG `createElementNS`、事件 `addEventListener` + `AbortSignal` 清理、`@lessjs/signals` -> `@lessjs/core` 依赖与发布顺序均有实装证据。
+v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`renderToString`、`renderToDOM`、`DsdElement` VNode 渲染分支、SVG `createElementNS`、事件 `addEventListener` + `AbortSignal` 清理、`@openelement/signals` -> `@openelement/core` 依赖与发布顺序均有实装证据。
 
 但当前仓库还不能被判定为“可发布的 v0.24.1 完成态”，原因是存在 **P0 release gate 失败** 与 **文档/代码事实不一致**：
 
@@ -83,15 +83,15 @@ v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`r
 - **Problem**:
   - `docs/release/0.24.1.md` 写明 “removes the old `html` tagged template API entirely” 与 “zero backward-compatibility overhead”。
   - `docs/reference/core-api-surface.md` 写明 `html()`、`unsafeHTML()`、`TemplateResult`、`renderTemplateToString` 等 “Removed in v0.24.1”。
-  - 但 `packages/core/src/template.ts` 仍实现并导出 `html`、`unsafeHTML`、`classMap`、`when`、`choose`、`repeat`、`ref`，只是未从 `@lessjs/core` root barrel re-export。
+  - 但 `packages/core/src/template.ts` 仍实现并导出 `html`、`unsafeHTML`、`classMap`、`when`、`choose`、`repeat`、`ref`，只是未从 `@openelement/core` root barrel re-export。
   - `DsdElement` / `renderDSD` / streaming DSD / reactive-dsd tests 仍保留 `TemplateResult` 支持路径。
   - `prop.ts` 仍有 `@prop()` legacy runtime metadata 支持，虽注释称 decorator 已删除。
 - **Suggested fix**:
   - 在 v0.24.1 选择一种一致叙事：
-    - **方案 A（推荐，低风险）**: 改文档为“从 public root API 删除，legacy template runtime 作为 internal/back-compat path 暂留，不再推荐，不再从 root export”。同时明确计划迁移到 `@lessjs/core/html-legacy` 或 v0.28/v1.0 删除。
+    - **方案 A（推荐，低风险）**: 改文档为“从 public root API 删除，legacy template runtime 作为 internal/back-compat path 暂留，不再推荐，不再从 root export”。同时明确计划迁移到 `@openelement/core/html-legacy` 或 v0.28/v1.0 删除。
     - **方案 B（高风险）**: 真删除 template runtime 与 `TemplateResult` 分支，并迁移所有 tests / DSD legacy cases。
-  - 更新 `CHANGELOG.md` 的 “Removed” 表述为 “removed from public `@lessjs/core` barrel”。
-  - 为 `@lessjs/core/template` 是否应为私有 internal 文件加 gate：禁止 app/ui/www 直接 import。
+  - 更新 `CHANGELOG.md` 的 “Removed” 表述为 “removed from public `@openelement/core` barrel”。
+  - 为 `@openelement/core/template` 是否应为私有 internal 文件加 gate：禁止 app/ui/www 直接 import。
 
 ### P0-4: Public docs / README 仍展示旧组件模型或旧版本线
 
@@ -129,12 +129,12 @@ v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`r
 - **Problem**:
   - `renderToString()` 在 node 层对 Signal-like children 做 unwrap，但 `serializeAttrs()` 对 props 直接 `String(value)`。
   - `renderToDOM()` 在 node 层对 Signal-like children 做 unwrap，但 `applyProps()` 对 attrs 直接 `setAttribute(attrName, String(value))`，style 对象直接 `Object.assign()`。
-  - `@lessjs/signals` 的 `signal()` / `computed()` 返回对象只有 `.value` / `.subscribe()`，没有 `valueOf()` / `Symbol.toPrimitive`，因此属性位置仍可能产生 `[object Object]`。
+  - `@openelement/signals` 的 `signal()` / `computed()` 返回对象只有 `.value` / `.subscribe()`，没有 `valueOf()` / `Symbol.toPrimitive`，因此属性位置仍可能产生 `[object Object]`。
   - 这意味着 `<div title={signal('x')}>`、`<div className={signal('active')}>`、`<svg width={signal(16)}>`、`style={{ opacity: signal(1) }}` 等场景没有 SSR/CSR parity。
 - **Suggested fix**:
   - 增加统一 `unwrapSignalLike(value)`，在 `serializeAttrs()`、`styleObjectToString()`、`applyProps()`、style assignment 前全部调用。
   - 对 boolean attr、className/htmlFor、style object nested values、SVG numeric attrs 分别加测试。
-  - 可选：在 `@lessjs/signals` engine 创建的 signal/computed 上也定义 `valueOf()` 和 `Symbol.toPrimitive()`，但 renderer 显式 unwrap 仍应保留。
+  - 可选：在 `@openelement/signals` engine 创建的 signal/computed 上也定义 `valueOf()` 和 `Symbol.toPrimitive()`，但 renderer 显式 unwrap 仍应保留。
 
 ### P1-2: CSR renderer 关键路径测试不足
 
@@ -224,7 +224,7 @@ v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`r
 - **Severity**: P2
 - **File**: `.github/workflows/publish-jsr.yml:67`
 - **Problem**:
-  - 注释写 `v0.24.3: @lessjs/signals is now a dependency of @lessjs/core`，但当前包版本与审计目标是 `0.24.1`。
+  - 注释写 `v0.24.3: @openelement/signals is now a dependency of @openelement/core`，但当前包版本与审计目标是 `0.24.1`。
   - 逻辑本身正确，但版本注释会误导审计与 release archaeology。
 - **Suggested fix**:
   - 改为 `v0.24.1` 或删除版本号，只保留事实说明。
@@ -256,10 +256,10 @@ v0.24.1 的核心 JSX 管线已经基本落地：`jsx/jsxs/jsxDEV/Fragment`、`r
 ## 正向确认
 
 - **版本一致**: 全部 18 个 `packages/*/deno.json` 均为 `0.24.1`。
-- **依赖图**: `deno task graph:check` 通过，无循环，source-level `@lessjs/*` imports 均已声明。
+- **依赖图**: `deno task graph:check` 通过，无循环，source-level `@openelement/*` imports 均已声明。
 - **发布顺序（CI workflow）**: `.github/workflows/publish-jsr.yml` 中 `signals` 位于 `core` 之前，且 workflow 覆盖 18 packages。
 - **JSX runtime exports**: `packages/core/deno.json` 导出 `./jsx-runtime` 与 `./jsx-dev-runtime`。
-- **Build JSX config**: root `deno.json` 配置 `jsx: "react-jsx"` 与 `jsxImportSource: "@lessjs/core"`；adapter-vite 内部 build 已显式配置 JSX automatic runtime。
+- **Build JSX config**: root `deno.json` 配置 `jsx: "react-jsx"` 与 `jsxImportSource: "@openelement/core"`；adapter-vite 内部 build 已显式配置 JSX automatic runtime。
 - **CSR event model**: `renderToDOM.applyProps()` 使用 `addEventListener`，并通过可选 `AbortSignal` 清理。
 - **SVG namespace**: `renderToDOM` 已对常用 SVG tags 使用 `document.createElementNS(SVG_NS, tag)`。
 - **Signal child unwrap**: `renderToString()` 与 `renderToDOM()` 已对 JSX children 中的 Signal-like node 做递归 unwrap。

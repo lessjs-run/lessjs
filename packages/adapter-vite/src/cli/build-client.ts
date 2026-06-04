@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - CLI: Client Island Build
+ * @openelement/adapter-vite - CLI: Client Island Build
  *
  * Client build for Island components.
  * Produces dist/client/islands/*.js + manifest for SSG post-processing.
@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
-import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
-import { createLogger } from '@lessjs/core/logger';
+import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('ssg');
 
@@ -48,7 +48,7 @@ const WORKSPACE_ROOT: string | null = (() => {
 })();
 
 function getJsrPackageVersion(metaUrl: string): string {
-  const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
+  const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
   return match?.[1] ?? FALLBACK_LESSJS_VERSION;
 }
 
@@ -159,14 +159,14 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
       : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
     : [];
 
-  // Always resolve @lessjs/style-sheet from workspace (core re-exports it)
+  // Always resolve @openelement/style-sheet from workspace (core re-exports it)
   if (WORKSPACE_ROOT) {
     serializedAlias.push({
-      find: '@lessjs/style-sheet',
+      find: '@openelement/style-sheet',
       replacement: join(WORKSPACE_ROOT, 'packages', 'style-sheet', 'src', 'index.ts'),
     });
     (serializedAlias as Array<{ find: string | RegExp; replacement: string }>).push({
-      find: /^@lessjs\/router/,
+      find: /^@openelement\/router/,
       replacement: join(WORKSPACE_ROOT, 'packages', 'router', 'src'),
     });
   }
@@ -240,7 +240,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     // does not recognize (causes [object Object] rendering).
     esbuild: {
       jsx: 'automatic',
-      jsxImportSource: '@lessjs/core',
+      jsxImportSource: '@openelement/core',
     },
     build: {
       outDir: clientOutDir,
@@ -276,7 +276,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         | undefined,
     },
     plugins: [
-      createLessJsrPackageResolverPlugin({
+      createOpenJsrPackageResolverPlugin({
         workspaceRoot: WORKSPACE_ROOT,
         version: getJsrPackageVersion(import.meta.url),
       }),

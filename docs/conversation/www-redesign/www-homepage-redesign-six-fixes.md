@@ -1,4 +1,4 @@
-# WWW 首页重构 + 六项缺陷修复方案
+﻿# WWW 首页重构 + 六项缺陷修复方案
 
 - Date: 2026-05-19
 - Status: PROPOSED
@@ -105,7 +105,7 @@ SSG 渲染流程：
 
 - 定位语精简到 **一行**，用品牌色渐变高亮关键词
 - CTA 按钮加大（48px 高度），主按钮用品牌色填充，次按钮用 ghost 样式
-- 终端代码片段改为**打字机动画**（逐字出现 `deno run -A jsr:@lessjs/create my-app`）
+- 终端代码片段改为**打字机动画**（逐字出现 `deno run -A jsr:@openelement/create my-app`）
 - 呼吸光晕从 `box-shadow` 改为 `radial-gradient` + `@keyframes`，更柔和
 - stat 数字条改为**计数器动画**（数字从 0 跳到目标值），使用 `IntersectionObserver`
 
@@ -132,7 +132,7 @@ SSG 渲染流程：
 │  ◁ LessJS                               │
 │  "Less is More" — 零JS首屏的全栈框架     │
 │                                         │
-│  $ deno run -A jsr:@lessjs/create my-app │
+│  $ deno run -A jsr:@openelement/create my-app │
 │  [Get Started →]                        │
 │                                         │
 │  GitHub · Twitter · Discord              │
@@ -170,7 +170,7 @@ SSG 渲染流程：
 **涉及文件**：
 
 - `www/app/routes/index/index.ts` — `class DocsHome extends LitElement` → `class DocsHome extends DsdLitElement`
-- 需增加 `import { DsdLitElement } from '@lessjs/adapter-lit'`
+- 需增加 `import { DsdLitElement } from '@openelement/adapter-lit'`
 - `render()` 方法开头加 DSD 保护：`if (this._dsdHydrated) return nothing;` — 或由 `DsdLitElement` 基类自动处理
 - 验证 SSG 输出是否包含正确的 DSD `<template shadowrootmode="open">`
 
@@ -251,7 +251,7 @@ export function filterBlogNav(navSections) { ... }
 
 **涉及文件**：
 
-- `packages/ui/src/less-layout.ts` — 修改 `.layout-body` CSS
+- `packages/ui/src\/open-layout.ts` — 修改 `.layout-body` CSS
 
 ### Fix #6: Blog SearchButton 缺失
 
@@ -262,7 +262,7 @@ export function filterBlogNav(navSections) { ... }
 ```typescript
 const renderer: LessRenderer = {
   wrap(html: string, ctx) {
-    const layoutOpen = html.indexOf('<less-layout');
+    const layoutOpen = html.indexOf('<open-layout');
     if (layoutOpen >= 0) {
       const closeGt = html.indexOf('>', layoutOpen);
       if (closeGt > 0) {
@@ -522,6 +522,6 @@ const renderer: LessRenderer = {
 | P1     | 首页 CTA → 新 Footer                  | `www/app/routes/index/index.ts`                                                                     |
 | P1     | 404 页隐藏 sidebar                    | `www/app/routes/404.ts`                                                                             |
 | P1     | 404 添加 SearchButton                 | 新建 `www/app/routes/_shared-renderer.ts` 或 404 template 内                                        |
-| P2     | Sidebar 居中                          | `packages/ui/src/less-layout.ts`                                                                    |
+| P2     | Sidebar 居中                          | `packages/ui/src\/open-layout.ts`                                                                    |
 | P2     | 首页硬编码颜色 → CSS 变量             | `www/app/routes/index/index.ts`                                                                     |
 | P2     | Standalone 页面隐藏 sidebar           | `www/app/routes/changelog.ts`, `contributing.ts`, `roadmap.ts`                                      |

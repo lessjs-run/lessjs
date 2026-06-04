@@ -1,4 +1,4 @@
----
+﻿---
 title: 'LessJS 全仓库简化方案 — ADR 0009'
 date: '2026-05-10'
 type: 'adr'
@@ -20,13 +20,13 @@ ADR 0008 的 Phase C+B → A → D 是管线级重构，不在此重复。本方
 | Layer | 范围 | 性质 |
 |-------|------|------|
 | **Layer 0** | ADR 0008: C+B → A → D | 管线级：消除 createServer、globalThis、.less/ IPC、runtime-shim |
-| **Layer 1** | @lessjs/core 内部简化 | 模块级：删除多余抽象、消除重复、合并薄层 |
+| **Layer 1** | @openelement/core 内部简化 | 模块级：删除多余抽象、消除重复、合并薄层 |
 | **Layer 2** | 跨包解耦与复用 | 包级：统一 escape 模式、统一 logger、消除重复数据流 |
 | **Layer 3** | 入口与导出精简 | API 级：合并 re-export 链、清理死代码导出 |
 
 ---
 
-## 二、Layer 1 — @lessjs/core 内部简化
+## 二、Layer 1 — @openelement/core 内部简化
 
 ### 2.1 删除 `CodeBuilder` 类 → 用 `string[]` 替代
 
@@ -85,7 +85,7 @@ const safeErr = String(err.stack || err).replace(/&/g,'&amp;').replace(/</g,'&lt
 **改为**: 在 `buildEntryDescriptor()` 中给 `imports` 增加 `escapeHtml` 的导入声明，生成的代码改为：
 
 ```ts
-import { escapeHtml } from '@lessjs/core/html-escape';
+import { escapeHtml } from '@openelement/core/html-escape';
 // ...
 const safeErr = escapeHtml(String(err.stack || err));
 ```
@@ -168,11 +168,11 @@ function renderCorsOrigin(origin: CorsOriginConfig): string {
 
 `__ssr()` 是一个完全确定性的辅助函数，逻辑只依赖 `renderDSD` 和 `log`——两者都在 `less-runtime.ts` 中已导出。
 
-**方案**: 将 `__ssr` 移到 `less-runtime.ts` 导出，生成的 entry 代码只需 `import { ..., __ssr } from '@lessjs/core/less-runtime'`。
+**方案**: 将 `__ssr` 移到 `less-runtime.ts` 导出，生成的 entry 代码只需 `import { ..., __ssr } from '@openelement/core/less-runtime'`。
 
 **注意**: 这会增加 `less-runtime.ts` 的导出，但 `__ssr` 在 SSG bundle 中是 tree-shakeable 的（如果不被使用就不会包含）。
 
-**替代方案（更安全）**: 如果担心 `less-runtime.ts` 的职责膨胀，可以新建 `less-ssr-helper.ts` 并在 `entry-renderer.ts` 生成的代码中 `import { __ssr } from '@lessjs/core/less-ssr-helper'`。
+**替代方案（更安全）**: 如果担心 `less-runtime.ts` 的职责膨胀，可以新建 `less-ssr-helper.ts` 并在 `entry-renderer.ts` 生成的代码中 `import { __ssr } from '@openelement/core/less-ssr-helper'`。
 
 **收益**: 每个入口模块减少 ~200 字节生成代码。
 
@@ -219,7 +219,7 @@ export {
 } from './html-escape.js';
 ```
 
-`render-dsd.ts` re-export `html-escape.ts` 的所有内容——这意味着消费者可以从 `@lessjs/core/render-dsd` 或 `@lessjs/core/html-escape` 两处导入同一函数。
+`render-dsd.ts` re-export `html-escape.ts` 的所有内容——这意味着消费者可以从 `@openelement/core/render-dsd` 或 `@openelement/core/html-escape` 两处导入同一函数。
 
 **问题**: 这是历史遗留。`render-dsd.ts` 的核心职责是 DSD 渲染，不应承担 escape 工具的导出。
 
@@ -242,11 +242,11 @@ export {
 
 ---
 
-### 3.3 `@lessjs/content` 的 `blog-data.ts` → 与 `i18n-data.ts` 对齐
+### 3.3 `@openelement/content` 的 `blog-data.ts` → 与 `i18n-data.ts` 对齐
 
 **文件**: `packages/content/src/blog/blog-data.ts`
 
-当前使用 `globalThis[Symbol.for()]` 桥接，而 `@lessjs/i18n` 的 `i18n-data.ts` 使用干净的模式（纯模块变量）。
+当前使用 `globalThis[Symbol.for()]` 桥接，而 `@openelement/i18n` 的 `i18n-data.ts` 使用干净的模式（纯模块变量）。
 
 **方案**: ADR 0008 Phase B 已覆盖。执行后两者模式完全一致。
 
@@ -334,7 +334,7 @@ function walkHtmlFiles(dir: string, visitor: (content: string, fullPath: string)
 - `escapeAttr`, `escapeAttrValue`, `escapeHtml`, `SafeHtml`, `UnsafeHtml`
 - `ComponentLayer`, `DsdComponent`, `DsdOptions`, `HydrateEventDescriptor`, `RenderAdapter`, `registerAdapter`
 
-这些应引导消费者使用 `@lessjs/core/html-escape` 和 `@lessjs/core` 主入口。
+这些应引导消费者使用 `@openelement/core/html-escape` 和 `@openelement/core` 主入口。
 
 ---
 
@@ -371,7 +371,7 @@ export { wrapInDocument } from './ssr-handler.js';
 
 **方案**: 
 - 将 CLI 专用函数标记为 `@internal`（在 deno.json 的 exports 中不导出）
-- 或将其移到 `@lessjs/core/cli/*` 导出路径下
+- 或将其移到 `@openelement/core/cli/*` 导出路径下
 
 **收益**: 公共 API 表面更小，减少破坏性变更的风险。
 

@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - SSG Post-Processing
+ * @openelement/core - SSG Post-Processing
  *
  * Pure Node.js fs operations for SSG output post-processing.
  * No Vite dependency - these functions only read/write files.
@@ -16,7 +16,7 @@
 
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('core');
 

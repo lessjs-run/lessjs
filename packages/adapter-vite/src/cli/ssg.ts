@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Independent SSG CLI (ADR 0022)
+ * @openelement/adapter-vite - Independent SSG CLI (ADR 0022)
  *
  * Standalone SSG entry point that loads a previously built SSR bundle
  * using its sidecar importmap.json, then runs the full SSG rendering
@@ -20,7 +20,7 @@
 import { resolve } from 'node:path';
 import process from 'node:process';
 import { existsSync, readFileSync } from 'node:fs';
-import { createLogger } from '@lessjs/core/logger';
+import { createLogger } from '@openelement/core/logger';
 import { ssgRender } from './ssg-render.js';
 
 const log = createLogger('ssg-cli');

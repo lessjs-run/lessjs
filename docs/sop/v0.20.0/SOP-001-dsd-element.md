@@ -9,7 +9,7 @@
 
 ## Objective
 
-Create `DsdElement` — a zero-dependency native `HTMLElement` base class in `@lessjs/core` that replaces `DsdLitElement` for all DSD components.
+Create `DsdElement` — a zero-dependency native `HTMLElement` base class in `@openelement/core` that replaces `DsdLitElement` for all DSD components.
 
 ---
 
@@ -101,7 +101,7 @@ export type { HydrateEventDescriptor } from './types.js';
 
 - [ ] `npm run build` succeeds in `packages/core`
 - [ ] Unit tests pass (`npm test` or `deno test`)
-- [ ] `import { DsdElement } from '@lessjs/core'` works from external consumer
+- [ ] `import { DsdElement } from '@openelement/core'` works from external consumer
 - [ ] Types are exported correctly (check with `tsc --noEmit`)
 - [ ] No Lit import anywhere in `packages/core/src/dsd-element.ts`
 

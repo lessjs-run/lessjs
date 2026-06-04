@@ -28,7 +28,7 @@ LessJS evolved incrementally from an SSG-only DSD framework through multiple arc
 After v0.27.0 cleanup:
 
 - `_layoutWorkaroundReRender` deleted ✅
-- `@lessjs/core/navigation` deleted ✅
+- `@openelement/core/navigation` deleted ✅
 - `Router.start()` unified SPA navigation ✅
 - `data-signal` markers in SSR HTML ✅
 - All template strings migrated to JSX ✅
@@ -97,13 +97,13 @@ renderToString(vnode) → pure function (~250 lines)
 
 ### What Gets Deleted
 
-| Code                        | Reason                                   |
-| --------------------------- | ---------------------------------------- |
-| `_walkAndBind()`            | Position matching → marker matching      |
-| `effectScope` in hydration  | Alien scope blocks effect firing         |
-| `_layoutWorkaroundReRender` | Layout fix → RAF offsetHeight            |
-| `@lessjs/core/navigation`   | Hand-written nav → Router                |
-| `data-less-*` attributes    | Brand prefix → `data-signal` / `data-on` |
+| Code                           | Reason                                   |
+| ------------------------------ | ---------------------------------------- |
+| `_walkAndBind()`               | Position matching → marker matching      |
+| `effectScope` in hydration     | Alien scope blocks effect firing         |
+| `_layoutWorkaroundReRender`    | Layout fix → RAF offsetHeight            |
+| `@openelement/core/navigation` | Hand-written nav → Router                |
+| `data-less-*` attributes       | Brand prefix → `data-signal` / `data-on` |
 
 ---
 

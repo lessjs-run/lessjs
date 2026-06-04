@@ -115,15 +115,15 @@ show.value
 
 #### 4a: Single Import
 
-- [ ] Re-export `signal`, `computed`, `effect` from `@lessjs/core`
-  - Currently: `import { DsdElement, html } from '@lessjs/core'; import { signal } from '@lessjs/signals';`
-  - Target: `import { DsdElement, html, signal, computed } from '@lessjs/core';`
-- [ ] `@lessjs/signals` remains a standalone package for non-DsdElement use
+- [ ] Re-export `signal`, `computed`, `effect` from `@openelement/core`
+  - Currently: `import { DsdElement, html } from '@openelement/core'; import { signal } from '@openelement/signals';`
+  - Target: `import { DsdElement, html, signal, computed } from '@openelement/core';`
+- [ ] `@openelement/signals` remains a standalone package for non-DsdElement use
 
 #### 4b: Error Messages
 
 - [ ] `render()` returns non-string, non-TemplateResult → clear error: "DsdElement.render() must return string or html\`...\`"
-- [ ] Signal used without import → runtime detection + hint: "Did you forget `import { signal } from '@lessjs/core'`?"
+- [ ] Signal used without import → runtime detection + hint: "Did you forget `import { signal } from '@openelement/core'`?"
 - [ ] TemplateResult detected but no signals subscribed → warning: "Your html template uses no signals. Use render(): string for static content."
 - [ ] Cycle detected: signal write during render → warning: "Signal write detected during render(). This may cause infinite loops."
 
@@ -181,7 +181,7 @@ deno task dsd:check-report
 - [ ] Fine-grained patching works: changing sigA updates only `[data-b="0"]` node
 - [ ] 12+ reactive-dsd tests pass
 - [ ] 3 www components migrated to signals (less-search, less-toc, less-term)
-- [ ] Single import path: `import { DsdElement, html, signal } from '@lessjs/core'`
+- [ ] Single import path: `import { DsdElement, html, signal } from '@openelement/core'`
 - [ ] Migration guide exists and is linked from README
 - [ ] All gate commands pass
 - [ ] DSD report shows zero unknown errors from new components

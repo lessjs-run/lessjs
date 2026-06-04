@@ -18,7 +18,7 @@
 ```typescript
 /**
  * @deprecated Use JSX syntax instead. See ADR-0057.
- * The `html` tagged template will be moved to `@lessjs/core/html-legacy` in v0.28
+ * The `html` tagged template will be moved to `@openelement/core/html-legacy` in v0.28
  * and removed in v1.0.
  */
 export function html(strings: TemplateStringsArray, ...values: any[]): TemplateResult {
@@ -34,7 +34,7 @@ export function html(strings: TemplateStringsArray, ...values: any[]): TemplateR
 
 ### Step 2: 更新 deno.json exports
 
-在 `@lessjs/core` 的 deno.json 中保留所有导出（不删除），但 JSDoc 指向 JSX 路径。
+在 `@openelement/core` 的 deno.json 中保留所有导出（不删除），但 JSDoc 指向 JSX 路径。
 
 ### Step 3: 更新文档
 

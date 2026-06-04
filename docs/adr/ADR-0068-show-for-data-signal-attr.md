@@ -53,7 +53,7 @@ if (el.hasAttribute('data-signal-attr') || el.hasAttribute('data-signal-html')) 
 | ------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `less-search` overlay     | `effect()` + `classList.toggle('open')`                                         | `computed()` → `data-signal="overlayClass" data-signal-attr="class"` |
 | `less-search` results     | `effect()` + `_renderResultsTo()` + `document.createElement('a')` + `innerHTML` | `computed()` → `data-signal-html="resultsHtml"`                      |
-| `less-search` escaping    | `_esc()` private method                                                         | `escapeHtml`/`escapeAttr` from `@lessjs/core`                        |
+| `less-search` escaping    | `_esc()` private method                                                         | `escapeHtml`/`escapeAttr` from `@openelement/core`                   |
 | `less-toc` events         | `onClick={(e, id) => ...}` closure                                              | `data-on-click='_onClick'` + `dataset.tocId`                         |
 | `less-toc` signals        | No `registerSignal`                                                             | `registerSignal('activeId')` + `data-signal`                         |
 | `reactive-showcase` theme | `computed()` in prop                                                            | `registerSignal('theme')` + `data-signal-attr`                       |

@@ -1,13 +1,13 @@
 {
-  "name": "@lessjs/i18n",
+  "name": "@openelement/i18n",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",
     "./data": "./src/i18n-data.ts"
   },
   "imports": {
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.30.0/logger",
-    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.30.0/build-types",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.30.0/logger",
+    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.30.0/build-types",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

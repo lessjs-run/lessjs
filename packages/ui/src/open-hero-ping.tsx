@@ -1,4 +1,4 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
  * Hero Ping - Ocean component (v0.20.0 Ocean-Island).
  *
@@ -11,10 +11,10 @@
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button
  */
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-export const tagName = 'less-hero-ping';
+export const tagName = 'open-hero-ping';
 
 const styles: StyleSheetLike = new StyleSheet();
 styles.replaceSync(`

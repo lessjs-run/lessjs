@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-input
+ * @openelement/ui - less-input
  *
  * Minimal input field following Swiss International Style.
  * Clean borders, subtle focus states.
@@ -11,7 +11,7 @@
  * Features:
  * - Form-associated: participates in native <form> submission
  * - Supports label, placeholder, error, disabled, required
- * - Dispatches 'less-input' custom event on value change
+ * - Dispatches 'open-input' custom event on value change
  *
  * @csspart wrapper -The outer input-wrapper div
  * @csspart label -The label element
@@ -20,21 +20,21 @@
  *
  * Usage:
  * ```html
- * <less-input placeholder="Enter text"></less-input>
- * <less-input type="email" label="Email"></less-input>
+ * <open-input placeholder="Enter text"></open-input>
+ * <open-input type="email" label="Email"></open-input>
  * <form onsubmit="console.info(new FormData(this))">
- *   <less-input name="username" label="Username"></less-input>
+ *   <open-input name="username" label="Username"></open-input>
  *   <button type="submit">Submit</button>
  * </form>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 
-export const tagName = 'less-input';
+export const tagName = 'open-input';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -107,7 +107,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessInput extends DsdElement {
+export class OpenInput extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override formAssociated = true;
   static override delegatesFocus = true;
@@ -216,7 +216,7 @@ export class LessInput extends DsdElement {
     this.setAttribute('value', input.value);
     this._internals?.setFormValue(input.value);
     this.dispatchEvent(
-      new CustomEvent('less-input', {
+      new CustomEvent('open-input', {
         detail: { value: input.value },
         bubbles: true,
         composed: false,
@@ -262,9 +262,9 @@ export class LessInput extends DsdElement {
   private _escAttr = _escAttr;
 }
 
-export default LessInput;
+export default OpenInput;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessInput);
+  customElements.define(tagName, OpenInput);
 }

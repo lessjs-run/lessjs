@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - DSD DevTools Plugin
+ * @openelement/adapter-vite - DSD DevTools Plugin
  *
  * Injects a <less-devtool> custom element in dev mode for debugging
  * DSD rendering, hydration status, and island configuration.

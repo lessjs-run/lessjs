@@ -1,14 +1,14 @@
-sequenceDiagram
+﻿sequenceDiagram
     title LessJS v0.26.0 — Dev:Fast 零 Bundler SSR 渲染流程
 
     participant Browser as 🌐 Browser
     participant Deno as 🦕 Deno.serve
     participant Hono as 🔀 Hono Router
     participant SSR as 🧩 SSR Middleware
-    participant NavData as 📋 @lessjs/content/nav
+    participant NavData as 📋 @openelement/content/nav
     participant RouteModule as 📄 Route Module
     participant RenderDSD as 🎨 render-dsd.ts
-    participant AdapterLit as 🔌 @lessjs/adapter-lit
+    participant AdapterLit as 🔌 @openelement/adapter-lit
 
     Browser->>Deno: GET /docs/getting-started
     Deno->>Hono: fetch(request)
@@ -21,7 +21,7 @@ sequenceDiagram
         SSR->>SSR: isStaticAsset() → false
 
         Note over SSR,NavData: SOP-001 成果：纯 ESM，零 virtual: 导入
-        SSR->>NavData: import { navTree } from '@lessjs/content/nav'
+        SSR->>NavData: import { navTree } from '@openelement/content/nav'
         NavData-->>SSR: NavTree { groups, flatMap }
 
         SSR->>SSR: findNavItemInTree(navTree, path)

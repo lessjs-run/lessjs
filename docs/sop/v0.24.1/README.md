@@ -62,7 +62,7 @@ LessJS 组件开发者
 - VNode 接口冻结条款写入代码注释 + ADR
 - `static props` 替代 `@prop()`，DsdElement 自动生成 `observedAttributes`
 - Signal 自动解包在 JSX `{}` 内生效，边界场景文档化 + `unwrap()` 工具存在
-- 所有 `@lessjs/ui` 内部组件迁移到 JSX + static props
+- 所有 `@openelement/ui` 内部组件迁移到 JSX + static props
 - `html` tagged template 标记 `@deprecated`，JSDoc 指向 JSX 路径
 - `deno task test` 通过（含新增 jsx-runtime 测试 + 迁移后组件回归测试）
 - `deno task dsd:check-report` 通过

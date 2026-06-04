@@ -10,19 +10,19 @@
 
 ## Goal
 
-Complete the workaround-chain cleanup without coupling `@lessjs/ui` to app
+Complete the workaround-chain cleanup without coupling `@openelement/ui` to app
 generated data.
 
 The final state is:
 
 - `www` route components render page content only.
-- `www` route components do not hand-author `<less-layout>`.
+- `www` route components do not hand-author `<open-layout>`.
 - `www` route components do not hand-pass `locale`, `locales`, `nav-items`,
   `header-nav`, or `current-path`.
-- `@lessjs/ui/less-layout` does not import generated data, content data, or
+- `@openelement/ui\/open-layout` does not import generated data, content data, or
   virtual data modules.
-- Generated app data is imported through `@lessjs/generated/*`.
-- Package API subpaths such as `@lessjs/content/nav` are not remapped to app
+- Generated app data is imported through `@openelement/generated/*`.
+- Package API subpaths such as `@openelement/content/nav` are not remapped to app
   generated files.
 - `adapter-vite` has one generated-data resolver used by dev, SSG, and client
   build paths.
@@ -37,14 +37,14 @@ Observed state:
 - `deno task build` passes and generates 351 HTML files.
 - The DSD report is generated with 322 pages and 0 render errors.
 - `deno task graph:check` passes for 19 packages with no cycles.
-- `deno task typecheck` fails in `packages/ui/src/less-layout.tsx` because
+- `deno task typecheck` fails in `packages/ui/src\/open-layout.tsx` because
   `_navSections` and `_headerNavLinks` are typed as `unknown[]` but returned as
   `NavSection[]` and `HeaderNavLink[]`.
 - `www/app` has 0 `_renderer.ts` files.
-- `www/app/routes` has 52 `<less-layout>` occurrences.
+- `www/app/routes` has 52 `<open-layout>` occurrences.
 - `www/app/routes` has 44 `locale=` and 44 `locales=` attributes.
 - `www/app/routes` still imports generated blog data through
-  `@lessjs/content/blog-data`.
+  `@openelement/content/blog-data`.
 - `build-ssg.ts` and `less-plugin.ts` still hardcode `www/app/data`.
 - Client build still emits a `_virtual_less-nav-client` chunk.
 
@@ -57,8 +57,8 @@ passes because the current virtual-data bridge still exists.
 - Do not rewrite the entry renderer as an AST/template generator in this SOP.
 - Do not remove builder virtual modules used for generated entries or route
   types.
-- Do not make `@lessjs/ui` depend on `@lessjs/content`, `@lessjs/i18n`, or
-  `@lessjs/generated/*`.
+- Do not make `@openelement/ui` depend on `@openelement/content`, `@openelement/i18n`, or
+  `@openelement/generated/*`.
 - Do not bring back `window.__ROUTE_MANIFEST__`.
 - Do not patch only `www` route pages while leaving framework contracts
   ambiguous.
@@ -67,7 +67,7 @@ passes because the current virtual-data bridge still exists.
 
 Purpose: make the current dirty baseline type-checkable before larger movement.
 
-1. Fix the two type errors in `packages/ui/src/less-layout.tsx`.
+1. Fix the two type errors in `packages/ui/src\/open-layout.tsx`.
    - Preferred temporary fix: type `_navSections` as `NavSection[] | undefined`.
    - Preferred temporary fix: type `_headerNavLinks` as
      `HeaderNavLink[] | undefined`.
@@ -92,9 +92,9 @@ Purpose: split package APIs from app-generated data.
 1. Add canonical generated-data specifiers:
 
 ```text
-@lessjs/generated/nav
-@lessjs/generated/blog-data
-@lessjs/generated/i18n
+@openelement/generated/nav
+@openelement/generated/blog-data
+@openelement/generated/i18n
 ```
 
 2. Add one shared resolver implementation in `packages/adapter-vite/src`, for
@@ -116,9 +116,9 @@ interface GeneratedDataResolverOptions {
 4. The resolver maps:
 
 ```text
-@lessjs/generated/nav       -> <root>/<dataDir>/_generated-nav.ts
-@lessjs/generated/blog-data -> <root>/<dataDir>/_generated-blog-data.ts
-@lessjs/generated/i18n      -> <root>/<dataDir>/_generated-i18n-data.ts
+@openelement/generated/nav       -> <root>/<dataDir>/_generated-nav.ts
+@openelement/generated/blog-data -> <root>/<dataDir>/_generated-blog-data.ts
+@openelement/generated/i18n      -> <root>/<dataDir>/_generated-i18n-data.ts
 ```
 
 5. Missing files must resolve to explicit typed fallback modules only during
@@ -135,9 +135,9 @@ Test cases:
 
 - resolves all three generated specifiers from root + default data dir.
 - resolves from a custom data dir.
-- does not resolve `@lessjs/content/nav`.
-- does not resolve `@lessjs/content/blog-data`.
-- does not resolve `@lessjs/i18n/data`.
+- does not resolve `@openelement/content/nav`.
+- does not resolve `@openelement/content/blog-data`.
+- does not resolve `@openelement/i18n/data`.
 - fallback module exports match the generated writer contracts.
 
 Exit criteria:
@@ -159,22 +159,22 @@ Purpose: remove hardcoded data paths and duplicate resolver logic.
 6. Keep temporary compatibility for old app-data aliases only if needed:
 
 ```text
-@lessjs/content/nav
-@lessjs/content/blog-data
-@lessjs/i18n/data
+@openelement/content/nav
+@openelement/content/blog-data
+@openelement/i18n/data
 ```
 
 Compatibility must be marked deprecated in comments and tests. New framework
-code must use `@lessjs/generated/*`.
+code must use `@openelement/generated/*`.
 
 7. Update `www/deno.json` to add the generated namespace:
 
 ```json
 {
   "imports": {
-    "@lessjs/generated/nav": "./app/data/_generated-nav.ts",
-    "@lessjs/generated/blog-data": "./app/data/_generated-blog-data.ts",
-    "@lessjs/generated/i18n": "./app/data/_generated-i18n-data.ts"
+    "@openelement/generated/nav": "./app/data/_generated-nav.ts",
+    "@openelement/generated/blog-data": "./app/data/_generated-blog-data.ts",
+    "@openelement/generated/i18n": "./app/data/_generated-i18n-data.ts"
   }
 }
 ```
@@ -205,9 +205,9 @@ It must compose with explicit user `_renderer.ts` files.
 2. The generated app shell imports:
 
 ```typescript
-import '@lessjs/ui/less-layout';
-import { headerNav, navSections } from '@lessjs/generated/nav';
-import { getDefaultLocale, locales } from '@lessjs/generated/i18n';
+import '@openelement/ui\/open-layout';
+import { headerNav, navSections } from '@openelement/generated/nav';
+import { getDefaultLocale, locales } from '@openelement/generated/i18n';
 ```
 
 3. The app shell computes:
@@ -220,7 +220,7 @@ import { getDefaultLocale, locales } from '@lessjs/generated/i18n';
 4. The app shell wraps page content:
 
 ```html
-<less-layout
+<open-layout
   current-path="..."
   locale="..."
   locales="[...]"
@@ -228,7 +228,7 @@ import { getDefaultLocale, locales } from '@lessjs/generated/i18n';
   header-nav="[...]"
 >
   ...
-</less-layout>
+</open-layout>
 ```
 
 5. Attribute serialization must use the same escaping rules as the render
@@ -254,12 +254,12 @@ This is allowed because it declares page semantics. It is not framework wiring.
 - shell and user renderer compose in deterministic order.
 - SSG `renderRoute()` passes locale to the app shell.
 - generated nav/i18n imports are present only in the app-shell module.
-- `@lessjs/ui` generated code has no `@lessjs/generated/*` import.
+- `@openelement/ui` generated code has no `@openelement/generated/*` import.
 
 Exit criteria:
 
-- A route can render inside `<less-layout>` without the route component
-  containing `<less-layout>`.
+- A route can render inside `<open-layout>` without the route component
+  containing `<open-layout>`.
 - Explicit user renderers still work.
 - Build and typecheck pass.
 
@@ -268,8 +268,8 @@ Exit criteria:
 Purpose: make `www` a consumer of framework layout instead of a layout owner.
 
 1. For each `www/app/routes/**/*.tsx` page:
-   - remove `import "@lessjs/ui/less-layout"` when it is used only for layout.
-   - remove `<less-layout>` wrappers.
+   - remove `import "@openelement/ui\/open-layout"` when it is used only for layout.
+   - remove `<open-layout>` wrappers.
    - remove `locale=`, `locales=`, `current-path=`, `nav-items=`,
      `header-nav=`.
    - keep authored page content, examples, islands, and page-specific styles.
@@ -283,14 +283,14 @@ Purpose: make `www` a consumer of framework layout instead of a layout owner.
      route metadata, not by manually bypassing the framework in ad hoc ways.
 
 3. Blog routes:
-   - replace `@lessjs/content/blog-data` imports with
-     `@lessjs/generated/blog-data`.
+   - replace `@openelement/content/blog-data` imports with
+     `@openelement/generated/blog-data`.
    - update comments that still mention `virtual:less-blog-data`.
 
 4. i18n route helpers:
-   - route code should not import app i18n data from `@lessjs/i18n/data`.
-   - if app i18n data is needed, use `@lessjs/generated/i18n`.
-   - package helpers remain imported from `@lessjs/i18n`.
+   - route code should not import app i18n data from `@openelement/i18n/data`.
+   - if app i18n data is needed, use `@openelement/generated/i18n`.
+   - package helpers remain imported from `@openelement/i18n`.
 
 Exit criteria:
 
@@ -298,7 +298,7 @@ The following commands return zero for route wiring:
 
 ```powershell
 $files = Get-ChildItem www\app\routes -Recurse -Include *.ts,*.tsx
-($files | Select-String -Pattern '<less-layout' -SimpleMatch).Count
+($files | Select-String -Pattern '<open-layout' -SimpleMatch).Count
 ($files | Select-String -Pattern 'locale=' -SimpleMatch).Count
 ($files | Select-String -Pattern 'locales=' -SimpleMatch).Count
 ($files | Select-String -Pattern 'nav-items=' -SimpleMatch).Count
@@ -358,20 +358,20 @@ Purpose: finish the namespace split.
 1. Remove old generated-data remaps from `www/deno.json`:
 
 ```text
-@lessjs/content/nav
-@lessjs/content/blog-data
-@lessjs/i18n/data
+@openelement/content/nav
+@openelement/content/blog-data
+@openelement/i18n/data
 ```
 
 2. Keep package import maps in root/package `deno.json` files aligned with real
    package exports.
 3. Remove compatibility branches in the generated-data resolver.
-4. Add a test that `@lessjs/content/nav` is not treated as app-generated data.
+4. Add a test that `@openelement/content/nav` is not treated as app-generated data.
 
 Exit criteria:
 
-- `www/deno.json` only maps `@lessjs/generated/*` for generated data.
-- `@lessjs/content/*` package subpaths keep their package meaning.
+- `www/deno.json` only maps `@openelement/generated/*` for generated data.
+- `@openelement/content/*` package subpaths keep their package meaning.
 - No generated-data resolver handles package API specifiers.
 
 ## Verification
@@ -411,10 +411,10 @@ Get-ChildItem packages -Recurse -Include *.ts,*.tsx |
   Select-String -Pattern 'www/app/data'
 
 Get-ChildItem packages\ui -Recurse -Include *.ts,*.tsx |
-  Select-String -Pattern '@lessjs/content/nav','@lessjs/generated/nav','virtual:less-nav'
+  Select-String -Pattern '@openelement/content/nav','@openelement/generated/nav','virtual:less-nav'
 
 Get-ChildItem www\app\routes -Recurse -Include *.ts,*.tsx |
-  Select-String -Pattern '<less-layout','locale=','locales=','nav-items=','header-nav=','current-path='
+  Select-String -Pattern '<open-layout','locale=','locales=','nav-items=','header-nav=','current-path='
 ```
 
 All four grep gates must return zero product-code matches.
@@ -438,15 +438,15 @@ SOP-010 is complete only when:
 - route wiring grep gates are zero.
 - data virtual grep gates are zero.
 - framework hardcoded `www/app/data` grep gate is zero.
-- `@lessjs/ui` has no app data imports.
-- `www/deno.json` uses `@lessjs/generated/*` for app generated data.
+- `@openelement/ui` has no app data imports.
+- `www/deno.json` uses `@openelement/generated/*` for app generated data.
 - SOP-009 can be updated to point to this SOP as the corrected completion path.
 
 ## Handoff Notes
 
 This SOP intentionally corrects SOP-009 rather than continuing its original P0
 plan. The failed plan tried to solve route/layout/data duplication by moving
-app data into `@lessjs/ui`. The correct plan moves data composition upward into
+app data into `@openelement/ui`. The correct plan moves data composition upward into
 the app shell boundary.
 
 If a future implementation hits resolver errors, first check whether the code

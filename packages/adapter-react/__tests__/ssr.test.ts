@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-react - SSR tests
+ * @openelement/adapter-react - SSR tests
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 import {
@@ -8,7 +8,7 @@ import {
   renderReactToString,
   uninstallReactAdapter,
 } from '../src/ssr.ts';
-import { getDefaultRegistry } from '@lessjs/core';
+import { getDefaultRegistry } from '@openelement/core';
 
 Deno.test('isReactElement detects React elements', () => {
   // Create a minimal React element structure

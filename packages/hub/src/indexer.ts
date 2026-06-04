@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Hub Search Index Builder
+ * @openelement/hub - Hub Search Index Builder
  *
  * v0.19.0: Build lightweight search indices from HubPackageRecord arrays.
  * Produces HubIndex instances that can be consumed by client-side search UIs.

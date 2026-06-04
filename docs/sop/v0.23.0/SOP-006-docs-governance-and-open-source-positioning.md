@@ -53,14 +53,14 @@ Acceptance:
 
 ### Step 2: Update Package Role Language
 
-- [ ] Describe `@lessjs/core` as runtime kernel.
-- [ ] Describe `@lessjs/signals` as facade over `alien-signals`.
-- [ ] Describe `@lessjs/app` as configuration facade.
+- [ ] Describe `@openelement/core` as runtime kernel.
+- [ ] Describe `@openelement/signals` as facade over `alien-signals`.
+- [ ] Describe `@openelement/app` as configuration facade.
 - [ ] Describe any authoring facade separately if introduced.
 - [ ] Mark compatibility bridges where needed.
-- [ ] Describe `@lessjs/adapter-vite` as the Vite/SSG adapter, not the owner of
+- [ ] Describe `@openelement/adapter-vite` as the Vite/SSG adapter, not the owner of
       all build-time concepts.
-- [ ] Describe `@lessjs/content` and `@lessjs/i18n` as feature packages that
+- [ ] Describe `@openelement/content` and `@openelement/i18n` as feature packages that
       consume shared build contracts.
 
 Acceptance:

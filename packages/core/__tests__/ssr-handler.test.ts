@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - wrapInDocument & renderSsrError tests (Deno)
+ * @openelement/core - wrapInDocument & renderSsrError tests (Deno)
  *
  * Both functions are now in html-escape.ts (ssr-handler.ts was removed
  * as a pure re-export facade).

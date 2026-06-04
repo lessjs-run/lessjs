@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - less-button
+ * @openelement/ui - less-button
  *
  * Minimal button component following Swiss International Style.
  * Pure B&W design with subtle hover states.
@@ -15,18 +15,18 @@
  *
  * Usage:
  * ```html
- * <less-button>Click me</less-button>
- * <less-button variant="primary">Submit</less-button>
- * <less-button size="sm" disabled>Small</less-button>
+ * <open-button>Click me</open-button>
+ * <open-button variant="primary">Submit</open-button>
+ * <open-button size="sm" disabled>Small</open-button>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _escAttr } from './shared/escape.js';
 
-export const tagName = 'less-button';
+export const tagName = 'open-button';
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
@@ -133,7 +133,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class LessButton extends DsdElement {
+export class OpenButton extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override formAssociated = true;
@@ -231,9 +231,9 @@ export class LessButton extends DsdElement {
   private _escAttr = _escAttr;
 }
 
-export default LessButton;
+export default OpenButton;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessButton);
+  customElements.define(tagName, OpenButton);
 }

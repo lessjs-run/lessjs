@@ -1,8 +1,8 @@
 /**
- * @lessjs/cem â€” Custom Elements Manifest types.
+ * @openelement/cem ¡ª Custom Elements Manifest types.
  *
  * Canonical owner of CEM schema types and LessJS package manifest types.
- * Formerly defined in @lessjs/core/types.ts and migrated here in v0.23.0
+ * Formerly defined in @openelement/core/types.ts and migrated here in v0.23.0
  * (SOP-001).
  *
  * Types owned by this package:
@@ -11,11 +11,11 @@
  * - LessJS package manifest types (LessPackageManifest, LessDeclaration, etc.)
  */
 
-import type { ComponentLayer, HydrationStrategy } from '@lessjs/core';
+import type { ComponentLayer, HydrationStrategy } from '@openelement/core';
 
 export type { ComponentLayer, HydrationStrategy };
 
-// â”€â”€â”€ WC Package Protocol (v0.16+) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ WC Package Protocol (v0.16+) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Custom element attribute descriptor (CEM-compatible) */
 export interface LessAttribute {
@@ -101,7 +101,7 @@ export interface LessElementExtensions {
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
   hydrate?: HydrationStrategy;
-  /** Module path for import (e.g. '@lessjs/ui/less-button') */
+  /** Module path for import (e.g. '@openelement/ui/less-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
   export?: string;
@@ -165,14 +165,14 @@ export interface LessModule {
   declarations?: string[];
 }
 
-/** CEM-compatible package manifest for LessJS Web Component packages.
+/** CEM-compatible package manifest for openElement Web Component packages.
  *
  * Structured, tool-consumable metadata for an entire WC package.
  */
 export interface LessPackageManifest {
   /** Schema version of the manifest format */
   schemaVersion: string;
-  /** Package name on JSR/npm (e.g. '@lessjs/ui') */
+  /** Package name on JSR/npm (e.g. '@openelement/ui') */
   packageName: string;
   /** Package version (semver) */
   version: string;
@@ -194,7 +194,7 @@ export interface LessPackageManifest {
   less?: LessPackageExtensions;
 }
 
-// â”€â”€â”€ CEM Schema Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM Schema Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** CEM schema version */
 export type CemSchemaVersion = string;
@@ -468,7 +468,7 @@ export interface CustomElementsManifest {
   [key: string]: unknown;
 }
 
-// â”€â”€â”€ CEM Parse Result Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ©¤©¤©¤ CEM Parse Result Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Result of parsing a CEM file */
 export interface CemParseResult {

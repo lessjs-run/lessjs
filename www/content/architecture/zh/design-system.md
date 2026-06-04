@@ -5,7 +5,7 @@ label: 'Design System'
 order: 10
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -94,9 +94,9 @@ currentPath=/architecture/design-system`}
           <span class='preview-badge'>可用</span>
         </div>
         <div class='preview-body'>
-          <less-button variant='primary'>主要按钮</less-button>
-          <less-button>默认按钮</less-button>
-          <less-button variant='ghost'>幽灵按钮</less-button>
+          <open-button variant='primary'>主要按钮</open-button>
+          <open-button>默认按钮</open-button>
+          <open-button variant='ghost'>幽灵按钮</open-button>
         </div>
       </div>
     </div>
@@ -108,17 +108,17 @@ currentPath=/architecture/design-system`}
           <span class='preview-badge'>可用</span>
         </div>
         <div class='preview-body preview-body-col'>
-          <less-input placeholder='输入邮箱...' label='邮箱'></less-input>
-          <less-input type='password' placeholder='密码' label='密码' required>
-          </less-input>
-          <less-input value='hello@lessjs.org' label='只读' disabled></less-input>
+          <open-input placeholder='输入邮箱...' label='邮箱'></open-input>
+          <open-input type='password' placeholder='密码' label='密码' required>
+          </open-input>
+          <open-input value='hello@openelement.org' label='只读' disabled></open-input>
         </div>
       </div>
     </div>
     <div class='install-section'>
-      <h3>安装 @lessjs/ui</h3>
+      <h3>安装 @openelement/ui</h3>
       <div class='install-cmd'>
-        <span class='prompt'>$</span> deno add jsr:@lessjs/ui
+        <span class='prompt'>$</span> deno add jsr:@openelement/ui
       </div>
       <p>Deno、Node、Bun。零配置。</p>
     </div>

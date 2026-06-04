@@ -30,7 +30,7 @@ coherent `0.28.3` package line.
 - Added `packages/protocols/src/__tests__/validators.test.ts` with 101 tests
   for protocol and manifest validation.
 - Added `packages/protocols/src/validators.ts` and exported it as
-  `@lessjs/protocols/validators`.
+  `@openelement/protocols/validators`.
 
 ### Lockfile Alignment
 
@@ -50,7 +50,7 @@ coherent `0.28.3` package line.
 
 - Added `docs/adr/ADR-0072-mdx-in-lessjs.md`.
 - Added `packages/content/src/mdx/` with `compileMdx()` and typed MDX metadata.
-- Exported `@lessjs/content/mdx`.
+- Exported `@openelement/content/mdx`.
 - Added `packages/adapter-vite/src/plugin-mdx.ts` with `lessMdx()` and
   `mdxPlugin()` exports.
 - Inserted the MDX plugin into the Less Vite plugin stack.
@@ -60,7 +60,7 @@ coherent `0.28.3` package line.
 ### Package Release Alignment
 
 - Bumped all 19 package `deno.json` versions to `0.28.3`.
-- Updated internal `jsr:@lessjs/*` ranges to `^0.28.3`.
+- Updated internal `jsr:@openelement/*` ranges to `^0.28.3`.
 - Added `docs/changelog/v0.28.3.md` and `docs/release/v0.28.3.md`.
 
 ## Rewrite Notes

@@ -90,7 +90,8 @@ export function collectEventBindings(node: unknown): Map<string, EventBindingRec
     const { tag, props, children } = value as VNode;
 
     if (
-      tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')
+      tag === Fragment ||
+      (typeof tag === 'symbol' && String(tag) === 'Symbol(openelement.fragment)')
     ) {
       for (const child of children) visit(child);
       return;

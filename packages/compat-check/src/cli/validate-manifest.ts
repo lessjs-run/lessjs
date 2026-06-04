@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * @lessjs/validate-manifest - CLI for validating CEM manifests.
+ * @openelement/validate-manifest - CLI for validating CEM manifests.
  *
  * Usage:
- *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json
- *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json --json
- *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json --strict
+ *   deno run -A jsr:@openelement/core/validate-manifest ./custom-elements.json
+ *   deno run -A jsr:@openelement/core/validate-manifest ./custom-elements.json --json
+ *   deno run -A jsr:@openelement/core/validate-manifest ./custom-elements.json --strict
  *
  * Exit codes:
  *   0 - manifest is valid

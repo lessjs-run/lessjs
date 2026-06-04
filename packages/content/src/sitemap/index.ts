@@ -1,5 +1,5 @@
 /**
- * @lessjs/content/sitemap - Sitemap module
+ * @openelement/content/sitemap - Sitemap module
  *
  * Generates sitemap.xml and robots.txt from SSG output.
  */

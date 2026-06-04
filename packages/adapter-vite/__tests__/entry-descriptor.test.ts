@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Entry descriptor + renderer tests (Deno)
+ * @openelement/adapter-vite - Entry descriptor + renderer tests (Deno)
  *
  * Tests the two-step entry pipeline:
  *   1. buildEntryDescriptor - produces structured data
@@ -10,7 +10,7 @@
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
-import type { RouteEntry } from '@lessjs/core';
+import type { RouteEntry } from '@openelement/core';
 
 // ─── Test fixtures ─────────────────────────────────────────────
 
@@ -131,7 +131,7 @@ Deno.test('renderEntry: produces valid module code', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   assertStringIncludes(
     code,
-    "import { renderDsd, renderDsdTree, escapeHtml } from '@lessjs/core'",
+    "import { renderDsd, renderDsdTree, escapeHtml } from '@openelement/core'",
   );
   assertStringIncludes(code, 'export default app');
   assertStringIncludes(code, 'const app = new Hono()');

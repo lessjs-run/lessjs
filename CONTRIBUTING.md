@@ -5,7 +5,7 @@ Thanks for your interest in contributing! Here's how to get started.
 ## Development Setup
 
 ```bash
-git clone https://github.com/lessjs-run/lessjs.git
+git clone https://github.com/open-element/open-element.git
 cd lessjs
 deno task dev      # Start dev server at localhost:5173
 deno task build    # Production build (3-phase SSG)

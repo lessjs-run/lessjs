@@ -15,7 +15,7 @@ Migrate the three **pure display** components (no interactivity, no events) from
 
 ## Pre-requisites
 
-- [ ] SOP-001: `DsdElement` base class exists in `@lessjs/core`
+- [ ] SOP-001: `DsdElement` base class exists in `@openelement/core`
 - [ ] SOP-002: `renderDsd()` extracts CSSStyleSheet
 - [ ] SOP-003: Open Props token sheet available
 
@@ -23,11 +23,11 @@ Migrate the three **pure display** components (no interactivity, no events) from
 
 ## Components
 
-| Component        | File                                | Lines | Events? | State? |
-| ---------------- | ----------------------------------- | ----- | ------- | ------ |
-| `less-card`      | `packages/ui/src/less-card.ts`      | 96    | No      | No     |
-| `less-callout`   | `packages/ui/src/less-callout.ts`   | ~60   | No      | No     |
-| `less-step-card` | `packages/ui/src/less-step-card.ts` | ~100  | No      | No     |
+| Component        | File                                 | Lines | Events? | State? |
+| ---------------- | ------------------------------------ | ----- | ------- | ------ |
+| `less-card`      | `packages/ui/src\/open-card.ts`      | 96    | No      | No     |
+| `less-callout`   | `packages/ui/src\/open-callout.ts`   | ~60   | No      | No     |
+| `less-step-card` | `packages/ui/src\/open-step-card.ts` | ~100  | No      | No     |
 
 ---
 
@@ -39,7 +39,7 @@ Each component follows this exact transformation:
 
 ```typescript
 import { css, html, nothing } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdLitElement } from '@openelement/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 class LessCard extends DsdLitElement {
@@ -55,7 +55,7 @@ class LessCard extends DsdLitElement {
 ### After (Native DsdElement)
 
 ```typescript
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@openelement/core';
 import { tokenSheet } from './open-props-tokens.js';
 
 const sheet = new CSSStyleSheet();
@@ -115,9 +115,9 @@ Read the component file. Note:
 
 ```diff
 - import { css, html, nothing } from 'lit';
-- import { DsdLitElement } from '@lessjs/adapter-lit';
+- import { DsdLitElement } from '@openelement/adapter-lit';
 - import { lessDesignTokens } from './design-tokens.js';
-+ import { DsdElement } from '@lessjs/core';
++ import { DsdElement } from '@openelement/core';
 ```
 
 ### Step 5: Remove DSD hack
@@ -134,7 +134,7 @@ if (!customElements.get('less-card')) customElements.define('less-card', LessCar
 
 ### Step 7: Verify SSR output
 
-Build the SSG site and compare `<less-card>` output before/after. The HTML structure inside `<template shadowrootmode>` must be identical.
+Build the SSG site and compare `<open-card>` output before/after. The HTML structure inside `<template shadowrootmode>` must be identical.
 
 ---
 
@@ -168,7 +168,7 @@ CSS Parts: container, indicator, title, description, content
 
 ## Verification Checklist (per component)
 
-- [ ] `import { DsdElement } from '@lessjs/core'` — no Lit import
+- [ ] `import { DsdElement } from '@openelement/core'` — no Lit import
 - [ ] `static styles = sheet` — CSSStyleSheet, not CSSResult
 - [ ] `render(): string` — returns string, not TemplateResult
 - [ ] No `_dsdHydrated` check

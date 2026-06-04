@@ -1,7 +1,7 @@
 /**
  * Build-time MDX compiler for LessJS content.
  *
- * MDX is compiled to JSX that uses @lessjs/core as jsxImportSource, so the
+ * MDX is compiled to JSX that uses @openelement/core as jsxImportSource, so the
  * rendered component continues through the existing VNode -> renderDsd path.
  */
 
@@ -17,7 +17,7 @@ export async function compileMdx(
   const compiled = await compile(content, {
     development: options.development ?? false,
     jsx: true,
-    jsxImportSource: options.jsxImportSource ?? '@lessjs/core',
+    jsxImportSource: options.jsxImportSource ?? '@openelement/core',
     outputFormat: 'program',
     providerImportSource: undefined,
     format: 'mdx',

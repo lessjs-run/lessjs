@@ -46,7 +46,7 @@ The initial scan found:
 | compatibility type definitions                    |     4 |
 | `loadRecords` helpers                             |     3 |
 | `renderPlaceholder` helpers                       |     3 |
-| internal `jsr:@lessjs/*` specifiers               |   287 |
+| internal `jsr:@openelement/*` specifiers          |   287 |
 | `as any`                                          |   194 |
 | `as unknown as`                                   |   172 |
 | TypeScript suppressions                           |     7 |
@@ -130,11 +130,11 @@ Initial canonical owners:
 
 | Concept                             | Canonical owner                                                      |
 | ----------------------------------- | -------------------------------------------------------------------- |
-| `CompatibilityClassification`       | `@lessjs/protocols` or `@lessjs/core/types`, but not both            |
-| HTML and attribute escaping         | `@lessjs/core`                                                       |
+| `CompatibilityClassification`       | `@openelement/protocols` or `@openelement/core/types`, but not both  |
+| HTML and attribute escaping         | `@openelement/core`                                                  |
 | Hub package record loading          | `packages/hub/src/cli/shared.ts`                                     |
 | Hub snapshot placeholder rendering  | `packages/hub/src/snapshot-placeholder.ts`                           |
-| adapter DSD hydration event binding | one shared helper in `@lessjs/core` or `@lessjs/runtime`             |
+| adapter DSD hydration event binding | one shared helper in `@openelement/core` or `@openelement/runtime`   |
 | package graph task execution        | `tools/run-package-graph-task.ts`                                    |
 | generated data loading              | `packages/adapter-vite/src/generated-data-resolver.ts` style helpers |
 
@@ -159,13 +159,13 @@ The architecture gate for v0.30.0 must check at least:
 - production TODO/FIXME entries are classified or removed
 - shared interfaces are declared in one canonical package
 - duplicate helper functions listed in this ADR no longer exist
-- internal `jsr:@lessjs/*` ranges match the release line
+- internal `jsr:@openelement/*` ranges match the release line
 - generated-data boundaries do not regex-parse TypeScript source
 - all completed current SOPs have matching verification commands
 
 ## Non-Goals
 
-- No UI Shell, Ocean-Island, daisyUI, or `@lessjs/ui/css` expansion in v0.30.0
+- No UI Shell, Ocean-Island, daisyUI, or `@openelement/ui/css` expansion in v0.30.0
 - No new adapter feature work
 - No new Hub product surface
 - No new public API except the removal or tightening required by the contract

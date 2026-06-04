@@ -1,6 +1,6 @@
 /**
  * Escape consistency test - ensures the escapeHtml/escapeAttr implementations
- * in @lessjs/core/render-dsd.ts and @lessjs/adapter-lit/src/ssr.ts stay in sync.
+ * in @openelement/core/render-dsd.ts and @openelement/adapter-lit/src/ssr.ts stay in sync.
  *
  * These packages are intentionally decoupled (adapter-lit must not import core),
  * so each has its own copy of the escape functions. If either copy drifts,

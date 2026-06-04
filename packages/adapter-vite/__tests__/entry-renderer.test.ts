@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - Entry renderer snapshot tests (Deno)
+ * @openelement/adapter-vite - Entry renderer snapshot tests (Deno)
  *
  * Snapshot tests for renderEntry output covering:
  * - CSP middleware (with/without nonce)
@@ -16,7 +16,7 @@ import {
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
-import type { RouteEntry } from '@lessjs/core';
+import type { RouteEntry } from '@openelement/core';
 
 // Fixtures
 
@@ -203,18 +203,18 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
     packageManifests: [
       {
         schemaVersion: '1.0.0',
-        packageName: '@lessjs/ui',
+        packageName: '@openelement/ui',
         version: '0.17.0',
         declarations: [
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
+            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
           },
           {
             tagName: 'less-button',
             className: 'LessButton',
-            less: { module: '@lessjs/ui/less-button', hydrate: 'idle' },
+            less: { module: '@openelement/ui/less-button', hydrate: 'idle' },
           },
         ],
       },
@@ -224,7 +224,7 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
 
   assertStringIncludes(code, 'less-layout');
   assertStringIncludes(code, 'less-button');
-  assertStringIncludes(code, '@lessjs/ui');
+  assertStringIncludes(code, '@openelement/ui');
 });
 
 Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
@@ -232,18 +232,18 @@ Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
     packageManifests: [
       {
         schemaVersion: '1.0.0',
-        packageName: '@lessjs/ui',
+        packageName: '@openelement/ui',
         version: '0.17.0',
         declarations: [
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
+            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
           },
           {
             tagName: 'less-button',
             className: 'LessButton',
-            less: { module: '@lessjs/ui/less-button', hydrate: 'idle' },
+            less: { module: '@openelement/ui/less-button', hydrate: 'idle' },
           },
         ],
       },
@@ -251,8 +251,8 @@ Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
   });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, '"less-layout":"@lessjs/ui/less-layout"');
-  assertFalse(code.includes("import * as __island_kiss_layout from '@lessjs/ui/less-layout'"));
+  assertStringIncludes(code, '"less-layout":"@openelement/ui/less-layout"');
+  assertFalse(code.includes("import * as __island_kiss_layout from '@openelement/ui/less-layout'"));
   assertFalse(code.includes('__kiss_get_default_export'));
   assertFalse(code.includes("customElements.define('less-layout'"));
   assertFalse(code.includes('__island_kiss_layout.default'));
@@ -301,7 +301,7 @@ Deno.test('renderEntry: imports Hono and DSD renderer', () => {
   // v0.5.0: DSD renderer replaces @lit-labs/ssr
   assertStringIncludes(code, 'renderDsd');
   assertStringIncludes(code, 'renderDsdTree');
-  assertStringIncludes(code, "import { jsx } from '@lessjs/core/jsx-runtime'");
+  assertStringIncludes(code, "import { jsx } from '@openelement/core/jsx-runtime'");
 });
 
 Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', () => {
@@ -310,7 +310,7 @@ Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', (
 
   assertStringIncludes(code, 'async function __renderAppShell(routeNode, routePath');
   assertStringIncludes(code, '"tagName": "less-layout"');
-  assertStringIncludes(code, "import '@lessjs/ui/less-layout';");
+  assertStringIncludes(code, "import '@openelement/ui/less-layout';");
   assertStringIncludes(code, 'renderDsd(shell.tagName, { props: layoutProps })');
   assertStringIncludes(code, 'layoutResult.html.slice(0, index) + pageHtml');
 });
@@ -319,7 +319,7 @@ Deno.test('renderEntry: appShell false renders route content without default lay
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true, appShell: false });
   const code = renderEntry(desc);
 
-  assertFalse(code.includes("import '@lessjs/ui/less-layout';"));
+  assertFalse(code.includes("import '@openelement/ui/less-layout';"));
   assertStringIncludes(code, '"default": false');
   assertStringIncludes(code, 'if (!shell) return pageHtml;');
 });
@@ -417,13 +417,13 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
     packageManifests: [
       {
         schemaVersion: '1.0.0',
-        packageName: '@lessjs/ui',
+        packageName: '@openelement/ui',
         version: '0.17.0',
         declarations: [
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
+            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
           },
         ],
       },
@@ -603,18 +603,18 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
     packageManifests: [
       {
         schemaVersion: '1.0.0',
-        packageName: '@lessjs/ui',
+        packageName: '@openelement/ui',
         version: '0.17.0',
         declarations: [
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'load', ssr: true },
+            less: { module: '@openelement/ui/less-layout', hydrate: 'load', ssr: true },
           },
           {
             tagName: 'less-widget',
             className: 'LessWidget',
-            less: { module: '@lessjs/ui/less-widget', hydrate: 'idle', ssr: false },
+            less: { module: '@openelement/ui/less-widget', hydrate: 'idle', ssr: false },
           },
         ],
       },
@@ -627,8 +627,8 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
   // Package islands with ssr:false remain client-only
   assertFalse(code.includes("customElements.define('less-widget'"));
   // But both should be in the island map
-  assertStringIncludes(code, '"less-layout":"@lessjs/ui/less-layout"');
-  assertStringIncludes(code, '"less-widget":"@lessjs/ui/less-widget"');
+  assertStringIncludes(code, '"less-layout":"@openelement/ui/less-layout"');
+  assertStringIncludes(code, '"less-widget":"@openelement/ui/less-widget"');
 });
 
 Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declarations', () => {
@@ -636,23 +636,23 @@ Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declaratio
     packageManifests: [
       {
         schemaVersion: '1.0.0',
-        packageName: '@lessjs/ui',
+        packageName: '@openelement/ui',
         version: '0.17.0',
         declarations: [
           {
             tagName: 'ssr-component',
             className: 'SsrComponent',
-            less: { module: '@lessjs/ui/ssr-component', ssr: true },
+            less: { module: '@openelement/ui/ssr-component', ssr: true },
           },
           {
             tagName: 'client-only-component',
             className: 'ClientOnlyComponent',
-            less: { module: '@lessjs/ui/client-only-component', ssr: false },
+            less: { module: '@openelement/ui/client-only-component', ssr: false },
           },
           {
             tagName: 'default-component',
             className: 'DefaultComponent',
-            less: { module: '@lessjs/ui/default-component' },
+            less: { module: '@openelement/ui/default-component' },
           },
         ],
       },

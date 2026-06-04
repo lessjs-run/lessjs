@@ -1,23 +1,23 @@
-# @lessjs/runtime
+﻿# @openelement/runtime
 
 Component authoring facade: the single import for writing LessJS components.
 
-`@lessjs/runtime` re-exports the complete authoring surface from the runtime
-kernel (`@lessjs/core`), signals engine (`@lessjs/signals`), and stylesheet
-abstraction (`@lessjs/style-sheet`).
+`@openelement/runtime` re-exports the complete authoring surface from the runtime
+kernel (`@openelement/core`), signals engine (`@openelement/signals`), and stylesheet
+abstraction (`@openelement/style-sheet`).
 
-**Use `@lessjs/runtime` as your only import when writing LessJS components.**
+**Use `@openelement/runtime` as your only import when writing LessJS components.**
 
 ## Install
 
 ```bash
-deno add jsr:@lessjs/runtime
+deno add jsr:@openelement/runtime
 ```
 
 ## Usage
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement, signal, StyleSheet } from '@openelement/runtime';
 
 class MyButton extends DsdElement {
   static props = { disabled: Boolean };
@@ -42,15 +42,15 @@ customElements.define(tagName, MyButton);
 
 ## Exports
 
-From `@lessjs/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
+From `@openelement/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
 `renderDsdTree`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
 `ErrorBoundary`, `LessError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindEvents`, `getSsrProps`.
 
-From `@lessjs/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.
+From `@openelement/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.
 
-From `@lessjs/signals`: `signal`, `computed`, `effect`.
+From `@openelement/signals`: `signal`, `computed`, `effect`.
 
-From `@lessjs/style-sheet`: `StyleSheet`.
+From `@openelement/style-sheet`: `StyleSheet`.
 
 ## License
 

@@ -1,7 +1,7 @@
 /**
- * @lessjs/i18n - Type definitions
+ * @openelement/i18n - Type definitions
  *
- * Internationalization module for LessJS.
+ * Internationalization module for openElement.
  */
 export interface LessI18nOptions {
   /** Available locale codes, e.g. ['en', 'zh'] */

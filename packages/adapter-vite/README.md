@@ -1,21 +1,21 @@
-# @lessjs/adapter-vite
+# @openelement/adapter-vite
 
 LessJS build orchestration for Vite.
 
 This package scans routes and islands, generates virtual entries, builds client
 island chunks, runs SSG, and writes post-processed HTML. It is build-time
-infrastructure; runtime primitives live in `@lessjs/core`.
+infrastructure; runtime primitives live in `@openelement/core`.
 
 ## Install
 
 ```bash
-deno add jsr:@lessjs/adapter-vite
+deno add jsr:@openelement/adapter-vite
 ```
 
 ## Usage
 
 ```ts
-import { less } from '@lessjs/adapter-vite';
+import { less } from '@openelement/adapter-vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -24,13 +24,13 @@ export default defineConfig({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
       componentsDir: 'app/components',
-      packageIslands: ['@lessjs/ui'],
+      packageIslands: ['@openelement/ui'],
     }),
   ],
 });
 ```
 
-Most applications should use `lessjs()` from `@lessjs/app` instead; it combines
+Most applications should use `lessjs()` from `@openelement/app` instead; it combines
 the core adapter, content pipeline, and i18n with one shared build context.
 
 ## Main Options
@@ -67,7 +67,7 @@ import {
   scanClientBuild,
   scanSSGOutput,
   writeIslandManifests,
-} from '@lessjs/adapter-vite';
+} from '@openelement/adapter-vite';
 ```
 
 ## Registry Boundary

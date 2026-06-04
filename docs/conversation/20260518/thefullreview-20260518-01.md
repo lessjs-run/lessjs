@@ -1,4 +1,4 @@
-# LessJS 项目文件全面审查报告
+﻿# LessJS 项目文件全面审查报告
 
 > 审查日期：2026-05-18
 > 审查对象：两份审计报告 + 仓库实际状态交叉验证
@@ -23,19 +23,19 @@
 
 | 包名                    | 真实版本   | 文件A/B/STATUS 声称 |
 | ----------------------- | ---------- | ------------------- |
-| @lessjs/core            | 0.18.3     | 一致                |
-| @lessjs/adapter-lit     | 0.18.3     | 一致                |
-| @lessjs/adapter-react   | 0.18.3     | 一致                |
-| @lessjs/adapter-vanilla | 0.18.3     | 一致                |
-| @lessjs/adapter-vite    | 0.18.3     | 一致                |
-| @lessjs/app             | 0.18.3     | 一致                |
-| @lessjs/content         | 0.18.3     | 一致                |
-| @lessjs/create          | 0.18.3     | 一致                |
-| @lessjs/hub             | **0.19.0** | 一致                |
-| @lessjs/i18n            | 0.18.3     | 一致                |
-| @lessjs/rpc             | 0.18.3     | 一致                |
-| @lessjs/signals         | 0.18.3     | 一致                |
-| @lessjs/ui              | 0.18.3     | 一致                |
+| @openelement/core            | 0.18.3     | 一致                |
+| @openelement/adapter-lit     | 0.18.3     | 一致                |
+| @openelement/adapter-react   | 0.18.3     | 一致                |
+| @openelement/adapter-vanilla | 0.18.3     | 一致                |
+| @openelement/adapter-vite    | 0.18.3     | 一致                |
+| @openelement/app             | 0.18.3     | 一致                |
+| @openelement/content         | 0.18.3     | 一致                |
+| @openelement/create          | 0.18.3     | 一致                |
+| @openelement/hub             | **0.19.0** | 一致                |
+| @openelement/i18n            | 0.18.3     | 一致                |
+| @openelement/rpc             | 0.18.3     | 一致                |
+| @openelement/signals         | 0.18.3     | 一致                |
+| @openelement/ui              | 0.18.3     | 一致                |
 
 **包数量：13 个**（不含 www），与两份审计报告一致。
 
@@ -68,8 +68,8 @@
 
 ### 1.5 Hub 生态
 
-- hub-index 中 3 个包：@lessjs/ui, @shoelace-style/shoelace, media-chrome
-- @lessjs/hub 的 deno.json **未导出** `./cli/less-add`、`./cli/validate`、`./cli/check-index`
+- hub-index 中 3 个包：@openelement/ui, @shoelace-style/shoelace, media-chrome
+- @openelement/hub 的 deno.json **未导出** `./cli/less-add`、`./cli/validate`、`./cli/check-index`
 - `hub:check-index` 在发现 drift 时**会写文件**（不是纯只读检查）
 
 ---
@@ -87,7 +87,7 @@
 | # | 严重度 | 类别     | 位置         | 问题描述                                                                | 当前内容    | 应改为                                                           | 证据                                    |
 | - | ------ | -------- | ------------ | ----------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------- | --------------------------------------- |
 | 1 | 🔴严重 | 事实遗漏 | 二、技术审计 | 未提及 dsd-report.json 中 72 条 SSR 渲染错误                            | 未提及      | 应补充此关键事实                                                 | 实际运行确认 72 errors，51 页面受影响   |
-| 2 | 🔴严重 | 事实遗漏 | 二、技术审计 | 未提及 @lessjs/hub 缺少 less-add 等 CLI 导出                            | 未提及      | 应指出 less-add 未发布                                           | hub/deno.json exports 无 ./cli/less-add |
+| 2 | 🔴严重 | 事实遗漏 | 二、技术审计 | 未提及 @openelement/hub 缺少 less-add 等 CLI 导出                            | 未提及      | 应指出 less-add 未发布                                           | hub/deno.json exports 无 ./cli/less-add |
 | 3 | 🟡中等 | 事实偏差 | 五、生存审计 | "全栈框架自 v0.17 后基本没推进"                                         | 此说法      | 不完全准确——Hono API Route、配置系统等在 v0.18 持续推进          | 见 ROADMAP Phase 4/5                    |
 | 4 | 🟡中等 | 内部矛盾 | 六、WWW结构  | 建议 /docs/ 统一文档入口，但未检查当前 /guide/ 和 /engine/ 已是分离状态 | 建议 /docs/ | 应先评估现有页面迁移成本                                         | 当前 77 个未提交变更已包含新路由结构    |
 | 5 | 🟢轻微 | 遗漏     | 全文         | 未提及 git tag 缺失问题                                                 | 未提及      | 应指出 STATUS.md 中引用的 tag 不存在                             | v0.18.0 tag 实际不存在                  |
@@ -108,7 +108,7 @@
 
 1. 未运行 `deno task build` 检查 dsd-report.json
 2. 未运行 `hub:scan` 验证快照渲染状态
-3. 未检查 @lessjs/hub 的 exports 完整性
+3. 未检查 @openelement/hub 的 exports 完整性
 4. 未检查 git tag 是否真实存在
 5. 未检查工作区脏状态对审计结论的影响
 
@@ -235,7 +235,7 @@
 | less-add 导出            | 未提及     | 未导出       | 未提及         | **未导出**   | 文件B唯一发现        |
 | git tag v0.18.0          | 未提及     | 未检查       | 列出但不存在   | **不存在**   | 全部遗漏             |
 | renderDSD() 渲染时机无关 | 标注为声称 | 未直接评判   | 声称为事实     | **只有 SSG** | 仅文件A指出          |
-| @lessjs/ui 用 Lit        | 明确指出   | 提到但未深究 | 未提及         | **Lit**      | 文件A更准确          |
+| @openelement/ui 用 Lit        | 明确指出   | 提到但未深究 | 未提及         | **Lit**      | 文件A更准确          |
 
 ### 7.2 两份报告互补分析
 
@@ -284,7 +284,7 @@
 | **2**  | STATUS.md 引用的 git tag 不存在          | 事实错误   | 要么打 tag，要么移除引用                                  |
 | **3**  | "renderDSD() 渲染时机无关"是声称不是事实 | 语义误导   | 标注"当前仅 SSG，ISR/SSR 为计划中"                        |
 | **4**  | dsd-report 72 条错误未在 Known Issues 中 | 遗漏       | 加入 Known Issues，标注为 Shoelace SSR admission 边界问题 |
-| **5**  | @lessjs/hub 未导出 less-add CLI          | 产品完整性 | 补齐 exports 或在文档降级 less-add 为实验性               |
+| **5**  | @openelement/hub 未导出 less-add CLI          | 产品完整性 | 补齐 exports 或在文档降级 less-add 为实验性               |
 
 ---
 

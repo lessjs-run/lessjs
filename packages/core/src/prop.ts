@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — Reactive property runtime.
+ * @openelement/core — Reactive property runtime.
  *
  * ADR-0052 / SOP-010 / ADR-0057: static props + Signal model.
  *

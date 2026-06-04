@@ -14,9 +14,9 @@ Application (www/)     ─  routes, islands, renderers
     │ ESM import
 Builder (adapter-vite) ─  route scan, SSG pipeline, bundle
     │ ESM import  
-Core (@lessjs/core)    ─  DsdElement, renderDsd, VNode, JSX
+Core (@openelement/core)    ─  DsdElement, renderDsd, VNode, JSX
     │ ESM import
-Signals (@lessjs/signals) ─  signal(), computed(), effect()
+Signals (@openelement/signals) ─  signal(), computed(), effect()
 ```
 
 Each layer only knows the layer below. No layer imports from above.
@@ -41,12 +41,12 @@ const result = await renderDsd(LessLayout, {
 
 // result.html contains the full DSD output
 console.log(result.html)
-// → <less-layout>
+// → <open-layout>
 //     <template shadowrootmode="open">
 //       <style>...</style>
 //       <div class="app-layout">...</div>
 //     </template>
-//   </less-layout>
+//   </open-layout>
 ```
 
 ### Single-Pass VNode Traversal
@@ -57,7 +57,7 @@ VNode trees are walked once. When a registered custom element is encountered, `r
 VNode tree
     ├─ <div class="app-header">
     │     ├─ <less-search>      → renderDsd('less-search')  inline
-    │     └─ <less-theme-toggle> → renderDsd('less-theme-toggle') inline
+    │     └─ <open-theme-toggle> → renderDsd('less-theme-toggle') inline
     ├─ <slot></slot>             → light DOM projection
     └─ <div class="app-footer">...</div>
 ```

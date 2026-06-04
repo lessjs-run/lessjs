@@ -4,7 +4,7 @@
 
 ## Objective
 
-将 `island-transform.ts` 的核心逻辑提取为纯函数 `transformIslandSource()`，放在 `@lessjs/core` 中。Vite 插件退化为薄的适配层。
+将 `island-transform.ts` 的核心逻辑提取为纯函数 `transformIslandSource()`，放在 `@openelement/core` 中。Vite 插件退化为薄的适配层。
 
 ## Background
 
@@ -77,13 +77,13 @@ function fileToTagName(fileName: string): string {
 
 ## Step 2: 重构 Vite 插件为薄包装 (1h)
 
-**文件**: `@lessjs/adapter-vite/src/island-transform.ts`
+**文件**: `@openelement/adapter-vite/src/island-transform.ts`
 
 ```diff
 - import type { Plugin } from 'vite';
 - import { fileToTagName } from './route-scanner.js';
 + import type { Plugin } from 'vite';
-+ import { transformIslandSource } from '@lessjs/core/island-transform';
++ import { transformIslandSource } from '@openelement/core/island-transform';
 
 export function islandTransformPlugin(islandsDir: string): Plugin {
   return {

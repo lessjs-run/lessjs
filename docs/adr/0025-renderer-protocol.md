@@ -113,7 +113,7 @@ interface RenderInput {
 ### 2. `renderDsd()` returns `RenderOutput` (DEFERRED to v0.16)
 
 > **v0.15 status**: Types (`RenderOutput`, `RenderError`, `HydrationHint`) are defined
-> and exported from `@lessjs/core`, but `renderDsd()` still returns `Promise<string>`.
+> and exported from `@openelement/core`, but `renderDsd()` still returns `Promise<string>`.
 > The return type change is deferred to v0.16 so it can be done together with
 > `RenderHooks` integration — avoiding two consecutive breaking changes to the same
 > function signature.
@@ -167,7 +167,7 @@ multi-adapter scenarios (e.g., Lit for some components, vanilla for others).
 ### 6. `create` CLI improvements
 
 - Fix JSR remote version resolution (handle API errors gracefully)
-- Update scaffold template to reference `@lessjs/core@^0.15.0`
+- Update scaffold template to reference `@openelement/core@^0.15.0`
 - Add `app/routes/about.ts` template for a more complete scaffold
 
 ### 7. `DsdOptions.customElementRegistry` simplified
@@ -210,6 +210,6 @@ attribute with no value.
 - [ ] `renderDsd()` returns `RenderOutput` instead of `string` (v0.16)
 - [ ] `dsd-report.json` is generated during `deno task build:ssg` (v0.16)
 - [ ] `RenderHooks` wired into render pipeline (v0.16)
-- [x] `deno run -A jsr:@lessjs/create test-app` produces a working scaffold
+- [x] `deno run -A jsr:@openelement/create test-app` produces a working scaffold
 - [x] `deno task typecheck && deno lint && deno fmt --check` all pass
 - [x] Zero `RenderAdapter` references in codebase

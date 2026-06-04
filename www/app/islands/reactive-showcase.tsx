@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Reactive DSD Showcase — DsdElement + Signals (v0.21)
  *
  * Demonstrates three core Reactive DSD patterns:
@@ -13,10 +13,10 @@
  * Zero framework runtime — pure DSD + Signals.
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
  */
-import { defineCustomElement, DsdElement } from '@lessjs/core';
-import { computed, signal } from '@lessjs/signals';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { defineCustomElement, DsdElement } from '@openelement/core';
+import { computed, signal } from '@openelement/signals';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 
 export const tagName = 'reactive-showcase';
 
@@ -116,9 +116,9 @@ export default class ReactiveShowcase extends DsdElement {
             A single <code>signal(0)</code> drives this counter. No Lit, no React, no framework.
           </p>
           <div className='counter-row'>
-            <button type='button' data-on-click='decrement'>−</button>
+            <button type='button' onClick={() => this.decrement()}>−</button>
             <span data-signal='count' textContent={this.#count}></span>
-            <button type='button' data-on-click='increment'>+</button>
+            <button type='button' onClick={() => this.increment()}>+</button>
           </div>
         </div>
 
@@ -140,7 +140,7 @@ export default class ReactiveShowcase extends DsdElement {
             </p>
             <button
               type='button'
-              data-on-click='toggleTheme'
+              onClick={() => this.toggleTheme()}
               data-signal='buttonLabel'
               textContent={this.#buttonLabel}
             >
@@ -159,7 +159,7 @@ export default class ReactiveShowcase extends DsdElement {
           <input
             className='filter-input'
             placeholder='Type to filter frameworks...'
-            data-on-input='_onFilterInput'
+            onInput={(e: Event) => this._onFilterInput(e)}
           />
           <div className='item-list'>
             {this.#filtered.value.map((f) => <div key={f}>{f}</div>)}

@@ -1,5 +1,5 @@
 /**
- * Tests for @lessjs/core CEM manifest validation.
+ * Tests for @openelement/core CEM manifest validation.
  *
  * Tests cover:
  * - Schema shape validation
@@ -14,7 +14,7 @@
 
 import { validateManifest, validateManifestFromJson } from '../src/validate-manifest.ts';
 
-import type { CustomElementsManifest } from '@lessjs/cem/types';
+import type { CustomElementsManifest } from '@openelement/cem/types';
 
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 

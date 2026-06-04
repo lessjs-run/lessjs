@@ -18,7 +18,7 @@ actual public/code surface:
 
 ## Non-Goals
 
-- Do not remove `@lessjs/adapter-lit`; it remains the compatibility and pure
+- Do not remove `@openelement/adapter-lit`; it remains the compatibility and pure
   island path.
 - Do not migrate high-state islands that intentionally use Lit.
 - Do not rewrite historical changelog or ADR examples that document previous
@@ -58,7 +58,7 @@ method.
 Current framework examples should prefer:
 
 ```ts
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@openelement/core';
 
 export class Page extends DsdElement {
   render(): string {

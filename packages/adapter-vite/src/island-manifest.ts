@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Island Upgrade Manifest
+ * @openelement/core - Island Upgrade Manifest
  *
  * Generates per-page island manifest JSON files during SSG post-processing.
  * Each manifest lists the islands found on a page with their chunk URLs and strategies.
@@ -7,7 +7,7 @@
 
 import { join } from 'node:path';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { HydrationStrategy } from '@lessjs/core';
+import type { HydrationStrategy } from '@openelement/core';
 
 /** Island manifest entry for a single custom element */
 export interface IslandManifestEntry {

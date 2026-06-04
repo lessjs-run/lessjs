@@ -4,7 +4,7 @@
 
 ## Objective
 
-路由组件通过 `static head` 声明 title/meta，SSG 自动注入 `<head>`，替代手动 `<less-layout head-extras='...'>`。
+路由组件通过 `static head` 声明 title/meta，SSG 自动注入 `<head>`，替代手动 `<open-layout head-extras='...'>`。
 
 ## Step-by-Step
 
@@ -55,7 +55,7 @@ export function injectHead(html: string, head?: HeadConfig): string {
 ### Step 4: Migration
 
 ```diff
-- <less-layout head-extras='<title>My Page</title><meta name="description" content="...">'>
+- <open-layout head-extras='<title>My Page</title><meta name="description" content="...">'>
 + class MyPage extends DsdElement { static head = { title: 'My Page', description: '...' }; }
 ```
 

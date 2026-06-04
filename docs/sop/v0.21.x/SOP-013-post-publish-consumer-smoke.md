@@ -45,7 +45,7 @@ consumer-smoke:
         rm -rf "$TEMP_DIR"
         mkdir -p "$TEMP_DIR"
         cd "$TEMP_DIR"
-        deno run -A jsr:@lessjs/create test-blog
+        deno run -A jsr:@openelement/create test-blog
     - name: Build consumer project
       env:
         TEMP_DIR: ${{ runner.temp }}/lessjs-post-publish-smoke
@@ -71,7 +71,7 @@ consumer-smoke:
   may need adjustment based on JSR's actual propagation delay.
 - The job must depend on `publish` (all packages published first).
 - If any package failed to publish, this job will naturally fail because
-  `deno run -A jsr:@lessjs/create` will pull a version mismatch.
+  `deno run -A jsr:@openelement/create` will pull a version mismatch.
 
 ## Acceptance Criteria
 
@@ -103,7 +103,7 @@ $tmp = Join-Path $env:TEMP "lessjs-post-publish-smoke"
 Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $tmp | Out-Null
 Set-Location $tmp
-deno run -A jsr:@lessjs/create test-blog
+deno run -A jsr:@openelement/create test-blog
 Set-Location test-blog
 deno task build
 Test-Path dist/index.html

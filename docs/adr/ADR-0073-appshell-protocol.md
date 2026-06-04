@@ -7,14 +7,14 @@
 ## Context
 
 Before v0.28.4, the generated SSR/SSG entry always imported
-`@lessjs/ui/less-layout` and rendered `<less-layout>` around every page. That
+`@openelement/ui\/open-layout` and rendered `<open-layout>` around every page. That
 worked for the LessJS documentation site, but it made the framework shell an
 implicit package-resolution side effect.
 
 Application authors who wanted a blog layout, product shell, marketing page, or
-route-specific reading layout had to override `@lessjs/ui/less-layout` with
+route-specific reading layout had to override `@openelement/ui\/open-layout` with
 aliases. That was fragile because the SSG package resolver also handles
-`@lessjs/*` specifiers early in the Vite pipeline.
+`@openelement/*` specifiers early in the Vite pipeline.
 
 The v0.28.4 cleanup policy also removed compatibility-only surfaces. A layout
 protocol needed to be explicit, testable, and descriptor-driven instead of
@@ -39,7 +39,7 @@ lessjs({
 ```
 
 `'default'` renders the framework default shell, currently
-`@lessjs/ui/less-layout` as `<less-layout>`.
+`@openelement/ui\/open-layout` as `<open-layout>`.
 
 ```ts
 lessjs({
@@ -89,12 +89,12 @@ route without a shell.
 
 ## Boundaries
 
-- `@lessjs/ui/less-layout` is the default implementation, not the framework
+- `@openelement/ui\/open-layout` is the default implementation, not the framework
   contract.
 - The descriptor records normalized shell imports, tags, and props before
   rendering code is generated.
-- SSG no longer hard-codes a side-effect import for `@lessjs/ui/less-layout`.
-- Exact user aliases win before the LessJS package resolver handles `@lessjs/*`.
+- SSG no longer hard-codes a side-effect import for `@openelement/ui\/open-layout`.
+- Exact user aliases win before the LessJS package resolver handles `@openelement/*`.
 - Default `less-layout` branding is configurable and may be omitted.
 
 ## Consequences

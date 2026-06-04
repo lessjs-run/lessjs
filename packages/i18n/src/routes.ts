@@ -1,7 +1,7 @@
 /**
- * @lessjs/i18n - Route helpers for i18n
+ * @openelement/i18n - Route helpers for i18n
  *
- * Helpers for creating locale-aware routes in LessJS.
+ * Helpers for creating locale-aware routes in openElement.
  * ADR 0018: These helpers require explicit locale lists since
  * module-level state (getI18nLocales()) has been removed.
  */
@@ -10,12 +10,12 @@
  * Generate getStaticPaths() return for locale-aware routes.
  *
  * ADR 0018: locales parameter is now REQUIRED (no module-level state fallback).
- * Import locales from @lessjs/generated/i18n in route components.
+ * Import locales from @openelement/generated/i18n in route components.
  *
  * Usage in route file:
  * ```ts
- * import { i18nStaticPaths } from '@lessjs/i18n';
- * import { locales } from '@lessjs/generated/i18n';
+ * import { i18nStaticPaths } from '@openelement/i18n';
+ * import { locales } from '@openelement/generated/i18n';
  *
  * export function getStaticPaths() {
  *   return i18nStaticPaths(locales); // -> [{ locale: 'en' }, { locale: 'zh' }]

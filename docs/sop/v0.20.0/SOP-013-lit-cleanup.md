@@ -11,7 +11,7 @@
 
 ## 目标
 
-**`@lessjs/ui` 和 `www/` 中零行 `from 'lit'`**。所有 Ocean 组件使用纯 `DsdElement` + `CSSStyleSheet`，无框架依赖。仅当组件需要 reactivity（状态管理、响应式更新）时，通过 `@lessjs/adapter-lit` 按需接入 Lit。
+**`@openelement/ui` 和 `www/` 中零行 `from 'lit'`**。所有 Ocean 组件使用纯 `DsdElement` + `CSSStyleSheet`，无框架依赖。仅当组件需要 reactivity（状态管理、响应式更新）时，通过 `@openelement/adapter-lit` 按需接入 Lit。
 
 ## 原则
 
@@ -91,7 +91,7 @@
 
 - ❌ 禁止用字符串替换 hack 模拟 Lit reactivity（如 `eval()`、正则替换 template）
 - ❌ 禁止在 Ocean 组件里保留 `import { html } from 'lit'`
-- ❌ 禁止删除 `@lessjs/adapter-lit` 包
+- ❌ 禁止删除 `@openelement/adapter-lit` 包
 - ❌ 禁止在没有 reactivity 需求的组件上保留 Lit
 
 ---

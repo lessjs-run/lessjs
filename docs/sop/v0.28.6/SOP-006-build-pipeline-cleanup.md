@@ -81,7 +81,7 @@ matching, metadata loading, or diagnostics as large string-generated blocks.
 Allowed generated entry shape:
 
 ```ts
-import { createSsrEntry } from '@lessjs/adapter-vite/ssr-runtime';
+import { createSsrEntry } from '@openelement/adapter-vite/ssr-runtime';
 import './routes/index.tsx';
 import './components/site-layout.tsx';
 
@@ -383,7 +383,7 @@ Runtime modules should own:
 Generated entry should move toward:
 
 ```ts
-import { createSsrEntry } from '@lessjs/adapter-vite/ssr-runtime';
+import { createSsrEntry } from '@openelement/adapter-vite/ssr-runtime';
 
 export default createSsrEntry({
   adapters,
@@ -456,7 +456,7 @@ API semantics, build consistency, or package dependency boundaries.
      - `packages/adapter-vite/src/less-plugin.ts`
      - `packages/adapter-vite/src/cli/build-ssg.ts`
 
-3. Restore the `@lessjs/core` dependency and trust-boundary model.
+3. Restore the `@openelement/core` dependency and trust-boundary model.
    - Current issue: `packages/core/src/security.ts` imports
      `npm:sanitize-html`.
    - Target: core must not own a heavy npm sanitizer dependency. `rawHtml`

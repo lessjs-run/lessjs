@@ -10,7 +10,7 @@
 
 ### 问题
 
-- `publish.yml` 中 `@lessjs/adapter-vite` 出现两次（重复发布）
+- `publish.yml` 中 `@openelement/adapter-vite` 出现两次（重复发布）
 - `deno task publish` 使用 `--allow-dirty`（可能发布未提交更改）
 - 无 `publish:dry-run` 预检
 - README 版本表发布后未同步更新
@@ -37,7 +37,7 @@
 
 | 文件                               | 变更                                              |
 | ---------------------------------- | ------------------------------------------------- |
-| `.github/workflows/publish.yml:66` | 删除重复的 `@lessjs/adapter-vite`                 |
+| `.github/workflows/publish.yml:66` | 删除重复的 `@openelement/adapter-vite`            |
 | `deno.json`                        | 移除 `--allow-dirty`，添加 `publish:dry-run` task |
 | 根目录 `CHANGELOG.md`              | 新建（集中变更日志，替代分散 blog 记录）          |
 | `README.md` `README.en.md`         | 版本表改为：`<version-from-denojson>` 动态标记    |
@@ -52,7 +52,7 @@
 - `core/src/constants.ts` 为空文件
 - `core/src/strategy-recommender.ts` 零引用 → 死代码
 - `rpc` 包无 src 导出函数
-- `signals` 包命名不一致（`@lessjs/signals` vs `@lessjs/signals`）
+- `signals` 包命名不一致（`@openelement/signals` vs `@openelement/signals`）
 - `html-escape.ts` 中 `wrapInDocument` 和 `renderSsrError` 部分重复
 
 ### 新 SOP
@@ -80,7 +80,7 @@
 | `packages/core/src/constants.ts`            | 删除文件                                  |
 | `packages/core/deno.json`                   | 删除 `./constants` 导出路径               |
 | `packages/core/src/strategy-recommender.ts` | 删除或添加 `@deprecated` / TODO 标记      |
-| `packages/signals/deno.json`                | 发布名统一为 `@lessjs/signals`            |
+| `packages/signals/deno.json`                | 发布名统一为 `@openelement/signals`       |
 | `packages/core/src/html-escape.ts`          | 合并 `wrapInDocument` 和 `renderSsrError` |
 
 ---
@@ -131,7 +131,7 @@
 
 ### 问题
 
-- `@lessjs/app` 缺失 LICENSE 文件
+- `@openelement/app` 缺失 LICENSE 文件
 - 无 CODE_OF_CONDUCT.md
 - 根目录无 CONTRIBUTING.md
 - 无 SECURITY.md

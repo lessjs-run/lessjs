@@ -3,7 +3,7 @@
 ## Rule: No Circular JSR Dependencies
 
 JSR publish resolves `jsr:` dependencies at publish time. If package A's `deno.json`
-imports `jsr:@lessjs/B@^ver/subpath` and package B's imports `jsr:@lessjs/A@^ver`,
+imports `jsr:@openelement/B@^ver/subpath` and package B's imports `jsr:@openelement/A@^ver`,
 neither can publish until the other is already published. This creates a deadlock.
 
 ## Publish Order (see docs/status/STATUS.md)
@@ -17,10 +17,10 @@ publish-time dependency, use dynamic `import()`:
 
 ```ts
 // WRONG: static import creates JSR publish-time dependency
-import { generateSitemap } from '@lessjs/content/sitemap';
+import { generateSitemap } from '@openelement/content/sitemap';
 
 // RIGHT: dynamic import resolved at runtime via workspace import map
-const { generateSitemap } = await import('@lessjs/content/sitemap');
+const { generateSitemap } = await import('@openelement/content/sitemap');
 ```
 
 JSR will emit `unanalyzable-dynamic-import` warnings — these are acceptable
@@ -30,6 +30,6 @@ imports map as `jsr:` entries.
 ## Import Map Hygiene
 
 - Remove `jsr:` entries from `deno.json` imports if source code no longer uses them
-- Always verify: `grep -rn "from '@lessjs/PKG" packages/THIS/src/` before adding jsr deps
+- Always verify: `grep -rn "from '@openelement/PKG" packages/THIS/src/` before adding jsr deps
 - Workspace-level `deno.json` import map provides local resolution; `jsr:` entries are
   only needed for published packages

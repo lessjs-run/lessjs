@@ -11,7 +11,7 @@ v0.23.0 → v0.23.2 的 CI 修复过程中，consumer smoke test 的 SSG/SSR 构
 
 | Attempt | Error                                                  | 包            | Root Cause               |
 | ------- | ------------------------------------------------------ | ------------- | ------------------------ |
-| 1       | Rolldown 无法解析 `@lessjs/runtime`                    | runtime       | 不在 resolver 白名单     |
+| 1       | Rolldown 无法解析 `@openelement/runtime`               | runtime       | 不在 resolver 白名单     |
 | 2       | JSR 404 (版本号 mismatch)                              | all           | 只 bump 了 adapter-vite  |
 | 3       | SSR 运行时 `ERR_MODULE_NOT_FOUND: alien-signals`       | alien-signals | consumer import map 缺失 |
 | 4       | SSR 运行时 `ERR_MODULE_NOT_FOUND: hono/secure-headers` | hono          | subpath external 不完整  |

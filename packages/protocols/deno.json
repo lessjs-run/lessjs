@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/protocols",
+  "name": "@openelement/protocols",
   "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",

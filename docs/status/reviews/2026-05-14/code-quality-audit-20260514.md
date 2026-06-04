@@ -18,7 +18,7 @@ The LessJS framework demonstrates a well-architected codebase with strong adhere
 
 ### 1.1 Architecture & Design
 
-- **Modular Monorepo Structure**: Clean separation between runtime (`@lessjs/core`) and build-time (`@lessjs/adapter-vite`, `@lessjs/adapter-lit`) code
+- **Modular Monorepo Structure**: Clean separation between runtime (`@openelement/core`) and build-time (`@openelement/adapter-vite`, `@openelement/adapter-lit`) code
 - **Web Standards Alignment**: Proper use of URLPattern, Navigation API, Declarative Shadow DOM, and Custom Elements
 - **Framework Agnostic**: Core is not tied to any specific UI framework
 - **Plugin Architecture**: Well-designed Vite plugin system with proper hook ordering

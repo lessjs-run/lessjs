@@ -32,11 +32,11 @@
 
 ### 修改
 
-| 文件                         | 变更                                                                  |
-| ---------------------------- | --------------------------------------------------------------------- |
-| `packages/core/src/index.ts` | 导出 jsx-runtime 公共 API                                             |
-| `packages/core/deno.json`    | 新增 `./jsx-runtime` 和 `./jsx-dev-runtime` 子路径导出                |
-| `deno.json`（根）            | `compilerOptions.jsx: "react-jsx"`, `jsxImportSource: "@lessjs/core"` |
+| 文件                         | 变更                                                                       |
+| ---------------------------- | -------------------------------------------------------------------------- |
+| `packages/core/src/index.ts` | 导出 jsx-runtime 公共 API                                                  |
+| `packages/core/deno.json`    | 新增 `./jsx-runtime` 和 `./jsx-dev-runtime` 子路径导出                     |
+| `deno.json`（根）            | `compilerOptions.jsx: "react-jsx"`, `jsxImportSource: "@openelement/core"` |
 
 ## Procedure
 
@@ -297,7 +297,7 @@ function applyProps(el: Element, props: Record<string, any>): void {
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@lessjs/core"
+    "jsxImportSource": "@openelement/core"
   }
 }
 ```
@@ -319,7 +319,7 @@ function applyProps(el: Element, props: Record<string, any>): void {
 **验证**：
 
 - [ ] `.tsx` 文件中的 JSX 语法编译通过
-- [ ] `import { jsx } from "@lessjs/core/jsx-runtime"` 工作正常
+- [ ] `import { jsx } from "@openelement/core/jsx-runtime"` 工作正常
 - [ ] `deno task typecheck` 通过
 
 ### Step 6: 单元测试

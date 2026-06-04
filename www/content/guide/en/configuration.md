@@ -5,7 +5,7 @@ label: 'Configuration'
 order: 10
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -18,19 +18,19 @@ currentPath='/en/guide/configuration'
       injection, PWA, and middleware are independent concerns.
     </p>
     <h2>Minimal Configuration</h2>
-    <less-code-block>
+    <open-code-block>
       <pre><code>import  from 'vite';
 
-import from '@lessjs/app';
+import from '@openelement/app';
 export default defineConfig();</code></pre>
-</less-code-block>
+</open-code-block>
 
 <p>
 Use <span class='inline-code'>lessjs()</span>
 as the recommended entry - it combines the core plugin, content pipeline, and i18n in a
 single call. If you only need core routing and island functionality, you can use
 <span class='inline-code'>lessPipeline()</span> from
-<span class='inline-code'>@lessjs/adapter-vite</span> directly.
+<span class='inline-code'>@openelement/adapter-vite</span> directly.
 </p>
 <h2>Options Reference</h2>
 <table>
@@ -78,34 +78,34 @@ dependency.
 LessJS uses JSX+Signal as the component model. Configure deno.json and
 vite.config.ts:
 </p>
-<less-code-block>
+<open-code-block>
 <pre><code>// deno.json
 ,
 "imports":
 }</code></pre>
-</less-code-block>
-<less-code-block>
+</open-code-block>
+<open-code-block>
 <pre><code>// vite.config.ts
 export default defineConfig(,
 plugins: [lessjs()]
 });</code></pre>
-</less-code-block>
+</open-code-block>
 <p>
 <span class='inline-code'>jsx: 'automatic'</span>
 tells esbuild to use LessJS's jsx-runtime instead of React's. Both Vite SSR and client
 island builds will correctly transform <span class='inline-code'>.tsx</span> files.
 </p>
 <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
-<less-code-block>
+<open-code-block>
 <pre><code>lessjs(,
 inject: ,
-packageIslands: ['@lessjs/ui'],
+packageIslands: ['@openelement/ui'],
 middleware: },
 pwa: ,
 content: , nav: },
 i18n: ,
 });</code></pre>
-</less-code-block>
+</open-code-block>
 <p>
 See <a href='/guide/api'>API Reference</a> for the complete options table, or check the
 

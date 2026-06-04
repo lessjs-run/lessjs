@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-react - DsdReactElement wrapper
+ * @openelement/adapter-react - DsdReactElement wrapper
  *
  * Wraps a React component as a Web Component with DSD hydration support.
  * On SSR, the adapter renders the React tree to a string via
@@ -8,7 +8,7 @@
  *
  * Usage:
  * ```ts
- * import { DsdReactElement } from '@lessjs/adapter-react';
+ * import { DsdReactElement } from '@openelement/adapter-react';
  * import { createElement } from 'react';
  *
  * function MyComponent({ name }: { name: string }) {
@@ -24,10 +24,10 @@
  * customElements.define('my-element', MyElement);
  * ```
  *
- * @module @lessjs/adapter-react/dsd-hydration
+ * @module @openelement/adapter-react/dsd-hydration
  */
 
-import { bindHydrateEvents, type HydrateEventDescriptor } from '@lessjs/core';
+import { bindHydrateEvents, type HydrateEventDescriptor } from '@openelement/core';
 
 /** Constructor type for Mixin pattern */
 // deno-lint-ignore no-explicit-any
@@ -193,7 +193,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
  *
  * @example
  * ```ts
- * import { DsdReactElement } from '@lessjs/adapter-react';
+ * import { DsdReactElement } from '@openelement/adapter-react';
  * import { createElement } from 'react';
  *
  * class MyElement extends DsdReactElement {

@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Playwright-based Snapshot Renderer
+ * @openelement/hub - Playwright-based Snapshot Renderer
  *
  * v0.19.0 Phase 3: Renders Web Components to static HTML using a real
  * Chromium browser via Playwright. Replaces the fragile happy-dom simulation
@@ -18,7 +18,7 @@
 
 import { toCdnUrl } from './cdn-url.ts';
 import { renderSnapshotPlaceholderHtml } from './snapshot-placeholder.ts';
-import { escapeAttr } from '@lessjs/core';
+import { escapeAttr } from '@openelement/core';
 import type { Browser, BrowserType } from 'npm:playwright@1.59.1';
 
 // ─── Types ───────────────────────────────────────────────────────────────

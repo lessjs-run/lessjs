@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Compatibility Classifier Tests
+ * @openelement/core - Compatibility Classifier Tests
  */
 
 import {
@@ -332,8 +332,8 @@ Deno.test('isValidTagName: rejects invalid tag names', () => {
 
 Deno.test('isKnownSsrSuperclass: recognizes known superclasses', () => {
   assertEquals(isKnownSsrSuperclass('LitElement'), true);
-  assertEquals(isKnownSsrSuperclass('LitElement (via @lessjs/adapter-lit)'), true);
-  assertEquals(isKnownSsrSuperclass('HTMLElement (via @lessjs/adapter-vanilla)'), true);
+  assertEquals(isKnownSsrSuperclass('LitElement (via @openelement/adapter-lit)'), true);
+  assertEquals(isKnownSsrSuperclass('HTMLElement (via @openelement/adapter-vanilla)'), true);
   assertEquals(isKnownSsrSuperclass('UnknownClass'), false);
 });
 

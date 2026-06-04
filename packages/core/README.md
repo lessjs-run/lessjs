@@ -1,8 +1,8 @@
-# @lessjs/core
+# @openelement/core
 
 Pure LessJS runtime package.
 
-`@lessjs/core` owns the platform-facing runtime primitives:
+`@openelement/core` owns the platform-facing runtime primitives:
 
 - **JSX + Signal component model** — `jsx()`, `jsxs()`, `VNode`, `renderToString()`, `renderToDom()`
 - **DsdElement** — zero-framework base class for DSD components
@@ -19,14 +19,14 @@ It does not contain Vite, CLI, or build orchestration logic.
 ## Install
 
 ```bash
-deno add jsr:@lessjs/core
+deno add jsr:@openelement/core
 ```
 
 ## Component Authoring
 
 ```tsx
-import { DsdElement } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
+import { DsdElement } from '@openelement/core';
+import { signal } from '@openelement/signals';
 
 class MyButton extends DsdElement {
   static props = { variant: String, disabled: Boolean };
@@ -66,7 +66,7 @@ import {
   SsrRenderError,
   unwrapSignalLike,
   VNode,
-} from '@lessjs/core';
+} from '@openelement/core';
 ```
 
 ## License

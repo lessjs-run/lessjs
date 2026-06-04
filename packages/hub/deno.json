@@ -1,5 +1,5 @@
 {
-  "name": "@lessjs/hub",
+  "name": "@openelement/hub",
   "version": "0.30.0",
   "exports": {
     ".": "./mod.ts",
@@ -14,8 +14,8 @@
     "./cli/check-index": "./src/cli/check-index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.30.0",
-    "@lessjs/compat-check": "jsr:@lessjs/compat-check@^0.30.0",
+    "@openelement/core": "jsr:@openelement/core@^0.30.0",
+    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.30.0",
     "typescript": "npm:typescript@^5.9.0"
   },
   "tasks": {

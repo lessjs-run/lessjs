@@ -428,7 +428,7 @@
 
 > 目标：修复影响用户的核心产品缺陷。
 
-### C-1: 补齐 @lessjs/hub 的 JSR Exports
+### C-1: 补齐 @openelement/hub 的 JSR Exports
 
 **来源**：thefullreview 问题 #2（🔴严重）、文件B 问题 #6
 **问题**：`packages/hub/deno.json` 未导出 `./cli/less-add`、`./cli/validate`、`./cli/check-index`，产品叙事中的 "less add" 命令不可用
@@ -887,10 +887,10 @@
 
 > 目标：让对外叙事反映代码现实，消除误导性措辞。
 
-### E-1: 修正 @lessjs/ui "DSD-native" 声称
+### E-1: 修正 @openelement/ui "DSD-native" 声称
 
 **来源**：文件A 一/定位审计、文件A 问题 #6
-**问题**：@lessjs/ui 用 Lit 编写，不是 DSD-native。当前对外宣称"DSD-native"构成误导
+**问题**：@openelement/ui 用 Lit 编写，不是 DSD-native。当前对外宣称"DSD-native"构成误导
 
 **步骤**：
 
@@ -906,10 +906,10 @@
    **README.md / README.en.md**：
    ```
    # 改前
-   @lessjs/ui — DSD-native UI Library
+   @openelement/ui — DSD-native UI Library
 
    # 改后
-   @lessjs/ui — Web Components UI Library (DSD-native rendering planned for v0.21+)
+   @openelement/ui — Web Components UI Library (DSD-native rendering planned for v0.21+)
    ```
 
    **ROADMAP.md**：
@@ -928,7 +928,7 @@
    ```
    ### LessJS UI: DSD-native Evolution (v0.21+)
 
-   Goal: evolve @lessjs/ui from Lit-based to DSD-native:
+   Goal: evolve @openelement/ui from Lit-based to DSD-native:
    - Pure CSS + CSS Parts (no Lit runtime)
    - Streaming SSR via renderDsd()
    - Zero-JS initial paint for static UI
@@ -1085,7 +1085,7 @@
    LessJS Hub indexes Web Components packages with SSR compatibility data,
    real browser snapshots, and one-click install.
 
-   Currently indexed: @lessjs/ui, Shoelace, Media Chrome.
+   Currently indexed: @openelement/ui, Shoelace, Media Chrome.
    ```
 3. 不使用 "platform"、"ecosystem"、"marketplace" 等暗示成熟度的词
 4. 使用 "early access"、"emerging"、"growing" 等诚实措辞
@@ -1096,7 +1096,7 @@
 
 ### Phase E 验收清单
 
-- [ ] 无文件将 @lessjs/ui 描述为 "DSD-native"（不含限定语）
+- [ ] 无文件将 @openelement/ui 描述为 "DSD-native"（不含限定语）
 - [ ] README 无 "cannot match" 类过强措辞
 - [ ] "Full-Stack Framework" 描述包含成熟度警告
 - [ ] renderDsd() 描述为 "declarative component renderer" 而非 "template engine"
@@ -1349,13 +1349,13 @@ A-8 ──┘                          B-4 ──┘                     C-3 ─
 
 以下问题在本 SOP 中无法由执行者独立决定，需要用户确认：
 
-| 决策项                       | 选项                                                                            | 影响               | 紧急度 |
-| ---------------------------- | ------------------------------------------------------------------------------- | ------------------ | ------ |
-| WWW 导航结构                 | 4区(/docs/+/hub/+/blog/) vs 5区(/framework/+/hub/+/engine/+/ui/+/blog/) vs 混合 | 全站路由迁移方向   | 高     |
-| @lessjs/ui DSD-native 时间线 | v0.21 开始 vs 更晚                                                              | 产品叙事和资源分配 | 中     |
-| Hub 主打定位                 | 保持"主打" vs 降为"重点" vs "引擎优先"                                          | 资源分配和叙事     | 高     |
-| 是否打回退 tag               | 对无法确认 commit 的版本打 tag vs 移除 STATUS 中的引用                          | 仓库历史完整性     | 低     |
-| E2E timeout 容忍度           | 必须全部通过 vs 允许 flaky 标记                                                 | 发布门禁严格度     | 中     |
+| 决策项                            | 选项                                                                            | 影响               | 紧急度 |
+| --------------------------------- | ------------------------------------------------------------------------------- | ------------------ | ------ |
+| WWW 导航结构                      | 4区(/docs/+/hub/+/blog/) vs 5区(/framework/+/hub/+/engine/+/ui/+/blog/) vs 混合 | 全站路由迁移方向   | 高     |
+| @openelement/ui DSD-native 时间线 | v0.21 开始 vs 更晚                                                              | 产品叙事和资源分配 | 中     |
+| Hub 主打定位                      | 保持"主打" vs 降为"重点" vs "引擎优先"                                          | 资源分配和叙事     | 高     |
+| 是否打回退 tag                    | 对无法确认 commit 的版本打 tag vs 移除 STATUS 中的引用                          | 仓库历史完整性     | 低     |
+| E2E timeout 容忍度                | 必须全部通过 vs 允许 flaky 标记                                                 | 发布门禁严格度     | 中     |
 
 ---
 

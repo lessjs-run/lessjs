@@ -37,16 +37,16 @@
 | File                     | Pattern | Line    | Details                                                                                                                                                                                                   | Severity | Migration Difficulty |
 | ------------------------ | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------- |
 | `404.tsx`                | 1       | 65-73   | `override render()` returns template string with `POPULAR_LINKS.map(...).join(...)`. Simple content, no conditional logic.                                                                                | P1       | Simple               |
-| `changelog.tsx`          | 1       | 269-302 | `override render()` returns large template string with `${this._getLocale()}`, `${JSON.stringify(...)}`, and `${renderedHtml}` interpolation. Contains `<less-layout>` wrapper.                           | P0       | Medium               |
-| `roadmap.tsx`            | 1       | 239-333 | `override render()` returns very large template string (~95 lines). Static content with no conditional logic. Contains `<less-layout>`.                                                                   | P1       | Simple               |
+| `changelog.tsx`          | 1       | 269-302 | `override render()` returns large template string with `${this._getLocale()}`, `${JSON.stringify(...)}`, and `${renderedHtml}` interpolation. Contains `<open-layout>` wrapper.                           | P0       | Medium               |
+| `roadmap.tsx`            | 1       | 239-333 | `override render()` returns very large template string (~95 lines). Static content with no conditional logic. Contains `<open-layout>`.                                                                   | P1       | Simple               |
 | `apilist.tsx`            | 1       | 42-151  | `_renderZh()` returns ~110-line template string with hard-coded `locale="zh"`. API reference entries.                                                                                                     | P0       | Medium               |
 | `apilist.tsx`            | 1       | 155-257 | `_renderEn()` returns ~103-line template string with hard-coded `locale="en"`. Mirror of `_renderZh`.                                                                                                     | P0       | Medium               |
 | `guide/architecture.tsx` | 1       | 31-53   | `override render()` returns template string with conditional `${isZh ? '...' : '...'}` logic. Small content.                                                                                              | P1       | Simple               |
 | `registry/index.tsx`     | 1       | 422-589 | `override render()` returns massive template string (~168 lines). Contains complex conditional logic, `.map()` for package cards, nested ternaries, event binding strings (`@input="${this._onSearch}"`). | P0       | Complex              |
-| `registry/[package].tsx` | 1       | 232-244 | Not-found branch returns template string with `<less-layout>`.                                                                                                                                            | P0       | Medium               |
+| `registry/[package].tsx` | 1       | 232-244 | Not-found branch returns template string with `<open-layout>`.                                                                                                                                            | P0       | Medium               |
 | `registry/[package].tsx` | 1       | 246-404 | Main render returns massive template string (~158 lines). Contains heavy conditional logic, `.map()` calls, inline style attributes, event binding strings.                                               | P0       | Complex              |
-| `docs/index.tsx`         | 1       | 99-137  | `override render()` returns medium template string with `${this._getLocale()}`, static content only. Contains `<less-layout>`.                                                                            | P1       | Simple               |
-| `hub/index.tsx`          | 1       | 80-114  | `override render()` returns small template string. Static content only. Contains `<less-layout>`.                                                                                                         | P1       | Simple               |
+| `docs/index.tsx`         | 1       | 99-137  | `override render()` returns medium template string with `${this._getLocale()}`, static content only. Contains `<open-layout>`.                                                                            | P1       | Simple               |
+| `hub/index.tsx`          | 1       | 80-114  | `override render()` returns small template string. Static content only. Contains `<open-layout>`.                                                                                                         | P1       | Simple               |
 
 ---
 
@@ -269,7 +269,7 @@ Option B is recommended because:
 
 ### Phase 4: Cleanup (low priority)
 
-- `index/index.tsx`: Replace `this.setAttribute('data-theme', ...)` with signal-bound attribute or `@lessjs/signals` binding if available
+- `index/index.tsx`: Replace `this.setAttribute('data-theme', ...)` with signal-bound attribute or `@openelement/signals` binding if available
 - `registry/[component].tsx`: Replace hard-coded `locale='en'` with `this.routing.locale`
 
 ---
@@ -282,11 +282,11 @@ Template string:
 
 ```typescript
 return `
-  <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}'>
+  <open-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}'>
     <div class="container">
       <h1>${title}</h1>
     </div>
-  </less-layout>
+  </open-layout>
 `;
 ```
 
@@ -294,11 +294,11 @@ JSX equivalent:
 
 ```tsx
 return (
-  <less-layout locale={this.routing.locale} locales={JSON.stringify(['en', 'zh'])}>
+  <open-layout locale={this.routing.locale} locales={JSON.stringify(['en', 'zh'])}>
     <div class='container'>
       <h1>{title}</h1>
     </div>
-  </less-layout>
+  </open-layout>
 );
 ```
 

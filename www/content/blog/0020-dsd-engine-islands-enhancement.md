@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0020: DSD 渲染引擎与 Islands 策略增强 — 核心护城河建设'
 date: '2026-05-12'
 type: 'adr'
@@ -101,7 +101,7 @@ Dev 模式 HTML 响应:
              ├── Island Explorer → 策略分布与实际行为
              └── Performance Tab   → 渲染时间 / DSD 数量
       </less-devtool>
-      <script type="module" src="/@lessjs/devtool"></script>  ← 虚拟模块入口
+      <script type="module" src="/@openelement/devtool"></script>  ← 虚拟模块入口
     </body>
   </html>
 ```
@@ -377,7 +377,7 @@ SSG 构建完成后，获取路由表：
 
 ```
 SSG 构建时分析页面间 DOM 结构差异：
-  如果两个页面共享相同的 <header> <nav> <less-layout> 结构
+  如果两个页面共享相同的 <header> <nav> <open-layout> 结构
   自动添加 view-transition-name 以保持过渡一致性
 
 用户不需要写任何 CSS，框架自动处理：

@@ -26,15 +26,15 @@ LessJS 框架的文档整体质量**良好**，达到了开源项目的标准。
 
 所有 10 个包都有独立的 README.md：
 
-- `@lessjs/core` - 运行时 API、导出路径、使用示例
-- `@lessjs/adapter-vite` - 构建编排配置
-- `@lessjs/ui` - 8 个 Web Components 的详细说明
-- `@lessjs/create` - 脚手架使用指南和示例代码
+- `@openelement/core` - 运行时 API、导出路径、使用示例
+- `@openelement/adapter-vite` - 构建编排配置
+- `@openelement/ui` - 8 个 Web Components 的详细说明
+- `@openelement/create` - 脚手架使用指南和示例代码
 - 其他 6 个包也都有完整文档
 
 每个包 README 包含：
 
-- 安装指令 (`deno add jsr:@lessjs/xxx`)
+- 安装指令 (`deno add jsr:@openelement/xxx`)
 - JSR 导出路径清单
 - 代码示例（import 语句、配置示例）
 - 组件/API 清单表格
@@ -164,7 +164,7 @@ README.md 包含：
 
 **API 参考文档站点**
 
-- 使用 TypeDoc 生成 `@lessjs/core` 等包的 API 文档
+- 使用 TypeDoc 生成 `@openelement/core` 等包的 API 文档
 - 部署到 GitHub Pages 或 Deno Deploy
 
 ### 3.4 长期改进（Low）
@@ -183,21 +183,21 @@ README.md 包含：
 
 ### 4.1 README.md 代码示例
 
-| 示例               | 位置   | 可运行性  | 备注                                    |
-| ------------------ | ------ | --------- | --------------------------------------- |
-| 快速开始 bash 命令 | L88-98 | ✅ 可运行 | `deno run -A jsr:@lessjs/create my-app` |
-| 架构图             | L19-34 | N/A       | ASCII art 示意                          |
-| 渲染管线           | L53-61 | N/A       | 流程图示意                              |
-| SSG 三阶段         | L67-82 | N/A       | 流程图示意                              |
+| 示例               | 位置   | 可运行性  | 备注                                         |
+| ------------------ | ------ | --------- | -------------------------------------------- |
+| 快速开始 bash 命令 | L88-98 | ✅ 可运行 | `deno run -A jsr:@openelement/create my-app` |
+| 架构图             | L19-34 | N/A       | ASCII art 示意                               |
+| 渲染管线           | L53-61 | N/A       | 流程图示意                                   |
+| SSG 三阶段         | L67-82 | N/A       | 流程图示意                                   |
 
 ### 4.2 包 README 代码示例
 
-| 包              | 示例类型      | 可运行性 | 备注                               |
-| --------------- | ------------- | -------- | ---------------------------------- |
-| @lessjs/core    | Import 语句   | ✅ 正确  | 导出路径与 JSR 一致                |
-| @lessjs/ui      | HTML 标签使用 | ✅ 正确  | `<less-button>`, `<less-input>` 等 |
-| @lessjs/create  | 项目结构      | ✅ 正确  | 与脚手架生成一致                   |
-| @lessjs/signals | API 使用      | ✅ 正确  | `signal()`, `computed()` 等        |
+| 包                   | 示例类型      | 可运行性 | 备注                               |
+| -------------------- | ------------- | -------- | ---------------------------------- |
+| @openelement/core    | Import 语句   | ✅ 正确  | 导出路径与 JSR 一致                |
+| @openelement/ui      | HTML 标签使用 | ✅ 正确  | `<open-button>`, `<open-input>` 等 |
+| @openelement/create  | 项目结构      | ✅ 正确  | 与脚手架生成一致                   |
+| @openelement/signals | API 使用      | ✅ 正确  | `signal()`, `computed()` 等        |
 
 ### 4.3 代码示例改进建议
 

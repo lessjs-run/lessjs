@@ -25,7 +25,7 @@ export const globalTokenSheet = openPropsTokenSheet;
 
 对 10 个 UI 组件（`less-button`, `less-card`, `less-callout` 等）：
 
-1. 删除 `import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens'`
+1. 删除 `import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens'`
 2. 删除 `static styles` 中的 `openPropsTokenSheet`
 3. 验证视觉一致性
 

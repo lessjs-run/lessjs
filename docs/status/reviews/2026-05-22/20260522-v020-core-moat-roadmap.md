@@ -1,7 +1,7 @@
 # LessJS v0.20.0 核心护城河与未来路线分析
 
 > **分析日期**: 2026-05-21 | **版本**: v0.20.0 | **分析者**: QA 工程师（战略质量审核）
-> **项目**: https://github.com/lessjs-run/lessjs | **官网**: https://lessjs.org
+> **项目**: https://github.com/open-element/open-element | **官网**: https://lessjs.org
 
 ---
 

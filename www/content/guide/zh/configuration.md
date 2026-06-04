@@ -5,7 +5,7 @@ label: 'Configuration'
 order: 10
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=
@@ -18,19 +18,19 @@ currentPath='/guide/configuration'
       是各自独立的关注点。
     </p>
     <h2>Minimal Configuration</h2>
-    <less-code-block>
+    <open-code-block>
       <pre><code>import  from 'vite';
 
-import from '@lessjs/app';
+import from '@openelement/app';
 export default defineConfig();</code></pre>
-</less-code-block>
+</open-code-block>
 
 <p>
 使用 <span class='inline-code'>lessjs()</span>
 是推荐方式--它组合了核心插件、内容管线和
 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用
 <span class='inline-code'>lessPipeline()</span> from
-<span class='inline-code'>@lessjs/adapter-vite</span>。
+<span class='inline-code'>@openelement/adapter-vite</span>。
 </p>
 <h2>Main Options</h2>
 <table>
@@ -68,34 +68,34 @@ i18n，一个调用包含所有功能。如果你只需要核心路由和 island
 <p>
 LessJS 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
 </p>
-<less-code-block>
+<open-code-block>
 <pre><code>// deno.json
 ,
 "imports":
 }</code></pre>
-</less-code-block>
-<less-code-block>
+</open-code-block>
+<open-code-block>
 <pre><code>// vite.config.ts
 export default defineConfig(,
 plugins: [lessjs()]
 });</code></pre>
-</less-code-block>
+</open-code-block>
 <p>
 <span class='inline-code'>jsx: 'automatic'</span>
 告诉 esbuild 使用 LessJS 的 jsx-runtime 而不是 React 的。Vite 的 SSR 和 client island
 构建都会正确转换 <span class='inline-code'>.tsx</span> 文件。
 </p>
 <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
-<less-code-block>
+<open-code-block>
 <pre><code>lessjs(,
 inject: ,
-packageIslands: ['@lessjs/ui'],
+packageIslands: ['@openelement/ui'],
 middleware: },
 pwa: ,
 content: , nav: },
 i18n: ,
 });</code></pre>
-</less-code-block>
+</open-code-block>
 <div class='nav-row'>
 <a href='/api/reference' class='nav-link'>← API Design</a>
 <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>

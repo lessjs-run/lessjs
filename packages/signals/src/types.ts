@@ -1,5 +1,5 @@
-/**
- * @lessjs/signals - Public type exports
+﻿/**
+ * @openelement/signals - Public type exports
  *
  * Shared types used by framework and sugar layers.
  * No internal polyfill dependencies.

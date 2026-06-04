@@ -1,4 +1,4 @@
-# Workspace Alias 爆炸问题 — 技术债
+﻿# Workspace Alias 爆炸问题 — 技术债
 
 **文档日期**: 2026-05-19
 **严重程度**: P1 — 非阻塞但影响可维护性
@@ -47,12 +47,12 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
 ### 方案 A：按需扫描（推荐）
 
 只对 `www/` 实际引用的包生成 alias。通过正则扫描 `www/app/**/*.ts` 中的 import 语句，
-提取 `from '@lessjs/*'` 包名 → 按需查询对应包的 `deno.json` exports。
+提取 `from '@openelement/*'` 包名 → 按需查询对应包的 `deno.json` exports。
 
 ```ts
 // 伪代码
 function generateOnDemandAliases(workspaceRoot: string, targetDir: string): AliasEntry[] {
-  const imports = scanImports(targetDir, '@lessjs/'); // 正则扫描
+  const imports = scanImports(targetDir, '@openelement/'); // 正则扫描
   const needed = new Set(imports.map(normalize));
   // 只对 needed 包生成 alias
 }
@@ -67,7 +67,7 @@ function generateOnDemandAliases(workspaceRoot: string, targetDir: string): Alia
 
 ```ts
 workspaceAlias: {
-  include: ['@lessjs/ui', '@lessjs/adapter-lit', '@lessjs/app'],
+  include: ['@openelement/ui', '@openelement/adapter-lit', '@openelement/app'],
 }
 ```
 
@@ -77,8 +77,8 @@ workspaceAlias: {
 ### 方案 C：走 Deno imports 直通
 
 Vite 的 `resolve.alias` 不需要包含全部子路径。既然
-`deno.json` imports 已映射 `@lessjs/ui` → `./packages/ui/src/index.ts`，
-可以只给根包加 alias，子路径由 `deno.json` imports（带 `@lessjs/ui/xxx` 映射）处理。
+`deno.json` imports 已映射 `@openelement/ui` → `./packages/ui/src/index.ts`，
+可以只给根包加 alias，子路径由 `deno.json` imports（带 `@openelement/ui/xxx` 映射）处理。
 
 **但** Rolldown 不支持这种用法（见 root deno.json 第 28-29 行注释），所以当前必须做 subpath alias。
 

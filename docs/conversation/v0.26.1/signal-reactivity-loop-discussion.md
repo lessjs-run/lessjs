@@ -1,7 +1,7 @@
-# v0.26.1 Signal 响应式死循环：问题分析与方案讨论
+﻿# v0.26.1 Signal 响应式死循环：问题分析与方案讨论
 
 日期: 2026-05-29\
-涉及组件: `less-theme-toggle`, `DsdElement`, `@lessjs/signals`\
+涉及组件: `less-theme-toggle`, `DsdElement`, `@openelement/signals`\
 状态: 讨论完成，进入 ADR 阶段
 
 ---

@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - ssg-render.ts tests
+ * @openelement/adapter-vite - ssg-render.ts tests
  */
 import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { Hono } from 'hono';

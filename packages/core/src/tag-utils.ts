@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — Tag name validation utility.
+ * @openelement/core — Tag name validation utility.
  *
  * Validates custom element tag names per HTML spec:
  * - Must contain at least one hyphen
@@ -7,7 +7,7 @@
  * - Only lowercase letters, digits, and hyphens allowed
  * - Must not be a reserved name
  *
- * @module @lessjs/core/tag-utils
+ * @module @openelement/core/tag-utils
  */
 
 /** Check if a tag name is a valid custom element name per HTML spec. */

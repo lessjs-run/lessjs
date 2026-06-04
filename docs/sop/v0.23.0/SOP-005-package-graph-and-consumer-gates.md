@@ -14,8 +14,8 @@ not manually inferred from local typechecking.
 
 Recent release failures came from package graph reality:
 
-- `@lessjs/core` and `@lessjs/signals` briefly formed a JSR publish cycle.
-- `@lessjs/create@0.22.0` generated a `vite.config.ts` that imported `vite`
+- `@openelement/core` and `@openelement/signals` briefly formed a JSR publish cycle.
+- `@openelement/create@0.22.0` generated a `vite.config.ts` that imported `vite`
   without listing `vite` in the consumer import map.
 - Post-publish smoke used an ambiguous latest create version instead of the
   just-published create version.
@@ -43,12 +43,12 @@ imports through the monorepo import map.
 ### Step 1: Add Package Graph Checker
 
 - [ ] Parse every `packages/*/deno.json`.
-- [ ] Build a graph of `@lessjs/*` dependencies.
+- [ ] Build a graph of `@openelement/*` dependencies.
 - [ ] Detect cycles.
 - [ ] Emit a publish order.
 - [ ] Fail if workflow publish order differs from the computed order unless an
       exception is documented.
-- [ ] Fail if a package imports another `@lessjs/*` package without declaring
+- [ ] Fail if a package imports another `@openelement/*` package without declaring
       it in its local `deno.json`.
 
 Acceptance:
@@ -59,7 +59,7 @@ Acceptance:
 
 ### Step 2: Add Direct Import Map Checker for Generated Projects
 
-- [ ] Generate a project with `@lessjs/create`.
+- [ ] Generate a project with `@openelement/create`.
 - [ ] Parse generated `.ts` files and `vite.config.ts`.
 - [ ] Check that every bare direct import is listed in `deno.json` or is a
       runtime-provided built-in.
@@ -74,13 +74,13 @@ Acceptance:
 ### Step 3: Pin Post-Publish Smoke to the New Version
 
 - [ ] Read `packages/create/deno.json` in the smoke job.
-- [ ] Run `jsr:@lessjs/create@<that version>`.
+- [ ] Run `jsr:@openelement/create@<that version>`.
 - [ ] Retry during JSR propagation.
 - [ ] Avoid falling back to latest when validating a just-published release.
 
 Acceptance:
 
-- [ ] A bad older `@lessjs/create` release cannot be selected by accident.
+- [ ] A bad older `@openelement/create` release cannot be selected by accident.
 
 ### Step 4: Broaden Consumer Proof
 
@@ -128,10 +128,10 @@ cd packages/create && deno publish --dry-run --allow-dirty
 - `deno task graph:check` reads every package, verifies a unified version line,
   detects cycles, validates publish order, and fails packages missing from the
   publish workflow.
-- The graph gate now checks source-level direct `@lessjs/*` imports against
+- The graph gate now checks source-level direct `@openelement/*` imports against
   each package-local `deno.json`, so root import-map success cannot hide
   undeclared JSR dependencies.
-- The publish workflow includes all 18 packages and publishes `@lessjs/runtime`
+- The publish workflow includes all 18 packages and publishes `@openelement/runtime`
   before generated projects can depend on it.
 - Post-publish smoke remains pinned to the create version read from
   `packages/create/deno.json`.

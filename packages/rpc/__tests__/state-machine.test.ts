@@ -1,5 +1,5 @@
 /**
- * @lessjs/rpc - Deep tests: State machine + Abort + Retry
+ * @openelement/rpc - Deep tests: State machine + Abort + Retry
  *
  * Tests cover:
  * - Loading state transitions (idle -> loading -> idle)

@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - errors.ts tests (Deno)
+ * @openelement/core - errors.ts tests (Deno)
  * ADR-0053: Updated for unified error architecture.
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';

@@ -1,4 +1,4 @@
-# LessJS v0.23.0 框架可靠性 & 清洁度审计
+﻿# LessJS v0.23.0 框架可靠性 & 清洁度审计
 
 > 审计日期：2026-05-27\
 > 审计范围：`packages/core` · `packages/ui` · `packages/adapter-vite` · `www/`\
@@ -107,20 +107,20 @@ _resetState() → super.connectedCallback() → addEventListener
 | 属性 | 值                                                                                                       |
 | ---- | -------------------------------------------------------------------------------------------------------- |
 | 文件 | `www/app/shared/section-renderer.ts:42-63`                                                               |
-| 问题 | 使用 `html.indexOf('<less-layout')` 定位标签闭合 `>`，对包含 less-layout 模板的代码块/示例内容产生误匹配 |
+| 问题 | 使用 `html.indexOf('<open-layout')` 定位标签闭合 `>`，对包含 less-layout 模板的代码块/示例内容产生误匹配 |
 
 ### P1: _propagateTheme() 应提升到框架基类
 
 | 属性 | 值                                                                                                                                        |
 | ---- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| 文件 | `packages/ui/src/less-layout.ts:961-978`                                                                                                  |
+| 文件 | `packages/ui/src\/open-layout.ts:961-978`                                                                                                  |
 | 问题 | 主题传播是框架级关注点，不应是 less-layout 的私有方法。当前同时 walk light DOM + shadow DOM，在 `_loadContent` 中被调用两次（立即 + rAF） |
 
 ### P1: "home" 属性语义错误
 
 | 属性 | 值                                                                                                                                                          |
 | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 文件 | `packages/ui/src/less-layout.ts:631`                                                                                                                        |
+| 文件 | `packages/ui/src\/open-layout.ts:631`                                                                                                                        |
 | 问题 | `home` 属性的实际作用是抑制侧边栏，但被 `contributing.ts`, `changelog.ts`, `404.ts`, `roadmap.ts` 等非首页页面使用。应重命名为 `no-sidebar` 或 `full-width` |
 
 ---
@@ -152,7 +152,7 @@ _resetState() → super.connectedCallback() → addEventListener
 | 属性       | 状态                                                                                                 |
 | ---------- | ---------------------------------------------------------------------------------------------------- |
 | v0.23.0 前 | 31 个路由文件缺失 `openPropsTokenSheet`                                                              |
-| v0.23.0 修 | 批量补上 `import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens'` 并加入 `static styles` |
+| v0.23.0 修 | 批量补上 `import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens'` 并加入 `static styles` |
 
 虽然已修复，但每个文件都写重复的 import 不符合 DRY 原则。建议：框架提供 `PageBase` 基类或 `createPage` 工厂函数，将 `openPropsTokenSheet` + 常用配置作为默认值。减少路由文件的样板代码量。
 
@@ -189,7 +189,7 @@ _resetState() → super.connectedCallback() → addEventListener
 
 | 属性 | 状态                                                                                                              |
 | ---- | ----------------------------------------------------------------------------------------------------------------- |
-| 文件 | `packages/ui/src/less-layout.ts`                                                                                  |
+| 文件 | `packages/ui/src\/open-layout.ts`                                                                                  |
 | 问题 | `_icon()` 的导航标签到 SVG 映射、页脚文本、`MOBILE_TAB_LIMIT = 5` 等属于 www 特定配置，不应硬编码在框架 UI 组件中 |
 
 建议通过 HTML 属性或 CSS 自定义属性使其可配置。
@@ -201,13 +201,13 @@ _resetState() → super.connectedCallback() → addEventListener
 ### 当前状态
 
 ```
-@lessjs/core          — runtime kernel + DsdElement + template engine
-@lessjs/ui            — UI components (less-layout, less-code-block, etc.)
-@lessjs/adapter-vite  — Vite plugin + SSG/SSR build pipeline
-@lessjs/content       — content plugin (nav, blog, sitemap)
-@lessjs/i18n          — i18n plugin
-@lessjs/protocols     — shared types + virtual module IDs
-@lessjs/app           — app facade (consumer entry point)
+@openelement/core          — runtime kernel + DsdElement + template engine
+@openelement/ui            — UI components (less-layout, less-code-block, etc.)
+@openelement/adapter-vite  — Vite plugin + SSG/SSR build pipeline
+@openelement/content       — content plugin (nav, blog, sitemap)
+@openelement/i18n          — i18n plugin
+@openelement/protocols     — shared types + virtual module IDs
+@openelement/app           — app facade (consumer entry point)
 ```
 
 ### 边界分析
@@ -223,7 +223,7 @@ _resetState() → super.connectedCallback() → addEventListener
 ### 建议
 
 - **ADR-0050 中 `app` 依赖 `adapter-vite/build-context`** 的问题尚未解决。如果是纯 facade 包，不应导入 adapter 内部类型
-- `@lessjs/ui` 作为 UI 组件库，可以接受 `show-search` 等配置属性，通过 attribute 驱动行为，不引入新依赖
+- `@openelement/ui` 作为 UI 组件库，可以接受 `show-search` 等配置属性，通过 attribute 驱动行为，不引入新依赖
 
 ---
 

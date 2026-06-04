@@ -1,4 +1,4 @@
-# Registry Hub v2 Design Conversation
+﻿# Registry Hub v2 Design Conversation
 
 > Design session: 2026-05-17
 > Result: ADR-0031 + v0.19.0 Phase 2 SOP
@@ -66,7 +66,7 @@ browsing rewarding.
    SSR-capable components: full rendered HTML. For client-only: placeholder.
 
 4. **Usage examples start hardcoded per known package, with generic fallback**:
-   Shoelace, Media Chrome, @lessjs/ui get hand-written examples. Others get
+   Shoelace, Media Chrome, @openelement/ui get hand-written examples. Others get
    auto-generated from CEM manifest.
 
 5. **CEM API reference is P2**: Rich attribute/event/slot tables depend on

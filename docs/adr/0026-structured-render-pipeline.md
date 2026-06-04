@@ -95,7 +95,7 @@ This enables CI gates: `if (report.totalErrors > 0) process.exit(1)`.
 
 ### 4. Package islands SSR registration via `beforeRender` hook
 
-Current limitation: package islands (e.g., `@lessjs/ui` components) are not
+Current limitation: package islands (e.g., `@openelement/ui` components) are not
 registered in SSR's `customElements` registry, so `renderDsd()` cannot
 instantiate them.
 
@@ -121,7 +121,7 @@ Add a `deno task check:versions` script that verifies:
 
 - All `packages/*/deno.json` have the same version
 - `deno.lock` is up to date
-- Cross-package `@lessjs/*@^X.Y.Z` references match the current version
+- Cross-package `@openelement/*@^X.Y.Z` references match the current version
 
 Run this in CI and as a pre-publish gate.
 

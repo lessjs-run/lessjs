@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-lit - SSR adapter tests
+ * @openelement/adapter-lit - SSR adapter tests
  */
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
@@ -116,7 +116,7 @@ Deno.test('installLitAdapter registers adapter in the default registry and unins
   installLitAdapter();
 
   // Verify the adapter is functional by testing through the registered adapter.
-  const { getDefaultRegistry } = await import('@lessjs/core');
+  const { getDefaultRegistry } = await import('@openelement/core');
   assertEquals(typeof getDefaultRegistry().register, 'function');
   // Test that Lit TemplateResult is recognized
   const result = html`

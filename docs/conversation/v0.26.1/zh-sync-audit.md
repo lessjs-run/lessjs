@@ -1,4 +1,4 @@
-# Bilingual Sync Audit — LessJS Docs (v0.26.1)
+﻿# Bilingual Sync Audit — LessJS Docs (v0.26.1)
 
 Audit scope: All `.tsx` route pages in `www/app/routes/`.\
 Patterns identified: **dual-method** (`_renderEn`/`_renderZh`) and **inline isZh** ternary.
@@ -71,8 +71,8 @@ The EN `_renderEn()` has significantly more content than the ZH `_renderZh()`:
 // EN has (lines 115-138):
 <p>Place API routes in <span class='inline-code'>app/routes/api</span>.
   Default-export a Hono app for complex APIs, or a plain function...</p>
-<less-code-block> {/* Hono app example */}
-<less-code-block> {/* health endpoint example */}
+<open-code-block> {/* Hono app example */}
+<open-code-block> {/* health endpoint example */}
 
 <h2>Request Validation</h2>
 <p>LessJS does not mandate a validation library. Zod with
@@ -88,8 +88,8 @@ ZH `_renderZh()` has a full JSX counter island example that **EN `_renderEn()` d
 
 ```tsx
 // ZH has (lines 140-166) — JSX counter component with signal()
-import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+import { DsdElement } from '@openelement/runtime';
+import { signal } from '@openelement/runtime';
 // ... full CounterIsland example with onClick handlers
 
 // EN has NO code example in the "Adding Interactivity" section at all

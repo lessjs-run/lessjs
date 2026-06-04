@@ -1,8 +1,8 @@
-# alien-signals Capability Audit (v0.26.1)
+﻿# alien-signals Capability Audit (v0.26.1)
 
 > **Author**: general-purpose-2 (Framework Architect)\
 > **Date**: 2026-05-30\
-> **Scope**: alien-signals v3.2.1 + @lessjs/signals + @lessjs/core integration
+> **Scope**: alien-signals v3.2.1 + @openelement/signals + @openelement/core integration
 
 ---
 
@@ -71,12 +71,12 @@ signal(s, newValue)
 
 ---
 
-## 2. @lessjs/signals Wrapper
+## 2. @openelement/signals Wrapper
 
 ### 2.1 Architecture
 
 ```
-@lessjs/signals
+@openelement/signals
   ├── index.ts         → Public exports (signal, computed, effect, types)
   ├── framework.ts     → Singleton engine, binds signal/computed/effect
   ├── alien-engine.ts  → Adapts alien-signals API → .value syntax
@@ -97,7 +97,7 @@ signal(s, newValue)
 
 ### 2.3 What is NOT Exposed (Hidden from LessJS users)
 
-| alien-signals primitive                                      | Status in @lessjs/signals      | Impact                                        |
+| alien-signals primitive                                      | Status in @openelement/signals      | Impact                                        |
 | ------------------------------------------------------------ | ------------------------------ | --------------------------------------------- |
 | `effectScope` / `createRoot`                                 | **NOT exposed**                | No grouped-effect lifecycle management        |
 | `getOwner` / `runWithOwner`                                  | **NOT exposed**                | No effect ownership context                   |
@@ -288,7 +288,7 @@ If a VNode child is a signal (detected by `isSignalLike`), the text content won'
 
 ### G4: No Effect Scope / Component-Level Cleanup (DESIGN GAP)
 
-**Location**: `@lessjs/signals` (framework layer)
+**Location**: `@openelement/signals` (framework layer)
 
 alien-signals `effectScope()` groups child effects for batch disposal. LessJS doesn't expose this. Each component currently relies on:
 
@@ -304,7 +304,7 @@ An effect scope per component instance would:
 
 ### G5: No Batching for Multi-Prop Updates (DESIGN GAP)
 
-**Location**: `@lessjs/signals` (framework layer)
+**Location**: `@openelement/signals` (framework layer)
 
 When multiple signal-valued props change in the same synchronous block, each triggers its own `effect()` execution + DOM update immediately. alien-signals `startBatch()`/`endBatch()` defer notifications until the batch ends.
 
@@ -320,7 +320,7 @@ With batching, both DOM writes would be batched into one flush.
 
 ### G6: No `untrack` for Non-Reactive Reads (DESIGN GAP)
 
-**Location**: `@lessjs/signals` (framework layer)
+**Location**: `@openelement/signals` (framework layer)
 
 Sometimes code needs to read a signal value without creating a dependency. alien-signals doesn't have a built-in `untrack()` but it CAN be implemented via `setActiveSub(undefined)` / restore. The TC39 proposal includes `untrack` as a first-class primitive.
 

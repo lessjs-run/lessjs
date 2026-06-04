@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - DsdRenderCollector unit tests (Deno)
+ * @openelement/core - DsdRenderCollector unit tests (Deno)
  *
  * Tests for the DSD render metrics collector used for build-time reporting.
  * Purely tests the collector data structure.

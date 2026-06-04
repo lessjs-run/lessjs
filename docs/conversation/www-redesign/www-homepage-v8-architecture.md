@@ -140,12 +140,12 @@ v8 顺序:  Hero → CodeStrip → BundleLine → Benchmark → MultiFw → Glow
 Astro 对比说明（放在 `.bench-note` 中或作为单独的 `.bench-astro` callout）：
 
 ```html
-<less-callout>
+<open-callout>
   <p>
     Unlike Astro, LessJS achieves zero-JS without a "no-JS-by-default" policy — DSD is a browser
     primitive, not a convention.
   </p>
-</less-callout>
+</open-callout>
 ```
 
 #### Multi-framework 去 Label
@@ -205,16 +205,16 @@ Astro 对比说明（放在 `.bench-note` 中或作为单独的 `.bench-astro` c
 
 ```diff
   <div class="qs-step-card">
--   <less-step-card step="1" label="创建"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
-+   <less-step-card step="1" label="创建"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
+-   <open-step-card step="1" label="创建"><code>deno run -A jsr:@openelement/create my-app</code></open-step-card>
++   <open-step-card step="1" label="创建"><code>deno run -A jsr:@openelement/create my-app</code></open-step-card>
 +   <p class="qs-desc">脚手架包含：路由 + SSG + Island 示例</p>
   </div>
   <div class="qs-step-card">
-    <less-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
+    <open-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></open-step-card>
 +   <p class="qs-desc">热更新 + DSD 实时预览 → localhost:5173</p>
   </div>
   <div class="qs-step-card">
-    <less-step-card step="3" label="构建"><code>deno task build → dist/</code></less-step-card>
+    <open-step-card step="3" label="构建"><code>deno task build → dist/</code></open-step-card>
 +   <p class="qs-desc">纯静态文件，部署到任何 Serverless 平台</p>
   </div>
 + <div class="qs-cta">
@@ -505,7 +505,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 1. 在 Benchmark `.bench-grid` 中添加 4 个 stat 卡片（从 Hero 移来的数据）
 2. 更新 `.bench-grid` CSS: `grid-template-columns` 从 `1fr 1fr` 改为 `repeat(4, 1fr)`（桌面端 4 列），移动端可改为 `1fr 1fr`
-3. 新增 `<less-callout>` Astro 对比说明（放在 bench-note 之后）
+3. 新增 `<open-callout>` Astro 对比说明（放在 bench-note 之后）
 4. 新增 CSS `.bench-astro` 样式（见 1.7 节）
 5. 更新 `.bench-note` 文本（添加"工程优化无法替代浏览器原生能力"措辞）
 6. 对称修改 `_renderEn`
@@ -555,7 +555,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 **具体操作**:
 
-1. 在 `_renderZh` 和 `_renderEn` 的每个 `.qs-step-card` 内 `<less-step-card>` 之后添加 `<p class="qs-desc">`
+1. 在 `_renderZh` 和 `_renderEn` 的每个 `.qs-step-card` 内 `<open-step-card>` 之后添加 `<p class="qs-desc">`
    - Step 1: 脚手架包含：路由 + SSG + Island 示例
    - Step 2: 热更新 + DSD 实时预览 → localhost:5173
    - Step 3: 纯静态文件，部署到任何 Serverless 平台
@@ -612,7 +612,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 | 约束                             | 说明                                                                                                                                                |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 不引入新 npm/JSR 依赖            | 已有依赖: `lit`, `@lessjs/adapter-lit`, `@lessjs/ui`                                                                                                |
+| 不引入新 npm/JSR 依赖            | 已有依赖: `lit`, `@openelement/adapter-lit`, `@openelement/ui`                                                                                                |
 | 不创建新 Web Component           | 已有组件不变: `less-showcase-panel`, `less-callout`, `less-step-card`, `less-code-block`, `less-term-demo`, `less-search`, `less-layout`            |
 | 不修改设计 tokens                | `--less-brand-*`, `--less-space-*`, `--less-radius-*`, `--less-duration-*`, `--less-easing-*`, `--less-shadow-*`, `--less-font-size-*` 全部保持不变 |
 | 不修改 less-showcase-panel       | 三 Tab 交互逻辑（Lit/React/Vanilla）完整保留                                                                                                        |

@@ -1,4 +1,4 @@
-# LessJS v0.27.0 性能优化专项审计报告
+﻿# LessJS v0.27.0 性能优化专项审计报告
 
 **审计人员**: performance-engineer  
 **审计日期**: 2026-06-01  
@@ -24,7 +24,7 @@
 | Chunk | 原始大小 | 说明 | 风险 |
 |-------|---------|------|------|
 | `client-DrPum-09.js` | **178 KB** | Shoelace+Lit 核心 | P1 |
-| `dist-BPGcSr41.js` | **172 KB** | @lessjs/ui 核心 | P1 |
+| `dist-BPGcSr41.js` | **172 KB** | @openelement/ui 核心 | P1 |
 | `shoelace-showcase-*.js` | **82 KB** | Shoelace 演示 | P2 |
 | `flexsearch.bundle.module.min-*.js` | **49 KB** | FlexSearch 全量 | P1 |
 | `island-demo-idle-*.js` | **48 KB** | Demo Island | P2 |
@@ -57,8 +57,8 @@
 - **现象**: SSR Bundle (`server/entry.js`) 为 1.53 MB，gzip 后 306 KB
 - **影响**: SSG 构建时需导入此 bundle 进行页面渲染，冷启动 SSG 渲染慢；部署到 CF Pages 等 Edge 环境时 import 延迟大
 - **根因分析**:
-  1. `ssr.noExternal` 包含 `/^@lessjs\//`, `/^lit/`, `/^@lit/`, `alien-signals`, `react`, `react-dom` — 几乎内联了所有依赖
-  2. Shoelace 被 `noExternal` 覆盖（`/^@lessjs/` 正则匹配到 Shoelace 的适配器），导致完整 Shoelace 库被打入 SSR Bundle
+  1. `ssr.noExternal` 包含 `/^@openelement\//`, `/^lit/`, `/^@lit/`, `alien-signals`, `react`, `react-dom` — 几乎内联了所有依赖
+  2. Shoelace 被 `noExternal` 覆盖（`/^@openelement/` 正则匹配到 Shoelace 的适配器），导致完整 Shoelace 库被打入 SSR Bundle
   3. React + ReactDOM 整包被内联（即使大部分页面不使用 React）
   4. Hono 框架本身也在 bundle 中
 - **整改建议**:
@@ -176,21 +176,21 @@
 
 ### 2.5 包体积与 Tree-Shaking
 
-#### P1: `@lessjs/runtime` 桶式导出影响 Tree-Shaking
+#### P1: `@openelement/runtime` 桶式导出影响 Tree-Shaking
 
 - **问题位置**: `packages/runtime/src/index.ts`
-- **现象**: `@lessjs/runtime` 重新导出了 `@lessjs/core`、`@lessjs/signals`、`@lessjs/style-sheet` 的全部公共 API
-- **影响**: 使用 `import { DsdElement } from '@lessjs/runtime'` 可能导致整个 core 包被引入（取决于 bundler 的 tree-shaking 能力）
+- **现象**: `@openelement/runtime` 重新导出了 `@openelement/core`、`@openelement/signals`、`@openelement/style-sheet` 的全部公共 API
+- **影响**: 使用 `import { DsdElement } from '@openelement/runtime'` 可能导致整个 core 包被引入（取决于 bundler 的 tree-shaking 能力）
 - **整改建议**: 
-  - 推荐直接从子包导入：`import { DsdElement } from '@lessjs/core'`
-  - `@lessjs/runtime` 文档标注为"便捷入口"，非推荐导入路径
+  - 推荐直接从子包导入：`import { DsdElement } from '@openelement/core'`
+  - `@openelement/runtime` 文档标注为"便捷入口"，非推荐导入路径
 
 #### P2: `types.ts` 1448 行 — 运行时包中包含大量类型定义
 
 - **问题位置**: `packages/core/src/types.ts`
 - **现象**: 核心包中 types.ts 占 1448 行（21% 核心包代码量），包含大量仅类型导出
 - **影响**: TypeScript 编译后类型会消除，但 Deno 的类型检查和 `deno check` 耗时会受影响
-- **整改建议**: 考虑将纯类型拆分到 `@lessjs/core/types` 子路径，减少主入口的类型检查负担
+- **整改建议**: 考虑将纯类型拆分到 `@openelement/core/types` 子路径，减少主入口的类型检查负担
 
 #### P2: `less-layout` Island 23 KB — 包含完整导航数据
 
@@ -216,7 +216,7 @@
 ```typescript
 // build-ssg.ts: 修改 noExternal 列表
 const defaultNoExternal = [
-  /^@lessjs\//,  // 保留
+  /^@openelement\//,  // 保留
   'alien-signals', // 保留
   // 移除: /^lit/, /^@lit/, /^@lit-labs\// (Lit 按需)
   // 移除: 'react', 'react-dom' (React 按需)
@@ -267,7 +267,7 @@ if (hasAdapterConfig('lit')) {
 | 类别 | 当前 | 目标 | 措施 |
 |------|------|------|------|
 | Shoelace+Lit 共享 chunk | 178 KB | 80 KB | 按组件拆分 |
-| @lessjs/ui 核心 | 172 KB | 100 KB | 按组件拆分、移除冗余 |
+| @openelement/ui 核心 | 172 KB | 100 KB | 按组件拆分、移除冗余 |
 | FlexSearch | 49 KB | 49 KB | 已 min，使用 visible 策略 |
 | 其余 Islands | ~255 KB | ~255 KB | 已经按需 |
 | **客户端总计** | **~654 KB** | **~484 KB** | |

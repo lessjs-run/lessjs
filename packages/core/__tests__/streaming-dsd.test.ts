@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Streaming Dsd Tests
+ * @openelement/core - Streaming Dsd Tests
  *
  * Tests for renderDsdStream() progressive Dsd delivery via Web Streams.
  */

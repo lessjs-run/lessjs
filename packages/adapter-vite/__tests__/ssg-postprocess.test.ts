@@ -1,5 +1,5 @@
 /**
- * @lessjs/adapter-vite - ssg-postprocess.ts tests (Deno)
+ * @openelement/adapter-vite - ssg-postprocess.ts tests (Deno)
  *
  * Tests the SSG post-processing functions using temp directories.
  */

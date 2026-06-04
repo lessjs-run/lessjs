@@ -1,4 +1,4 @@
-# LessJS 架构分析报告
+﻿# LessJS 架构分析报告
 
 > 日期：2026-05-13
 > 目标：E S M 原生 + DSD 驱动 + Vite 可选的 SSG 框架可行性分析
@@ -23,7 +23,7 @@ render-dsd.ts
 **没有 Lit，没有 Vite，没有 node:*，没有 npm: 前缀。**  
 所有 DSD 渲染是纯字符串拼接 + `async/await`。用户组件只要写 `render(): string`，就不需要 Lit。
 
-Lit 只通过 `@lessjs/adapter-lit` 的 `installLitAdapter()` 注入——用户主动调用才激活。如果用原生 Web Components（`render(): string`）或者 Lit 之外的框架，整套管线不需要 Lit。
+Lit 只通过 `@openelement/adapter-lit` 的 `installLitAdapter()` 注入——用户主动调用才激活。如果用原生 Web Components（`render(): string`）或者 Lit 之外的框架，整套管线不需要 Lit。
 
 **结论：DSD 已经做到了你想要的——核心依赖为零，Lit 可选。**
 
@@ -69,9 +69,9 @@ Phase 3:                                  Phase 3:
   "imports": {
     "hono": "https://jsr.io/@hono/hono/4.7.0/mod.ts",
     "lit": "npm:lit@3.3.2",
-    "@lessjs/core": "npm:@jsr/lessjs__core@0.13.0",
-    "@lessjs/core/logger": "npm:@jsr/lessjs__core@0.13.0/logger",
-    "@lessjs/adapter-lit": "npm:@jsr/lessjs__adapter-lit@0.8.0"
+    "@openelement/core": "npm:@jsr/lessjs__core@0.13.0",
+    "@openelement/core/logger": "npm:@jsr/lessjs__core@0.13.0/logger",
+    "@openelement/adapter-lit": "npm:@jsr/lessjs__adapter-lit@0.8.0"
   }
 }
 ```
@@ -90,7 +90,7 @@ for (const route of routes) {
 ```
 
 **为什么这解决了 `npm:` vs `jsr:` 的坑？**  
-因为 SSR bundle 不再依赖"构建环境的隐式 import map"，而是**自己带一份明文 import map**。不管用户用 `jsr:@lessjs/app` 还是 `npm:@jsr/lessjs__app` 还是 workspace，Phase 3 都读这份 sidecar import map 来解析 bare specifier。
+因为 SSR bundle 不再依赖"构建环境的隐式 import map"，而是**自己带一份明文 import map**。不管用户用 `jsr:@openelement/app` 还是 `npm:@jsr/lessjs__app` 还是 workspace，Phase 3 都读这份 sidecar import map 来解析 bare specifier。
 
 ### 1.3 项目能更干净吗？能，但不碰伤筋动骨的东西
 
@@ -197,13 +197,13 @@ LessJS = DSD + ESM-native SSG + Islands + 任意 runtime
 
 ```bash
 # 方法 1: npm（干净，推荐外部用户）
-npm install @lessjs/app @lessjs/adapter-lit
+npm install @openelement/app @openelement/adapter-lit
 
 # 方法 2: JSR（干净）
-deno add jsr:@lessjs/app jsr:@lessjs/adapter-lit
+deno add jsr:@openelement/app jsr:@openelement/adapter-lit
 
 # 方法 3: Workspace（开发 LessJS 本身用）
-git clone https://github.com/lessjs-run/lessjs.git
+git clone https://github.com/open-element/open-element.git
 ```
 
 **三种方式都能跑，没有 `npm:` vs `jsr:` 的差异。** 因为 importmap.json 是 SSR bundle 自带的。
@@ -222,7 +222,7 @@ deno task build  # Vite build + SSG，和现在一样
 # 或者独立 SSG（不需要 Vite 环境）
 npx lessjs-ssg    # 读 dist/server/entry.mjs + importmap.json
 # 或者
-deno run -A npm:@lessjs/adapter-vite/ssg
+deno run -A npm:@openelement/adapter-vite/ssg
 # 或者
 node ssg.mjs      # 只要 Node 18+
 ```

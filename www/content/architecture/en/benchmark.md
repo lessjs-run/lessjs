@@ -1,11 +1,11 @@
----
+﻿---
 title: 'Performance & Benchmarks'
 section: 'Reference'
 label: 'Performance'
 order: 100
 ---
 
-<less-layout navItems= headerNav= currentPath='/architecture/benchmark'>
+<open-layout navItems= headerNav= currentPath='/architecture/benchmark'>
 
           <h1>Performance &amp; Benchmarks</h1>
           <p class='subtitle'>Zero-noise. What we actually measure.</p>

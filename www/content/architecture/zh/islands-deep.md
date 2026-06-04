@@ -1,11 +1,11 @@
----
+﻿---
 title: 'Island 深度指南'
 section: 'Principles'
 label: 'Island Deep Dive'
 order: 50
 ---
 
-<less-layout
+<open-layout
 locale=
 locales=
 navItems=

@@ -1,4 +1,4 @@
-# LessJS v0.21.16 深度技术选型报告
+﻿# LessJS v0.21.16 深度技术选型报告
 
 > 2026-05-26
 
@@ -8,7 +8,7 @@
 
 ### 现状
 
-`@lessjs/signals`（14 文件）基于 TC39 Signal.State 原生，手写 ~400 行 DAG 依赖图算法（polyfill.ts），包含 channel/islandEffect/themeSignal 等独占功能。
+`@openelement/signals`（14 文件）基于 TC39 Signal.State 原生，手写 ~400 行 DAG 依赖图算法（polyfill.ts），包含 channel/islandEffect/themeSignal 等独占功能。
 
 ### 结论：混合策略
 

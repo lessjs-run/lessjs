@@ -13,17 +13,17 @@
 │  Application (www/)                      │
 │  ─ routes, islands, renderers, content  │
 ├─────────────────────────────────────────┤
-│  Builder (@lessjs/adapter-vite)         │
+│  Builder (@openelement/adapter-vite)         │
 │  ─ route scan, SSG pipeline, bundle     │
 ├─────────────────────────────────────────┤
-│  UI (@lessjs/ui)                        │
+│  UI (@openelement/ui)                        │
 │  ─ less-layout, less-button, etc.       │
 ├─────────────────────────────────────────┤
-│  Core (@lessjs/core)                    │
+│  Core (@openelement/core)                    │
 │  ─ DsdElement, renderDsd, VNode, JSX   │
 │  ─ renderDsdTree, signals bridge, props │
 ├─────────────────────────────────────────┤
-│  Signals (@lessjs/signals)              │
+│  Signals (@openelement/signals)              │
 │  ─ signal(), computed(), effect()       │
 └─────────────────────────────────────────┘
 ```
@@ -46,7 +46,7 @@ renderDsd(input, props?)
 instantiate component → injectProps() → render()
     │
     ▼
-VNode tree ← JSX compiled by Deno (jsxImportSource: @lessjs/core)
+VNode tree ← JSX compiled by Deno (jsxImportSource: @openelement/core)
     │
     ▼
 renderDsdTree(vnode)  ← single async traversal
@@ -104,7 +104,7 @@ _bindEvents()
 ```
 User writes:  render() { return <div class="x">hello</div> }
                     │
-                    ▼  Deno JSX transform (jsxImportSource: @lessjs/core)
+                    ▼  Deno JSX transform (jsxImportSource: @openelement/core)
 Becomes:       jsx('div', { class: 'x', children: 'hello' })
                     │
                     ▼  jsx() returns VNode
@@ -223,14 +223,14 @@ build-ssg.ts
 ## 8. Dependency Graph
 
 ```
-@lessjs/create ──→ @lessjs/app ──→ @lessjs/adapter-vite ──→ @lessjs/core
+@openelement/create ──→ @openelement/app ──→ @openelement/adapter-vite ──→ @openelement/core
                        │                                           │
-                       └── @lessjs/ui ─────────────────────────────┘
-                       └── @lessjs/content ──→ @lessjs/core
-                       └── @lessjs/i18n ──→ @lessjs/core
-                       └── @lessjs/router ──→ @lessjs/core
-                       └── @lessjs/signals ────────────────── (zero deps)
-                       └── @lessjs/runtime ──→ core + signals + style-sheet
+                       └── @openelement/ui ─────────────────────────────┘
+                       └── @openelement/content ──→ @openelement/core
+                       └── @openelement/i18n ──→ @openelement/core
+                       └── @openelement/router ──→ @openelement/core
+                       └── @openelement/signals ────────────────── (zero deps)
+                       └── @openelement/runtime ──→ core + signals + style-sheet
 ```
 
 Published to JSR. Zero node:* imports in core. Works in Deno, Node, Bun, Edge.
@@ -247,13 +247,13 @@ import {
   Fragment, // JSX fragment
   renderDsd, // One function to rule them all
   renderToString, // Sync VNode→HTML (no nested CE)
-} from '@lessjs/core';
+} from '@openelement/core';
 ```
 
 ### Compiler Protocol (jsx-runtime subpath)
 
 ```ts
-import { For, jsx, jsxDEV, jsxs, Show } from '@lessjs/core/jsx-runtime';
+import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 ```
 
 ### Internal (not publicly exported)

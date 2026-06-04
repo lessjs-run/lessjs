@@ -1,4 +1,4 @@
-# www/ Content Model Audit — v0.27.0
+﻿# www/ Content Model Audit — v0.27.0
 
 ## 1. innerHTML 使用情况
 
@@ -27,9 +27,9 @@
 
 ---
 
-## 2. 残留 `@lessjs/runtime` 导入
+## 2. 残留 `@openelement/runtime` 导入
 
-所有 .tsx 路由文件已迁移至 `@lessjs/core`。以下文件仍使用 `@lessjs/runtime`：
+所有 .tsx 路由文件已迁移至 `@openelement/core`。以下文件仍使用 `@openelement/runtime`：
 
 | 文件                       | 行号 | 导入                       |
 | -------------------------- | ---- | -------------------------- |
@@ -39,7 +39,7 @@
 | `islands/demo-load.ts`     | 5    | `defineIsland`             |
 | `islands/demo-idle.ts`     | 5    | `defineIsland`             |
 
-**代码示例中的 `@lessjs/runtime` 引用（文档，非真实导入）**:
+**代码示例中的 `@openelement/runtime` 引用（文档，非真实导入）**:
 
 - `routes/architecture/islands.tsx:122` — 代码示例
 - `content/architecture/zh/islands.md:81` — MD 内容
@@ -129,13 +129,13 @@
 | 检查项                | 状态         | 问题数                  |
 | --------------------- | ------------ | ----------------------- |
 | innerHTML 残留        | 需处理       | 3 runtime + 5 legacy    |
-| @lessjs/runtime 导入  | 未完成       | 5 文件未迁移            |
+| @openelement/runtime 导入  | 未完成       | 5 文件未迁移            |
 | 硬编码颜色            | 部分残留     | ~10 处需令牌化          |
 | var(--xxx, #fallback) | 已清理       | 0                       |
 | _esc() 使用           | 已清理       | 0                       |
 | [page] 残留           | 已清理       | 0                       |
 | MD 内容孤儿           | 1 个孤儿文件 | `getting-started.en.md` |
 
-**高优先级**: `less-search.tsx` innerHTML 迁移、`scroll-reveal.ts` 迁移至 `@lessjs/core`。
+**高优先级**: `less-search.tsx` innerHTML 迁移、`scroll-reveal.ts` 迁移至 `@openelement/core`。
 **中优先级**: 删除 `getting-started.en.md` 孤儿文件、清理 `demo-*` legacy islands。
 **低优先级**: `#fff` 和 `#11131a` 硬编码颜色令牌化。

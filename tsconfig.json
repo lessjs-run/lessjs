@@ -3,7 +3,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@lessjs/core",
+    "jsxImportSource": "@openelement/core",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
     "target": "ESNext",

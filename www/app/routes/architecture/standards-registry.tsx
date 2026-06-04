@@ -1,8 +1,8 @@
 ﻿export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/core';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 export class StandardsRegistryGuidePage extends DsdElement {
   declare locale?: string;
 

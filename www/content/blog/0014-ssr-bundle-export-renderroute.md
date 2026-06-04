@@ -1,4 +1,4 @@
----
+﻿---
 title: 'ADR 0014: SSR Bundle 导出 renderRoute() — 消除 build-ssg.ts 的越权访问'
 date: '2026-05-10'
 type: 'adr'
@@ -74,11 +74,11 @@ globalThis.customElements.define = (name, ctor, options) => { ... };
 // 先在 bundle scope 初始化
 await module.initBlogData(blogOptions);
 // 再在 file system scope 初始化（因为 await import() 创建了新的模块实例）
-const fsContentModule = await import('@lessjs/content');
+const fsContentModule = await import('@openelement/content');
 await fsContentModule.initBlogData(blogOptions);
 ```
 
-- `await import('@lessjs/content')` 会创建独立的模块实例（不在 SSR bundle 内）
+- `await import('@openelement/content')` 会创建独立的模块实例（不在 SSR bundle 内）
 - 需要手动在两个作用域中同步状态 — ADR 0008 要消除的正是这类多实例问题
 - 如果路由模块依赖虚拟模块（如 `virtual:less-nav`），`native import()` 直接失败
 
@@ -304,7 +304,7 @@ export async function getStaticPaths(routePath) {
 - 直接调用 `renderDSDFn()` + `wrapInDocumentFn()` (L619-631, L433-442)
 - `customElements.define` 幂等补丁 (L304-321)
 - 博客数据双作用域初始化 (L346-368)
-- `await import('@lessjs/i18n')` 初始化 (L535-542)
+- `await import('@openelement/i18n')` 初始化 (L535-542)
 - 动态路由的 `await import(routeImportPath)` (L387-388)
 
 **替换为**：
@@ -386,14 +386,14 @@ customElements.define = (name, ctor, options) => {
 | 3 | 直接调用 renderDSD + wrapInDocument      | build-ssg.ts L619-631 | → bundle 内部的 renderRoute()    |
 | 4 | customElements.define 幂等补丁           | build-ssg.ts L304-321 | → 移入 bundle 内部               |
 | 5 | 博客数据双作用域初始化                   | build-ssg.ts L346-368 | → bundle 内部的 getStaticPaths() |
-| 6 | `await import('@lessjs/i18n')` 初始化    | build-ssg.ts L535-542 | → bundle 内部处理                |
+| 6 | `await import('@openelement/i18n')` 初始化    | build-ssg.ts L535-542 | → bundle 内部处理                |
 | 7 | 动态路由 `await import(routeImportPath)` | build-ssg.ts L387-388 | → bundle 内部的 getStaticPaths() |
 
 ### 值得关注但不在本 ADR 范围
 
 | #  | 问题                                               | 位置                  | 建议                                    |
 | -- | -------------------------------------------------- | --------------------- | --------------------------------------- |
-| 8  | `await import('@lessjs/content/sitemap')` 独立导入 | build-ssg.ts L851     | 可改为 bundle 导出，与 renderRoute 同源 |
+| 8  | `await import('@openelement/content/sitemap')` 独立导入 | build-ssg.ts L851     | 可改为 bundle 导出，与 renderRoute 同源 |
 | 9  | 客户端 manifest 读取 + 脚本注入                    | build-ssg.ts L676-698 | 纯文件 I/O，无越权，暂不处理            |
 | 10 | PWA manifest + service worker 生成                 | build-ssg.ts L769-845 | 纯文件生成，无越权，暂不处理            |
 

@@ -106,11 +106,11 @@ for (const signal of collectTemplateSignals(result)) {
 ### Public API
 
 ```ts
-// @lessjs/core exports
+// @openelement/core exports
 export type { ReactiveHost, Unsubscribe } from './types.js';
 
 // External use
-import type { ReactiveHost } from '@lessjs/core';
+import type { ReactiveHost } from '@openelement/core';
 
 class CustomSignalLib {
   connect(host: ReactiveHost) {
@@ -140,8 +140,8 @@ class CustomSignalLib {
 
 ### Step 4: Export from Core
 
-- [x] `ReactiveHost` exported from `@lessjs/core`
-- [x] `Unsubscribe` exported from `@lessjs/core`
+- [x] `ReactiveHost` exported from `@openelement/core`
+- [x] `Unsubscribe` exported from `@openelement/core`
 
 ### Step 5: Verify
 

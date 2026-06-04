@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub - Hub Package Record Builder
+ * @openelement/hub - Hub Package Record Builder
  *
  * v0.19.0: Construct HubPackageRecord instances from validation/build artifacts.
  *

@@ -6,7 +6,7 @@ Owner: core package
 
 ## Objective
 
-Make the `@lessjs/core` API intentionally shaped before v0.22.0. The goal is not to shrink the API blindly. The goal is to separate stable userland contracts from experimental framework seams and internal monorepo utilities.
+Make the `@openelement/core` API intentionally shaped before v0.22.0. The goal is not to shrink the API blindly. The goal is to separate stable userland contracts from experimental framework seams and internal monorepo utilities.
 
 ## Evidence Inputs
 

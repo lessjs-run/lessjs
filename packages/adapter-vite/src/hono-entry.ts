@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Hono entry generator (re-export facade).
+ * @openelement/core - Hono entry generator (re-export facade).
  *
  * All implementation has been merged into entry-renderer.ts.
  * This file re-exports for consumers that import from hono-entry.ts.

@@ -72,7 +72,7 @@ Aligning to a strict Swiss structural grid:
 
 To keep the bundle size small (~30KB), we will strictly utilize the native features exported by LessJS monorepo packages. **No bulky external libraries.**
 
-### 2.1 CSS & Stylesheet Separation (`@lessjs/style-sheet`)
+### 2.1 CSS & Stylesheet Separation (`@openelement/style-sheet`)
 
 Instead of inlining long CSS strings directly inside `.tsx` files, we use the framework-native asset pipeline.
 
@@ -91,13 +91,13 @@ Instead of inlining long CSS strings directly inside `.tsx` files, we use the fr
    }
    ```
 
-### 2.2 Fine-grained Reactivity in Islands (`@lessjs/signals`)
+### 2.2 Fine-grained Reactivity in Islands (`@openelement/signals`)
 
-For tab switches, interactive graphs, and live components, we avoid bulky state managers. We use the native `@lessjs/signals` library.
+For tab switches, interactive graphs, and live components, we avoid bulky state managers. We use the native `@openelement/signals` library.
 
 ```tsx
-import { DsdElement } from '@lessjs/core';
-import { computed, signal } from '@lessjs/signals';
+import { DsdElement } from '@openelement/core';
+import { computed, signal } from '@openelement/signals';
 
 export class InteractiveConsole extends DsdElement {
   // Define private signal state (avoids polluting public properties)
@@ -130,7 +130,7 @@ export class InteractiveConsole extends DsdElement {
 
 _Note: In JSX templates, children that are signals (e.g. `{this.#activeCode}`) are automatically unwrapped and bound to text-node effects during client-side hydration, giving ultra-fast pinpoint DOM updates._
 
-### 2.3 Single-file Bilingual Components (`@lessjs/core`)
+### 2.3 Single-file Bilingual Components (`@openelement/core`)
 
 Instead of duplicating route folders, we utilize the native `_getLocale` API of `DsdElement`:
 
@@ -143,7 +143,7 @@ export class GettingStartedPage extends DsdElement {
 }
 ```
 
-At build-time, the `@lessjs/i18n` plugin automatically executes SSG expansion. It renders the component twice (once with `locale="en"`, once with `locale="zh"`) and writes the output to `/guide/getting-started/index.html` and `/zh/guide/getting-started/index.html` respectively, preserving 100% zero-duplication code structure and 100% SEO-friendly static assets.
+At build-time, the `@openelement/i18n` plugin automatically executes SSG expansion. It renders the component twice (once with `locale="en"`, once with `locale="zh"`) and writes the output to `/guide/getting-started/index.html` and `/zh/guide/getting-started/index.html` respectively, preserving 100% zero-duplication code structure and 100% SEO-friendly static assets.
 
 ---
 
@@ -154,11 +154,11 @@ At build-time, the `@lessjs/i18n` plugin automatically executes SSG expansion. I
 1. **Configure Theme Colors**:
    - Update `www/vite.config.ts`'s `colorTokensStyle` and global inject fragments to set up the dark theme variables.
    - Force HTML background to `#040508` and default text selection to the purple-neon glow.
-2. **Refactor `<less-layout>` (`packages/ui/src/less-layout.tsx`)**:
+2. **Refactor `<open-layout>` (`packages/ui/src\/open-layout.tsx`)**:
    - Update the background of the app wrapper to `var(--bg-obsidian)`.
    - Polish the header and sidebar to a ultra-minimalist Swiss grid.
    - Add the vertical activity indicator line (`border-left`) to active navigation items.
-   - Refactor `<less-theme-toggle>` to support a smooth CSS rotation animation (`transform: rotate(45deg)`).
+   - Refactor `<open-theme-toggle>` to support a smooth CSS rotation animation (`transform: rotate(45deg)`).
 
 ### 📅 Phase 2: Decoupling Style Sheets (DX Overhaul)
 
@@ -183,8 +183,8 @@ At build-time, the `@lessjs/i18n` plugin automatically executes SSG expansion. I
 1. **Integrate Dynamic TOC**:
    - Enable `<less-toc>` island component inside `www/app/routes/guide/getting-started.tsx` and all subsequent guide pages.
    - Use `IntersectionObserver` to track reading progress. Apply the Swiss active track indicator (neon violet left border) to highlight the active heading in the TOC side panel.
-2. **Beautify Code Blocks (`<less-code-block>`)**:
-   - Polish code containers in `@lessjs/ui` to use `#1A1A2E` background, sharp `0.5px` border contrast, and custom mono typography.
+2. **Beautify Code Blocks (`<open-code-block>`)**:
+   - Polish code containers in `@openelement/ui` to use `#1A1A2E` background, sharp `0.5px` border contrast, and custom mono typography.
 
 ### 📅 Phase 5: Verification & Safety Gates
 

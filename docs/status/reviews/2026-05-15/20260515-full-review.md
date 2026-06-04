@@ -106,10 +106,10 @@
   /\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/;
   ```
 
-### C-09. 锁文件过期: `@lessjs/ui@0.6.1` 和 `@0.14.2` 引用 / Stale Lock File with Ancient Versions
+### C-09. 锁文件过期: `@openelement/ui@0.6.1` 和 `@0.14.2` 引用 / Stale Lock File with Ancient Versions
 
 - **文件 / File**: `deno.lock:7,50,1121-1166`
-- **风险 / Risk**: 锁文件固定了远古版本 `@lessjs/ui@0.6.1` 和 `@0.14.2` 依赖，工作区实际版本为 `0.14.6`。`deno install` 可能拉取不兼容版本，导致运行时崩溃。/ Lock file pins ancient `@lessjs/ui@0.6.1` and `@0.14.2` deps. Workspace is at `0.14.6`. `deno install` may pull incompatible versions.
+- **风险 / Risk**: 锁文件固定了远古版本 `@openelement/ui@0.6.1` 和 `@0.14.2` 依赖，工作区实际版本为 `0.14.6`。`deno install` 可能拉取不兼容版本，导致运行时崩溃。/ Lock file pins ancient `@openelement/ui@0.6.1` and `@0.14.2` deps. Workspace is at `0.14.6`. `deno install` may pull incompatible versions.
 - **修复 / Fix**: 运行 `deno install` 重新生成 `deno.lock`，提交更新。
 
 ### C-10. 硬编码过期版本: `v0.13.0` 在线上终端展示 / Stale Hardcoded Version in Live Terminal
@@ -197,7 +197,7 @@
 ### H-13. CLI `jsrNames` 缺少 `adapterVite` 键 — 远程执行崩溃 / CLI `jsrNames` Missing `adapterVite` — Remote Crash
 
 - **文件 / File**: `packages/create/cli.ts:91-99`
-- **问题 / Problem**: 远程解析版本时 `jsrNames['adapterVite']` 为 `undefined`，fetch `@lessjs/undefined/meta` 导致 CLI 崩溃。/ `jsrNames['adapterVite']` is `undefined`, fetching `@lessjs/undefined/meta` crashes CLI.
+- **问题 / Problem**: 远程解析版本时 `jsrNames['adapterVite']` 为 `undefined`，fetch `@openelement/undefined/meta` 导致 CLI 崩溃。/ `jsrNames['adapterVite']` is `undefined`, fetching `@openelement/undefined/meta` crashes CLI.
 - **修复 / Fix**: 添加 `adapterVite: 'adapter-vite'`
 
 ### H-14. CLI 未校验项目名称 — 路径穿越风险 / CLI No Project Name Validation
@@ -215,8 +215,8 @@
 ### H-16. 循环依赖: adapter-vite ↔ content / Circular Dependency
 
 - **文件 / File**: `packages/adapter-vite/src/entry-renderer.ts:446` ↔ `packages/content/deno.json:14`
-- **问题 / Problem**: `adapter-vite` 生成代码导入 `@lessjs/content/sitemap`，`content` 导入 `@lessjs/adapter-vite/build-context`。/ `adapter-vite` generates code importing from `content`; `content` imports from `adapter-vite`.
-- **修复 / Fix**: 抽取共享类型包 `@lessjs/build-types`，或将 sitemap 生成移入 adapter-vite。
+- **问题 / Problem**: `adapter-vite` 生成代码导入 `@openelement/content/sitemap`，`content` 导入 `@openelement/adapter-vite/build-context`。/ `adapter-vite` generates code importing from `content`; `content` imports from `adapter-vite`.
+- **修复 / Fix**: 抽取共享类型包 `@openelement/build-types`，或将 sitemap 生成移入 adapter-vite。
 
 ### H-17. `npx -y` 无版本锁定 — 供应链风险 / `npx -y` Without Version Pinning
 
@@ -348,7 +348,7 @@
 
 | #      | 问题 / Issue                                        | 严重度 / Severity |
 | ------ | --------------------------------------------------- | ----------------- |
-| DEP-01 | 锁文件固定远古版本 `@lessjs/ui@0.6.1`               | CRITICAL          |
+| DEP-01 | 锁文件固定远古版本 `@openelement/ui@0.6.1`          | CRITICAL          |
 | DEP-02 | `npx -y` 无版本锁定                                 | HIGH              |
 | DEP-03 | 8 个外部 CDN 资源无 SRI                             | HIGH              |
 | DEP-04 | FlexSearch 运行时 CDN import 无 SRI                 | MEDIUM            |
@@ -384,7 +384,7 @@
 - ⚠️ 循环依赖: `adapter-vite` ↔ `content`（代码生成级）
 - ⚠️ `extractStatus`/`adrId` 函数跨文件重复
 - ⚠️ 依赖声明在根和包级别重复
-- ⚠️ `@lessjs/create` deno.json 缺少 `compilerOptions`/`include`/`exclude`
+- ⚠️ `@openelement/create` deno.json 缺少 `compilerOptions`/`include`/`exclude`
 - ⚠️ `www/deno.json` 缺少 `name` 字段
 
 ### 重复代码 / Duplicate Code
@@ -399,7 +399,7 @@
 
 ### 依赖冲突 / Dependency Conflicts
 
-- 锁文件 `@lessjs/ui@0.6.1` 与工作区 `0.14.6` 不一致（**CRITICAL**）
+- 锁文件 `@openelement/ui@0.6.1` 与工作区 `0.14.6` 不一致（**CRITICAL**）
 - 版本策略混用：`vite@8.0.10`（精确）vs `hono@^4`（宽范围）
 
 ### 版本不兼容 / Version Incompatibility

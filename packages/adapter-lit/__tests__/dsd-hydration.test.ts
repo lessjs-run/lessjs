@@ -1,11 +1,11 @@
 /**
- * @lessjs/adapter-lit - WithDsdHydration Mixin unit tests
+ * @openelement/adapter-lit - WithDsdHydration Mixin unit tests
  *
  * Tests for DSD detection, event hydration, and cleanup.
  * Uses a MockLitElement class since Deno has no browser DOM.
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
-import type { HydrateEventDescriptor } from '@lessjs/core';
+import type { HydrateEventDescriptor } from '@openelement/core';
 
 // ─── Mock DOM ─────────────────────────────────────────────────
 

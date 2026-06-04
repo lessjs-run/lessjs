@@ -26,14 +26,14 @@
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    @lessjs/core                          │
+│                    @openelement/core                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
 │  │  DsdElement   │  │ render-dsd.ts │  │   types.ts   │  │
 │  │  (NEW 基类)   │  │(EDIT 样式提取) │  │(已有类型复用) │  │
 │  └──────┬───────┘  └──────────────┘  └──────────────┘  │
 │         │                                               │
 ├─────────┼───────────────────────────────────────────────┤
-│         │              @lessjs/ui                       │
+│         │              @openelement/ui                       │
 │         │  ┌──────────────────────────────────────┐     │
 │         ├──│  less-button, less-input, less-card, │     │
 │         │  │  less-callout, less-step-card,       │     │
@@ -193,8 +193,8 @@ export const openPropsTokenSheet: CSSStyleSheet;
 - parse5@7.0.0               : HTML 解析（已有，不变）
 
 # 移除的依赖
-- lit (npm:lit@^3.2.0)       : 不再作为 @lessjs/ui 的直接依赖
-- @lessjs/adapter-lit         : 不再作为 @lessjs/ui 的依赖
+- lit (npm:lit@^3.2.0)       : 不再作为 @openelement/ui 的直接依赖
+- @openelement/adapter-lit         : 不再作为 @openelement/ui 的依赖
 - @lit/reactive-element       : 不再需要
 - lit-element                 : 不再需要
 - lit-html                    : 不再需要
@@ -230,9 +230,9 @@ export const openPropsTokenSheet: CSSStyleSheet;
 | DELETE | `packages/ui/src/tokens/color-values.ts`      | 删除（迁移到 open-props-tokens.ts）                                                                                                                                                                                   |
 | DELETE | `packages/ui/src/tokens/colors.ts`            | 删除（迁移到 open-props-tokens.ts）                                                                                                                                                                                   |
 | NEW    | `packages/ui/src/open-props-tokens.ts`        | 重写 design-tokens.ts 为纯 CSSStyleSheet：内联所有 Open Props 灰度值（gray-0~gray-12 的 light + dark），所有 spacing/typography/effects/radius/animation 令牌用 `CSSStyleSheet` 的 `replaceSync` 或 `insertRule` 构建 |
-| EDIT   | `packages/ui/deno.json`                       | 移除 `lit`/`@lessjs/adapter-lit` imports，移除 `./tokens/color-values`/`./tokens/colors` 导出，新增 `./open-props-tokens` 导出                                                                                        |
+| EDIT   | `packages/ui/deno.json`                       | 移除 `lit`/`@openelement/adapter-lit` imports，移除 `./tokens/color-values`/`./tokens/colors` 导出，新增 `./open-props-tokens` 导出                                                                                   |
 | EDIT   | `packages/ui/src/index.ts`                    | 新增 `export { openPropsTokenSheet } from './open-props-tokens.js'`，移除 tokens/colors 相关导出                                                                                                                      |
-| EDIT   | `deno.json`（根目录）                         | 按需更新 `@lessjs/ui/tokens/*` imports 映射                                                                                                                                                                           |
+| EDIT   | `deno.json`（根目录）                         | 按需更新 `@openelement/ui/tokens/*` imports 映射                                                                                                                                                                      |
 | EDIT   | `packages/adapter-lit/src/index.ts`           | 标记 `DsdLitElement`/`WithDsdHydration` 为 `@deprecated`（less-hero-ping 过渡用）                                                                                                                                     |
 
 **说明**：
@@ -261,29 +261,29 @@ export const openPropsTokenSheet: CSSStyleSheet;
 
 **源文件**：
 
-| 操作 | 文件路径                                   | 说明                                                                                                                                                                                                                             |
-| ---- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| EDIT | `packages/ui/src/less-card.ts`             | ~96行，迁移模式：`import { DsdLitElement } from '@lessjs/adapter-lit'` → `import { DsdElement } from '@lessjs/core'`，`css\`\``→`CSSStyleSheet`，`html\`\``→ 模板字面量字符串，添加`part="container/header/body/footer"`         |
-| EDIT | `packages/ui/src/less-callout.ts`          | ~60行，同上迁移模式，纯展示组件无交互                                                                                                                                                                                            |
-| EDIT | `packages/ui/src/less-step-card.ts`        | ~100行，同上，添加 `part="step/indicator/content"`                                                                                                                                                                               |
-| EDIT | `packages/ui/src/less-button.ts`           | ~251行，属性驱动：`static observedAttributes = ['variant','size','disabled','href','target','type']`，`attributeChangedCallback` 触发 DOM 同步，`hydrateEvents` 声明 click 事件，保留 `delegatesFocus`/`formAssociated` 静态属性 |
-| EDIT | `packages/ui/src/less-input.ts`            | ~254行，属性驱动 + 事件：`observedAttributes` 声明 label/value/type/error/placeholder，`attributeChangedCallback` → `_syncDOM()` 更新内部 input 元素，`hydrateEvents` 声明 input/focus/blur 事件                                 |
-| EDIT | `packages/ui/src/manifest.ts`              | 更新这 5 个组件的声明：`less.adapter` 从 `'lit'` 改为 `'vanilla'`，`superclassName` 从 `'LitElement'` 改为 `'DsdElement'`                                                                                                        |
-| EDIT | `packages/ui/__tests__/components.test.ts` | 适配新的 DsdElement API                                                                                                                                                                                                          |
+| 操作 | 文件路径                                   | 说明                                                                                                                                                                                                                               |
+| ---- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EDIT | `packages/ui/src/less-card.ts`             | ~96行，迁移模式：`import { DsdLitElement } from '@openelement/adapter-lit'` → `import { DsdElement } from '@openelement/core'`，`css\`\``→`CSSStyleSheet`，`html\`\``→ 模板字面量字符串，添加`part="container/header/body/footer"` |
+| EDIT | `packages/ui/src/less-callout.ts`          | ~60行，同上迁移模式，纯展示组件无交互                                                                                                                                                                                              |
+| EDIT | `packages/ui/src/less-step-card.ts`        | ~100行，同上，添加 `part="step/indicator/content"`                                                                                                                                                                                 |
+| EDIT | `packages/ui/src/less-button.ts`           | ~251行，属性驱动：`static observedAttributes = ['variant','size','disabled','href','target','type']`，`attributeChangedCallback` 触发 DOM 同步，`hydrateEvents` 声明 click 事件，保留 `delegatesFocus`/`formAssociated` 静态属性   |
+| EDIT | `packages/ui/src/less-input.ts`            | ~254行，属性驱动 + 事件：`observedAttributes` 声明 label/value/type/error/placeholder，`attributeChangedCallback` → `_syncDOM()` 更新内部 input 元素，`hydrateEvents` 声明 input/focus/blur 事件                                   |
+| EDIT | `packages/ui/src/manifest.ts`              | 更新这 5 个组件的声明：`less.adapter` 从 `'lit'` 改为 `'vanilla'`，`superclassName` 从 `'LitElement'` 改为 `'DsdElement'`                                                                                                          |
+| EDIT | `packages/ui/__tests__/components.test.ts` | 适配新的 DsdElement API                                                                                                                                                                                                            |
 
 **迁移模式示例**（less-card）：
 
 ```typescript
 // BEFORE (Lit)
 import { css, html } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdLitElement } from '@openelement/adapter-lit';
 class LessCard extends DsdLitElement {
   static styles = css`.card { ... }`;
   render() { return html`<div class="card"><slot></slot></div>`; }
 }
 
 // AFTER (DsdElement)
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@openelement/core';
 const styles = new CSSStyleSheet();
 styles.replaceSync(`:host { display: block; } .card { ... }`);
 class LessCard extends DsdElement {
@@ -440,7 +440,7 @@ class LessCard extends DsdElement {
 - CSSStyleSheet 在 SSR 中自动序列化为 <style> 标签
 
 ## 迁移检查清单（每个组件）
-- [ ] import 从 lit/@lessjs/adapter-lit 改为 @lessjs/core
+- [ ] import 从 lit/@openelement/adapter-lit 改为 @openelement/core
 - [ ] extends 从 DsdLitElement 改为 DsdElement
 - [ ] css`` 改为 new CSSStyleSheet() + replaceSync()
 - [ ] html`` 改为 模板字面量字符串
@@ -473,14 +473,14 @@ graph TD
 
 ## 待明确事项
 
-| # | 问题                                                                                                                            | 影响范围      | 建议                                                                            |
-| - | ------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
-| 1 | **less-search 归属** — `less-search.ts` 当前在 `www/app/islands/` 而非 `packages/ui/src/`，迁移后是否需要移入 `@lessjs/ui` 包？ | T04 文件路径  | 建议保留在 app 层作为 Islands，保持与 less-hero-ping 一致的 Island 模式         |
-| 2 | **@lessjs/adapter-lit 包保留策略** — DsdLitElement 标记 deprecated 后，adapter-lit 包是否继续发布？                             | T01, 发布流程 | 建议保留但标记 deprecated，less-hero-ping 仍需使用                              |
-| 3 | **deno.json lit 依赖** — 根 `deno.json` 中 lit 映射是否保留？less-hero-ping 仍需 lit                                            | T01, 构建     | 保留 `"lit": "npm:lit@^3.2.0"` 映射，仅从 `packages/ui/deno.json` 移除          |
-| 4 | **bundle size 基线** — 当前 bundle 的 gzip 大小基线是多少？目标 ≤6KB 是否可达成？                                               | T05           | 需在 T05 执行前测量基线                                                         |
-| 5 | **ADR-0036 文件** — 当前 `docs/adr/` 中无 0036 文件，是否需要创建？                                                             | 文档          | 建议由 PM 在确认本设计后创建                                                    |
-| 6 | **manifest.ts 中 less-search 声明** — `less-search` 不在 `packages/ui/src/` 中，是否需要在 manifest 中注册？                    | T04           | 建议在 `www/` 的独立 manifest 中声明，或在 `packages/ui/src/manifest.ts` 中添加 |
+| # | 问题                                                                                                                                 | 影响范围      | 建议                                                                            |
+| - | ------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------- |
+| 1 | **less-search 归属** — `less-search.ts` 当前在 `www/app/islands/` 而非 `packages/ui/src/`，迁移后是否需要移入 `@openelement/ui` 包？ | T04 文件路径  | 建议保留在 app 层作为 Islands，保持与 less-hero-ping 一致的 Island 模式         |
+| 2 | **@openelement/adapter-lit 包保留策略** — DsdLitElement 标记 deprecated 后，adapter-lit 包是否继续发布？                             | T01, 发布流程 | 建议保留但标记 deprecated，less-hero-ping 仍需使用                              |
+| 3 | **deno.json lit 依赖** — 根 `deno.json` 中 lit 映射是否保留？less-hero-ping 仍需 lit                                                 | T01, 构建     | 保留 `"lit": "npm:lit@^3.2.0"` 映射，仅从 `packages/ui/deno.json` 移除          |
+| 4 | **bundle size 基线** — 当前 bundle 的 gzip 大小基线是多少？目标 ≤6KB 是否可达成？                                                    | T05           | 需在 T05 执行前测量基线                                                         |
+| 5 | **ADR-0036 文件** — 当前 `docs/adr/` 中无 0036 文件，是否需要创建？                                                                  | 文档          | 建议由 PM 在确认本设计后创建                                                    |
+| 6 | **manifest.ts 中 less-search 声明** — `less-search` 不在 `packages/ui/src/` 中，是否需要在 manifest 中注册？                         | T04           | 建议在 `www/` 的独立 manifest 中声明，或在 `packages/ui/src/manifest.ts` 中添加 |
 
 ---
 

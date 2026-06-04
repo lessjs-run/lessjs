@@ -1,11 +1,11 @@
-# @lessjs/create
+# @openelement/create
 
 Project scaffold for LessJS.
 
 ## Usage
 
 ```bash
-deno run -A jsr:@lessjs/create my-app
+deno run -A jsr:@openelement/create my-app
 cd my-app
 deno task dev
 deno task build
@@ -24,7 +24,7 @@ my-app/
       my-counter.ts
 ```
 
-The scaffold uses `@lessjs/app` and includes `packageIslands: ['@lessjs/ui']`
+The scaffold uses `@openelement/app` and includes `packageIslands: ['@openelement/ui']`
 for the built-in LessJS UI components.
 
 ## Current Scope

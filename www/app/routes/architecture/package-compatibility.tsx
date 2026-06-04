@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
+export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/core';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
+import { DsdElement } from '@openelement/core';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui\/open-code-block';
 
 const baseStyle = pageStyles;
 
@@ -76,7 +76,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
             在 Vite 插件的 <code>buildStart()</code> 阶段，LessJS 会自动扫描
             <code>node_modules</code> 下的所有包，寻找 <code>custom-elements.json</code>：
           </p>
-          <less-code-block><pre><code>{`// 伪代码 - 实际实现在 route-scanner.ts
+          <open-code-block><pre><code>{`// 伪代码 - 实际实现在 route-scanner.ts
 for (const pkg of node_modules) {
   const cemPath = join(pkg, 'custom-elements.json');
   if (exists(cemPath)) {
@@ -84,7 +84,7 @@ for (const pkg of node_modules) {
     const classified = classify(parsed);      // 兼容性分类
     results.push(classified);
   }
-}`}</code></pre></less-code-block>
+}`}</code></pre></open-code-block>
 
           <h3>特点</h3>
           <ul>
@@ -98,7 +98,7 @@ for (const pkg of node_modules) {
           <p>
             构建完成后，<code>dsd-report.json</code> 中新增了 <code>cemCompatibility</code> 部分：
           </p>
-          <less-code-block><pre><code>{`{
+          <open-code-block><pre><code>{`{
   "reportVersion": "1.1.0",
   "cemCompatibility": {
     "packageCount": 2,
@@ -111,7 +111,7 @@ for (const pkg of node_modules) {
       }
     ]
   }
-}`}</code></pre></less-code-block>
+}`}</code></pre></open-code-block>
           <p>
             每条记录包含包名、兼容等级、原因说明和组件数量，方便调试和审计。
           </p>
@@ -239,7 +239,7 @@ for (const pkg of node_modules) {
             During the Vite plugin's <code>buildStart()</code> phase, LessJS automatically scans
             <code>node_modules</code> for <code>custom-elements.json</code> files:
           </p>
-          <less-code-block><pre><code>{`// Pseudocode - actual implementation in route-scanner.ts
+          <open-code-block><pre><code>{`// Pseudocode - actual implementation in route-scanner.ts
 for (const pkg of node_modules) {
   const cemPath = join(pkg, 'custom-elements.json');
   if (exists(cemPath)) {
@@ -247,7 +247,7 @@ for (const pkg of node_modules) {
     const classified = classify(parsed);      // compatibility classifier
     results.push(classified);
   }
-}`}</code></pre></less-code-block>
+}`}</code></pre></open-code-block>
 
           <h3>Key properties</h3>
           <ul>
@@ -261,7 +261,7 @@ for (const pkg of node_modules) {
           <p>
             The build report now includes a <code>cemCompatibility</code> section:
           </p>
-          <less-code-block><pre><code>{`{
+          <open-code-block><pre><code>{`{
   "reportVersion": "1.1.0",
   "cemCompatibility": {
     "packageCount": 2,
@@ -274,7 +274,7 @@ for (const pkg of node_modules) {
       }
     ]
   }
-}`}</code></pre></less-code-block>
+}`}</code></pre></open-code-block>
           <p>
             Each entry includes the package name, compatibility tier, reason, and component count
             for debugging and audit purposes.

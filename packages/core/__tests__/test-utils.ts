@@ -1,5 +1,5 @@
 /**
- * @lessjs/core — Test utilities.
+ * @openelement/core — Test utilities.
  *
  * v0.25.0 (SOP-009): Single re-export point for all core test imports.
  * Tests import from './test-utils.ts' instead of '../src/xxx.ts'.

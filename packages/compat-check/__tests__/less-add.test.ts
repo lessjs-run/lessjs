@@ -1,5 +1,5 @@
 /**
- * Tests for @lessjs/core `less add` safe install flow.
+ * Tests for @openelement/core `less add` safe install flow.
  *
  * Tests cover:
  * - SSR-capable package plan generation

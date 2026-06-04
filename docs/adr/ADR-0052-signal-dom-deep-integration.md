@@ -11,7 +11,7 @@
 ## Context
 
 ADR-0039 established the architectural intent: DsdElement integrates with
-`@lessjs/signals` to enable zero-framework reactivity. The actual implementation
+`@openelement/signals` to enable zero-framework reactivity. The actual implementation
 achieved the "html template with Signal interpolation" half — Signals can be
 interpolated into templates and trigger microtask-batched re-renders.
 
@@ -83,7 +83,7 @@ subscription — no manual `_syncDOM()` required.**
 ### `@prop()` Decorator API
 
 ```ts
-import { DsdElement, html, prop } from '@lessjs/runtime';
+import { DsdElement, html, prop } from '@openelement/runtime';
 
 class LessButton extends DsdElement {
   @prop()

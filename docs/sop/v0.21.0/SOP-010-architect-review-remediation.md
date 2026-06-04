@@ -33,13 +33,13 @@ never moved the physical implementation, so both locations have full copies.
       `packages/cem/src/cem-parser.ts` are byte-identical to their core
       counterparts. If so:
 - [ ] In `packages/core/src/compatibility.ts`: replace entire file content with
-      a single re-export from `@lessjs/compat-check`:
+      a single re-export from `@openelement/compat-check`:
       `ts
-      export * from '@lessjs/compat-check';`
+      export * from '@openelement/compat-check';`
 - [ ] In `packages/core/src/cem-parser.ts`: replace entire file content with
-      a single re-export from `@lessjs/cem`:
+      a single re-export from `@openelement/cem`:
       `ts
-      export * from '@lessjs/cem';`
+      export * from '@openelement/cem';`
 - [ ] Run `deno task typecheck && deno task test` — ensure no regressions.
 - [ ] If tests pass, **delete** `packages/compat-check/src/compatibility.ts` and
       `packages/cem/src/cem-parser.ts` (keep only the re-export wrappers in
@@ -52,11 +52,11 @@ never moved the physical implementation, so both locations have full copies.
 
 ---
 
-## Step 2: Add `./types` Subpath Export to `@lessjs/core`
+## Step 2: Add `./types` Subpath Export to `@openelement/core`
 
 **Problem**: `packages/core/deno.json` exports 20 subpaths but **missing
 `"./types"`**. The independent packages (`compat-check`, `cem`) import types
-from `@lessjs/core` (via their `index.ts` thin wrappers), and external consumers
+from `@openelement/core` (via their `index.ts` thin wrappers), and external consumers
 of `ReactiveHost`, `HydrateEventDescriptor`, `Unsubscribe` etc. need a stable
 path.
 
@@ -258,7 +258,7 @@ Expected: 787+ tests passing, zero regressions, fmt/lint clean.
 ## Exit Criteria
 
 - [ ] No duplicate implementation between core and independent packages
-- [ ] `@lessjs/core` exports `./types` subpath
+- [ ] `@openelement/core` exports `./types` subpath
 - [ ] `batch()` either works or is clearly deprecated with warning
 - [ ] `DANGEROUS_KEYS` lives in `security.ts`, not `island.ts`
 - [ ] `connectedCallback` branching simplified via extracted method

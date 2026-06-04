@@ -8,20 +8,20 @@ Deno.test('OPTIONAL_PACKAGE_STUBS covers adapters and generated-data packages', 
   assertEquals(
     Object.keys(OPTIONAL_PACKAGE_STUBS).sort(),
     [
-      '@lessjs/adapter-lit',
-      '@lessjs/adapter-lit/ssr',
-      '@lessjs/adapter-react',
-      '@lessjs/adapter-react/ssr',
-      '@lessjs/adapter-vanilla',
-      '@lessjs/adapter-vanilla/ssr',
-      '@lessjs/content',
-      '@lessjs/content/sitemap',
-      '@lessjs/i18n',
+      '@openelement/adapter-lit',
+      '@openelement/adapter-lit/ssr',
+      '@openelement/adapter-react',
+      '@openelement/adapter-react/ssr',
+      '@openelement/adapter-vanilla',
+      '@openelement/adapter-vanilla/ssr',
+      '@openelement/content',
+      '@openelement/content/sitemap',
+      '@openelement/i18n',
     ],
   );
-  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@lessjs/content'], 'loadBlogData');
-  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@lessjs/content/sitemap'], 'generateSitemap');
-  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@lessjs/i18n'], 'loadI18nData');
+  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/content'], 'loadBlogData');
+  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/content/sitemap'], 'generateSitemap');
+  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/i18n'], 'loadI18nData');
 });
 
 Deno.test('optionalPackageStubsPlugin exposes a single shared stub plugin', () => {

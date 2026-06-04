@@ -5,7 +5,7 @@ label: 'Core Concepts'
 order: 2
 ---
 
-<less-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/guide/core-concepts">
+<open-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/guide/core-concepts">
 
           <h1>核心概念</h1>
           <p class="subtitle">
@@ -16,7 +16,7 @@ order: 2
           <p>
             LessJS 组件是原生 Web Components，继承自 <code>DsdElement</code>。JSX 提供带类型安全的模板语法，编译为 VNode 树，SSR 时输出 Declarative Shadow DOM。
           </p>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 export class GreetingCard extends DsdElement !&lt;/h2&gt;
 &lt;p&gt;Welcome to the framework.&lt;/p&gt;
@@ -25,7 +25,7 @@ export class GreetingCard extends DsdElement !&lt;/h2&gt;
 }
 }
 
-customElements.define('greeting-card', GreetingCard);</code></pre></less-code-block>
+customElements.define('greeting-card', GreetingCard);</code></pre></open-code-block>
 
 <p>关键点：</p>
 <ul>
@@ -34,22 +34,22 @@ customElements.define('greeting-card', GreetingCard);</code></pre></less-code-bl
 <li>事件绑定使用标准 camelCase：<code>onClick</code>、<code>onInput</code>、<code>onSubmit</code></li>
 </ul>
 
-          <less-callout type="info" label="为什么用 JSX？">
+          <open-callout type="info" label="为什么用 JSX？">
             JSX 提供完整的 TypeScript 类型检查、IDE 自动补全、语法高亮和 AI 工具兼容性。
             它替代了旧的 <code>html\`...\`</code> tagged template DSL，编译为 VNode 对象，无需运行时模板解析器。
-          </less-callout>
+          </open-callout>
 
           <h3>条件渲染</h3>
-          <less-code-block><pre><code>// 三元表达式
+          <open-code-block><pre><code>// 三元表达式
 
 // 逻辑与
 /&gt;}
 
 // 空值合并
-</code></pre></less-code-block>
+</code></pre></open-code-block>
 
     <h3>列表渲染</h3>
-    <less-code-block><pre><code>const todos = signal([
+    <open-code-block><pre><code>const todos = signal([
 
 ,
 ,
@@ -64,14 +64,14 @@ return (
     ))}
 
 &lt;/ul&gt;
-);</code></pre></less-code-block>
+);</code></pre></open-code-block>
 
     <h2>属性声明：static props</h2>
     <p>
       使用 <code>static props</code> 声明组件属性，自动注册为 <code>observedAttributes</code>。
       属性名自动转换为 kebab-case 作为 HTML 属性名。
     </p>
-    <less-code-block><pre><code>import  from '@lessjs/core';
+    <open-code-block><pre><code>import  from '@openelement/core';
 
 export class ProductCard extends DsdElement ;
 
@@ -84,11 +84,11 @@ override render() &lt;/h3&gt;
 }
 }
 
-customElements.define('product-card', ProductCard);</code></pre></less-code-block>
+customElements.define('product-card', ProductCard);</code></pre></open-code-block>
 
 <p>使用方法：</p>
-<less-code-block><pre><code>&lt;product-card title="Widget" price="19.99" in-stock&gt;&lt;/product-card&gt;
-&lt;product-card title="Gadget" price="29.99"&gt;&lt;/product-card&gt;</code></pre></less-code-block>
+<open-code-block><pre><code>&lt;product-card title="Widget" price="19.99" in-stock&gt;&lt;/product-card&gt;
+&lt;product-card title="Gadget" price="29.99"&gt;&lt;/product-card&gt;</code></pre></open-code-block>
 
           <table>
             <thead><tr><th>类型</th><th>属性值</th><th>HTML 属性规则</th></tr></thead>
@@ -105,7 +105,7 @@ customElements.define('product-card', ProductCard);</code></pre></less-code-bloc
           </p>
 
           <h3>signal() — 可变的响应式值</h3>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 const count = signal(0);
 
@@ -114,16 +114,16 @@ console.log(count.value); // 0
 
 // 写入
 count.value = 1;
-count.value++;</code></pre></less-code-block>
+count.value++;</code></pre></open-code-block>
 
-          <less-callout type="warning" label="JSX 外部使用 .value">
+          <open-callout type="warning" label="JSX 外部使用 .value">
             在 JSX <code></code> 之外读写 Signal 时，必须使用 <code>.value</code>。
             JSX 内的自动展开是通过 <code>Symbol.toPrimitive</code> 和 <code>valueOf()</code> 实现的。
-          </less-callout>
+          </open-callout>
 
           <h3>computed() — 派生状态</h3>
           <p>从其他 Signal 派生只读值，自动追踪依赖并惰性求值：</p>
-          <less-code-block><pre><code>import  from '@lessjs/core';
+          <open-code-block><pre><code>import  from '@openelement/core';
 
 const firstName = signal('Jane');
 const lastName = signal('Doe');
@@ -131,21 +131,21 @@ const fullName = computed(() => firstName.value + ' ' + lastName.value);
 
 console.log(fullName.value); // 'Jane Doe'
 firstName.value = 'John';
-console.log(fullName.value); // 'John Doe'（自动更新）</code></pre></less-code-block>
+console.log(fullName.value); // 'John Doe'（自动更新）</code></pre></open-code-block>
 
     <h3>effect() — 副作用</h3>
     <p>Signal 变化时自动执行回调，用于 DOM 操作、日志、同步外部状态等：</p>
-    <less-code-block><pre><code>import  from '@lessjs/core';
+    <open-code-block><pre><code>import  from '@openelement/core';
 
 const theme = signal('light');
 const dispose = effect(() => );
 
 theme.value = 'dark'; // effect 自动执行
-dispose(); // 停止追踪</code></pre></less-code-block>
+dispose(); // 停止追踪</code></pre></open-code-block>
 
     <h2>完整示例：计数器</h2>
     <p>结合 DsdElement、static props 和 Signals 的完整组件：</p>
-    <less-code-block><pre><code>import  from '@lessjs/core';
+    <open-code-block><pre><code>import  from '@openelement/core';
 
 export class Counter extends DsdElement ;
 
@@ -174,10 +174,10 @@ override render() &lt;/h3&gt;
 }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);</code></pre></open-code-block>
 
 <p>使用方式：</p>
-<less-code-block><pre><code>&lt;my-counter step="2" label="步进计数器"&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
+<open-code-block><pre><code>&lt;my-counter step="2" label="步进计数器"&gt;&lt;/my-counter&gt;</code></pre></open-code-block>
 
           <h2>最佳实践</h2>
           <ul>

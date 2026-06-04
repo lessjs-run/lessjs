@@ -1,6 +1,6 @@
-/** @jsxImportSource @lessjs/core */
+/** @jsxImportSource @openelement/core */
 /**
- * @lessjs/ui - LessCallout Component
+ * @openelement/ui - OpenCallout Component
  *
  * Callout/notice box for inline documentation alerts.
  * Supports 4 types: info, warning, danger, tip.
@@ -8,18 +8,18 @@
  *
  * Usage:
  * ```html
- * <less-callout type="info" label="Note">
+ * <open-callout type="info" label="Note">
  *   This is an informational callout.
- * </less-callout>
+ * </open-callout>
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc } from './shared/escape.js';
 
-export const tagName = 'less-callout';
+export const tagName = 'open-callout';
 
 const TYPE_CONFIG: Record<string, { icon: string; cls: string }> = {
   info: { icon: '\u2139\uFE0F', cls: 'callout--info' },
@@ -57,7 +57,7 @@ sheet.replaceSync(`
   .callout-body ::slotted(p) { margin: 0; }
 `);
 
-export class LessCallout extends DsdElement {
+export class OpenCallout extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
@@ -92,8 +92,8 @@ export class LessCallout extends DsdElement {
   private _esc = _esc;
 }
 
-export default LessCallout;
+export default OpenCallout;
 
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, LessCallout);
+  customElements.define(tagName, OpenCallout);
 }

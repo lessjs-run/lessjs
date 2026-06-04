@@ -1,13 +1,13 @@
 /**
- * @lessjs/core - route-level ISR cache primitives.
+ * @openelement/core - route-level ISR cache primitives.
  *
- * v0.21: ISR contract â€” MemoryIsrCache for dev/tests.
+ * v0.21: ISR contract ¡ª MemoryIsrCache for dev/tests.
  * v0.22: Platform adapters (CF Workers KV, Deno KV).
  *
  * Architecture:
  *   1. Build: SSG produces static HTML + isr-manifest.json
  *   2. Runtime: Edge handler checks cache before serving static
- *   3. Regeneration: miss â†’ renderDsd() â†’ cache â†’ serve
+ *   3. Regeneration: miss ¡ú renderDsd() ¡ú cache ¡ú serve
  *   4. Stale: serve cached HTML + async background regeneration
  *
  * The IsrCache interface is platform-agnostic. Production adapters
@@ -54,7 +54,7 @@ export function createIsrCacheKey(
   const suffix = sortedParams.length === 0 ? '' : '?' +
     sortedParams.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
-  return `lessjs:isr:${routePath}${suffix}`;
+  return `openelement:isr:${routePath}${suffix}`;
 }
 
 /** ISR route record written to isr-manifest.json at build time. */
@@ -65,7 +65,7 @@ export interface IsrManifestEntry {
   params: Record<string, string>;
 }
 
-// â•â•â• Memory Cache (dev / tests) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ¨T¨T¨T Memory Cache (dev / tests) ¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T
 
 export class MemoryIsrCache implements IsrCache {
   readonly #entries = new Map<string, IsrCacheEntry>();
