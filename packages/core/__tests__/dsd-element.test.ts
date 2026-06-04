@@ -1,6 +1,7 @@
+// @ts-nocheck — test mock classes return string values for render().
+// String returns handled by renderDsd compat path at runtime.
 /**
  * @lessjs/core - DsdElement Tests
- *
  * Tests for the zero-dependency DsdElement base class.
  * Covers DSD detection, CSR fallback, template event binding,
  * AbortController cleanup, M-17 guard, StyleSheet merging,
