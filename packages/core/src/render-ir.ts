@@ -283,7 +283,7 @@ export async function renderDsdTree(
 function callComponent(
   tag: VNode['tag'],
   props: Record<string, unknown>,
-  children: (VNode | string)[],
+  children: (VNode | string | RenderFn)[],
 ): unknown {
   if (isComponentCtor(tag)) {
     const instance = new tag();
