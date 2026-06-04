@@ -379,7 +379,11 @@ export function classifyCemManifest(
 
     for (const decl of mod.declarations) {
       if (decl.kind !== 'custom-element') continue;
-      const ce = decl as { tagName?: string; less?: unknown; superClass?: { name?: string } };
+      const ce = decl as {
+        tagName?: string;
+        less?: import('@lessjs/core').LessElementExtensions;
+        superClass?: { name?: string };
+      };
 
       if (!ce.tagName) continue;
 
