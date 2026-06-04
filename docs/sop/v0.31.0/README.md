@@ -2,7 +2,7 @@
 
 > Version: v0.31.0\
 > Date: 2026-06-05\
-> Status: Local Gates Passed; CI Pending\
+> Status: Complete\
 > ADR: ADR-0082
 
 ## Goal
@@ -82,11 +82,11 @@ new app author sees.
 - [x] Bump all 19 packages to `0.31.0`.
 - [x] Update changelog and release note.
 - [x] Run full local gates.
-- [ ] Push `dev`.
-- [ ] Wait for `dev` CI.
-- [ ] Merge to `main`.
-- [ ] Wait for `main` CI.
-- [ ] Tag `v0.31.0` and publish GitHub release notes.
+- [x] Push `dev`.
+- [x] Wait for `dev` CI.
+- [x] Merge to `main`.
+- [x] Wait for `main` CI.
+- [x] Tag `v0.31.0` and publish GitHub release notes.
 
 ## Verification
 

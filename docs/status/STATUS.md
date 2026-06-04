@@ -4,7 +4,7 @@
 
 ## Current Version Line: v0.31.0 (JSX-first Application API)
 
-v0.31.0 Status: **LOCAL GATES PASSED; DEV CI PENDING.**
+v0.31.0 Status: **IMPLEMENTED AND RELEASED.**
 Governing docs:
 
 - `docs/adr/ADR-0082-jsx-first-application-api.md`
@@ -80,9 +80,8 @@ v0.22.x and earlier: **HISTORICAL.**
 ## Package Version State
 
 All 19 packages are aligned to **v0.31.0** under `@openelement/*` for this
-release. Local gates have passed. v0.31.0 must not be called fully released until
-GitHub Actions pass on `dev`, merge to `main` completes, `main` CI passes, and
-the GitHub tag/release note exists.
+release. Release proof requires local gates, GitHub Actions on `dev`, merge to
+`main`, GitHub Actions on `main`, and the GitHub tag/release note.
 
 ## Architecture Positioning
 
