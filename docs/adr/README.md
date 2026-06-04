@@ -1,6 +1,6 @@
 # ADR Index
 
-Architecture Decision Records for LessJS. Each ADR documents a significant
+Architecture Decision Records for openElement. Each ADR documents a significant
 architectural decision, its context, and consequences.
 
 ## Format

@@ -33,8 +33,8 @@ export class GuideArchitecturePage extends DsdElement {
             ? '架构文档已迁移到新的<a href="/architecture">Architecture 分区</a>（v0.23 重新设计）。'
             : 'The architecture documentation has moved to the new <a href="/architecture">Architecture section</a> (v0.23 redesign).'}</p>
           <p>{isZh
-            ? 'LessJS v0.23.0 实现了分层包架构：protocols、runtime kernel、product facades、build adapters、feature packages。每次发布前机械检查包图。无向后兼容——旧路径移除而非桥接。WC Package Protocol。六阶段愿景。无 webpack。Registry Hub。'
-            : 'LessJS v0.23.0 implements a layered package architecture: protocols, runtime kernel, product facades, build adapters, and feature packages. The package graph is checked mechanically before every publish. No backward compatibility — old paths removed, not bridged. WC Package Protocol. Six-Phase Vision. No webpack. Registry Hub.'}</p>
+            ? 'openElement v0.23.0 实现了分层包架构：protocols、runtime kernel、product facades、build adapters、feature packages。每次发布前机械检查包图。无向后兼容——旧路径移除而非桥接。WC Package Protocol。六阶段愿景。无 webpack。Registry Hub。'
+            : 'openElement v0.23.0 implements a layered package architecture: protocols, runtime kernel, product facades, build adapters, and feature packages. The package graph is checked mechanically before every publish. No backward compatibility — old paths removed, not bridged. WC Package Protocol. Six-Phase Vision. No webpack. Registry Hub.'}</p>
         </div>
       
     );

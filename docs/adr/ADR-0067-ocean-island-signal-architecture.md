@@ -4,7 +4,7 @@
 > **Date**: 2026-05-31
 > **Author**: Zhi (Architect), Qi (Delivery Director)
 > **Supersedes**: ADR-0058 (Signal→DOM binding), ADR-0062 (DSD-first RDOM), ADR-0065 (Unified VNode), ADR-0066 (Signal-Native Hydration)
-> **Architecture Doc**: [lessjs-architecture.md](../architecture/lessjs-architecture.md)
+> **Architecture Doc**: [current-architecture.md](../arch/current-architecture.md)
 > **Target**: v0.27.0
 
 ---
@@ -135,4 +135,4 @@ renderToString(vnode) → pure function (~250 lines)
 
 See [SOP-005 Signal-Native Hydration Migration](../sop/v0.28.0/SOP-005-signal-native-hydration.md) for step-by-step execution plan.
 
-Full architecture documentation: [lessjs-architecture.md](../architecture/lessjs-architecture.md)
+Full architecture documentation: [current-architecture.md](../arch/current-architecture.md)

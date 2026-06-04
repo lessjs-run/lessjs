@@ -6,7 +6,7 @@
 
 import { join } from 'node:path';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import type { BlogPost, LessBlogOptions } from './types.ts';
+import type { BlogPost, OpenElementBlogOptions } from './types.ts';
 import { parseMarkdownFile, slugFromFilename } from './markdown.ts';
 import { createLogger } from '@openelement/core/logger';
 
@@ -16,7 +16,7 @@ const log = createLogger('blog');
  * Scan the content directory and parse all blog posts.
  * Draft posts are included but marked.
  */
-export async function scanPosts(options?: LessBlogOptions): Promise<BlogPost[]> {
+export async function scanPosts(options?: OpenElementBlogOptions): Promise<BlogPost[]> {
   const contentDir = options?.contentDir ?? 'posts';
   const posts: BlogPost[] = [];
 
@@ -44,9 +44,9 @@ export async function scanPosts(options?: LessBlogOptions): Promise<BlogPost[]> 
 
 /**
  * Generate route data for all blog pages.
- * Returns an array of route objects suitable for LessJS route system.
+ * Returns an array of route objects suitable for openElement route system.
  */
-export async function generateBlogRoutes(options?: LessBlogOptions): Promise<{
+export async function generateBlogRoutes(options?: OpenElementBlogOptions): Promise<{
   posts: BlogPost[];
   basePath: string;
   listRoute: {

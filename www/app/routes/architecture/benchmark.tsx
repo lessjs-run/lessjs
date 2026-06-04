@@ -1,5 +1,5 @@
 ﻿/**
- * LessJS Benchmark & Performance
+ * openElement Benchmark & Performance
  *
  * Zero-noise performance characteristics: SSG build time, DSD rendering,
  * cold start, bundle size. No cherry-picked micro-benchmarks.
@@ -10,7 +10,7 @@ import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@openelement/ui/less-code-block';
+import '@openelement/ui/open-code-block';
 
 const styles = new StyleSheet();
 styles.replaceSync(pageStyles + `
@@ -45,7 +45,7 @@ export default class Benchmark extends DsdElement {
           <div class='metric'><span class='label'>Route switch (SPA)</span><span class='value'>~0ms (no full page reload)</span></div>
 
           <h2>Bundle Size</h2>
-          <p>LessJS ships zero runtime JS for DSD components. Islands load on-demand by strategy. No framework runtime in the critical path.</p>
+          <p>openElement ships zero runtime JS for DSD components. Islands load on-demand by strategy. No framework runtime in the critical path.</p>
         </div>
       
     );
@@ -70,7 +70,7 @@ export default class Benchmark extends DsdElement {
           <div class='metric'><span class='label'>路由切换 (SPA)</span><span class='value'>~0ms（无整页重载）</span></div>
 
           <h2>包体积</h2>
-          <p>LessJS 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
+          <p>openElement 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
         </div>
       
     );

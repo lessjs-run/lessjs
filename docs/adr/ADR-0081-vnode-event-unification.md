@@ -30,12 +30,16 @@ the island regression:
 
 - stale `less-*` UI subpaths and custom element names after the `@openelement`
   rename;
-- `virtual:less-*` historical references that must not be active build
+- `virtual:open-*` historical references that must not be active build
   contracts;
 - dynamic HTML and `innerHTML` sites that need an explicit trust boundary;
 - mojibake/replacement text introduced by broad edits;
 - stale architecture gate allowlist entries after file renames;
 - accidental non-product material under `opc-doc/`.
+
+The cleanup is intentionally breaking. v0.30.1 does not preserve `lessjs()`,
+`lessPipeline`, `@openelement/ui/less-*`, `<less-*>`, `data-on-*`, or
+`data-signal-html` as active compatibility paths.
 
 ## Decision
 
@@ -57,6 +61,10 @@ openElement adopts this permanent boundary:
    reject active source regressions: `_bindEvents`, `data-on-*` in production UI,
    stale `less-*` package subpaths, unreviewed `innerHTML`, mojibake, and stale
    type-escape allowlist entries.
+6. **The public names follow openElement.** The Vite facade is `openElement()`,
+   the build plugin line is `open*`, virtual modules use `virtual:open-*`, UI
+   subpaths and element tags use `open-*`, and package metadata uses
+   `openElement`.
 
 ## Consequences
 
@@ -77,6 +85,9 @@ openElement adopts this permanent boundary:
 - The first implementation may replace a dynamic container wholesale on signal
   changes. That is acceptable for v0.30.1 islands; keyed updates are a future
   optimization, not part of this cleanup.
+- Existing consumers using the old LessJS names must rename imports, config
+  calls, custom element tags, metadata fields, and event names. No deprecated
+  alias layer is kept in this release.
 
 ## Non-Goals
 
@@ -87,6 +98,8 @@ openElement adopts this permanent boundary:
   boundaries.
 - Do not rewrite historical ADRs solely to erase old product names. Current
   public docs and active source take priority.
+- Do not add a second dynamic renderer. VNode/RenderNode remains the only
+  framework-owned renderer model.
 
 ## Required Gates
 
@@ -98,4 +111,5 @@ v0.30.1 is not complete until these are true in active tracked files:
   `escapeHtml`/`escapeAttr` imports.
 - framework-authored interactive pages have no `data-on-*`.
 - root import maps and package exports use `open-*` UI subpaths only.
+- package and route metadata use `openElement`, not `less`.
 - `arch:check`, `graph:check`, build, tests, lint, and fmt all pass.

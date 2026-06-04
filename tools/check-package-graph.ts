@@ -1,5 +1,5 @@
 /**
- * Validate the LessJS package dependency graph.
+ * Validate the openElement package dependency graph.
  *
  * Checks:
  * - all package deno.json files under packages/ are readable

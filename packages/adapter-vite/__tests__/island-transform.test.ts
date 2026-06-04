@@ -11,7 +11,7 @@ Deno.test('island-transform - islandTransformPlugin', async (t) => {
   const plugin = islandTransformPlugin('app/islands');
 
   await t.step('returns a Vite plugin', () => {
-    assertEquals(plugin.name, 'less:island-transform');
+    assertEquals(plugin.name, 'open:island-transform');
     assertEquals(typeof plugin.transform, 'function');
   });
 
@@ -119,7 +119,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
       },
       {
         tagName: 'theme-toggle',
-        modulePath: '@openelement/ui/less-theme-toggle',
+        modulePath: '@openelement/ui/open-theme-toggle',
         isPackage: true,
         strategy: 'idle' as const,
       },
@@ -127,7 +127,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     const code = generateClientEntry(islands);
     // All islands (local + package) use dynamic import() - they self-register
     assertEquals(code.includes('import("/app/islands/my-counter.ts")'), true);
-    assertEquals(code.includes('import("@openelement/ui/less-theme-toggle")'), true);
+    assertEquals(code.includes('import("@openelement/ui/open-theme-toggle")'), true);
     // No explicit customElements.define() in generated entry
     assertEquals(code.includes("customElements.define('my-counter'"), false);
   });
@@ -145,7 +145,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     assertEquals(code.includes('function __load'), true);
   });
 
-  await t.step('dispatches less:ready event after upgrade', () => {
+  await t.step('dispatches open:ready event after upgrade', () => {
     const islands = [
       {
         tagName: 'my-counter',
@@ -156,7 +156,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     const code = generateClientEntry(islands);
     // v0.5.0: no old marker, CE-native upgrade
     assertEquals(code.includes('defer-hydration'), false);
-    assertEquals(code.includes('less:ready'), true);
+    assertEquals(code.includes('open:ready'), true);
     assertEquals(code.includes('LitElement'), false);
   });
 

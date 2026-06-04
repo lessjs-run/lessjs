@@ -1,13 +1,11 @@
 /**
  * @openelement/core - route-level ISR cache primitives.
  *
- * v0.21: ISR contract ¡ª MemoryIsrCache for dev/tests.
  * v0.22: Platform adapters (CF Workers KV, Deno KV).
  *
  * Architecture:
  *   1. Build: SSG produces static HTML + isr-manifest.json
  *   2. Runtime: Edge handler checks cache before serving static
- *   3. Regeneration: miss ¡ú renderDsd() ¡ú cache ¡ú serve
  *   4. Stale: serve cached HTML + async background regeneration
  *
  * The IsrCache interface is platform-agnostic. Production adapters
@@ -64,8 +62,6 @@ export interface IsrManifestEntry {
   cacheKey: string;
   params: Record<string, string>;
 }
-
-// ¨T¨T¨T Memory Cache (dev / tests) ¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T
 
 export class MemoryIsrCache implements IsrCache {
   readonly #entries = new Map<string, IsrCacheEntry>();

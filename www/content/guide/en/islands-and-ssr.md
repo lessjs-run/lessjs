@@ -9,7 +9,7 @@ order: 4
 
           <h1>Islands &amp; SSR</h1>
           <p class="subtitle">
-            LessJS's Ocean/Island model: server pre-renders content via DSD, client upgrades interactive
+            openElement's Ocean/Island model: server pre-renders content via DSD, client upgrades interactive
             components on demand.
           </p>
 
@@ -29,7 +29,7 @@ order: 4
               </ul>
             </div>
             <div style="padding:var(--size-4);border:1px solid var(--border);border-radius:var(--radius-2);background:var(--bg-surface);border-left:3px solid var(--brand)">
-              <h3>LessJS Islands</h3>
+              <h3>openElement Islands</h3>
               <ul>
                 <li>Content pre-rendered via SSG + DSD</li>
                 <li>Only needed components load JavaScript</li>
@@ -128,7 +128,7 @@ components after loading the island entry.
           </table>
 
           <open-callout type="info" label="Upgrade, Not Hydration">
-            LessJS uses Island Upgrade instead of traditional hydration. When the browser parses HTML,
+            openElement uses Island Upgrade instead of traditional hydration. When the browser parses HTML,
             DSD has already populated the content. The client entry calls <code>customElements.define()</code>
             to upgrade existing elements into real Custom Elements.
           </open-callout>

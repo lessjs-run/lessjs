@@ -22,4 +22,4 @@ order: 100
           <div class='metric'><span class='label'>Route switch (SPA)</span><span class='value'>~0ms (no full page reload)</span></div>
 
           <h2>Bundle Size</h2>
-          <p>LessJS ships zero runtime JS for DSD components. Islands load on-demand by strategy. No framework runtime in the critical path.</p>
+          <p>openElement ships zero runtime JS for DSD components. Islands load on-demand by strategy. No framework runtime in the critical path.</p>

@@ -1,6 +1,6 @@
 # Custom AppShell
 
-LessJS v0.28.4 supports explicit application shells. Use this when a site should
+openElement v0.28.4 supports explicit application shells. Use this when a site should
 not inherit the default documentation layout, or when different routes need
 different outer shells.
 
@@ -37,18 +37,18 @@ customElements.define(tagName, SiteLayout);
 ## 2. Configure The Shell
 
 ```ts
-import { lessjs } from '@openelement/app';
+import { openElement } from '@openelement/app';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
-    lessjs({
+    openElement({
       appShell: {
         tagName: 'site-layout',
         import: './app/components/site-layout.tsx',
         props: {
           siteName: 'Field Notes',
-          footerText: 'Built with LessJS',
+          footerText: 'Built with openElement',
         },
       },
     }),
@@ -57,7 +57,7 @@ export default defineConfig({
 ```
 
 The SSG entry imports the configured module and renders `<site-layout>`. No alias
-override for `@openelement/ui/less-layout` is needed.
+override for `@openelement/ui/open-layout` is needed.
 
 ## 3. Add Route-Level Layouts
 
@@ -71,7 +71,7 @@ export const tagName = 'blog-post-page';
 ```
 
 ```ts
-lessjs({
+openElement({
   layouts: {
     default: {
       tagName: 'site-layout',

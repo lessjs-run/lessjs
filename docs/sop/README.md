@@ -1,6 +1,6 @@
 # SOP Index
 
-This directory is the execution map for LessJS releases. Each version should
+This directory is the execution map for openElement releases. Each version should
 have one SOP with:
 
 - entry criteria: what must be true before work starts

@@ -214,11 +214,11 @@ function computeLockHash(projectRoot: string): string {
 }
 
 /**
- * Read a cached manifest from .less/external-manifest.json.
+ * Read a cached manifest from .openElement/external-manifest.json.
  * Returns null if the cache is stale (lock hash mismatch) or missing.
  */
 function readCachedManifest(projectRoot: string, lockHash: string): ExternalManifest | null {
-  const cachePath = join(projectRoot, '.less', 'external-manifest.json');
+  const cachePath = join(projectRoot, '.openElement', 'external-manifest.json');
   if (!existsSync(cachePath)) return null;
   try {
     const cached = JSON.parse(readFileSync(cachePath, 'utf-8')) as ExternalManifest;
@@ -232,10 +232,10 @@ function readCachedManifest(projectRoot: string, lockHash: string): ExternalMani
 }
 
 /**
- * Write the manifest cache to .less/external-manifest.json.
+ * Write the manifest cache to .openElement/external-manifest.json.
  */
 function writeCachedManifest(projectRoot: string, manifest: ExternalManifest): void {
-  const dir = join(projectRoot, '.less');
+  const dir = join(projectRoot, '.openElement');
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, 'external-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
 }
@@ -323,7 +323,7 @@ function buildImportMapFromRedirects(
  * Resolve the complete external dependency manifest using Deno module graph.
  *
  * Flow:
- * 1. Check cache (.less/external-manifest.json by deno.lock hash)
+ * 1. Check cache (.openElement/external-manifest.json by deno.lock hash)
  * 2. If cache miss: write temp probe module, run `deno info --json`, parse
  * 3. Supplement with AST-based exports resolution (ADR-0054)
  * 4. Fallback to AST-only if Deno is unavailable
@@ -350,9 +350,9 @@ export async function resolveExternalManifest(
     const probeCode = externalPackages
       .map((pkg) => `import '${pkg}';`)
       .join('\n');
-    const probePath = join(projectRoot, '.less', '.external-probe.ts');
+    const probePath = join(projectRoot, '.openElement', '.external-probe.ts');
 
-    mkdirSync(join(projectRoot, '.less'), { recursive: true });
+    mkdirSync(join(projectRoot, '.openElement'), { recursive: true });
     writeFileSync(probePath, probeCode, 'utf-8');
 
     const { execSync } = await import('node:child_process');

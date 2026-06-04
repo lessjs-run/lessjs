@@ -15,12 +15,12 @@ title: Simple
 
 Deno.test('v0.28.3 MDX: island syntax survives compile', async () => {
   const mod = await compileMdx('<open-theme-toggle client:idle />');
-  assertStringIncludes(mod.code, 'less-theme-toggle');
+  assertStringIncludes(mod.code, 'open-theme-toggle');
   assertStringIncludes(mod.code, 'client:idle');
 });
 
-Deno.test('v0.28.3 MDX: VNode output can enter LessJS render path', async () => {
-  const html = await renderDsdTree(jsx('less-card', { children: 'MDX card' }));
+Deno.test('v0.28.3 MDX: VNode output can enter openElement render path', async () => {
+  const html = await renderDsdTree(jsx('open-card', { children: 'MDX card' }));
   assertEquals(html, '<open-card>MDX card</open-card>');
 });
 
@@ -36,5 +36,5 @@ Deno.test('v0.28.3 MDX: syntax errors are surfaced', async () => {
 Deno.test('v0.28.3 MDX: example fixture exists', async () => {
   const source = await Deno.readTextFile('www/content/mdx/example.mdx');
   const mod = await compileMdx(source);
-  assert(mod.content.includes('less-theme-toggle'));
+  assert(mod.content.includes('open-theme-toggle'));
 });

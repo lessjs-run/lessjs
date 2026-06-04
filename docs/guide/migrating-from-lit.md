@@ -2,14 +2,14 @@
 
 > Current for v0.30.0.
 
-LessJS native components use the `DsdElement` + JSX/VNode contract. Lit remains
-supported at the adapter boundary, but LessJS core no longer accepts
+openElement native components use the `DsdElement` + JSX/VNode contract. Lit remains
+supported at the adapter boundary, but openElement core no longer accepts
 string-returning or TemplateResult-returning components as its native public
 contract.
 
 ## Quick Comparison
 
-| Lit                          | LessJS native component            |
+| Lit                          | openElement native component       |
 | ---------------------------- | ---------------------------------- |
 | `LitElement`                 | `DsdElement`                       |
 | `@state() count = 0`         | `count = signal(0)`                |
@@ -44,7 +44,7 @@ class MyCounter extends LitElement {
 }
 ```
 
-## LessJS Native Counter
+## openElement Native Counter
 
 ```tsx
 import { DsdElement, type VNode } from '@openelement/core';
@@ -83,6 +83,6 @@ customElements.define('my-counter', MyCounter);
 - Replace `html` templates with JSX.
 - Replace Lit event expressions with JSX event props such as `onClick`.
 - Replace Lit `css` templates with `StyleSheet`.
-- Return `VNode | null` from native LessJS `render()`.
+- Return `VNode | null` from native openElement `render()`.
 - Keep Lit TemplateResult values inside `@openelement/adapter-lit`; do not pass them
-  into core as native LessJS component output.
+  into core as native openElement component output.

@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-theme-toggle
+ * @openelement/ui - open-theme-toggle
  *
  * Theme toggle Reactive DSD component for Dark/Light mode switching.
  * Swiss International Style: Pure B&W, minimal.
@@ -80,7 +80,6 @@ export class OpenThemeToggle extends DsdElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    // raf breaks signal��island-reconstruct��connectedCallback synchronous loop
     requestAnimationFrame(() => this._initTheme());
   }
 
@@ -109,7 +108,7 @@ export class OpenThemeToggle extends DsdElement {
       } else {
         let resolved = false;
         try {
-          const saved = localStorage.getItem('less-theme');
+          const saved = localStorage.getItem('open-theme');
           if (saved === 'light') {
             this._theme.value = 'light';
             resolved = true;
@@ -126,13 +125,12 @@ export class OpenThemeToggle extends DsdElement {
       }
     }
 
-    // Sync to self, document, and parent layout �� critical for :root[data-theme]
     this.setAttribute('data-theme', this._theme.value);
     document.documentElement.setAttribute('data-theme', this._theme.value);
     if (document.documentElement.style) {
       document.documentElement.style.colorScheme = this._theme.value;
     }
-    // Propagate to parent less-layout
+    // Propagate to parent open-layout
     try {
       const root = this.getRootNode();
       if (root instanceof ShadowRoot && root.host) {
@@ -145,7 +143,7 @@ export class OpenThemeToggle extends DsdElement {
 
   private _persistTheme(theme: 'dark' | 'light'): void {
     try {
-      localStorage.setItem('less-theme', theme);
+      localStorage.setItem('open-theme', theme);
     } catch { /* blocked */ }
   }
 
@@ -156,12 +154,10 @@ export class OpenThemeToggle extends DsdElement {
 
   protected override onCsrRendered(): void {
     super.onCsrRendered();
-    // NO _initTheme() here �� causes signal��effect��onCsrRendered��initTheme loop
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
     // Zero signal.value reads in render (ADR-0062).
-    // data-theme is passed as a signal prop �� applyProps creates
     // effect binding that updates the attribute when theme changes.
     // CSS selectors ([data-theme="light"]) handle icon visibility.
     return (
@@ -223,15 +219,15 @@ export class OpenThemeToggle extends DsdElement {
         root.host.setAttribute('data-theme', theme);
       }
     } catch (e) {
-      console.debug('[less-theme-toggle] getRootNode unavailable:', e);
+      console.debug('[open-theme-toggle] getRootNode unavailable:', e);
     }
 
     this._dispatchThemeChange(theme);
 
     try {
-      localStorage.setItem('less-theme', theme);
+      localStorage.setItem('open-theme', theme);
     } catch (e) {
-      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
+      console.debug('[open-theme-toggle] localStorage.setItem unavailable:', e);
     }
     // data-theme attribute is managed by signal prop binding (data-theme={this._theme})
   }
@@ -239,10 +235,10 @@ export class OpenThemeToggle extends DsdElement {
   private _dispatchThemeChange(theme: 'dark' | 'light'): void {
     try {
       if (typeof CustomEvent !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
-        globalThis.dispatchEvent(new CustomEvent('less:theme-change', { detail: { theme } }));
+        globalThis.dispatchEvent(new CustomEvent('open:theme-change', { detail: { theme } }));
       }
     } catch (e) {
-      console.debug('[less-theme-toggle] theme event dispatch unavailable:', e);
+      console.debug('[open-theme-toggle] theme event dispatch unavailable:', e);
     }
   }
 

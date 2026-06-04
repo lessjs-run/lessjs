@@ -63,9 +63,9 @@ Deno.test('html-escape - wrapInDocument', async (t) => {
     assertEquals(html.includes('<link rel="stylesheet" href="/app.css">'), true);
   });
 
-  await t.step('defaults to title=LessJS and lang=en', () => {
+  await t.step('defaults to title=openElement and lang=en', () => {
     const html = wrapInDocument('<h1>Hello</h1>');
-    assertEquals(html.includes('<title>LessJS</title>'), true);
+    assertEquals(html.includes('<title>openElement</title>'), true);
     assertEquals(html.includes('lang="en"'), true);
   });
 

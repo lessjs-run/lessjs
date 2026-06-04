@@ -14,7 +14,7 @@ currentPath='/en/guide/testing'
 
     <h1>Testing</h1>
     <p class='subtitle'>
-      LessJS testing should protect framework contracts: route scanning, DSD output, island
+      openElement testing should protect framework contracts: route scanning, DSD output, island
       metadata, middleware scope, SSG post-processing, and package boundaries.
     </p>
     <h2>Project Testing</h2>
@@ -38,7 +38,7 @@ currentPath='/en/guide/testing'
     </p>
     <h2>Playwright E2E Tests</h2>
     <p>
-      LessJS includes Playwright end-to-end tests that verify SSG output in real browsers.
+      openElement includes Playwright end-to-end tests that verify SSG output in real browsers.
       They confirm DSD is correctly parsed, Custom Elements upgrade, and island strategies
       work as expected.
     </p>

@@ -395,17 +395,17 @@ export default class DocsRegistryHome extends DsdElement {
     return result;
   }
 
-  /** data-on-input handler for search box */
+  /** Search box input handler. */
   _onSearchInput(e: Event): void {
     this.#query.value = (e.target as HTMLInputElement).value;
   }
 
-  /** data-on-click handler for filter buttons (reads dataset.filter) */
+  /** Filter button click handler. */
   _onFilterClick(e: Event): void {
     this.#tierFilter.value = (e.currentTarget as HTMLElement).dataset.filter || 'all';
   }
 
-  /** data-on-change handler for sort select */
+  /** Sort select change handler. */
   _onSortChange(e: Event): void {
     this.#sortBy.value = (e.target as HTMLSelectElement).value as 'name' | 'tags' | 'compatibility';
   }
@@ -433,7 +433,7 @@ export default class DocsRegistryHome extends DsdElement {
             </p>
             <p class="early-access-note">
               Currently indexing 3 packages. Actively onboarding more Web Components libraries.
-              <a href="https://github.com/open-element/open-element/issues?q=label%3Ahub-submit">Submit your package {'->'}</a>
+              <a href="https://github.com/open-element/openelement/issues?q=label%3Ahub-submit">Submit your package {'->'}</a>
             </p>
           </div>
 
@@ -442,15 +442,15 @@ export default class DocsRegistryHome extends DsdElement {
               class="search-box"
               type="text"
               placeholder="Search by name, tag, or description..."
-              data-on-input="_onSearchInput"
+              onInput={(event: Event) => this._onSearchInput(event)}
             />
             <div class="filter-group">
-              <button class={`filter-btn ${tier === 'all' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="all" type="button">All</button>
-              <button class={`filter-btn ${tier === 'ssr-capable' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="ssr-capable" type="button">SSR &#10003;</button>
-              <button class={`filter-btn ${tier === 'client-only' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="client-only" type="button">Client</button>
-              <button class={`filter-btn ${tier === 'rejected' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="rejected" type="button">Rejected</button>
+              <button class={`filter-btn ${tier === 'all' ? 'active' : ''}`} onClick={(event: Event) => this._onFilterClick(event)} data-filter="all" type="button">All</button>
+              <button class={`filter-btn ${tier === 'ssr-capable' ? 'active' : ''}`} onClick={(event: Event) => this._onFilterClick(event)} data-filter="ssr-capable" type="button">SSR &#10003;</button>
+              <button class={`filter-btn ${tier === 'client-only' ? 'active' : ''}`} onClick={(event: Event) => this._onFilterClick(event)} data-filter="client-only" type="button">Client</button>
+              <button class={`filter-btn ${tier === 'rejected' ? 'active' : ''}`} onClick={(event: Event) => this._onFilterClick(event)} data-filter="rejected" type="button">Rejected</button>
             </div>
-            <select class="sort-select" data-on-change="_onSortChange">
+            <select class="sort-select" onChange={(event: Event) => this._onSortChange(event)}>
               <option value="name" selected={sort === 'name'}>Sort: Name</option>
               <option value="tags" selected={sort === 'tags'}>Sort: Components</option>
               <option value="compatibility" selected={sort === 'compatibility'}>Sort: Compatibility</option>

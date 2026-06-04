@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-button
+ * @openelement/ui - open-button
  *
  * Minimal button component following Swiss International Style.
  * Pure B&W design with subtle hover states.
@@ -225,7 +225,7 @@ export class OpenButton extends DsdElement {
   }
 
   private _handleClick(_e: Event): void {
-    this.dispatchEvent(new CustomEvent('less-click', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('open-click', { bubbles: true, composed: true }));
   }
 
   private _escAttr = _escAttr;

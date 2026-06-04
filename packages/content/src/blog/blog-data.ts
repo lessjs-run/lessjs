@@ -9,7 +9,7 @@
  * This module is only called by the virtual module plugin's load() hook.
  */
 
-import type { BlogPost, LessBlogOptions } from './types.ts';
+import type { BlogPost, OpenElementBlogOptions } from './types.ts';
 import { generateBlogRoutes } from './routes.ts';
 
 /**
@@ -20,7 +20,7 @@ import { generateBlogRoutes } from './routes.ts';
  * This replaces the stateful initBlogData() + getPosts() pattern.
  * For virtual module consumers, use @openelement/generated/blog-data instead.
  */
-export async function loadBlogData(options?: LessBlogOptions): Promise<{
+export async function loadBlogData(options?: OpenElementBlogOptions): Promise<{
   posts: BlogPost[];
   basePath: string;
 }> {

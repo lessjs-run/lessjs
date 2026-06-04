@@ -1,6 +1,6 @@
 import { assertEquals, assertRejects } from 'jsr:@std/assert@1';
 import { extractHubClientOnlyTags, loadHubClientOnlyTags } from '../src/hub-client-only-tags.ts';
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 
 Deno.test('extractHubClientOnlyTags returns unique client-only tag names', () => {
   const tags = extractHubClientOnlyTags({
@@ -8,7 +8,7 @@ Deno.test('extractHubClientOnlyTags returns unique client-only tag names', () =>
       tags: [
         { tagName: 'sl-button', compatibility: 'client-only' },
         { tagName: 'sl-button', compatibility: 'client-only' },
-        { tagName: 'less-card', compatibility: 'ssr' },
+        { tagName: 'open-card', compatibility: 'ssr' },
       ],
     },
     beta: {
@@ -43,7 +43,7 @@ Deno.test('loadHubClientOnlyTags imports generated hub data through module bound
       [
         'export default {',
         '  shoelace: { tags: [{ tagName: "sl-button", compatibility: "client-only" }] },',
-        '  native: { tags: [{ tagName: "less-card", compatibility: "ssr" }] },',
+        '  native: { tags: [{ tagName: "open-card", compatibility: "ssr" }] },',
         '};',
       ].join('\n'),
     );
@@ -65,7 +65,7 @@ Deno.test('loadHubClientOnlyTags throws when present generated hub data is broke
 
     const err = await assertRejects(
       () => loadHubClientOnlyTags(root, { onError: 'throw' }),
-      LessError,
+      OpenElementError,
       'Generated Hub data exists but failed to import',
     );
     assertEquals(err.code, 'HUB_DATA_IMPORT_ERROR');

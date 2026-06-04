@@ -1,24 +1,20 @@
 /**
- * @openelement/cem ¡ª Custom Elements Manifest types.
- *
- * Canonical owner of CEM schema types and LessJS package manifest types.
+ * Canonical owner of CEM schema types and openElement package manifest types.
  * Formerly defined in @openelement/core/types.ts and migrated here in v0.23.0
  * (SOP-001).
  *
  * Types owned by this package:
  * - CEM schema types (CustomElementsManifest, CemModule, CemCustomElement, etc.)
  * - CEM parse result types (CemParseResult, CemParseError, CemParseWarning)
- * - LessJS package manifest types (LessPackageManifest, LessDeclaration, etc.)
+ * - openElement package manifest types (OpenElementPackageManifest, OpenElementDeclaration, etc.)
  */
 
 import type { ComponentLayer, HydrationStrategy } from '@openelement/core';
 
 export type { ComponentLayer, HydrationStrategy };
 
-// ©¤©¤©¤ WC Package Protocol (v0.16+) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Custom element attribute descriptor (CEM-compatible) */
-export interface LessAttribute {
+export interface OpenElementAttribute {
   /** Attribute name */
   name: string;
   /** Attribute type (e.g. 'string', 'boolean', 'number') */
@@ -34,7 +30,7 @@ export interface LessAttribute {
 }
 
 /** Custom element class member descriptor (CEM-compatible) */
-export interface LessMember {
+export interface OpenElementMember {
   /** Member name */
   name: string;
   /** Member kind */
@@ -54,7 +50,7 @@ export interface LessMember {
 }
 
 /** Custom element event descriptor (CEM-compatible) */
-export interface LessEvent {
+export interface OpenElementEvent {
   /** Event name */
   name: string;
   /** Event type (e.g. 'CustomEvent<{ value: string }>') */
@@ -64,7 +60,7 @@ export interface LessEvent {
 }
 
 /** Custom element slot descriptor (CEM-compatible) */
-export interface LessSlot {
+export interface OpenElementSlot {
   /** Slot name (empty string for default slot) */
   name: string;
   /** Description */
@@ -72,7 +68,7 @@ export interface LessSlot {
 }
 
 /** Custom element CSS custom property descriptor (CEM-compatible) */
-export interface LessCssProperty {
+export interface OpenElementCssProperty {
   /** CSS property name (e.g. '--button-padding') */
   name: string;
   /** Default value */
@@ -84,15 +80,15 @@ export interface LessCssProperty {
 }
 
 /** Custom element CSS part descriptor (CEM-compatible) */
-export interface LessCssPart {
+export interface OpenElementCssPart {
   /** Part name */
   name: string;
   /** Description */
   description?: string;
 }
 
-/** SSR/DSD/hydration declarations for a LessJS custom element */
-export interface LessElementExtensions {
+/** SSR/DSD/hydration declarations for a openElement custom element */
+export interface OpenElementExtensions {
   /** Whether this component can be server-side rendered */
   ssr?: boolean;
   /** Whether this component uses Declarative Shadow DOM for SSR output */
@@ -101,16 +97,16 @@ export interface LessElementExtensions {
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
   hydrate?: HydrationStrategy;
-  /** Module path for import (e.g. '@openelement/ui/less-button') */
+  /** Module path for import (e.g. '@openelement/ui/open-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
   export?: string;
 }
 
-/** Package-level LessJS declarations */
-export interface LessPackageExtensions {
-  /** Minimum LessJS core version required */
-  lessjsVersion?: string;
+/** Package-level openElement declarations */
+export interface OpenElementPackageExtensions {
+  /** Minimum openElement core version required */
+  openElementVersion?: string;
   /** Adapter required for SSR rendering (e.g. 'lit', 'vanilla') */
   adapter?: string;
   /** Whether this package provides a default CSS stylesheet */
@@ -120,17 +116,17 @@ export interface LessPackageExtensions {
 }
 
 /** Named export descriptor within a package module */
-export interface LessExport {
-  /** Export name (e.g. 'LessButton') */
+export interface OpenElementExport {
+  /** Export name (e.g. 'OpenButton') */
   name: string;
-  /** Reference path (e.g. './less-button.js') */
+  /** Reference path (e.g. './open-button.js') */
   path?: string;
   /** Description */
   description?: string;
 }
 
-/** Custom element declaration within a LessJS package manifest */
-export interface LessDeclaration {
+/** Custom element declaration within a openElement package manifest */
+export interface OpenElementDeclaration {
   /** Custom element tag name (must be valid per HTML spec) */
   tagName: string;
   /** Element class name */
@@ -138,29 +134,29 @@ export interface LessDeclaration {
   /** Super class name (e.g. 'LitElement') */
   superclassName?: string;
   /** Attributes */
-  attributes?: LessAttribute[];
+  attributes?: OpenElementAttribute[];
   /** Class members */
-  members?: LessMember[];
+  members?: OpenElementMember[];
   /** Events */
-  events?: LessEvent[];
+  events?: OpenElementEvent[];
   /** Slots */
-  slots?: LessSlot[];
+  slots?: OpenElementSlot[];
   /** CSS custom properties */
-  cssProperties?: LessCssProperty[];
+  cssProperties?: OpenElementCssProperty[];
   /** CSS shadow parts */
-  cssParts?: LessCssPart[];
-  /** LessJS SSR/DSD/hydration extensions */
-  less?: LessElementExtensions;
+  cssParts?: OpenElementCssPart[];
+  /** openElement SSR/DSD/hydration extensions */
+  openElement?: OpenElementExtensions;
   /** Description */
   description?: string;
 }
 
-/** Module entry within a LessJS package manifest */
-export interface LessModule {
-  /** Module path relative to package root (e.g. './less-button.js') */
+/** Module entry within a openElement package manifest */
+export interface OpenElementModule {
+  /** Module path relative to package root (e.g. './open-button.js') */
   path: string;
   /** Named exports from this module */
-  exports?: LessExport[];
+  exports?: OpenElementExport[];
   /** Declarations defined in this module */
   declarations?: string[];
 }
@@ -169,7 +165,7 @@ export interface LessModule {
  *
  * Structured, tool-consumable metadata for an entire WC package.
  */
-export interface LessPackageManifest {
+export interface OpenElementPackageManifest {
   /** Schema version of the manifest format */
   schemaVersion: string;
   /** Package name on JSR/npm (e.g. '@openelement/ui') */
@@ -187,14 +183,12 @@ export interface LessPackageManifest {
   /** Repository URL */
   repository?: string;
   /** Custom element declarations in this package */
-  declarations: LessDeclaration[];
+  declarations: OpenElementDeclaration[];
   /** Module entry points */
-  modules?: LessModule[];
-  /** Package-level LessJS extensions */
-  less?: LessPackageExtensions;
+  modules?: OpenElementModule[];
+  /** Package-level openElement extensions */
+  openElement?: OpenElementPackageExtensions;
 }
-
-// ©¤©¤©¤ CEM Schema Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** CEM schema version */
 export type CemSchemaVersion = string;
@@ -393,8 +387,8 @@ export interface CemCustomElement extends CemBase {
   shadowRootMode?: 'open' | 'closed';
   /** Whether the element is a form-associated custom element */
   formAssociated?: boolean;
-  /** LessJS SSR/DSD/hydration extensions (non-standard, LessJS-specific) */
-  less?: LessElementExtensions;
+  /** openElement SSR/DSD/hydration extensions (non-standard, openElement-specific) */
+  openElement?: OpenElementExtensions;
 }
 
 /** CEM reference to another declaration */
@@ -467,8 +461,6 @@ export interface CustomElementsManifest {
   /** Preserve unknown top-level fields for future compatibility */
   [key: string]: unknown;
 }
-
-// ©¤©¤©¤ CEM Parse Result Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Result of parsing a CEM file */
 export interface CemParseResult {

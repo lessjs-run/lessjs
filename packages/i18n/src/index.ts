@@ -10,10 +10,10 @@
  *
  * Recommended usage (via @openelement/app):
  * ```ts
- * import { lessjs } from '@openelement/app';
+ * import { openElement } from '@openelement/app';
  *
  * export default defineConfig({
- *   plugins: [await lessjs({
+ *   plugins: [await openElement({
  *     i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
  *   })],
  * });
@@ -21,7 +21,7 @@
  *
  * Standalone usage requires explicit ctx parameter:
  * ```ts
- * lessI18n({ locales: ['en', 'zh'], defaultLocale: 'en', ctx });  // ctx must be explicitly passed
+ * openI18n({ locales: ['en', 'zh'], defaultLocale: 'en', ctx });  // ctx must be explicitly passed
  * ```
  *
  * Route-level helpers:
@@ -31,8 +31,8 @@
  */
 
 import type { Plugin } from 'vite';
-import type { LessI18nOptions } from './types.ts';
-import type { LessBuildContextLike } from '@openelement/protocols/build-types';
+import type { OpenElementI18nOptions } from './types.ts';
+import type { OpenElementBuildContextLike } from '@openelement/protocols/build-types';
 import { loadI18nData, writeI18nDataModule } from './i18n-data.ts';
 import { createLogger } from '@openelement/core/logger';
 import process from 'node:process';
@@ -41,28 +41,24 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 
 const log = createLogger('i18n');
 
-// ©¤©¤©¤ Re-exports ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-export type { LessI18nOptions } from './types.ts';
+export type { OpenElementI18nOptions } from './types.ts';
 export { loadI18nData } from './i18n-data.ts';
 export { writeI18nDataModule } from './i18n-data.ts';
 export { i18nStaticPaths, normalizeLocalePath, switchLocale } from './routes.ts';
 export type { LocalePath } from './routes.ts';
 
-// ©¤©¤©¤ Main Plugin ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * LessJS i18n Vite plugin.
+ * openElement i18n Vite plugin.
  * Configures locale options for route-level i18n helpers.
  */
-export function lessI18n(
-  options: LessI18nOptions & { ctx?: LessBuildContextLike },
+export function openI18n(
+  options: OpenElementI18nOptions & { ctx?: OpenElementBuildContextLike },
 ): Plugin {
-  // ctx must be explicitly provided (via lessjs() umbrella or direct param)
+  // ctx must be explicitly provided (via openElement() umbrella or direct param)
   const ctx = options.ctx;
 
   return {
-    name: 'less:i18n',
+    name: 'open:i18n',
 
     buildStart() {
       // ADR 0018: Use loadI18nData() pure function - zero module state
@@ -97,4 +93,4 @@ export function lessI18n(
   };
 }
 
-export default lessI18n;
+export default openI18n;

@@ -1,84 +1,88 @@
-# LessJS
+# openElement
 
 English | [简体中文](./README.zh.md)
 
-**The DSD-first Web Components framework (v0.29).** JamFullStack: SSG, Islands, API routes, and Edge deployment — all on Web Standards.
+**DSD-first Web Components framework (v0.30.1).** openElement builds static-first
+applications with Declarative Shadow DOM, JSX/VNode rendering, progressive
+islands, Hono routes, and release gates that prove the package graph before
+publishing.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-@openelement/core-blue)](https://jsr.io/@openelement/core)
-[![CI](https://github.com/open-element/open-element/actions/workflows/test.yml/badge.svg)](https://github.com/open-element/open-element/actions/workflows/test.yml)
+[![CI](https://github.com/open-element/openelement/actions/workflows/test.yml/badge.svg)](https://github.com/open-element/openelement/actions/workflows/test.yml)
 
 ## Quick Start
 
 ```bash
 deno run -A jsr:@openelement/create my-app
-cd my-app && deno task dev
+cd my-app
+deno task dev
 ```
 
-## Why LessJS
+## Why openElement
 
-LessJS renders Web Components on the server via **Declarative Shadow DOM**. The browser parses DSD natively — no hydration, no JS for static content. Interactive pieces are **islands**: small, strategy-gated components that load on demand.
+openElement renders Web Components on the server through Declarative Shadow DOM.
+Static content ships as HTML first. Interactive pieces are islands that upgrade
+only when their `client:*` strategy says they should.
 
 ```tsx
-// routes/index/index.tsx
-import { DsdElement } from '@openelement/runtime';
+import { DsdElement, type VNode } from '@openelement/runtime';
 
 export default class HomePage extends DsdElement {
-  render() {
-    return <h1>Hello LessJS</h1>;
+  render(): VNode {
+    return <main>Hello openElement</main>;
   }
 }
 ```
 
-The App Shell (`<open-layout>`) is applied automatically by the Builder — pages only declare their content.
+The current v0.30.1 contract is intentionally narrow:
 
-## Features
-
-- **DSD-first** — Server-rendered Shadow DOM. Zero JS overhead for static content.
-- **JSX + Signals** — React-like DX with fine-grained reactivity via `alien-signals`.
-- **File-based routing** — `app/routes/` maps 1:1 to URL paths.
-- **SSG built-in** — Build-time rendering, sitemaps, PWA manifest. Deno-native.
-- **Progressive islands** — `client:load | idle | visible | only` hydration strategies.
-- **Hono API routes** — Drop API handlers into the route tree.
-- **Zero-bundler dev** — `deno task dev:fast` cold starts in ~100ms.
-- **Framework-agnostic** — Lit, React, and Vanilla adapters for islands.
-
-## Documentation
-
-| Section       | Link                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------ |
-| Guide         | [lessjs.com/guide/getting-started](https://lessjs.com/guide/getting-started)         |
-| API Reference | [lessjs.com/apilist](https://lessjs.com/apilist)                                     |
-| Architecture  | [lessjs.com/architecture/architecture](https://lessjs.com/architecture/architecture) |
+- one app facade: `openElement()`;
+- one renderer model: JSX -> VNode -> RenderNode -> DSD HTML or DOM;
+- one metadata field: `openElement`;
+- one UI naming line: `open-*`;
+- one trust boundary: `trustedHtml` for pre-sanitized, non-interactive content.
 
 ## Packages
 
-| Package                     | Version | Description                                                 |
-| --------------------------- | ------- | ----------------------------------------------------------- |
-| `@openelement/core`         | v0.28.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
-| `@openelement/adapter-vite` | v0.28.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
-| `@openelement/ui`           | v0.28.0 | DSD-native UI components (button, card, input, dialog...)   |
-| `@openelement/signals`      | v0.28.0 | Signal primitives (signal, computed, effect)                |
-| `@openelement/content`      | v0.28.0 | Blog, nav, sitemap build plugins                            |
-| `@openelement/i18n`         | v0.28.0 | Locales, route expansion                                    |
-| `@openelement/create`       | v0.28.0 | Project scaffold CLI                                        |
-| `@openelement/runtime`      | v0.28.0 | Unified component authoring facade (core + signals + style) |
+All 19 packages are versioned together at **v0.30.1** under
+[`@openelement`](https://jsr.io/@openelement).
 
-[All 19 packages →](https://jsr.io/@openelement)
+| Package                     | Role                                      |
+| --------------------------- | ----------------------------------------- |
+| `@openelement/core`         | DSD renderer, DsdElement, JSX runtime     |
+| `@openelement/adapter-vite` | Vite adapter, SSG pipeline, island builds |
+| `@openelement/app`          | `openElement()` app configuration facade  |
+| `@openelement/runtime`      | component authoring facade                |
+| `@openelement/ui`           | `open-*` DSD component library            |
+| `@openelement/content`      | Markdown, MDX, nav, blog, sitemap         |
+| `@openelement/i18n`         | locale data and static path helpers       |
+| `@openelement/hub`          | registry metadata and validation          |
 
-## What's New in v0.28.0
+## Documentation
 
-- **Architecture contracts stabilized** — `createAdapterRegistry()` factory, `LessRenderer` interface expansion, `onRenderError` hook, try/catch around `_renderOrHydrate`.
-- **Full Open Props migration** — 7 color scales (indigo/green/red/orange/blue/teal/cyan) with dark mode inversions; 0 custom semantic tokens, 0 hardcoded colors in www/.
-- **CI composite action** — reusable workflow exported, 5-step matrix reduced from 14 to 9 jobs.
-- **Documentation site theme gates** — 80+ test cases covering SSR/CSR theme parity, search/sidebar/TOC color isolation.
-- **Signal-driven registry** — registry index rewritten to zero manual DOM via `data-signal` + `data-signal-attr`.
-- **[Full changelog →](https://github.com/open-element/open-element/blob/dev/docs/changelog/v0.28.0.md)**
+| Section       | Link                                                                                           |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| Guide         | [openelement.org/guide/getting-started](https://openelement.org/guide/getting-started)         |
+| API Reference | [openelement.org/apilist](https://openelement.org/apilist)                                     |
+| Architecture  | [openelement.org/architecture/architecture](https://openelement.org/architecture/architecture) |
+
+## Current Line
+
+v0.30.1 is the clean architecture sweep after the v0.30.0 contract freeze. It
+removes active LessJS compatibility names, keeps dynamic UI on the VNode path,
+and aligns current docs and package metadata with the openElement identity.
+
+v0.31 is reserved for UI Shell/Ocean-Island work. **v1.0** remains the stable
+engine target after the renderer, metadata, package graph, and trust-boundary
+contracts have been proven in product-facing surfaces.
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Architecture decisions in [docs/adr/](./docs/adr/). Target: **v1.0** stable engine freeze.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Architecture decisions live in
+[docs/adr/](./docs/adr/), release execution lives in [docs/sop/](./docs/sop/),
+and current status lives in [docs/status/STATUS.md](./docs/status/STATUS.md).
 
 ## License
 

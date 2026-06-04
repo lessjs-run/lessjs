@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 
 function makeTempDir(): string {
-  return Deno.makeTempDirSync({ prefix: 'less-test-' });
+  return Deno.makeTempDirSync({ prefix: 'open-test-' });
 }
 
 function cleanup(dir: string) {

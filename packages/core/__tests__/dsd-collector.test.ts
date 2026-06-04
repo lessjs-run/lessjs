@@ -21,7 +21,7 @@ Deno.test('DsdRenderCollector - empty collector', () => {
 Deno.test('DsdRenderCollector - aggregates DSD component metrics', () => {
   const collector = new DsdRenderCollector();
   collector.add({
-    tagName: 'less-button',
+    tagName: 'open-button',
     renderTimeMs: 0.5,
     templateSize: 120,
     layer: 'dsd-static',
@@ -55,7 +55,7 @@ Deno.test('DsdRenderCollector - distinguishes pure islands', () => {
     nestingDepth: 0,
   });
   collector.add({
-    tagName: 'less-theme-toggle',
+    tagName: 'open-theme-toggle',
     renderTimeMs: 1.0,
     templateSize: 0,
     layer: 'pure-island',
@@ -71,7 +71,7 @@ Deno.test('DsdRenderCollector - distinguishes pure islands', () => {
 Deno.test('DsdRenderCollector - metrics are readonly snapshot', () => {
   const collector = new DsdRenderCollector();
   collector.add({
-    tagName: 'less-button',
+    tagName: 'open-button',
     renderTimeMs: 0.5,
     templateSize: 120,
     layer: 'dsd-static',
@@ -79,5 +79,5 @@ Deno.test('DsdRenderCollector - metrics are readonly snapshot', () => {
     nestingDepth: 1,
   });
   assertEquals(collector.metrics.length, 1);
-  assertEquals(collector.metrics[0].tagName, 'less-button');
+  assertEquals(collector.metrics[0].tagName, 'open-button');
 });

@@ -19,7 +19,7 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import type { LessBuildContext } from '../build-context.js';
+import type { OpenElementBuildContext } from '../build-context.js';
 import type {
   CemCompatibilityReport,
   CompatibilityClassification,
@@ -166,7 +166,7 @@ export function resolveDynamicRoutePath(
 export async function ssgRender(
   module: SsrBundle,
   options: SsgRenderOptions,
-  ctx?: LessBuildContext,
+  ctx?: OpenElementBuildContext,
 ): Promise<void> {
   const root = options.root || process.cwd();
   const outDir = options.outDir || 'dist';
@@ -512,14 +512,14 @@ export async function ssgRender(
   // PWA generation is enabled after the ThemeInit service-worker cache patch.
   if (pwa) {
     const manifest = {
-      name: pwa.name || 'LessJS',
-      short_name: pwa.shortName || 'LessJS',
+      name: pwa.name || 'openElement',
+      short_name: pwa.shortName || 'openElement',
       start_url: basePath,
       display: 'standalone' as const,
       theme_color: pwa.themeColor || '#000000',
       background_color: pwa.backgroundColor || '#ffffff',
       icons: [
-        { src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' },
+        { src: '/assets/open-logo.svg', sizes: 'any', type: 'image/svg+xml' },
       ],
     };
     writeFileSync(
@@ -535,7 +535,7 @@ export async function ssgRender(
         routes: routeInfo.map((route) => route.path).sort(),
       }),
     );
-    const swCode = `const CACHE = 'less-${cacheHash}';
+    const swCode = `const CACHE = 'openelement-${cacheHash}';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
@@ -693,7 +693,7 @@ async function networkFirst(req) {
 }
 
 function buildHydrationStrategySummary(
-  ctx?: LessBuildContext,
+  ctx?: OpenElementBuildContext,
 ): import('@openelement/core').DsdHydrationStrategySummary {
   const summary: import('@openelement/core').DsdHydrationStrategySummary = {
     load: 0,
@@ -733,7 +733,7 @@ function buildHydrationStrategySummary(
  *
  * When ctx or packageIslandDecls is absent, returns an empty array.
  */
-function buildManifestDecisions(ctx?: LessBuildContext): ManifestDecision[] {
+function buildManifestDecisions(ctx?: OpenElementBuildContext): ManifestDecision[] {
   const decls = ctx?.phase1?.packageIslandDecls;
   const manifests = ctx?.phase1?.packageManifests;
   if (!decls?.length || !manifests?.length) return [];

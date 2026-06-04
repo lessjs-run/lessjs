@@ -28,11 +28,11 @@ export type RenderFn = (item: unknown, idx: number) => unknown;
 // ─── VNode interface ─────────────────────────────────────────────────────────
 
 /**
- * LessJS declarative component description.
+ * openElement declarative component description.
  *
  * VNode represents a single element or component in the virtual tree.
  * It is consumed once per render (SSR: to HTML string, CSR: to real DOM).
- * LessJS intentionally does NOT diff VNode trees — DSD is the ground truth.
+ * openElement intentionally does NOT diff VNode trees — DSD is the ground truth.
  */
 export interface VNode {
   /** HTML tag name (e.g. 'div'), component function/class, or Fragment symbol */

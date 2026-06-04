@@ -118,8 +118,8 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
     }
     // Parent alias last - use directory path to avoid ENOTDIR.
     // When the "." export points to a file (e.g. src/index.ts),
-    // Rolldown resolves subpath imports like @openelement/ui/less-callout
-    // as index.ts/less-callout -> ENOTDIR. Pointing to the parent
+    // Rolldown resolves subpath imports like @openelement/ui/open-callout
+    // as index.ts/open-callout -> ENOTDIR. Pointing to the parent
     // directory instead lets Vite resolve subpaths correctly.
     if (exports['.']) {
       let replacement = resolve(memberDir, exports['.'] as string);

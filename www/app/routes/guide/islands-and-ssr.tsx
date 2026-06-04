@@ -18,7 +18,7 @@ export class IslandsSsrPage extends DsdElement {
         <div class="container">
           <h1>Islands 与 SSR</h1>
           <p class="subtitle">
-            LessJS 的 Ocean/Island 模型：服务端通过 DSD 预渲染内容，客户端按需升级交互组件。
+            openElement 的 Ocean/Island 模型：服务端通过 DSD 预渲染内容，客户端按需升级交互组件。
           </p>
 
           <h2>Ocean/Island 模式</h2>
@@ -36,7 +36,7 @@ export class IslandsSsrPage extends DsdElement {
               </ul>
             </div>
             <div style="padding:var(--size-4);border:1px solid var(--gray-3);border-radius:var(--radius-2);background:var(--gray-1);border-left:3px solid var(--indigo-5)">
-              <h3>LessJS Islands</h3>
+              <h3>openElement Islands</h3>
               <ul>
                 <li>内容通过 SSG + DSD 预渲染</li>
                 <li>只有需要的组件加载 JS</li>
@@ -137,7 +137,7 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
           </table>
 
           <open-callout type="info" label="Upgrade, Not Hydration">
-            LessJS 使用 Island Upgrade 而非传统 hydration。浏览器解析 HTML 时 DSD 已经填充内容，
+            openElement 使用 Island Upgrade 而非传统 hydration。浏览器解析 HTML 时 DSD 已经填充内容，
             客户端 entry 调用 <code>customElements.define()</code> 升级已有元素为真正的 Custom Element。
           </open-callout>
 
@@ -156,7 +156,7 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
         <div class="container">
           <h1>Islands & SSR</h1>
           <p class="subtitle">
-            LessJS's Ocean/Island model: server pre-renders content via DSD, client upgrades interactive
+            openElement's Ocean/Island model: server pre-renders content via DSD, client upgrades interactive
             components on demand.
           </p>
 
@@ -176,7 +176,7 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
               </ul>
             </div>
             <div style="padding:var(--size-4);border:1px solid var(--gray-3);border-radius:var(--radius-2);background:var(--gray-1);border-left:3px solid var(--indigo-5)">
-              <h3>LessJS Islands</h3>
+              <h3>openElement Islands</h3>
               <ul>
                 <li>Content pre-rendered via SSG + DSD</li>
                 <li>Only needed components load JavaScript</li>
@@ -278,7 +278,7 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
           </table>
 
           <open-callout type="info" label="Upgrade, Not Hydration">
-            LessJS uses Island Upgrade instead of traditional hydration. When the browser parses HTML,
+            openElement uses Island Upgrade instead of traditional hydration. When the browser parses HTML,
             DSD has already populated the content. The client entry calls <code>customElements.define()</code>
             to upgrade existing elements into real Custom Elements.
           </open-callout>

@@ -32,7 +32,7 @@
               "name": ""
             }
           ],
-          "less": {
+          "openElement": {
             "ssr": true,
             "dsd": true,
             "hydrate": "load",

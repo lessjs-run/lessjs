@@ -2,7 +2,7 @@
  * @openelement/content navigation tools - Navigation scanner
  *
  * Scans route files, extracts `meta` exports, and aggregates NavSection[].
- * Build-time only - data stored in ctx.navSections (ADR 0010: no .less/ temp files).
+ * Build-time only - data stored in ctx.navSections (ADR 0010: no .openElement/ temp files).
  */
 
 import { join, resolve } from 'node:path';

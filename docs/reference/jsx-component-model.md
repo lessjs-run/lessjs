@@ -1,4 +1,4 @@
-# LessJS JSX Component Model
+# openElement JSX Component Model
 
 Status: v0.24.1\
 Scope: JSX + Signal authoring in `DsdElement`

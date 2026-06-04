@@ -54,10 +54,10 @@ Deno.test('evaluateDsdReportGate fails unknown error types by default', () => {
 });
 
 Deno.test('evaluateDsdReportGate fails non-recoverable errors above threshold', () => {
-  // Use native tag (less-*) so errors count toward threshold
+  // Use native tag (open-*) so errors count toward threshold
   const report = reportWith([
-    { message: 'Failed to instantiate', recoverable: false, tagName: 'less-button' },
-    { message: 'Failed to instantiate', recoverable: false, tagName: 'less-button' },
+    { message: 'Failed to instantiate', recoverable: false, tagName: 'open-button' },
+    { message: 'Failed to instantiate', recoverable: false, tagName: 'open-button' },
   ]);
 
   const result = evaluateDsdReportGate(report, { maxNonRecoverable: 1 });

@@ -101,7 +101,7 @@ export default class HeroPing extends DsdElement {
     this._msg = '';
     this._renderToDom();
     try {
-      const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';
+      const url = this.apiUrl || 'https://demo.openelement.org/api';
       const r = await fetch(url, { signal: this._abortController.signal });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();

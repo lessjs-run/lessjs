@@ -1,11 +1,11 @@
-# LessJS Roadmap
+# openElement Roadmap
 
 > Source of truth for version planning.
 > Strategic boundary: [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md).
 
 ## Principle
 
-LessJS promises deterministic outcomes, not universal magic.
+openElement promises deterministic outcomes, not universal magic.
 
 A Web Component is SSR-rendered only when a declared adapter or validated
 package contract makes that safe. Otherwise it becomes client-only or fails
@@ -124,7 +124,7 @@ Delivered:
 - Open Props token migration
 - CSS Parts coverage
 - `@openelement/adapter-lit` deprecation for DSD components
-- `less-hero-ping` retained as the Lit island example
+- `open-hero-ping` retained as the Lit island example
 - DSD report gate tightened to finite thresholds
 - ADR-0037 strategic boundary and SOP-015 docs alignment
 
@@ -239,7 +239,7 @@ Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.27.0/`.
 
 ## Vision: JamFullStack
 
-LessJS should ship a complete Web Components full-stack experience:
+openElement should ship a complete Web Components full-stack experience:
 
 - **ISR + Edge KV**: production ISR handlers backed by Deno KV and Cloudflare Workers KV.
 - **Edge Deployment**: first-class Deno Deploy and CF Workers deployment presets.

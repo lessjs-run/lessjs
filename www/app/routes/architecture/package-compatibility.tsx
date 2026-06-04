@@ -23,13 +23,13 @@ export class PackageCompatibilityGuidePage extends DsdElement {
         <div class="container">
           <h1>第三方包兼容性</h1>
           <p class="subtitle">
-            v0.18.0 引入的 Universal WC Engine 让 LessJS 能自动识别第三方 Web Component 包的兼容性，安全决定谁可以 SSR、谁只能跑在浏览器。
+            v0.18.0 引入的 Universal WC Engine 让 openElement 能自动识别第三方 Web Component 包的兼容性，安全决定谁可以 SSR、谁只能跑在浏览器。
           </p>
 
           <h2>核心思路</h2>
           <p>
             第三方 Web Component 包来自不同的生态：有些用 Lit、有些用 Vanilla、有些只能在浏览器运行。
-            LessJS 不做"一刀切"假设，而是通过读取标准的 <code>custom-elements.json</code> 文件来了解每个包。
+            openElement 不做"一刀切"假设，而是通过读取标准的 <code>custom-elements.json</code> 文件来了解每个包。
           </p>
           <h3>但前提是这个包有 CEM 文件</h3>
           <p>
@@ -50,12 +50,12 @@ export class PackageCompatibilityGuidePage extends DsdElement {
             <tbody>
               <tr>
                 <td><code>ssr-capable</code></td>
-                <td>有显式的 LessJS SSR 声明或适配器支持</td>
+                <td>有显式的 openElement SSR 声明或适配器支持</td>
                 <td>导入 SSR bundle，参与 DSD 渲染</td>
               </tr>
               <tr>
                 <td><code>client-only</code></td>
-                <td>浏览器专用，或无 SSR 声明<ul><li>CEM 没有 LessJS 扩展</li><li>显式 <code>ssr: false</code></li><li>没有 CEM 时默认</li></ul></td>
+                <td>浏览器专用，或无 SSR 声明<ul><li>CEM 没有 openElement 扩展</li><li>显式 <code>ssr: false</code></li><li>没有 CEM 时默认</li></ul></td>
                 <td>排除出 SSR bundle，生成 client 注册/水合元数据</td>
               </tr>
               <tr>
@@ -73,7 +73,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
 
           <h2>构建时自动检测</h2>
           <p>
-            在 Vite 插件的 <code>buildStart()</code> 阶段，LessJS 会自动扫描
+            在 Vite 插件的 <code>buildStart()</code> 阶段，openElement 会自动扫描
             <code>node_modules</code> 下的所有包，寻找 <code>custom-elements.json</code>：
           </p>
           <open-code-block><pre><code>{`// 伪代码 - 实际实现在 route-scanner.ts
@@ -106,7 +106,7 @@ for (const pkg of node_modules) {
       {
         "packageName": "@third-party/wc-button",
         "tier": "client-only",
-        "reason": "No LessJS SSR extension in CEM",
+        "reason": "No openElement SSR extension in CEM",
         "componentCount": 5
       }
     ]
@@ -136,7 +136,7 @@ for (const pkg of node_modules) {
             </thead>
             <tbody>
               <tr>
-                <td>包有 CEM + LessJS SSR 扩展</td>
+                <td>包有 CEM + openElement SSR 扩展</td>
                 <td><code>ssr-capable</code></td>
                 <td>自动加入 SSR bundle</td>
               </tr>
@@ -161,7 +161,7 @@ for (const pkg of node_modules) {
           <h2>路线图展望</h2>
           <ul class="compact-list">
             <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI - 安装前手动验证</li>
-            <li><strong>v0.18.2</strong>: <code>less add</code> - 一键安装 + 配置第三方包</li>
+            <li><strong>v0.18.2</strong>: <code>open add</code> - 一键安装 + 配置第三方包</li>
             <li><strong>v0.18.3</strong>: DOM 模拟 - 实验性尝试渲染 client-only 组件</li>
           </ul>
 
@@ -181,7 +181,7 @@ for (const pkg of node_modules) {
         <div class="container">
           <h1>Package Compatibility</h1>
           <p class="subtitle">
-            Introduced in v0.18.0, the Universal WC Engine enables LessJS to automatically detect
+            Introduced in v0.18.0, the Universal WC Engine enables openElement to automatically detect
             and classify third-party Web Component packages - deciding safely which ones can SSR
             and which must stay client-only.
           </p>
@@ -189,7 +189,7 @@ for (const pkg of node_modules) {
           <h2>The Problem</h2>
           <p>
             Third-party Web Components come from different ecosystems. Some use Lit, some use
-            vanilla classes, some are browser-only with real-DOM dependencies. LessJS no longer
+            vanilla classes, some are browser-only with real-DOM dependencies. openElement no longer
             assumes every package is SSR-safe - it reads their <code>custom-elements.json</code>
             manifest and makes informed decisions.
           </p>
@@ -213,7 +213,7 @@ for (const pkg of node_modules) {
             <tbody>
               <tr>
                 <td><code>ssr-capable</code></td>
-                <td>Explicit LessJS SSR declaration or adapter support</td>
+                <td>Explicit openElement SSR declaration or adapter support</td>
                 <td>Import in SSR bundle, participate in DSD rendering</td>
               </tr>
               <tr>
@@ -236,7 +236,7 @@ for (const pkg of node_modules) {
 
           <h2>Build-Time Auto-Detection</h2>
           <p>
-            During the Vite plugin's <code>buildStart()</code> phase, LessJS automatically scans
+            During the Vite plugin's <code>buildStart()</code> phase, openElement automatically scans
             <code>node_modules</code> for <code>custom-elements.json</code> files:
           </p>
           <open-code-block><pre><code>{`// Pseudocode - actual implementation in route-scanner.ts
@@ -269,7 +269,7 @@ for (const pkg of node_modules) {
       {
         "packageName": "@third-party/wc-button",
         "tier": "client-only",
-        "reason": "No LessJS SSR extension in CEM",
+        "reason": "No openElement SSR extension in CEM",
         "componentCount": 5
       }
     ]
@@ -300,7 +300,7 @@ for (const pkg of node_modules) {
             </thead>
             <tbody>
               <tr>
-                <td>Has CEM + LessJS SSR extension</td>
+                <td>Has CEM + openElement SSR extension</td>
                 <td><code>ssr-capable</code></td>
                 <td>Auto-added to SSR bundle</td>
               </tr>
@@ -325,7 +325,7 @@ for (const pkg of node_modules) {
           <h2>Roadmap</h2>
           <ul class="compact-list">
             <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI - pre-install validation</li>
-            <li><strong>v0.18.2</strong>: <code>less add</code> - one-click install and configure</li>
+            <li><strong>v0.18.2</strong>: <code>open add</code> - one-click install and configure</li>
             <li><strong>v0.18.3</strong>: DOM simulation - experimental client-only component rendering</li>
           </ul>
 

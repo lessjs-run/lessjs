@@ -81,7 +81,7 @@ async function loadSsrBundle(ssrDir: string) {
 async function main() {
   const opts = parseArgs();
 
-  log.info('=== LessJS SSG CLI (standalone) ===');
+  log.info('=== openElement SSG CLI (standalone) ===');
   log.info(`SSR dir: ${opts.ssrDir}`);
   log.info(`Output dir: ${opts.outDir}`);
   log.info(`Root: ${opts.root}`);

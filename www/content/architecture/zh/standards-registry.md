@@ -15,13 +15,13 @@ order: 20
 
           <h1>标准与 Registry 策略</h1>
           <p class="subtitle">
-            LessJS 的长期方向是 WC SSR/SSG 渲染内核和组件包协议。公共 registry hub 只有在本地索引、
+            openElement 的长期方向是 WC SSR/SSG 渲染内核和组件包协议。公共 registry hub 只有在本地索引、
             manifest、验证产物和安全治理成熟后才应该出现。
           </p>
 
           <h2>一句话边界</h2>
           <p>
-            LessJS 可以成为 Web Components 的 SSR/SSG 渲染内核和包协议，但不能承诺任意 Web Component
+            openElement 可以成为 Web Components 的 SSR/SSG 渲染内核和包协议，但不能承诺任意 Web Component
             都能被自动 SSR、自动注册和自动水合。所谓"自动"必须来自 manifest，而不是运行时猜测。
           </p>
 
@@ -30,7 +30,7 @@ order: 20
             <thead>
               <tr>
                 <th>参考</th>
-                <th>LessJS 如何使用</th>
+                <th>openElement 如何使用</th>
                 <th>不做什么</th>
               </tr>
             </thead>
@@ -48,7 +48,7 @@ order: 20
               <tr>
                 <td>Open UI</td>
                 <td>借鉴 parts、states、behavior、a11y、form semantics 的组件契约词汇。</td>
-                <td>不把 LessJS 变成 OpenWC 模板或 Open UI 实现库。</td>
+                <td>不把 openElement 变成 OpenWC 模板或 Open UI 实现库。</td>
               </tr>
               <tr>
                 <td>OpenWC</td>
@@ -58,7 +58,7 @@ order: 20
               <tr>
                 <td>Lit / FAST</td>
                 <td>作为 WC 作者体验和 adapter 输入。</td>
-                <td>不把任一作者库绑定成 LessJS 的定义。</td>
+                <td>不把任一作者库绑定成 openElement 的定义。</td>
               </tr>
               <tr>
                 <td>Scoped Custom Element Registries</td>
@@ -128,7 +128,7 @@ order: 20
           <ol>
             <li>把 renderer protocol、adapter contract 和 DSD diagnostics 文档化并加测试。</li>
             <li>把 <code>PackageIslandMeta</code> 扩展为 CEM-compatible 的包 manifest 草案。</li>
-            <li>先做 <code>less validate-manifest</code>，再做 <code>less add</code>。</li>
+            <li>先做 <code>less validate-manifest</code>，再做 <code>open add</code>。</li>
             <li>先做本地 registry index，再做公共 hub。</li>
           </ol>
 

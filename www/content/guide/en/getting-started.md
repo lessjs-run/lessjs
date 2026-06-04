@@ -15,7 +15,7 @@ order: 1
           </p>
 
           <open-callout type="info" label="Recommended">
-            Deno 2.7+ recommended. LessJS is a Deno-first project - dependencies are managed
+            Deno 2.7+ recommended. openElement is a Deno-first project - dependencies are managed
             through <span class="inline-code">deno.json</span>, and all dev/build commands
             use Deno tasks.
           </open-callout>
@@ -74,7 +74,7 @@ and common Deno tasks.
 | | └-- counter.ts # client-upgraded Custom Element
 | └-- _renderer.ts # optional layout wrapper
 |-- deno.json # tasks and imports
-└-- vite.config.ts # LessJS plugin config</code></pre></open-code-block>
+└-- vite.config.ts # openElement plugin config</code></pre></open-code-block>
 
     <h2>Writing a Page</h2>
     <p>

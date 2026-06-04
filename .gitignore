@@ -12,7 +12,7 @@ npm/
 *.tsbuildinfo
 .tsbuildinfo
 
-# npm (Deno project — no npm lockfiles)
+# npm (Deno project - no npm lockfiles)
 package-lock.json
 
 # Environment
@@ -59,8 +59,9 @@ docs/vite-build-*.txt
 node_modules/
 
 # Root-level logo source files (design originals, keep local)
-/less-logo*.svg
-/less-favicon.svg
+/open-logo*.svg
+/open-favicon.svg
+
 www/dist/
 dist-test-ssg-render/
 
@@ -72,6 +73,6 @@ hub-submission.json
 lighthouse-result*.json
 .deno-cache/
 .deno_cache/
-www/.less/
-.less/
+www/.openElement/
+.openElement/
 .codebuddy/settings.local.json

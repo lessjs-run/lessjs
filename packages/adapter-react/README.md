@@ -1,10 +1,10 @@
 # @openelement/adapter-react
 
-React SSR adapter for [LessJS](https://github.com/open-element/open-element).
+React SSR adapter for [openElement](https://github.com/open-element/openelement).
 
 ## Overview
 
-SSR adapter for React components used as Web Components in the LessJS
+SSR adapter for React components used as Web Components in the openElement
 framework. Uses `ReactDOMServer.renderToStaticMarkup()` for clean DSD
 HTML output without React hydration markers.
 
@@ -54,7 +54,7 @@ customElements.define('greeting-element', GreetingElement);
 ## Why renderToStaticMarkup()?
 
 `renderToString()` adds `data-reactroot` attributes for client hydration.
-Since LessJS uses DSD (Declarative Shadow DOM) for SSR, we don't need
+Since openElement uses DSD (Declarative Shadow DOM) for SSR, we don't need
 React's hydration markers - the browser handles DOM from the template.
 `renderToStaticMarkup()` produces clean HTML without extra attributes.
 

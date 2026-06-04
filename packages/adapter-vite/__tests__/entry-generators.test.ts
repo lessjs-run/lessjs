@@ -8,12 +8,12 @@ Deno.test('empty -> zero JS', () => {
 Deno.test('client:load island loads immediately', () => {
   const code = generateClientEntry([
     {
-      tagName: 'less-theme-toggle',
-      modulePath: '@openelement/ui/less-theme-toggle',
+      tagName: 'open-theme-toggle',
+      modulePath: '@openelement/ui/open-theme-toggle',
       strategy: 'load',
     },
   ]);
-  assert(code.includes('import("@openelement/ui/less-theme-toggle")'));
+  assert(code.includes('import("@openelement/ui/open-theme-toggle")'));
   assert(code.includes('client:load islands'));
   try {
     new Function(code);
@@ -24,7 +24,7 @@ Deno.test('client:load island loads immediately', () => {
 
 Deno.test('client:idle island deferred to idle', () => {
   const code = generateClientEntry([
-    { tagName: 'less-hero-ping', modulePath: './ping.ts', strategy: 'idle' },
+    { tagName: 'open-hero-ping', modulePath: './ping.ts', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
   assert(code.includes('import("./ping.ts")'));
@@ -38,14 +38,14 @@ Deno.test('client:idle island deferred to idle', () => {
 Deno.test('mixed load+idle', () => {
   const code = generateClientEntry([
     {
-      tagName: 'less-theme-toggle',
-      modulePath: '@openelement/ui/less-theme-toggle',
+      tagName: 'open-theme-toggle',
+      modulePath: '@openelement/ui/open-theme-toggle',
       strategy: 'load',
     },
-    { tagName: 'less-hero-ping', modulePath: '@openelement/ui/less-hero-ping', strategy: 'idle' },
+    { tagName: 'open-hero-ping', modulePath: '@openelement/ui/open-hero-ping', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
-  assert(code.includes('less:ready'));
+  assert(code.includes('open:ready'));
   try {
     new Function(code);
   } catch (e) {
@@ -61,11 +61,11 @@ Deno.test('no legacy SSR client runtime', () => {
   assertEquals(code.includes('lit-element-hydrate-support'), false);
 });
 
-Deno.test('less:ready event', () => {
+Deno.test('open:ready event', () => {
   const code = generateClientEntry([
     { tagName: 'my-island', modulePath: './island.ts', strategy: 'idle' },
   ]);
-  assert(code.includes('less:ready'));
+  assert(code.includes('open:ready'));
   try {
     new Function(code);
   } catch (e) {
@@ -101,32 +101,32 @@ Deno.test('legacy eager/lazy strategies are not emitted by v0.21 runtime', () =>
   assertEquals(code.includes('lazy'), false);
 });
 
-// 鈹€鈹€鈹€ v0.5 Trust Release: strategy must reach client entry 鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('package island strategy:load is preserved in client entry', () => {
   // Bug: buildClient used to drop strategy from packageIslands, so
-  // less-theme-toggle (strategy: 'load') must stay in the immediate bucket.
+  // open-theme-toggle (strategy: 'load') must stay in the immediate bucket.
   // Fix: strategy is now passed through from metadata.
   const code = generateClientEntry([
     {
-      tagName: 'less-theme-toggle',
-      modulePath: '@openelement/ui/less-theme-toggle',
+      tagName: 'open-theme-toggle',
+      modulePath: '@openelement/ui/open-theme-toggle',
       strategy: 'load',
       isPackage: true,
     },
     {
-      tagName: 'less-button',
-      modulePath: '@openelement/ui/less-button',
+      tagName: 'open-button',
+      modulePath: '@openelement/ui/open-button',
       strategy: 'idle',
       isPackage: true,
     },
   ]);
 
   // Load island must appear in the immediate-load array
-  assert(code.includes('"less-theme-toggle"'));
+  assert(code.includes('"open-theme-toggle"'));
   // Both must appear in the island map
-  assert(code.includes('import("@openelement/ui/less-theme-toggle")'));
-  assert(code.includes('import("@openelement/ui/less-button")'));
+  assert(code.includes('import("@openelement/ui/open-theme-toggle")'));
+  assert(code.includes('import("@openelement/ui/open-button")'));
 });
 
 Deno.test('client entry safely escapes tag names and module paths', () => {

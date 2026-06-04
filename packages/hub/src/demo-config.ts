@@ -51,14 +51,14 @@ export const DEMO_ATTRS: Record<string, Record<string, string>> = {
   'sl-divider': {},
   'sl-menu': {},
   'sl-menu-item': { checked: '' },
-  // LessJS UI
-  'less-button': { variant: 'primary' },
-  'less-card': { variant: 'elevated' },
-  'less-input': { placeholder: 'Type here...' },
-  'less-dialog': { open: '', label: 'Dialog' },
-  'less-code-block': {},
-  'less-hero-ping': {},
-  'less-theme-toggle': {},
+  // openElement UI
+  'open-button': { variant: 'primary' },
+  'open-card': { variant: 'elevated' },
+  'open-input': { placeholder: 'Type here...' },
+  'open-dialog': { open: '', label: 'Dialog' },
+  'open-code-block': {},
+  'open-hero-ping': {},
+  'open-theme-toggle': {},
 };
 
 /** Demo slot content so components show meaningful structure in previews */
@@ -84,11 +84,11 @@ export const DEMO_SLOTS: Record<string, string> = {
     '<sl-tab slot="nav" panel="a">Tab A</sl-tab> <sl-tab slot="nav" panel="b">Tab B</sl-tab><sl-tab-panel name="a">Panel A</sl-tab-panel> <sl-tab-panel name="b">Panel B</sl-tab-panel>',
   'sl-tree': '<sl-tree-item expanded>Branch<sl-tree-item>Leaf</sl-tree-item></sl-tree-item>',
   'sl-tree-item': 'Tree Item',
-  // LessJS UI
-  'less-button': 'Click Me',
-  'less-card':
-    '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot="footer">Card Footer</div>',
-  'less-input': '',
-  'less-dialog': '<div>Dialog body content</div>',
-  'less-code-block': '<code>console.info("Hello openElement!")</code>',
+  // openElement UI
+  'open-button': 'Click Me',
+  'open-card':
+    '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the open-card component.</div><div slot="footer">Card Footer</div>',
+  'open-input': '',
+  'open-dialog': '<div>Dialog body content</div>',
+  'open-code-block': '<code>console.info("Hello openElement!")</code>',
 };

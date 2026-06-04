@@ -7,7 +7,7 @@
  * island paths.
  *
  * ADR 0011: This module exports buildSSG() only - it is called from
- * closeBundle() in less:build plugin. No longer a standalone CLI entry.
+ * closeBundle() in open:build plugin. No longer a standalone CLI entry.
  * ctx parameter is required (no globalThis fallback).
  *
  * Usage:
@@ -19,8 +19,12 @@ import { fileURLToPath } from 'node:url';
 import { type Alias, normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@openelement/core';
-import type { LessBuildContext } from '../build-context.js';
+import type {
+  FrameworkOptions,
+  HydrationStrategy,
+  OpenElementPackageManifest,
+} from '@openelement/core';
+import type { OpenElementBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
@@ -34,16 +38,16 @@ import { loadHubClientOnlyTags } from '../hub-client-only-tags.js';
 
 const log = createLogger('ssg');
 
-const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
+const VIRTUAL_SSG_ENTRY_ID = 'virtual:open-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.23.0';
+const FALLBACK_OPENELEMENT_VERSION = '0.30.1';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
-  return match?.[1] ?? FALLBACK_LESSJS_VERSION;
+  return match?.[1] ?? FALLBACK_OPENELEMENT_VERSION;
 }
 
-function getLocalLessjsPackageRoot(metaUrl: string): string | null {
+function getLocalOpenElementPackageRoot(metaUrl: string): string | null {
   if (!metaUrl.startsWith('file:')) return null;
   try {
     const root = resolve(fileURLToPath(new URL('.', metaUrl)), '..', '..', '..', '..');
@@ -89,7 +93,7 @@ interface BuildSSGOptions {
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
   islandMeta?: Record<string, Partial<import('../entry-descriptor.js').IslandDecl>>;
-  packageManifests?: LessPackageManifest[];
+  packageManifests?: OpenElementPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
@@ -118,7 +122,10 @@ interface BuildSSGOptions {
   skipPreResolution?: boolean;
 }
 
-async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): Promise<void> {
+async function buildSSG(
+  options: BuildSSGOptions = {},
+  ctx: OpenElementBuildContext,
+): Promise<void> {
   const root = options.root || ctx.phase3.root || process.cwd();
   const outDir = options.outDir || ctx.phase3.outDir || 'dist';
   const routesDir = options.routesDir || ctx.phase3.routesDir || 'app/routes';
@@ -128,7 +135,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
   // SOP-v0.21.6: Detect if we're running from a Deno workspace.
   // In workspace mode, @deno/vite-plugin resolves bare specifiers.
-  // In JSR mode, we need the less:ssg-core-resolve plugin.
+  // In JSR mode, we need the open:ssg-core-resolve plugin.
   const workspaceRoot = (() => {
     try {
       for (let d = resolve(root); d !== resolve(d, '..'); d = resolve(d, '..')) {
@@ -139,7 +146,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     return null;
   })();
 
-  // Read island metadata from ctx (ADR 0010: no .less/ fallback)
+  // Read island metadata from ctx (ADR 0010: no .openElement/ fallback)
   const islandTagNames = options.islandTagNames || ctx.phase1.islandTagNames || [];
   const islandMeta = options.islandMeta || ctx.phase1.islandMeta || {};
   const packageManifests = options.packageManifests || ctx.phase1.packageManifests || [];
@@ -167,13 +174,13 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
   const routes = await scanRoutes(routesDir);
 
-  // v0.25.0: Generate type-safe route parameter declarations for `virtual:less-routes`
+  // v0.25.0: Generate type-safe route parameter declarations for `virtual:open-routes`
   const { generateRouteTypes } = await import('../route-type-generator.js');
   const routeTypeDts = generateRouteTypes(routes);
-  const dotLessDir = join(root, '.less');
-  mkdirSync(dotLessDir, { recursive: true });
-  writeFileSync(join(dotLessDir, 'routes.d.ts'), routeTypeDts, 'utf-8');
-  log.info(`Route types generated -> .less/routes.d.ts`);
+  const dotOpenElementDir = join(root, '.openElement');
+  mkdirSync(dotOpenElementDir, { recursive: true });
+  writeFileSync(join(dotOpenElementDir, 'routes.d.ts'), routeTypeDts, 'utf-8');
+  log.info(`Route types generated -> .openElement/routes.d.ts`);
 
   const islandsRoot = join(root, islandsDir);
   const ssgIslandFiles = await scanIslands(islandsRoot);
@@ -220,7 +227,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     appShell,
     layouts,
   });
-  // Deno import map resolution handles bare specifiers (e.g. @openelement/ui/less-callout)
+  // Deno import map resolution handles bare specifiers (e.g. @openelement/ui/open-callout)
   // via the createDenoImportMapPlugin added to the Phase 3 viteBuild plugins below.
   const ssgEntryCode = rawSsgEntryCode;
 
@@ -339,7 +346,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const conflictTags = [...clientOnlyTagMap.values()].filter((t) => ssrTags.has(t));
     if (conflictTags.length > 0) {
       throw new Error(
-        `[LessJS] SSR+client:only conflict detected for tags: ${conflictTags.join(', ')}. ` +
+        `[openElement] SSR+client:only conflict detected for tags: ${conflictTags.join(', ')}. ` +
           'A tag cannot be both SSR-capable and client:only on the same page.',
       );
     }
@@ -374,11 +381,11 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
             // SOP-016: HTMLElement stub is self-contained in @openelement/core/dsd-element.ts.
             banner: `\
 if (typeof globalThis.customElements === 'undefined') {
-  const __lessCeRegistry = new Map();
+  const __openCeRegistry = new Map();
   globalThis.customElements = {
-    define(name, ctor, _opts) { __lessCeRegistry.set(name, ctor); },
-    get(name) { return __lessCeRegistry.get(name); },
-    whenDefined(name) { return Promise.resolve(__lessCeRegistry.get(name)); },
+    define(name, ctor, _opts) { __openCeRegistry.set(name, ctor); },
+    get(name) { return __openCeRegistry.get(name); },
+    whenDefined(name) { return Promise.resolve(__openCeRegistry.get(name)); },
     upgrade(_root) {},
   };
 }
@@ -387,7 +394,7 @@ if (typeof globalThis.customElements === 'undefined') {
         },
       },
       ssr: { noExternal: allNoExternal, external: manifest.specifiers },
-      // ADR 0008 Phase A: Inject headExtras via define instead of .less/head-extras.html
+      // ADR 0008 Phase A: Inject headExtras via define instead of .openElement/head-extras.html
       // The generated entry code uses __HEAD_EXTRAS__ which gets replaced
       // at build time. This avoids the Vite SSR AsyncFunction syntax errors
       // that large inline strings (with backticks/${}) cause.
@@ -407,9 +414,9 @@ if (typeof globalThis.customElements === 'undefined') {
       },
       plugins: [
         // ADR 0010: Virtual SSG entry module
-        // Replaces .less/.less-ssg-entry.ts file write
+        // Replaces .openElement/.openElement-ssg-entry.ts file write
         {
-          name: 'less:virtual-ssg-entry',
+          name: 'open:virtual-ssg-entry',
           resolveId(id) {
             if (id === VIRTUAL_SSG_ENTRY_ID) return RESOLVED_SSG_ENTRY_ID;
           },
@@ -425,28 +432,28 @@ if (typeof globalThis.customElements === 'undefined') {
         optionalPackageStubsPlugin(),
         createGeneratedDataResolverPlugin({
           root,
-          name: 'less:ssg-generated-data',
+          name: 'open:ssg-generated-data',
         }),
         createOpenJsrPackageResolverPlugin({
           workspaceRoot,
           version: getJsrPackageVersion(import.meta.url),
-          localPackageRoot: getLocalLessjsPackageRoot(import.meta.url),
+          localPackageRoot: getLocalOpenElementPackageRoot(import.meta.url),
           userAliases: metadataResolveAlias,
         }),
         {
-          name: 'less:ssg-client-only-island-stubs',
+          name: 'open:ssg-client-only-island-stubs',
           enforce: 'pre',
           load(id) {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
-            const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
+            const tagName = clientOnlyTagMap.get(normalized) || 'open-client-only-stub';
             // Client-only stub marker uses an unbranded attribute.
             // SSR outputs <tag-name data-client-only="true"></tag-name>
             // Client runtime imports the real module and upgrades the element.
             return [
               `export const tagName = ${JSON.stringify(tagName)};`,
-              'export const less = { ssr: false };',
-              `export default class LessClientOnlyStub extends HTMLElement {
+              'export const openElement = { ssr: false };',
+              `export default class OpenClientOnlyStub extends HTMLElement {
   connectedCallback() {
     if (!this.hasAttribute('data-client-only')) {
       this.setAttribute('data-client-only', 'true');
@@ -475,7 +482,7 @@ if (typeof globalThis.customElements === 'undefined') {
     const module = await import(ssrBundleUrl) as Record<string, unknown>;
 
     if (!module.default) {
-      throw new SsrRenderError('virtual:less-ssg-entry', new Error('Failed to load Hono app'));
+      throw new SsrRenderError('virtual:open-ssg-entry', new Error('Failed to load Hono app'));
     }
 
     // Delegate to shared ssgRender() - zero Vite dependency from this point

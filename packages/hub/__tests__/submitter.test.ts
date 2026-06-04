@@ -41,7 +41,7 @@ const sampleRecord: HubPackageRecord = {
   snapshotPaths: {},
   installGuidance: {
     safeToInstall: true,
-    command: 'less add @test/test-pkg',
+    command: 'open add @test/test-pkg',
     configChanges: ['client-only'],
     warnings: ['No SSR metadata.'],
     ssrCapable: false,

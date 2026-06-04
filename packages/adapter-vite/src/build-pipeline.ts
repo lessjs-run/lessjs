@@ -1,21 +1,21 @@
 /**
  * @openelement/adapter-vite - BuildPipeline declarative API.
  *
- * v0.25.0 (SOP-001): lessPipeline() is the sole public build pipeline entry.
- * It wraps the internal plugin factory (less-plugin.ts) with a cleaner
+ * v0.25.0 (SOP-001): openPipeline() is the sole public build pipeline entry.
+ * It wraps the internal plugin factory (plugin.ts) with a cleaner
  * declarative config shape. All existing build code is reused as-is.
  *
  * @module @openelement/adapter-vite/build-pipeline
  */
 
 import type { Plugin } from 'vite';
-import { less } from './less-plugin.js';
+import { createOpenPlugin } from './plugin.js';
 import type { FrameworkOptions } from '@openelement/core';
 export type { FrameworkOptions } from '@openelement/core';
 
 // ─── Pipeline Config ───────────────────────────────────────────────
 
-export interface PipelineConfig {
+export interface OpenPipelineConfig {
   routes?: { dir?: string };
   i18n?: { locales: string[]; defaultLocale?: string };
   output?: { outDir?: string; cleanUrls?: boolean };
@@ -25,20 +25,20 @@ export interface PipelineConfig {
   headExtras?: string;
 }
 
-// ─── lessPipeline() — declarative entry ────────────────────────────
+// ─── openPipeline() — declarative entry ────────────────────────────
 
 /**
  * Declarative build pipeline entry.
  *
  * ```typescript
  * // vite.config.ts
- * import { lessPipeline } from '@openelement/adapter-vite';
+ * import { openPipeline } from '@openelement/adapter-vite';
  * export default defineConfig({
- *   plugins: [lessPipeline({ routes: { dir: 'app/routes' }, i18n: { locales: ['en', 'zh'] } })],
+ *   plugins: [openPipeline({ routes: { dir: 'app/routes' }, i18n: { locales: ['en', 'zh'] } })],
  * });
  * ```
  */
-export function lessPipeline(config: PipelineConfig = {}): Plugin[] {
+export function openPipeline(config: OpenPipelineConfig = {}): Plugin[] {
   const options: FrameworkOptions = {
     routesDir: config.routes?.dir || 'app/routes',
     islandsDir: config.island?.dir || 'app/islands',
@@ -49,5 +49,5 @@ export function lessPipeline(config: PipelineConfig = {}): Plugin[] {
     island: config.island as FrameworkOptions['island'],
     build: config.output as FrameworkOptions['build'],
   };
-  return less(options);
+  return createOpenPlugin(options);
 }

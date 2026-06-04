@@ -33,7 +33,7 @@ function callLoad(
   return load(id, {});
 }
 
-// ������ Constants ������������������������������������������������������������������������������������������������
+// Section
 
 Deno.test('CORE_SUBPATHS: maps known subpaths to source files', () => {
   assertEquals(CORE_SUBPATHS.logger, 'logger.ts');
@@ -60,12 +60,12 @@ Deno.test('VIRTUAL_CORE_PREFIX: is a null-prefixed string', () => {
   assertEquals(VIRTUAL_CORE_PREFIX.startsWith('\0'), true);
 });
 
-// ������ createCoreResolvePlugin: local mode ��������������������������������������������
+// Section
 
 Deno.test('createCoreResolvePlugin: local mode (file:// metaUrl)', () => {
   const plugin = createCoreResolvePlugin('file:///home/user/project/src/index.ts');
 
-  assertEquals(plugin.name, 'less:core-resolve');
+  assertEquals(plugin.name, 'open:core-resolve');
   assertEquals(plugin.enforce, 'pre');
 
   // In local mode, resolveId should be a no-op (return undefined)
@@ -90,14 +90,14 @@ Deno.test('createCoreResolvePlugin: local mode plugins have correct hooks', () =
   assertEquals(typeof plugin.load, 'function');
 });
 
-// ������ createCoreResolvePlugin: remote mode ������������������������������������������
+// Section
 
 Deno.test('createCoreResolvePlugin: remote mode detects https:// URL', () => {
   const plugin = createCoreResolvePlugin(
     'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
   );
 
-  assertEquals(plugin.name, 'less:core-resolve');
+  assertEquals(plugin.name, 'open:core-resolve');
   assertEquals(plugin.enforce, 'pre');
 });
 
@@ -106,7 +106,7 @@ Deno.test('createCoreResolvePlugin: remote mode detects http:// URL', () => {
     'http://localhost:8080/@openelement/adapter-vite/0.17.0/src/index.ts',
   );
 
-  assertEquals(plugin.name, 'less:core-resolve');
+  assertEquals(plugin.name, 'open:core-resolve');
   assertEquals(plugin.enforce, 'pre');
 });
 
@@ -115,7 +115,7 @@ Deno.test('createCoreResolvePlugin: remote mode resolves @openelement/core bare 
     'https://jsr.io/@openelement/adapter-vite/0.17.0/src/index.ts',
   );
 
-  // @openelement/core (no subpath) -> virtual:lessjs:core/src/index.ts
+  // @openelement/core (no subpath) -> virtual:openElement:core/src/index.ts
   const result = callResolveId(plugin, '@openelement/core');
   assertEquals(result, '\0openelement:core/src/index.ts');
 });
@@ -201,7 +201,7 @@ Deno.test('createCoreResolvePlugin: remote mode null-byte-prefixed sources are n
   assertEquals(result, undefined);
 });
 
-// ������ npm: prefix rewriting (in load hook) ������������������������������������������
+// Section
 
 Deno.test('createCoreResolvePlugin: local mode load returns undefined for non-virtual IDs', async () => {
   const plugin = createCoreResolvePlugin('file:///project/src/index.ts');
@@ -230,7 +230,7 @@ Deno.test('createCoreResolvePlugin: remote mode load checks cache', () => {
   assertEquals(typeof plugin.load, 'function');
 });
 
-// ������ CORE_SUBPATHS completeness ��������������������������������������������������������������
+// Section
 
 Deno.test('CORE_SUBPATHS: includes all expected core subpath modules', () => {
   const expectedKeys = ['logger', 'build-context', 'navigation', 'errors'];

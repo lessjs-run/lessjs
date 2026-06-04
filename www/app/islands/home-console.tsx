@@ -3,7 +3,7 @@ import { StyleSheet } from '@openelement/style-sheet';
 import { signal } from '@openelement/signals';
 import { consumeContext } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import { THEME_CTX } from '@openelement/ui/less-layout';
+import { THEME_CTX } from '@openelement/ui/open-layout';
 
 const styles = new StyleSheet();
 styles.replaceSync(`

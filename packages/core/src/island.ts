@@ -5,11 +5,11 @@
  *   - Automatic registration via customElements.define()
  *   - Hydration strategy support (load, idle, visible, only)
  *   - __island / __tagName / __layer metadata markers
- *   - data-ssr-props property binding on client upgrade (less:bind)
+ *   - data-ssr-props restoration on client upgrade
  *   - DSD opt-out via `dsd: false` (Pure Island / Layer 3)
  *
  * Framework-agnostic: works with Lit, vanilla Custom Elements,
- * FAST, or any Web Component library. bindEvents() sets props
+ * FAST, or any Web Component library. bindSsrProps() sets props
  * directly; adapters handle framework-specific update triggers.
  *
  * v0.29.1: defineCustomElement helper inlined from custom-element.ts.
@@ -83,7 +83,7 @@ export interface IslandOptions {
 
 /**
  * Get the value of the data-ssr-props attribute from a host element.
- * Used by less:bind to reconstruct SSR props on client upgrade.
+ * Used to reconstruct SSR props on client upgrade.
  *
  * @param el - The custom element host element
  * @returns Parsed props object, or null if no data-ssr-props attribute
@@ -112,14 +112,13 @@ export function getSsrProps(el: HTMLElement): Record<string, unknown> | null {
 
 /**
  * Apply SSR props from data-ssr-props to a component instance.
- * This is less:bind - binds server-rendered property values to the
+ * This restores server-rendered property values to the
  * client-side component on upgrade, ensuring consistency between
  * SSR and client state.
  *
  * v0.6.2: Framework-agnostic. No Lit-specific detection.
- * Props are set directly on the instance. DSD hydration (event binding,
- * state sync) is handled at the component level via DsdElement
- * and html template @click bindings.
+ * Props are set directly on the instance. DSD hydration and VNode event
+ * markers are handled at the component level via DsdElement.
  *
  * v0.14.3: Prototype pollution fix - filters dangerous keys
  * (__proto__, constructor, prototype) from parsed SSR props.
@@ -133,7 +132,7 @@ export function getSsrProps(el: HTMLElement): Record<string, unknown> | null {
  */
 import { DANGEROUS_KEYS } from './security.js';
 
-export function bindEvents(el: HTMLElement): void {
+export function bindSsrProps(el: HTMLElement): void {
   const props = getSsrProps(el);
   if (!props) return;
 
@@ -157,8 +156,6 @@ export function bindEvents(el: HTMLElement): void {
     }
   }
 }
-
-// ©¤©¤©¤ Strategy Implementations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Create an IntersectionObserver-based upgrade strategy.
@@ -263,15 +260,13 @@ function createIdleStrategy(registerFn: () => void): void {
   }
 }
 
-// ©¤©¤©¤ Main defineIsland() wrapper ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * Wrap a component class as a LessJS Island.
+ * Wrap a component class as a openElement Island.
  *
  * Handles:
  *   - Automatic customElements.define() registration
  *   - Strategy-based upgrade timing
- *   - data-ssr-props binding (less:bind)
+ *   - data-ssr-props binding (open:bind)
  *   - __island / __tagName export markers
  *   - __layer metadata (dsd-static, dsd-interactive, or pure-island)
  *   - Idempotent registration (safe for SSR with multiple routes)
@@ -358,14 +353,14 @@ export function defineIsland<T extends CustomElementConstructor>(
   // This is safer than monkey-patching because it doesn't interfere
   // with Lit's own connectedCallback chain.
   //
-  // v0.14.3: Added __bindEventsDone idempotency guard to prevent
-  // double bindEvents() calls when a subclass island inherits from a
+  // v0.14.3: Added __ssrPropsBound idempotency guard to prevent
+  // double bindSsrProps() calls when a subclass island inherits from a
   // parent island (both registered via defineIsland()). Without this guard,
   // the parent's wrapped connectedCallback and the subclass's both
-  // call bindEvents on the same element.
+  // call bindSsrProps on the same element.
   const origConnected = componentClass.prototype.connectedCallback;
-  if (!componentClass.prototype.__lessIslandWrapped) {
-    componentClass.prototype.__lessIslandWrapped = true;
+  if (!componentClass.prototype.__openIslandWrapped) {
+    componentClass.prototype.__openIslandWrapped = true;
     componentClass.prototype.connectedCallback = function (this: HTMLElement) {
       // Call original connectedCallback first (super.connectedCallback)
       if (typeof origConnected === 'function') {
@@ -374,10 +369,10 @@ export function defineIsland<T extends CustomElementConstructor>(
       // Auto-bind SSR props on upgrade (idempotent - only once per element)
       if (
         this.hasAttribute('data-ssr-props') &&
-        !(this as unknown as { __bindEventsDone?: boolean }).__bindEventsDone
+        !(this as unknown as { __ssrPropsBound?: boolean }).__ssrPropsBound
       ) {
-        (this as unknown as { __bindEventsDone?: boolean }).__bindEventsDone = true;
-        Promise.resolve().then(() => bindEvents(this));
+        (this as unknown as { __ssrPropsBound?: boolean }).__ssrPropsBound = true;
+        Promise.resolve().then(() => bindSsrProps(this));
       }
     } as unknown as typeof componentClass.prototype.connectedCallback;
   }
@@ -426,8 +421,6 @@ export function defineIsland<T extends CustomElementConstructor>(
 
   return componentClass;
 }
-
-// ©¤©¤©¤ Convenience sub-exports ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Exports the `island` function as default for convenience imports.

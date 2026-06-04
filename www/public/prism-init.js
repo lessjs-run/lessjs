@@ -1,9 +1,9 @@
 /**
  * Prism initialization — deferred script.
  *
- * Primary highlighting is handled by <less-code-block> components via
+ * Primary highlighting is handled by <open-code-block> components via
  * connectedCallback. This script is a fallback that handles any bare
- * <pre><code> in the light DOM that isn't inside a <less-code-block>.
+ * <pre><code> in the light DOM that isn't inside a <open-code-block>.
  */
 (function () {
   const init = function () {

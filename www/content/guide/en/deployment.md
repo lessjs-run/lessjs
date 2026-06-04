@@ -14,7 +14,7 @@ currentPath='/en/guide/deployment'
 
     <h1>Deployment</h1>
     <p class='subtitle'>
-      LessJS prioritizes static file deployment. Runtime API routes are deployed separately
+      openElement prioritizes static file deployment. Runtime API routes are deployed separately
       via serverless or edge adapters when the app needs dynamic behavior.
     </p>
     <h2>Build Once</h2>
@@ -56,13 +56,13 @@ currentPath='/en/guide/deployment'
     </p>
     <h2>No Production SSR Server by Default</h2>
     <p>
-      LessJS's main path doesn't need a long-running production SSR server. Static pages stay
+      openElement's main path doesn't need a long-running production SSR server. Static pages stay
       static; dynamic behavior should be explicit API or future ISR. This keeps hosting cheap,
       cacheable, and operationally lightweight.
     </p>
     <h2>PWA Support</h2>
     <p>
-      LessJS supports Progressive Web Apps. Place your manifest and service worker in the
+      openElement supports Progressive Web Apps. Place your manifest and service worker in the
       <code>public/</code> directory — they're automatically copied to the output during build.
       CSP meta and view transition metadata can be auto-injected via the Vite plugin.
     </p>

@@ -59,7 +59,6 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
-import { trustRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@openelement/signals';
 
 /**
@@ -106,7 +105,7 @@ export class DsdElement extends _Base implements ReactiveHost {
   /** v0.25.0: Page head metadata. SSG reads this to inject <title> and <meta> tags. */
   static head?: { title?: string; description?: string; ogImage?: string };
 
-  /** @internal — use lessPipeline({ island: { upgradeStrategy } }) instead */
+  /** @internal — use openPipeline({ island: { upgradeStrategy } }) instead */
   static client?: { strategy?: 'load' | 'idle' | 'visible' | 'only' };
 
   /**
@@ -324,10 +323,9 @@ export class DsdElement extends _Base implements ReactiveHost {
       const sig = this.signalRegistry.get(name);
       if (!sig) continue;
 
-      // Skip textContent if this element has attr/html/class binding
+      // Skip textContent if this element has attribute or class binding.
       if (
         el.hasAttribute('data-signal-attr') ||
-        el.hasAttribute('data-signal-html') ||
         el.hasAttribute('data-signal-class')
       ) continue;
 
@@ -356,23 +354,6 @@ export class DsdElement extends _Base implements ReactiveHost {
       this.#effectDisposers.add(dispose);
     }
 
-    // --- Signal → innerHTML: data-signal-html="signalName" (v0.28) ---
-    const htmlEls = this.shadowRoot.querySelectorAll('[data-signal-html]');
-    for (const el of htmlEls) {
-      const name = el.getAttribute('data-signal-html');
-      if (!name) continue;
-      const sig = this.signalRegistry.get(name);
-      if (!sig) continue;
-
-      const applyHtml = () => {
-        (el as HTMLElement).innerHTML = trustRenderHtml(String(sig.value));
-      };
-      applyHtml();
-      const dispose = effect(() => applyHtml());
-      this.#effectDisposers.add(dispose);
-    }
-
-    // --- Signal → attribute: data-signal-attr="attr1,attr2" (v0.28) ---
     const attrSigEls = this.shadowRoot.querySelectorAll('[data-signal][data-signal-attr]');
     for (const el of attrSigEls) {
       const name = el.getAttribute('data-signal');

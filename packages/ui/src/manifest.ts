@@ -1,28 +1,28 @@
 /**
  * @openelement/ui - Package Manifest
  *
- * CEM-compatible LessPackageManifest for the @openelement/ui package.
+ * CEM-compatible OpenElementPackageManifest for the @openelement/ui package.
  * Consumers (adapter-vite) read manifest.declarations to derive
  * island metadata (tagName, module, hydrate, ssr, dsd).
  *
  * v0.20.0: All components use DsdElement (zero framework).
  */
 
-import type { LessPackageManifest } from '@openelement/core';
+import type { OpenElementPackageManifest } from '@openelement/core';
 
-export const manifest: LessPackageManifest = {
+export const manifest: OpenElementPackageManifest = {
   schemaVersion: '1.0.0',
   packageName: '@openelement/ui',
-  version: '0.20.0',
+  version: '0.30.1',
   description: 'Swiss International Style Web Component library for openElement',
-  author: 'LessJS',
+  author: 'openElement',
   license: 'MIT',
-  homepage: 'https://lessjs.run',
-  repository: 'https://github.com/open-element/open-element',
-  less: {
+  homepage: 'https://openelement.org',
+  repository: 'https://github.com/open-element/openelement',
+  openElement: {
     adapter: 'vanilla', // v0.20.0: DSD components use DsdElement (zero framework)
     hasStylesheet: true,
-    cssPrefix: 'less',
+    cssPrefix: 'open',
   },
   declarations: [
     // -- Ocean (DSD, DsdElement) --
@@ -48,7 +48,7 @@ export const manifest: LessPackageManifest = {
         { name: 'container', description: 'The article wrapper' },
         { name: 'body', description: 'The card content area' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-static',
@@ -71,7 +71,7 @@ export const manifest: LessPackageManifest = {
         { name: 'icon', description: 'The type icon span' },
         { name: 'content', description: 'The body content area' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-static',
@@ -97,7 +97,7 @@ export const manifest: LessPackageManifest = {
         { name: 'title', description: 'The step label heading' },
         { name: 'content', description: 'The slot content area' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-static',
@@ -118,12 +118,12 @@ export const manifest: LessPackageManifest = {
         { name: 'href', type: 'string', description: 'Link URL (renders as anchor)' },
       ],
       events: [
-        { name: 'less-click', type: 'CustomEvent', description: 'Fired on button click' },
+        { name: 'open-click', type: 'CustomEvent', description: 'Fired on button click' },
       ],
       cssParts: [
         { name: 'control', description: 'The button or anchor element' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -158,7 +158,7 @@ export const manifest: LessPackageManifest = {
         { name: 'control', description: 'The input element' },
         { name: 'error', description: 'The error message element' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -180,7 +180,7 @@ export const manifest: LessPackageManifest = {
         { name: 'icon-sun', description: 'The sun SVG icon' },
         { name: 'icon-moon', description: 'The moon SVG icon' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -199,7 +199,7 @@ export const manifest: LessPackageManifest = {
         { name: 'copy', description: 'The copy button' },
         { name: 'body', description: 'The pre/code area' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -237,7 +237,7 @@ export const manifest: LessPackageManifest = {
         { name: 'body', description: 'The content area' },
         { name: 'footer', description: 'The footer area' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -255,7 +255,7 @@ export const manifest: LessPackageManifest = {
         { name: 'current-path', type: 'string', description: 'Current URL path' },
         { name: 'nav-items', type: 'array', description: 'Sidebar navigation sections' },
         { name: 'header-nav', type: 'array', description: 'Header navigation links' },
-        { name: 'logo-text', type: 'string', default: '"LessJS"', description: 'Logo text' },
+        { name: 'logo-text', type: 'string', default: '"openElement"', description: 'Logo text' },
         { name: 'home', type: 'boolean', description: 'Home page layout (no sidebar)' },
       ],
       slots: [
@@ -271,7 +271,7 @@ export const manifest: LessPackageManifest = {
         { name: 'nav', description: 'The header-nav element' },
         { name: 'nav-toggle', description: 'The mobile menu toggle button' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',
@@ -290,7 +290,7 @@ export const manifest: LessPackageManifest = {
         { name: 'dot-static', description: 'The static status dot' },
         { name: 'dot-animated', description: 'The animated ping dot' },
       ],
-      less: {
+      openElement: {
         ssr: true,
         dsd: true,
         layer: 'dsd-interactive',

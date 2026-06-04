@@ -1,5 +1,5 @@
 /**
- * Build-time MDX compiler for LessJS content.
+ * Build-time MDX compiler for openElement content.
  *
  * MDX is compiled to JSX that uses @openelement/core as jsxImportSource, so the
  * rendered component continues through the existing VNode -> renderDsd path.

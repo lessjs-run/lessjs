@@ -1,6 +1,6 @@
 {
   "name": "@openelement/hub",
-  "version": "0.30.0",
+  "version": "0.30.1",
   "exports": {
     ".": "./mod.ts",
     "./schema": "./src/schema.ts",
@@ -9,13 +9,13 @@
     "./submitter": "./src/submitter.ts",
     "./snapshot": "./src/snapshot.ts",
     "./cli/hub-submit": "./src/cli/hub-submit.ts",
-    "./cli/less-install-guide": "./src/cli/less-install-guide.ts",
+    "./cli/install-guide": "./src/cli/install-guide.ts",
     "./cli/validate": "./src/cli/validate.ts",
     "./cli/check-index": "./src/cli/check-index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.30.0",
-    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.30.0",
+    "@openelement/core": "jsr:@openelement/core@^0.30.1",
+    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.30.1",
     "typescript": "npm:typescript@^5.9.0"
   },
   "tasks": {

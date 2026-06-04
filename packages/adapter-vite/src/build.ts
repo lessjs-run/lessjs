@@ -1,18 +1,23 @@
 /**
  * @openelement/adapter-vite - Build plugin
- * LessJS Architecture (K·I·S·S): Knowledge · Isolated · Semantic · Static
+ * openElement Architecture (K·I·S·S): Knowledge · Isolated · Semantic · Static
  * Build produces only static files (K+S), Islands are the only JS (I).
  * API Routes (S - Serverless extension) deploy separately.
  *
  * ADR 0011: closeBundle writes metadata to ctx, then triggers Phase 2/3.
  * ADR 0022: Phase 2/3 extracted into explicit BuildStep classes for
  *           error isolation and future extensibility.
- * No globalThis bridge - ctx stays in less() closure scope throughout.
+ * No globalThis bridge - ctx stays in createOpenPlugin() closure scope throughout.
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
 import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@openelement/core';
-import type { LessBuildContext, Phase1Token, Phase2Token, Phase3Token } from './build-context.js';
+import type {
+  OpenElementBuildContext,
+  Phase1Token,
+  Phase2Token,
+  Phase3Token,
+} from './build-context.js';
 import { join } from 'node:path';
 import process from 'node:process';
 import { createLogger } from '@openelement/core/logger';
@@ -23,7 +28,7 @@ const log = createLogger('core');
 export interface BuildStep {
   readonly name: string;
   readonly phase: 1 | 2 | 3;
-  run(ctx: LessBuildContext, token: Phase1Token | Phase2Token | Phase3Token): Promise<void>;
+  run(ctx: OpenElementBuildContext, token: Phase1Token | Phase2Token | Phase3Token): Promise<void>;
 }
 
 /** Phase 2: Client island bundle - runs AFTER SSG (ADR 0023) */
@@ -31,7 +36,7 @@ class ClientBuildStep implements BuildStep {
   readonly name = 'Client island build';
   readonly phase = 2 as const;
 
-  async run(ctx: LessBuildContext, token: Phase1Token | Phase3Token): Promise<void> {
+  async run(ctx: OpenElementBuildContext, token: Phase1Token | Phase3Token): Promise<void> {
     ctx.completePhase2(token);
     const { buildClient } = await import('./cli/build-client.js');
     await buildClient(ctx);
@@ -43,7 +48,7 @@ class SSGBuildStep implements BuildStep {
   readonly name = 'Static site generation';
   readonly phase = 3 as const;
 
-  async run(ctx: LessBuildContext, token: Phase1Token): Promise<void> {
+  async run(ctx: OpenElementBuildContext, token: Phase1Token): Promise<void> {
     ctx.completePhase3(token);
     const { buildSSG } = await import('./cli/build-ssg.js');
     await buildSSG({}, ctx);
@@ -53,7 +58,7 @@ class SSGBuildStep implements BuildStep {
 /** Vite plugin: writes build metadata to ctx, then runs Phase 2 + Phase 3 */
 export function buildPlugin(
   options: FrameworkOptions & { allowHeadExtrasScripts?: boolean } = {},
-  ctx?: LessBuildContext,
+  ctx?: OpenElementBuildContext,
 ): Plugin {
   const outDir = options.build?.outDir || 'dist';
 
@@ -61,7 +66,7 @@ export function buildPlugin(
   let base: string = '/';
 
   return {
-    name: 'less:build',
+    name: 'open:build',
 
     configResolved(resolvedConfig) {
       config = resolvedConfig;
@@ -76,7 +81,7 @@ export function buildPlugin(
       const root = config.root;
 
       if (!ctx) {
-        log.warn('less:build skipped Phase 2/3 because no LessBuildContext was provided.');
+        log.warn('open:build skipped Phase 2/3 because no OpenElementBuildContext was provided.');
         return;
       }
 
@@ -90,7 +95,7 @@ export function buildPlugin(
           return item;
         });
 
-      // ─── Write to LessBuildContext ──────────
+      // --- Write to OpenElementBuildContext ----------
       if (ctx) {
         ctx.phase3.root = root;
         ctx.phase3.outDir = outDir;
@@ -149,7 +154,7 @@ export function buildPlugin(
         }
       }
 
-      // ── Inject client script (only runs if Phase 2 completed) ──
+      // -- Inject client script (only runs if Phase 2 completed) --
       // Phase 2's manifest.json tells us the client chunk URLs to inject
       // into the already-rendered HTML pages.
       if (ctx._phaseTokens[2]) {
@@ -163,7 +168,7 @@ export function buildPlugin(
             const manifest = JSON.parse(manifestRaw);
             for (const [src, entry] of Object.entries(manifest) as [string, { file?: string }][]) {
               if (
-                (src.includes('less-client-entry') || src.includes('virtual:less-client')) &&
+                (src.includes('open-client-entry') || src.includes('virtual:open-client')) &&
                 entry.file
               ) {
                 const base = ctx.phase3.base || '/';
@@ -229,7 +234,7 @@ export function buildPlugin(
         log.info('No Phase 2 - client script injection skipped');
       }
 
-      // ── Clean Phase 1 SSR artifacts from public dist (v0.14.10) ──
+      // -- Clean Phase 1 SSR artifacts from public dist (v0.14.10) --
       // The SSR virtual entry bundle and its source map are build-time only;
       // they must not be deployed to public static hosting.
       try {
@@ -238,7 +243,7 @@ export function buildPlugin(
         const entries = await readdir(assetsDir).catch(() => [] as string[]);
         const toDelete = entries.filter(
           (f) =>
-            f.startsWith('_virtual_less-hono-entry') ||
+            f.startsWith('_virtual_open-hono-entry') ||
             (f.startsWith('src-') && f.endsWith('.js') && !f.includes('client')),
         );
         for (const f of toDelete) {

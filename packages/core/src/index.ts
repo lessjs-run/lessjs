@@ -1,7 +1,7 @@
 /**
  * @openelement/core - Pure runtime.
  *
- * LessJS is a static-first framework with a pure runtime core:
+ * openElement is a static-first framework with a pure runtime core:
  * - Zero node:* imports - no filesystem, no process, no path
  * - Zero Vite dependency - no Plugin, no build orchestration
  * - Zero npm: specifiers - works in Deno, Node, Bun, Edge
@@ -12,7 +12,7 @@
  * Adapter: createAdapterRegistry() + default registry access
  *
  * Build orchestration (Vite plugins) lives in @openelement/adapter-vite.
- * For the unified lessjs() entry, use @openelement/app instead.
+ * For the unified openElement() entry, use @openelement/app instead.
  */
 
 // --- Public API re-exports -----------------------------------------
@@ -22,9 +22,9 @@ export type {
   AppShellDefinition,
   FrameworkOptions,
   LayoutsConfig,
-  LessMiddleware,
-  LessMiddlewareContext,
-  LessRenderer,
+  OpenElementMiddleware,
+  OpenElementMiddlewareContext,
+  OpenElementRenderer,
   RouteEntry,
   SpecialFileType,
   SsrContext,
@@ -34,8 +34,8 @@ export {
   BuildError,
   ErrorCode,
   IslandRenderError,
-  LessError,
   NavigationError,
+  OpenElementError,
   PropValidationError,
   RenderError,
   reportError,
@@ -47,7 +47,7 @@ export type { ErrorPhase, ErrorSeverity, ErrorTelemetryHook, SsrErrorEntry } fro
 export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
-export type { LessApiContext } from './types.js';
+export type { OpenElementApiContext } from './types.js';
 export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
 export type {
   IsrCache,
@@ -90,20 +90,20 @@ export type {
   HydrationHint,
   HydrationStrategy,
   IsrRouteRecord,
-  LessAttribute,
-  LessCssPart,
-  LessCssProperty,
-  LessDeclaration,
-  LessElementExtensions,
-  LessEvent,
-  LessExport,
-  LessMember,
-  LessModule,
-  LessPackageExtensions,
-  LessPackageManifest,
-  LessSlot,
   ManifestDecision,
   ManifestValidationReport,
+  OpenElementAttribute,
+  OpenElementCssPart,
+  OpenElementCssProperty,
+  OpenElementDeclaration,
+  OpenElementEvent,
+  OpenElementExport,
+  OpenElementExtensions,
+  OpenElementMember,
+  OpenElementModule,
+  OpenElementPackageExtensions,
+  OpenElementPackageManifest,
+  OpenElementSlot,
   ReactiveHost,
   RegistryIndex,
   RegistryIndexEntry,
@@ -135,12 +135,12 @@ export {
   unwrapSignalLike,
 } from './signal-like.js';
 export { consumeContext, type Context, createContext, provideContext } from './signal-context.js';
-export { createLogger, LessLogger, LogLevel } from './logger.js';
+export { createLogger, LogLevel, OpenElementLogger } from './logger.js';
 /** @internal — use @openelement/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
 export {
-  bindEvents,
+  bindSsrProps,
   defineCustomElement,
   defineIsland,
   getSsrProps,

@@ -17,16 +17,16 @@ test.describe('Search', () => {
   test('search island returns a live routing result', async ({ page, request }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => customElements.get('less-search'));
+    await page.waitForFunction(() => customElements.get('open-search'));
     await page.keyboard.press('Control+K');
-    await page.locator('less-search').evaluate((el) => {
+    await page.locator('open-search').evaluate((el) => {
       const input = el.shadowRoot?.querySelector('input') as HTMLInputElement | null;
       input?.focus();
     });
     await page.keyboard.type('routing');
     await page.waitForTimeout(500);
 
-    const href = await page.locator('less-search').evaluate((el) => {
+    const href = await page.locator('open-search').evaluate((el) => {
       const link = el.shadowRoot?.querySelector('.result') as HTMLAnchorElement | null;
       return link?.getAttribute('href') ?? null;
     });
@@ -39,14 +39,14 @@ test.describe('Search', () => {
   test('search overlay is anchored to viewport when opened from layout header', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => customElements.get('less-search'));
+    await page.waitForFunction(() => customElements.get('open-search'));
 
-    await page.locator('less-search').evaluate((el) => {
+    await page.locator('open-search').evaluate((el) => {
       const button = el.shadowRoot?.querySelector('button');
       button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     });
 
-    const overlay = await page.locator('less-search').evaluate((el) => {
+    const overlay = await page.locator('open-search').evaluate((el) => {
       const node = el.shadowRoot?.querySelector('.overlay');
       if (!node) return null;
       const rect = node.getBoundingClientRect();
@@ -70,9 +70,9 @@ test.describe('Search', () => {
   test('search initial HTML does not stringify computed signals', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => customElements.get('less-search'));
+    await page.waitForFunction(() => customElements.get('open-search'));
 
-    const text = await page.locator('less-search').evaluate((el) =>
+    const text = await page.locator('open-search').evaluate((el) =>
       el.shadowRoot?.querySelector('.results')?.textContent ?? ''
     );
     expect(text).not.toContain('[object Object]');
@@ -82,10 +82,10 @@ test.describe('Search', () => {
   test('search panel follows theme token changes', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => customElements.get('less-search'));
+    await page.waitForFunction(() => customElements.get('open-search'));
 
     const readPanelBackground = async () =>
-      await page.locator('less-search').evaluate((el) => {
+      await page.locator('open-search').evaluate((el) => {
         const button = el.shadowRoot?.querySelector('button');
         button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
         const panel = el.shadowRoot?.querySelector('.panel');
@@ -93,12 +93,12 @@ test.describe('Search', () => {
       });
 
     const darkBackground = await readPanelBackground();
-    await page.locator('less-search').evaluate((el) => {
+    await page.locator('open-search').evaluate((el) => {
       const overlay = el.shadowRoot?.querySelector('.overlay');
       overlay?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     });
 
-    await page.locator('less-theme-toggle').evaluate((el) => {
+    await page.locator('open-theme-toggle').evaluate((el) => {
       const button = el.shadowRoot?.querySelector('button');
       button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     });

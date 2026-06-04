@@ -74,7 +74,7 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
  */
 export function optionalPackageStubsPlugin(): Plugin {
   return {
-    name: 'less:optional-package-stubs',
+    name: 'open:optional-package-stubs',
     enforce: 'pre',
     async resolveId(id) {
       if (!(id in OPTIONAL_PACKAGE_STUBS)) return;

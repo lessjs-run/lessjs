@@ -3,7 +3,7 @@
  *
  * Shared CSSStyleSheet defining design tokens (spacing, gray palette,
  * border radius, typography, semantic brand/text/bg/border tokens)
- * that all LessJS components can adopt via `static styles`.
+ * that all openElement components can adopt via `static styles`.
  *
  * Cleaned dead tokens; only used tokens survive.
  */

@@ -6,17 +6,17 @@
 import { assertExists } from 'jsr:@std/assert@^1.0.0';
 import type {
   FrameworkOptions,
-  LessMiddleware,
-  LessPackageManifest,
-  LessRenderer,
+  OpenElementMiddleware,
+  OpenElementPackageManifest,
+  OpenElementRenderer,
   RouteEntry,
   SpecialFileType,
   SsrContext,
 } from '../src/types.ts';
 
 // Compile-time type existence checks (lint compliance: consume the imported types)
-type _LessMiddleware = LessMiddleware;
-type _LessRenderer = LessRenderer;
+type _LessMiddleware = OpenElementMiddleware;
+type _LessRenderer = OpenElementRenderer;
 type _SpecialFileType = SpecialFileType;
 
 // These are compile-time assertions - if the types don't exist or have
@@ -68,15 +68,15 @@ Deno.test('types: RouteEntry has required fields', () => {
   assertEquals(specialRoute.special, 'renderer');
 });
 
-Deno.test('types: LessPackageManifest has required fields', () => {
-  const manifest: LessPackageManifest = {
+Deno.test('types: OpenElementPackageManifest has required fields', () => {
+  const manifest: OpenElementPackageManifest = {
     schemaVersion: '1.0.0',
     packageName: '@test/ui',
     version: '0.1.0',
     declarations: [
       {
         tagName: 'test-button',
-        less: {
+        openElement: {
           ssr: true,
           dsd: true,
           module: '@test/ui/test-button',

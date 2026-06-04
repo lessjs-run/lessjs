@@ -1,5 +1,5 @@
 /**
- * LessJS dev:fast — static file middleware.
+ * openElement dev:fast — static file middleware.
  *
  * Serves static assets from dist/client/ during zero-bundler development.
  * No Vite transform; files served as-is with correct content types.

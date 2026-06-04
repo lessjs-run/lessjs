@@ -53,13 +53,13 @@ test.describe('Accessibility', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // less-theme-toggle is nested inside less-layout's shadow DOM.
+    // open-theme-toggle is nested inside open-layout's shadow DOM.
     // Playwright locators pierce shadow DOM automatically.
-    const toggle = page.locator('less-theme-toggle');
+    const toggle = page.locator('open-theme-toggle');
     if ((await toggle.count()) > 0) {
       // Verify delegatesFocus is set on the custom element class
       const hasDelegatesFocus = await page.evaluate(() => {
-        const ctor = customElements.get('less-theme-toggle');
+        const ctor = customElements.get('open-theme-toggle');
         if (!ctor) return false;
         // deno-lint-ignore no-explicit-any
         return (ctor as any).delegatesFocus === true;
@@ -67,7 +67,7 @@ test.describe('Accessibility', () => {
       expect(hasDelegatesFocus).toBe(true);
 
       // Verify the toggle contains a button (focusable target)
-      const hasButton = await page.locator('less-theme-toggle >> button').count();
+      const hasButton = await page.locator('open-theme-toggle >> button').count();
       expect(hasButton).toBeGreaterThan(0);
     }
   });
@@ -95,7 +95,7 @@ test.describe('Performance', () => {
   test('homepage loads within 5 seconds', async ({ page }) => {
     const start = Date.now();
     await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await page.locator('less-layout').waitFor({ state: 'attached' });
+    await page.locator('open-layout').waitFor({ state: 'attached' });
     const loadTime = Date.now() - start;
 
     expect(loadTime).toBeLessThan(5000);
@@ -104,7 +104,7 @@ test.describe('Performance', () => {
   test('guide page loads within 5 seconds', async ({ page }) => {
     const start = Date.now();
     await page.goto('/guide/getting-started', { waitUntil: 'domcontentloaded' });
-    await page.locator('less-layout').waitFor({ state: 'attached' });
+    await page.locator('open-layout').waitFor({ state: 'attached' });
     const loadTime = Date.now() - start;
 
     expect(loadTime).toBeLessThan(5000);
@@ -147,8 +147,8 @@ test.describe('PWA Support', () => {
     expect(response?.ok()).toBe(true);
 
     const manifest = await response!.json();
-    expect(manifest.name).toContain('LessJS');
-    expect(manifest.short_name).toBe('LessJS');
+    expect(manifest.name).toContain('openElement');
+    expect(manifest.short_name).toBe('openElement');
   });
 
   test('has service worker script', async ({ page }) => {

@@ -244,7 +244,7 @@ The effect is **never created during SSR**. `_renderIntoShadowRoot()` is only ca
 
 The full re-render approach was chosen for VNodes because:
 
-1. **Components are the unit of rendering**. LessJS components tend to be small (a counter, a card, a form field). Full re-render of a small shadow DOM is fast.
+1. **Components are the unit of rendering**. openElement components tend to be small (a counter, a card, a form field). Full re-render of a small shadow DOM is fast.
 
 2. **JSX trees are pure data**. There are no binding markers to query-and-patch, and retrofitting them into `renderToDom()` output would require either a virtual DOM diff or marker injection — both of which add complexity.
 

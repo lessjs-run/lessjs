@@ -1,4 +1,4 @@
-# LessJS Architecture Notes
+# openElement Architecture Notes
 
 This directory owns current architecture explanations.
 

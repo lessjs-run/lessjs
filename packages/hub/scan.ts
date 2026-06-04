@@ -33,8 +33,8 @@ await writeScanOutput(PUBLIC_DIR, result);
 console.info(`\n  Writing www/app/data/registry/hub-index.ts...`);
 await writeIndexTs(result, `${Deno.cwd()}/www/app/data/registry/hub-index.ts`);
 
-// Write TypeScript module with full package records for detail page SSR
-console.info(`  Writing www/app/routes/registry/_hub-data-full.ts...`);
-await writePackageDataTs(result, `${Deno.cwd()}/www/app/routes/registry/_hub-data-full.ts`);
+// Write TypeScript module with full package records for detail page SSR.
+console.info(`  Writing www/app/data/registry/hub-data.ts...`);
+await writePackageDataTs(result, `${Deno.cwd()}/www/app/data/registry/hub-data.ts`);
 
 console.info(`\n  ✅ Done!`);

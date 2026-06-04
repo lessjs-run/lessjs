@@ -19,6 +19,6 @@ Deno.test('toHono converts URLPattern regex groups to Hono regex groups', () => 
   assertEquals(toHono('/plain/:slug'), '/plain/:slug');
 });
 
-Deno.test('toURLPattern preserves LessJS route patterns', () => {
+Deno.test('toURLPattern preserves openElement route patterns', () => {
   assertEquals(toURLPattern('/blog/:slug'), '/blog/:slug');
 });

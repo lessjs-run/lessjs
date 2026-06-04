@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-dialog
+ * @openelement/ui - open-dialog
  *
  * Dialog component using native <dialog> element + popover API.
  * Per WHATWG HTML Living Standard sections 4.11.4 (dialog) and 6.9.2 (popover).
@@ -239,7 +239,7 @@ export class OpenDialog extends DsdElement {
     this._updateStates();
     this._syncDialogElement();
     this._syncInert();
-    this.dispatchEvent(new CustomEvent('less-dialog-close', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('open-dialog-close', { bubbles: true, composed: true }));
   }
 
   private _handleCancel(e: Event): void {

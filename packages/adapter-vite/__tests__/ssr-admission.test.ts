@@ -12,9 +12,9 @@ import { buildSsrAdmissionPlan } from '../src/entry-descriptor.ts';
 import type { IslandDecl } from '../src/entry-descriptor.ts';
 import type { CompatibilityClassification } from '@openelement/core';
 
-// 鈹€鈹€鈹€ Fixture imports 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
-// Local island with less.ssr = false
+// Local island with openElement.ssr = false
 const localSsrFalse: IslandDecl = {
   tagName: 'local-ssr-false',
   modulePath: '/app/islands/local-island-ssr-false.ts',
@@ -22,7 +22,7 @@ const localSsrFalse: IslandDecl = {
   ssr: false,
   dsd: false,
   hydrate: 'idle',
-  reason: 'local island exports less.ssr=false',
+  reason: 'local island exports openElement.ssr=false',
 };
 
 // Package island with ssr: false (from manifest)
@@ -65,7 +65,7 @@ const parentWithClientChild: IslandDecl = {
   dsd: true,
 };
 
-// 鈹€鈹€鈹€ Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('SSR Admission: local island with ssr=false -> clientOnlyTags', () => {
   const islands: IslandDecl[] = [localSsrFalse];
@@ -78,7 +78,7 @@ Deno.test('SSR Admission: local island with ssr=false -> clientOnlyTags', () => 
   const decision = plan.decisions.find((d) => d.tagName === 'local-ssr-false');
   assertExists(decision);
   assertEquals(decision.renderPath, 'client-only');
-  assertEquals(decision.reason, 'local island exports less.ssr=false');
+  assertEquals(decision.reason, 'local island exports openElement.ssr=false');
 });
 
 Deno.test('SSR Admission: package island with ssr=false -> clientOnlyTags', () => {
@@ -91,8 +91,8 @@ Deno.test('SSR Admission: package island with ssr=false -> clientOnlyTags', () =
   const decision = plan.decisions.find((d) => d.tagName === 'package-ssr-false');
   assertExists(decision);
   assertEquals(decision.renderPath, 'client-only');
-  // buildSsrAdmissionPlan returns island.reason || 'less.ssr is false' when ssr === false
-  assertEquals(decision.reason, 'less.ssr is false');
+  // buildSsrAdmissionPlan returns island.reason || 'openElement.ssr is false' when ssr === false
+  assertEquals(decision.reason, 'openElement.ssr is false');
 });
 
 Deno.test('SSR Admission: local island with ssr=true -> renderableTags', () => {
@@ -105,7 +105,7 @@ Deno.test('SSR Admission: local island with ssr=true -> renderableTags', () => {
   const decision = plan.decisions.find((d) => d.tagName === 'local-ssr-true');
   assertExists(decision);
   assertEquals(decision.renderPath, 'ssr+client');
-  assertEquals(decision.reason, 'less.ssr is true');
+  assertEquals(decision.reason, 'openElement.ssr is true');
 });
 
 Deno.test('SSR Admission: package island with ssr=true -> renderableTags', () => {
@@ -118,7 +118,7 @@ Deno.test('SSR Admission: package island with ssr=true -> renderableTags', () =>
   const decision = plan.decisions.find((d) => d.tagName === 'package-ssr-true');
   assertExists(decision);
   assertEquals(decision.renderPath, 'ssr+client');
-  assertEquals(decision.reason, 'package island with less.ssr=true');
+  assertEquals(decision.reason, 'package island with openElement.ssr=true');
 });
 
 Deno.test('SSR Admission: duplicate tag -> rejectedTags', () => {
@@ -182,8 +182,8 @@ Deno.test('SSR Admission: plan records reasons for all tags', () => {
   const islands: IslandDecl[] = [localSsrTrue, localSsrFalse];
   const plan = buildSsrAdmissionPlan(islands);
 
-  assertEquals(plan.reasons['local-ssr-true'], 'less.ssr is true');
-  assertEquals(plan.reasons['local-ssr-false'], 'local island exports less.ssr=false');
+  assertEquals(plan.reasons['local-ssr-true'], 'openElement.ssr is true');
+  assertEquals(plan.reasons['local-ssr-false'], 'local island exports openElement.ssr=false');
 });
 
 Deno.test('SSR Admission: decisions array has correct structure', () => {
@@ -200,7 +200,7 @@ Deno.test('SSR Admission: decisions array has correct structure', () => {
   assertEquals(typeof decision.reason, 'string');
 });
 
-// 鈹€鈹€鈹€ CEM Classifications (v0.18.0) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('SSR Admission: CEM ssr-capable -> renderableTags', () => {
   const islands: IslandDecl[] = [
@@ -215,7 +215,7 @@ Deno.test('SSR Admission: CEM ssr-capable -> renderableTags', () => {
     {
       tagName: 'cem-ssr-capable',
       tier: 'ssr-capable',
-      reason: 'LitElement with ssr: true (LessJS adapter required)',
+      reason: 'LitElement with ssr: true (openElement adapter required)',
       source: 'package',
       modulePath: '/node_modules/ssr-package/button.ts',
       ssr: true,
@@ -248,7 +248,7 @@ Deno.test('SSR Admission: CEM client-only -> clientOnlyTags', () => {
     {
       tagName: 'cem-client-only',
       tier: 'client-only',
-      reason: 'CEM-only package @openelement/ui (no LessJS SSR declaration)',
+      reason: 'CEM-only package @openelement/ui (no openElement SSR declaration)',
       source: 'package',
       modulePath: '/node_modules/browser-package/button.ts',
       ssr: false,
@@ -384,7 +384,7 @@ Deno.test('SSR Admission: CEM takes precedence over island metadata', () => {
     {
       tagName: 'mixed-precedence',
       tier: 'client-only', // CEM says client-only
-      reason: 'No LessJS SSR declaration',
+      reason: 'No openElement SSR declaration',
       source: 'package',
       modulePath: '/node_modules/mixed-package/button.ts',
       ssr: false,
@@ -417,7 +417,7 @@ Deno.test('SSR Admission: conservative default - CEM without Less extension -> c
     {
       tagName: 'bare-cem',
       tier: 'client-only', // Classifier defaults to client-only
-      reason: 'CEM-only package third-party (no LessJS SSR declaration)',
+      reason: 'CEM-only package third-party (no openElement SSR declaration)',
       source: 'package',
       modulePath: '/node_modules/third-party/button.ts',
       ssr: false,
@@ -465,7 +465,7 @@ Deno.test('SSR Admission: mixed island + CEM classifications', () => {
     {
       tagName: 'cem-client-only',
       tier: 'client-only',
-      reason: 'No LessJS SSR declaration',
+      reason: 'No openElement SSR declaration',
       source: 'package',
       modulePath: '/node_modules/browser-package/button.ts',
       ssr: false,

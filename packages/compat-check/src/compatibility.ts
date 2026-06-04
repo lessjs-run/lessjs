@@ -5,7 +5,7 @@
  * This is the core of openElement's conservative admission model for third-party WCs.
  *
  * Compatibility Tiers:
- * - ssr-capable: Explicit Less manifest or adapter says SSR is supported
+ * - ssr-capable: Explicit openElement manifest or adapter says SSR is supported
  * - client-only: Browser-only package or no SSR declaration
  * - rejected: Invalid manifest, duplicate tag, unsafe path, unresolved module
  * - experimental-dom: Opt-in DOM simulation candidate
@@ -16,14 +16,12 @@
 import type { CompatibilityClassification, CompatibilityTier } from './types.js';
 import type {
   CustomElementsManifest,
-  LessElementExtensions,
-  LessPackageManifest,
+  OpenElementExtensions,
+  OpenElementPackageManifest,
 } from '@openelement/cem';
 import { isValidTagName } from '@openelement/core';
 
 export { isValidTagName };
-
-// ©¤©¤©¤ Known Adapters ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Known SSR-capable adapters */
 const KNOWN_ADAPTERS = new Set([
@@ -43,8 +41,6 @@ const KNOWN_SSR_SUPERCLASSES = new Set([
   'HTMLElement (via @openelement/adapter-vanilla)',
 ]);
 
-// ©¤©¤©¤ Classification Engine ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Input for a single component classification */
 export interface ClassificationInput {
   /** Tag name */
@@ -53,8 +49,8 @@ export interface ClassificationInput {
   modulePath: string;
   /** Source of the declaration (local, package, nested) */
   source: 'local' | 'package' | 'nested';
-  /** LessJS element extensions (ssr, dsd, hydrate) */
-  less?: LessElementExtensions;
+  /** openElement element extensions (ssr, dsd, hydrate) */
+  openElement?: OpenElementExtensions;
   /** Superclass name (e.g. 'LitElement') */
   superClass?: string;
   /** Package name (for diagnostics) */
@@ -103,10 +99,8 @@ const DEFAULT_CONFIG: ClassifierConfig = {
   additionalAdapters: [],
 };
 
-// ©¤©¤©¤ Classification Logic ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * Classify a single component based on its Less manifest.
+ * Classify a single component based on its openElement manifest.
  *
  * @param input - Component classification input
  * @param config - Classifier configuration
@@ -116,7 +110,7 @@ export function classifyComponent(
   input: ClassificationInput,
   config: ClassifierConfig = DEFAULT_CONFIG,
 ): CompatibilityClassification {
-  const { tagName, modulePath, source, less, superClass, packageName } = input;
+  const { tagName, modulePath, source, openElement, superClass, packageName } = input;
 
   // Step 1: Validate tag name format
   if (!isValidTagName(tagName)) {
@@ -129,13 +123,13 @@ export function classifyComponent(
     };
   }
 
-  // Step 2: Apply LessJS extensions with conservative defaults
-  const ssr = less?.ssr ?? false;
-  const dsd = less?.dsd ?? false;
-  const hydrate = less?.hydrate ?? 'idle';
-  const layer = less?.layer;
+  // Step 2: Apply openElement extensions with conservative defaults
+  const ssr = openElement?.ssr ?? false;
+  const dsd = openElement?.dsd ?? false;
+  const hydrate = openElement?.hydrate ?? 'idle';
+  const layer = openElement?.layer;
 
-  // Step 3: Classify based on LessJS extensions
+  // Step 3: Classify based on openElement extensions
   let tier: CompatibilityTier;
   let reason: string;
 
@@ -143,7 +137,7 @@ export function classifyComponent(
     // SSR explicitly enabled - check if adapter/capability is declared
     if (superClass && KNOWN_SSR_SUPERCLASSES.has(superClass)) {
       tier = 'ssr-capable';
-      reason = `${superClass} with ssr: true (LessJS adapter required)`;
+      reason = `${superClass} with ssr: true (openElement adapter required)`;
     } else if (layer) {
       tier = 'ssr-capable';
       reason = `ssr: true with layer: ${layer}`;
@@ -156,16 +150,16 @@ export function classifyComponent(
       reason =
         'ssr: true but no adapter/layer declared - requires explicit opt-in for experimental DOM';
     }
-  } else if (ssr === false && less !== undefined) {
+  } else if (ssr === false && openElement !== undefined) {
     // Explicit client-only declaration
     tier = 'client-only';
     reason = 'ssr: false (explicit client-only)';
   } else {
-    // No Less manifest or ssr not declared - conservative default
+    // No openElement manifest or ssr not declared - conservative default
     tier = 'client-only';
     reason = packageName
-      ? `CEM-only package ${packageName} (no LessJS SSR declaration)`
-      : 'CEM-only package (no LessJS SSR declaration)';
+      ? `CEM-only package ${packageName} (no openElement SSR declaration)`
+      : 'CEM-only package (no openElement SSR declaration)';
   }
 
   return {
@@ -228,8 +222,6 @@ export function validateModulePath(modulePath: string): {
 
   return { valid: true };
 }
-
-// ©¤©¤©¤ Batch Classification ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Classify multiple components from various sources.
@@ -333,24 +325,22 @@ export function classifyComponents(
   };
 }
 
-// ©¤©¤©¤ Less Manifest Classification ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * Classify all declarations from a LessPackageManifest.
+ * Classify all declarations from a OpenElementPackageManifest.
  *
- * @param manifest - LessJS package manifest
+ * @param manifest - openElement package manifest
  * @param config - Classifier configuration
  * @returns Classification result
  */
-export function classifyLessManifest(
-  manifest: LessPackageManifest,
+export function classifyOpenElementManifest(
+  manifest: OpenElementPackageManifest,
   config: ClassifierConfig = DEFAULT_CONFIG,
 ): ClassificationResult {
   const inputs: ClassificationInput[] = manifest.declarations.map((decl) => ({
     tagName: decl.tagName,
-    modulePath: decl.less?.module || `./${decl.tagName}.js`,
+    modulePath: decl.openElement?.module || `./${decl.tagName}.js`,
     source: 'package' as const,
-    less: decl.less,
+    openElement: decl.openElement,
     superClass: decl.superclassName,
     packageName: manifest.packageName,
   }));
@@ -362,7 +352,7 @@ export function classifyLessManifest(
  * Classify all declarations from a CustomElementsManifest.
  *
  * Note: CEM-only packages are classified as client-only by default.
- * SSR capability requires a LessJS extension.
+ * SSR capability requires a openElement extension.
  *
  * @param manifest - CEM manifest
  * @param config - Classifier configuration
@@ -381,7 +371,7 @@ export function classifyCemManifest(
       if (decl.kind !== 'custom-element') continue;
       const ce = decl as {
         tagName?: string;
-        less?: import('@openelement/core').LessElementExtensions;
+        openElement?: import('@openelement/core').OpenElementExtensions;
         superClass?: { name?: string };
       };
 
@@ -391,7 +381,7 @@ export function classifyCemManifest(
         tagName: ce.tagName,
         modulePath: mod.path,
         source: 'package',
-        less: ce.less,
+        openElement: ce.openElement,
         superClass: ce.superClass?.name,
         packageName: manifest.packageName,
       });
@@ -400,8 +390,6 @@ export function classifyCemManifest(
 
   return classifyComponents(inputs, config);
 }
-
-// ©¤©¤©¤ Merged Classification ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Merge classifications from multiple sources (local + package).
@@ -423,10 +411,6 @@ export function mergeClassifications(
   const allInputs = [...packageInputs, ...localInputs];
   return classifyComponents(allInputs, config);
 }
-
-// ©¤©¤©¤ Utility Functions ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-// isValidTagName ¡ª imported from @openelement/core/tag-utils
 
 /**
  * Check if a superclass is known to be SSR-capable.

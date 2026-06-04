@@ -357,7 +357,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     }
 
     lines.push('');
-    lines.push(`// Use <${tagName}> in any LessJS page template`);
+    lines.push(`// Use <${tagName}> in any openElement page template`);
     lines.push(`<${tagName}></${tagName}>`);
 
     if (!record.installGuidance.ssrCapable) {
@@ -385,10 +385,10 @@ export default class DocsRegistryComponentDetail extends DsdElement {
       .join(' ');
     const attrStr = attrs ? ` ${attrs}` : '';
     const themeLink = meta.themeCssUrl ? `<link rel="stylesheet" href="${meta.themeCssUrl}">` : '';
-    // LessJS UI components need design token CSS injected inline because their
+    // openElement UI components need design token CSS injected inline because their
     // styles reference CSS custom properties (--bg-card, --border, etc.)
     // that are normally declared on :root by lessRootColorCSS. In the iframe
-    // there is no LessJS runtime, so we inline the light-theme tokens directly.
+    // there is no openElement runtime, so we inline the light-theme tokens directly.
     const lessThemeCss = meta.importSpec === '@openelement/ui'
       ? '<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--indigo-5:#5c7cfa;--indigo-6:#4c6ef5;--indigo-1:#dbe4ff;--green-6:#40c057;--red-6:#fa5252;--orange-6:#fd7e14;color-scheme:light}</style>'
       : '';
@@ -540,7 +540,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           <div class='section'>
             <div class='section-title'>Usage</div>
             <div class='usage-hint'>
-              Copy the code below into your LessJS route file.
+              Copy the code below into your openElement route file.
             </div>
             <div class='usage-block'>{usageSnippet}</div>
           </div>
@@ -696,7 +696,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             <div class='install-hint'>
               To use this component in your project:
             </div>
-            <div class='usage-block'>less add {fullPkgName}</div>
+            <div class='usage-block'>open add {fullPkgName}</div>
             {pkg.installGuidance.warnings.length > 0
               ? (
                 <div class='install-warnings'>

@@ -24,8 +24,8 @@ Deno.test('ui manifest - has correct package metadata', () => {
 
 Deno.test('ui manifest - all declarations have SSR and DSD enabled', () => {
   for (const decl of manifest.declarations) {
-    assertEquals(decl.less?.ssr, true, `${decl.tagName} should have ssr: true`);
-    assertEquals(decl.less?.dsd, true, `${decl.tagName} should have dsd: true`);
+    assertEquals(decl.openElement?.ssr, true, `${decl.tagName} should have ssr: true`);
+    assertEquals(decl.openElement?.dsd, true, `${decl.tagName} should have dsd: true`);
   }
 });
 

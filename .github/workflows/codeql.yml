@@ -40,7 +40,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Deno project â€?no build step needed for TS source analysis
+          # Deno project -?no build step needed for TS source analysis
           # CodeQL JS/TS extractor works on raw source files
           queries: security-extended,security-and-quality
 

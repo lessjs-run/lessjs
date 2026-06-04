@@ -107,7 +107,7 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'client-only.ts'),
         [
-          'export const less = {',
+          'export const openElement = {',
           '  // comments and trailing commas are accepted by the AST path',
           '  ssr: false,',
           '  dsd: false,',
@@ -125,7 +125,7 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
       assertEquals(meta['client-only'].hydrate, 'idle');
       assertEquals(
         meta['client-only'].reason,
-        'local island exports less.ssr=false',
+        'local island exports openElement.ssr=false',
       );
       assertEquals(meta['my-counter'], undefined);
     },
@@ -140,32 +140,32 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
         join(FIXTURES_DIR, 'islands', 'browser-only.ts'),
         [
           'throw new Error("Browser-only: document is not defined");',
-          'export const less = { ssr: false };',
+          'export const openElement = { ssr: false };',
         ].join('\n'),
       );
       const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
         'browser-only.ts',
       ]);
       assertEquals(meta['browser-only']?.ssr, false);
-      assertEquals(meta['browser-only']?.reason, 'local island exports less.ssr=false');
+      assertEquals(meta['browser-only']?.reason, 'local island exports openElement.ssr=false');
     },
   );
 
   await t.step(
-    'scanIslandMeta - rejects dynamic less metadata instead of guessing',
+    'scanIslandMeta - rejects dynamic openElement metadata instead of guessing',
     async () => {
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'dynamic-meta.ts'),
         [
           'const base = { ssr: false };',
-          'export const less = { ...base };',
+          'export const openElement = { ...base };',
           'export default class DynamicMeta {}',
         ].join('\n'),
       );
       await assertRejects(
         () => scanIslandMeta(join(FIXTURES_DIR, 'islands'), ['dynamic-meta.ts']),
         Error,
-        'unsupported less metadata syntax',
+        'unsupported openElement metadata syntax',
       );
     },
   );
@@ -263,13 +263,13 @@ Deno.test({
       assertEquals(result, []);
     });
 
-    await t.step('throws LessError for non-existent package', async () => {
-      const { LessError } = await import('@openelement/core/errors');
+    await t.step('throws OpenElementError for non-existent package', async () => {
+      const { OpenElementError } = await import('@openelement/core/errors');
       try {
         await scanPackageManifests(['@nonexistent/package']);
-        assertEquals(true, false, 'Expected LessError to be thrown');
+        assertEquals(true, false, 'Expected OpenElementError to be thrown');
       } catch (e) {
-        assertEquals(e instanceof LessError, true);
+        assertEquals(e instanceof OpenElementError, true);
         assertEquals((e as Error).message.includes('@nonexistent/package'), true);
       }
     });
@@ -284,12 +284,12 @@ Deno.test({
     assertEquals(result[0].declarations.length > 0, true);
   }); */
 
-    await t.step('throws LessError for package with import errors', async () => {
-      const { LessError } = await import('@openelement/core/errors');
+    await t.step('throws OpenElementError for package with import errors', async () => {
+      const { OpenElementError } = await import('@openelement/core/errors');
       try {
         await scanPackageManifests(['vite']);
       } catch (e) {
-        assertEquals(e instanceof LessError, true);
+        assertEquals(e instanceof OpenElementError, true);
         assertEquals((e as Error).message.includes('vite'), true);
       }
     });
@@ -305,13 +305,13 @@ Deno.test('route-scanner - scanIslands with non-existent dir', async () => {
 });
 
 Deno.test('route-scanner - scanPackageManifests rejects packages without manifest export', async () => {
-  const { LessError } = await import('@openelement/core/errors');
+  const { OpenElementError } = await import('@openelement/core/errors');
   // A package that exists but has no manifest export should throw
   try {
     await scanPackageManifests(['jsr:@std/assert']);
     // If it somehow has a manifest, that's unexpected but OK
   } catch (e) {
-    assertEquals(e instanceof LessError, true);
+    assertEquals(e instanceof OpenElementError, true);
   }
 });
 

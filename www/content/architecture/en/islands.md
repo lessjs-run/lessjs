@@ -15,7 +15,7 @@ order: 40
 
     <h1>Island Upgrade</h1>
     <p class="subtitle">
-      LessJS islands are Custom Element upgrades that follow DSD HTML. This is not full-page
+      openElement islands are Custom Element upgrades that follow DSD HTML. This is not full-page
       hydration - it does not restore the entire application state on the client.
     </p>
     <h2>Why Islands</h2>
@@ -29,7 +29,7 @@ order: 40
         </ul>
       </div>
       <div class="comparison-item less">
-        <h3>LessJS Island Model</h3>
+        <h3>openElement Island Model</h3>
         <ul>
           <li>Content is first rendered by SSG + DSD.</li>
           <li>Only components that truly need interactivity load client modules.</li>
@@ -78,20 +78,20 @@ order: 40
     </p>
     <h2>Package Islands</h2>
     <p>
-      Reusable packages can export island metadata. LessJS reads this at build time for SSR
+      Reusable packages can export island metadata. openElement reads this at build time for SSR
       registration and client entry generation.
     </p>
     <p>
       Today that metadata is intentionally minimal. Future package islands should be driven by a
       CEM-compatible manifest that declares tag, module, export, strategy, SSR renderability, DSD
       constraints, hydration events, diagnostics, and fallback behavior. That protocol is required
-      before <code>less add</code>, automatic registration, or registry hub claims are stable.
+      before <code>open add</code>, automatic registration, or registry hub claims are stable.
     </p>
     <h2>Current Boundaries</h2>
     <p>
       The current implementation should be treated as framework-supported package island scanning,
       not a general-purpose component marketplace. If a package cannot explain its SSR and hydration
-      behavior, LessJS should render it as static host markup or a pure island instead of guessing.
+      behavior, openElement should render it as static host markup or a pure island instead of guessing.
     </p>
     <div class="nav-row">
       <a href="/$/architecture/dsd" class="nav-link">&larr; DSD Architecture</a>

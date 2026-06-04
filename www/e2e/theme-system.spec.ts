@@ -14,7 +14,7 @@ import { expect, type Page, test } from '@playwright/test';
 async function clickThemeToggle(page: Page): Promise<void> {
   await page.evaluate(() => {
     const visit = (root: Document | ShadowRoot | Element): Element | null => {
-      const direct = root.querySelector?.('less-theme-toggle');
+      const direct = root.querySelector?.('open-theme-toggle');
       if (direct) return direct;
       const all = root.querySelectorAll?.('*') ?? [];
       for (const el of Array.from(all)) {
@@ -49,7 +49,7 @@ async function waitForThemeChange(page: Page, before: string | null): Promise<vo
 async function waitForToggleReady(page: Page): Promise<void> {
   await page.waitForFunction(() => {
     const visit = (root: Document | ShadowRoot | Element): Element | null => {
-      const direct = root.querySelector?.('less-theme-toggle');
+      const direct = root.querySelector?.('open-theme-toggle');
       if (direct) return direct;
       const all = root.querySelectorAll?.('*') ?? [];
       for (const el of Array.from(all)) {
@@ -74,7 +74,7 @@ test.describe('Theme Toggle', () => {
   test('theme toggle element exists', async ({ page }) => {
     const exists = await page.evaluate(() => {
       const visit = (root: Document | ShadowRoot | Element): Element | null => {
-        const direct = root.querySelector?.('less-theme-toggle');
+        const direct = root.querySelector?.('open-theme-toggle');
         if (direct) return direct;
         const all = root.querySelectorAll?.('*') ?? [];
         for (const el of Array.from(all)) {
@@ -93,7 +93,7 @@ test.describe('Theme Toggle', () => {
   test('theme toggle has shadow root', async ({ page }) => {
     const hasShadowRoot = await page.evaluate(() => {
       const visit = (root: Document | ShadowRoot | Element): Element | null => {
-        const direct = root.querySelector?.('less-theme-toggle');
+        const direct = root.querySelector?.('open-theme-toggle');
         if (direct) return direct;
         const all = root.querySelectorAll?.('*') ?? [];
         for (const el of Array.from(all)) {
@@ -130,7 +130,7 @@ test.describe('Theme Toggle', () => {
 
     // Check localStorage
     const stored = await page.evaluate(() => {
-      return localStorage.getItem('less-theme');
+      return localStorage.getItem('open-theme');
     });
     expect(stored).toMatch(/^(light|dark)$/);
   });
@@ -173,7 +173,7 @@ test.describe('Theme Toggle', () => {
     await page.evaluate(() => {
       document.documentElement.setAttribute('data-theme', 'dark');
       globalThis.dispatchEvent(
-        new CustomEvent('less:theme-change', {
+        new CustomEvent('open:theme-change', {
           detail: { theme: 'dark' },
         }),
       );
@@ -197,7 +197,7 @@ test.describe('Theme Toggle', () => {
     await page.evaluate(() => {
       document.documentElement.setAttribute('data-theme', 'light');
       globalThis.dispatchEvent(
-        new CustomEvent('less:theme-change', {
+        new CustomEvent('open:theme-change', {
           detail: { theme: 'light' },
         }),
       );

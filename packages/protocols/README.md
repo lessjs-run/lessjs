@@ -1,6 +1,6 @@
 # @openelement/protocols
 
-Dependency-light shared LessJS contracts.
+Dependency-light shared openElement contracts.
 
 This package owns build-time and runtime-adjacent data contracts that must be
 shared across packages without making feature packages depend on adapter

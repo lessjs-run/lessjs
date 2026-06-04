@@ -87,7 +87,7 @@ jobs:
 
   # SOP-013: Post-Publish Consumer Smoke Test
   # Verifies that freshly published JSR packages form a complete, buildable
-  # consumer project. This is the final release gate ¡ª it catches problems that
+  # consumer project. This is the final release gate - it catches problems that
   # pre-publish testing cannot because the new version does not yet exist on JSR.
   # Windows JSR-latest compatibility is monitored separately in
   # jsr-consumer-monitor.yml so this release gate stays fast and release-scoped.
@@ -128,6 +128,6 @@ jobs:
         run: |
           CONSUMER_DIR="${{ runner.temp }}/openelement-post-publish-smoke"
           test -f "$CONSUMER_DIR/test-blog/dist/index.html" || {
-            echo "::error::dist/index.html not found ¡ª post-publish consumer build failed"
+            echo "::error::dist/index.html not found - post-publish consumer build failed"
             exit 1
           }

@@ -24,7 +24,7 @@ Deno.test('extractCustomElementTags: extracts hyphenated tags', () => {
   const html =
     '<div><open-theme-toggle></open-theme-toggle><open-hero-ping auto></open-hero-ping></div>';
   const tags = extractCustomElementTags(html);
-  assertEquals(tags.sort(), ['less-hero-ping', 'less-theme-toggle']);
+  assertEquals(tags.sort(), ['open-hero-ping', 'open-theme-toggle']);
 });
 
 Deno.test('extractCustomElementTags: ignores non-custom elements', () => {
@@ -36,25 +36,25 @@ Deno.test('extractCustomElementTags: ignores non-custom elements', () => {
 Deno.test('extractCustomElementTags: handles tags with attributes', () => {
   const html = '<open-button disabled>Click</open-button><open-input type="text" />';
   const tags = extractCustomElementTags(html);
-  assertEquals(tags.sort(), ['less-button', 'less-input']);
+  assertEquals(tags.sort(), ['open-button', 'open-input']);
 });
 
 Deno.test('generateIslandManifests: produces manifests with known islands', () => {
   setup();
   writeFileSync(join(TMP_DIR, 'index.html'), '<open-theme-toggle></open-theme-toggle>');
 
-  const chunkMap = { 'less-theme-toggle': '/client/islands/island-less-theme-toggle-abc.js' };
-  const strategyMap = { 'less-theme-toggle': 'idle' as const };
-  const layerMap = { 'less-theme-toggle': 'dsd-interactive' as const };
+  const chunkMap = { 'open-theme-toggle': '/client/islands/island-open-theme-toggle-abc.js' };
+  const strategyMap = { 'open-theme-toggle': 'idle' as const };
+  const layerMap = { 'open-theme-toggle': 'dsd-interactive' as const };
 
   const manifests = generateIslandManifests(TMP_DIR, chunkMap, strategyMap, layerMap);
   assertEquals(manifests.length, 1);
   assertEquals(manifests[0].route, '/');
   assertEquals(manifests[0].islands.length, 1);
-  assertEquals(manifests[0].islands[0].tagName, 'less-theme-toggle');
+  assertEquals(manifests[0].islands[0].tagName, 'open-theme-toggle');
   assertEquals(
     manifests[0].islands[0].chunkUrl,
-    '/client/islands/island-less-theme-toggle-abc.js',
+    '/client/islands/island-open-theme-toggle-abc.js',
   );
   assertEquals(manifests[0].islands[0].strategy, 'idle');
   assertEquals(manifests[0].islands[0].layer, 'dsd-interactive');
@@ -77,7 +77,7 @@ Deno.test('generateIslandManifests: defaults strategy to idle and layer to dsd-s
   setup();
   writeFileSync(join(TMP_DIR, 'guide.html'), '<open-button>Click</open-button>');
 
-  const chunkMap = { 'less-button': '/client/islands/island-less-button-xyz.js' };
+  const chunkMap = { 'open-button': '/client/islands/island-open-button-xyz.js' };
   const manifests = generateIslandManifests(TMP_DIR, chunkMap);
 
   assertEquals(manifests[0].islands[0].strategy, 'idle');
@@ -91,7 +91,7 @@ Deno.test('writeIslandManifests: creates JSON files in island-manifests dir', ()
     {
       route: '/',
       islands: [{
-        tagName: 'less-toggle',
+        tagName: 'open-toggle',
         chunkUrl: '/client/toggle.js',
         strategy: 'load',
         layer: 'dsd-static',
@@ -111,6 +111,6 @@ Deno.test('writeIslandManifests: creates JSON files in island-manifests dir', ()
   const content = JSON.parse(readFileSync(join(manifestDir, files[0].name), 'utf-8'));
   assertEquals(content.route, '/');
   assertEquals(content.islands.length, 1);
-  assertEquals(content.islands[0].tagName, 'less-toggle');
+  assertEquals(content.islands[0].tagName, 'open-toggle');
   cleanup();
 });

@@ -234,7 +234,7 @@ function validateSchema(
 // ─── Less Extension Validation ─────────────────────────────────────────
 
 /**
- * Validate LessJS extensions within CEM declarations.
+ * Validate openElement extensions within CEM declarations.
  * Checks for supported SSR/DSD/hydration values.
  */
 function validateLessExtensions(
@@ -248,40 +248,40 @@ function validateLessExtensions(
     for (const decl of mod.declarations) {
       if (decl.kind !== 'custom-element') continue;
       const ce = decl as CemCustomElement;
-      if (!ce.less) continue;
+      if (!ce.openElement) continue;
 
       // Validate ssr field
-      if (ce.less.ssr !== undefined && typeof ce.less.ssr !== 'boolean') {
+      if (ce.openElement.ssr !== undefined && typeof ce.openElement.ssr !== 'boolean') {
         errors.push({
           code: 'INVALID_SSR_VALUE',
           severity: 'error',
-          message: `"less.ssr" must be a boolean, got "${typeof ce.less.ssr}".`,
+          message: `"openElement.ssr" must be a boolean, got "${typeof ce.openElement.ssr}".`,
           tagName: ce.tagName,
-          fix: 'Set "less.ssr" to true or false (boolean).',
+          fix: 'Set "openElement.ssr" to true or false (boolean).',
         });
       }
 
       // Validate dsd field
-      if (ce.less.dsd !== undefined && typeof ce.less.dsd !== 'boolean') {
+      if (ce.openElement.dsd !== undefined && typeof ce.openElement.dsd !== 'boolean') {
         errors.push({
           code: 'INVALID_DSD_VALUE',
           severity: 'error',
-          message: `"less.dsd" must be a boolean, got "${typeof ce.less.dsd}".`,
+          message: `"openElement.dsd" must be a boolean, got "${typeof ce.openElement.dsd}".`,
           tagName: ce.tagName,
-          fix: 'Set "less.dsd" to true or false (boolean).',
+          fix: 'Set "openElement.dsd" to true or false (boolean).',
         });
       }
 
       // Validate hydrate strategy
-      if (ce.less.hydrate !== undefined) {
+      if (ce.openElement.hydrate !== undefined) {
         const validStrategies = ['load', 'idle', 'visible', 'only'];
-        if (!validStrategies.includes(ce.less.hydrate)) {
+        if (!validStrategies.includes(ce.openElement.hydrate)) {
           errors.push({
             code: 'INVALID_HYDRATE_STRATEGY',
             severity: 'error',
-            message: `"less.hydrate" must be one of: ${
+            message: `"openElement.hydrate" must be one of: ${
               validStrategies.join(', ')
-            }, got "${ce.less.hydrate}".`,
+            }, got "${ce.openElement.hydrate}".`,
             tagName: ce.tagName,
             fix: `Use one of: ${validStrategies.join(', ')}.`,
           });
@@ -289,15 +289,15 @@ function validateLessExtensions(
       }
 
       // Validate layer
-      if (ce.less.layer !== undefined) {
+      if (ce.openElement.layer !== undefined) {
         const validLayers = ['dsd-static', 'dsd-interactive', 'pure-island'];
-        if (!validLayers.includes(ce.less.layer)) {
+        if (!validLayers.includes(ce.openElement.layer)) {
           errors.push({
             code: 'INVALID_LAYER',
             severity: 'error',
-            message: `"less.layer" must be one of: ${
+            message: `"openElement.layer" must be one of: ${
               validLayers.join(', ')
-            }, got "${ce.less.layer}".`,
+            }, got "${ce.openElement.layer}".`,
             tagName: ce.tagName,
             fix: `Use one of: ${validLayers.join(', ')}.`,
           });
@@ -319,7 +319,7 @@ function validateLessExtensions(
  * 2. Validates each custom element tag name
  * 3. Detects duplicate tag names
  * 4. Validates module paths (without executing code)
- * 5. Validates LessJS extension values
+ * 5. Validates openElement extension values
  * 6. Determines overall compatibility tier
  *
  * @param manifest - Parsed CustomElementsManifest
@@ -373,7 +373,7 @@ export function validateManifest(
 
     // Determine compatibility tier
     let compatTier: CompatibilityTier = 'client-only';
-    if (ce.less?.ssr === true) {
+    if (ce.openElement?.ssr === true) {
       compatTier = 'ssr-capable';
     }
 
@@ -383,8 +383,8 @@ export function validateManifest(
       compatibility: compatTier,
       modulePath: ce.superClass?.module || undefined,
       className: ce.className,
-      ssr: ce.less?.ssr,
-      dsd: ce.less?.dsd,
+      ssr: ce.openElement?.ssr,
+      dsd: ce.openElement?.dsd,
     });
   }
 
@@ -400,7 +400,7 @@ export function validateManifest(
     errors.push(...pathErrors);
   }
 
-  // Step 5: Validate LessJS extensions
+  // Step 5: Validate openElement extensions
   if (manifest.modules) {
     const extResults = validateLessExtensions(manifest.modules);
     errors.push(...extResults.errors);

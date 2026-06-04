@@ -1,29 +1,24 @@
 /**
- * @openelement/runtime ¡ª Component authoring facade.
- *
  * Single-import convenience layer for openElement component authors.
  * Re-exports the public authoring surface from the runtime kernel,
  * signals engine, and stylesheet abstraction.
  *
- * Use this as your sole import for writing LessJS components:
+ * Use this as your sole import for writing openElement components:
  * ```tsx
  * import { DsdElement, signal, StyleSheet } from '@openelement/runtime';
  * ```
  *
- * This package does not own any implementation ¡ª it is a pure
  * re-export facade over @openelement/core, @openelement/signals, and
  * @openelement/style-sheet.
  *
  * @module @openelement/runtime
  */
 
-// ©¤©¤©¤ @openelement/core ¡ª Runtime kernel primitives ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 // Base class + JSX
 export { DsdElement } from '@openelement/core';
 export { Fragment, jsx, jsxDEV, jsxs } from '@openelement/core/jsx-runtime';
 export type { VNode } from '@openelement/core';
-export type { LessRenderer } from '@openelement/core';
+export type { OpenElementRenderer } from '@openelement/core';
 export { isVNode } from '@openelement/core';
 
 // JSX rendering
@@ -44,8 +39,8 @@ export type {
   ErrorPhase,
   ErrorSeverity,
   IslandRenderError,
-  LessError,
   NavigationError,
+  OpenElementError,
   PropValidationError,
   RenderError,
   SsrRenderError,
@@ -60,14 +55,10 @@ export { escapeAttr, escapeAttrValue, escapeHtml } from '@openelement/core';
 export type { SafeHtml, UnsafeHtml } from '@openelement/core';
 
 // Island authoring helpers
-export { bindEvents, defineIsland, getSsrProps } from '@openelement/core';
+export { bindSsrProps, defineIsland, getSsrProps } from '@openelement/core';
 export type { IslandOptions } from '@openelement/core';
 
-// ©¤©¤©¤ @openelement/signals ¡ª Reactive primitives ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 export { computed, effect, signal } from '@openelement/signals';
-
-// ©¤©¤©¤ @openelement/style-sheet ¡ª CSSStyleSheet abstraction ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 export { StyleSheet } from '@openelement/style-sheet';
 export type { StyleSheetLike, StyleSheetRule } from '@openelement/style-sheet';

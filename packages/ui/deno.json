@@ -1,6 +1,6 @@
 {
   "name": "@openelement/ui",
-  "version": "0.30.0",
+  "version": "0.30.1",
   "exports": {
     ".": "./src/index.ts",
     "./open-button": "./src/open-button.tsx",
@@ -18,11 +18,11 @@
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.30.0",
-    "@openelement/signals": "jsr:@openelement/signals@^0.30.0",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.30.0",
-    "@openelement/router": "jsr:@openelement/router@^0.30.0",
-    "@openelement/router/client-router": "jsr:@openelement/router@^0.30.0/client-router"
+    "@openelement/core": "jsr:@openelement/core@^0.30.1",
+    "@openelement/signals": "jsr:@openelement/signals@^0.30.1",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.30.1",
+    "@openelement/router": "jsr:@openelement/router@^0.30.1",
+    "@openelement/router/client-router": "jsr:@openelement/router@^0.30.1/client-router"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

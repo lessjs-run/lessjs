@@ -6,7 +6,7 @@ import {
   classifyCemManifest,
   classifyComponent,
   classifyComponents,
-  classifyLessManifest,
+  classifyOpenElementManifest,
   getClassificationSummary,
   isKnownSsrAdapter,
   isKnownSsrSuperclass,
@@ -21,14 +21,14 @@ import {
   assertStringIncludes,
 } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 
-// 鈹€鈹€鈹€ Single Component Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('classifyComponent: SSR-capable with LitElement', () => {
   const result = classifyComponent({
     tagName: 'my-lit-element',
     modulePath: './my-element.js',
     source: 'local',
-    less: { ssr: true, dsd: true, hydrate: 'load' },
+    openElement: { ssr: true, dsd: true, hydrate: 'load' },
     superClass: 'LitElement',
   });
 
@@ -43,7 +43,7 @@ Deno.test('classifyComponent: explicit client-only with ssr: false', () => {
     tagName: 'client-only-element',
     modulePath: './client-only.js',
     source: 'package',
-    less: { ssr: false },
+    openElement: { ssr: false },
   });
 
   assertEquals(result.tier, 'client-only');
@@ -80,7 +80,7 @@ Deno.test('classifyComponent: ssr: true without adapter is client-only by defaul
     tagName: 'unknown-element',
     modulePath: './unknown.js',
     source: 'package',
-    less: { ssr: true }, // No adapter/layer
+    openElement: { ssr: true }, // No adapter/layer
   });
 
   // Without enableExperimentalDom, falls back to client-only
@@ -93,7 +93,7 @@ Deno.test('classifyComponent: ssr: true with layer is SSR-capable', () => {
     tagName: 'layered-element',
     modulePath: './layered.js',
     source: 'local',
-    less: { ssr: true, layer: 'dsd-interactive' },
+    openElement: { ssr: true, layer: 'dsd-interactive' },
   });
 
   assertEquals(result.tier, 'ssr-capable');
@@ -106,7 +106,7 @@ Deno.test('classifyComponent: experimental DOM requires opt-in', () => {
       tagName: 'experimental-element',
       modulePath: './experimental.js',
       source: 'package',
-      less: { ssr: true }, // No adapter
+      openElement: { ssr: true }, // No adapter
     },
     { enableExperimentalDom: true },
   );
@@ -115,7 +115,7 @@ Deno.test('classifyComponent: experimental DOM requires opt-in', () => {
   assert(result.reason.includes('experimental'));
 });
 
-// 鈹€鈹€鈹€ Module Path Validation Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateModulePath: accepts relative paths', () => {
   assertEquals(validateModulePath('./src/element.js').valid, true);
@@ -150,7 +150,7 @@ Deno.test('validateModulePath: rejects empty path', () => {
   assertEquals(validateModulePath(null as any).valid, false);
 });
 
-// 鈹€鈹€鈹€ Batch Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('classifyComponents: detects duplicate tags', () => {
   const inputs = [
@@ -196,7 +196,7 @@ Deno.test('classifyComponents: builds correct tag sets', () => {
       tagName: 'ssr-element',
       modulePath: './ssr.js',
       source: 'local' as const,
-      less: { ssr: true },
+      openElement: { ssr: true },
       superClass: 'LitElement',
     },
     { tagName: 'client-element', modulePath: './client.js', source: 'local' as const },
@@ -204,7 +204,7 @@ Deno.test('classifyComponents: builds correct tag sets', () => {
       tagName: 'explicit-client',
       modulePath: './explicit.js',
       source: 'local' as const,
-      less: { ssr: false },
+      openElement: { ssr: false },
     },
   ];
 
@@ -215,9 +215,9 @@ Deno.test('classifyComponents: builds correct tag sets', () => {
   assertEquals(result.rejectedTags, []);
 });
 
-// 鈹€鈹€鈹€ Less Manifest Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
-Deno.test('classifyLessManifest: classifies all declarations', () => {
+Deno.test('classifyOpenElementManifest: classifies all declarations', () => {
   const manifest = {
     schemaVersion: '1.0.0',
     packageName: '@test/my-package',
@@ -226,11 +226,11 @@ Deno.test('classifyLessManifest: classifies all declarations', () => {
       {
         tagName: 'pkg-element-1',
         superclassName: 'LitElement',
-        less: { ssr: true, dsd: true },
+        openElement: { ssr: true, dsd: true },
       },
       {
         tagName: 'pkg-element-2',
-        less: { ssr: false },
+        openElement: { ssr: false },
       },
       {
         tagName: 'pkg-element-3',
@@ -239,14 +239,14 @@ Deno.test('classifyLessManifest: classifies all declarations', () => {
     ],
   };
 
-  const result = classifyLessManifest(manifest);
+  const result = classifyOpenElementManifest(manifest);
 
   assertEquals(result.stats.totalComponents, 3);
   assertEquals(result.stats.ssrCapableCount, 1);
   assertEquals(result.stats.clientOnlyCount, 2);
 });
 
-// 鈹€鈹€鈹€ CEM Manifest Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('classifyCemManifest: CEM-only packages are client-only', () => {
   const manifest = {
@@ -275,7 +275,7 @@ Deno.test('classifyCemManifest: CEM-only packages are client-only', () => {
   assertEquals(result.clientOnlyTags, ['cem-element']);
 });
 
-// 鈹€鈹€鈹€ Merged Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('mergeClassifications: local takes precedence over package', () => {
   const local = [
@@ -283,7 +283,7 @@ Deno.test('mergeClassifications: local takes precedence over package', () => {
       tagName: 'local-element',
       modulePath: './local.js',
       source: 'local' as const,
-      less: { ssr: true },
+      openElement: { ssr: true },
       superClass: 'LitElement',
     },
   ];
@@ -315,7 +315,7 @@ Deno.test('mergeClassifications: duplicate tags across sources are rejected', ()
   assert(result.rejectedTags.includes('shared-tag'));
 });
 
-// 鈹€鈹€鈹€ Utility Function Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('isValidTagName: accepts valid tag names', () => {
   assertEquals(isValidTagName('my-element'), true);
@@ -352,7 +352,7 @@ Deno.test('getClassificationSummary: generates readable summary', () => {
       tagName: 'ssr-el',
       modulePath: './a.js',
       source: 'local' as const,
-      less: { ssr: true },
+      openElement: { ssr: true },
       superClass: 'LitElement',
     },
     { tagName: 'client-el', modulePath: './b.js', source: 'local' as const },
@@ -367,14 +367,14 @@ Deno.test('getClassificationSummary: generates readable summary', () => {
   assertStringIncludes(summary, 'SSR-capable tags: ssr-el');
 });
 
-// 鈹€鈹€鈹€ Edge Cases 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('classifyComponent: handles undefined superClass', () => {
   const result = classifyComponent({
     tagName: 'plain-element',
     modulePath: './plain.js',
     source: 'local',
-    less: { ssr: true },
+    openElement: { ssr: true },
     superClass: undefined,
   });
 

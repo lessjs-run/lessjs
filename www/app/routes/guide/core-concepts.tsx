@@ -18,17 +18,17 @@ export class CoreConceptsPage extends DsdElement {
         <div class="container">
           <h1>核心概念</h1>
           <p class="subtitle">
-            理解 LessJS 的三个核心构建块：组件模型 (DsdElement + JSX)、属性声明 (static props) 和响应式系统 (Signals)。
+            理解 openElement 的三个核心构建块：组件模型 (DsdElement + JSX)、属性声明 (static props) 和响应式系统 (Signals)。
           </p>
 
           <h2>组件模型：DsdElement + JSX</h2>
           <p>
-            LessJS 组件是原生 Web Components，继承自 <code>DsdElement</code>。JSX 提供带类型安全的模板语法，编译为 VNode 树，SSR 时输出 Declarative Shadow DOM。
+            openElement 组件是原生 Web Components，继承自 <code>DsdElement</code>。JSX 提供带类型安全的模板语法，编译为 VNode 树，SSR 时输出 Declarative Shadow DOM。
           </p>
           <open-code-block><pre><code>{`import { DsdElement, signal } from '@openelement/core';
 
 export class GreetingCard extends DsdElement {
-  #name = signal('LessJS');
+  #name = signal('openElement');
 
   override render() {
     return (
@@ -65,7 +65,7 @@ customElements.define('greeting-card', GreetingCard);`}</code></pre></open-code-
 
           <h3>列表渲染</h3>
           <open-code-block><pre><code>{`const todos = signal([
-  { id: 1, text: 'Learn LessJS', done: false },
+  { id: 1, text: 'Learn openElement', done: false },
   { id: 2, text: 'Build an app', done: false },
 ]);
 
@@ -239,13 +239,13 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
 
           <h2>Component Model: DsdElement + JSX</h2>
           <p>
-            LessJS components are native Web Components extending <code>DsdElement</code>. JSX provides
+            openElement components are native Web Components extending <code>DsdElement</code>. JSX provides
             type-safe templates that compile to VNode trees, outputting Declarative Shadow DOM during SSR.
           </p>
           <open-code-block><pre><code>{`import { DsdElement, signal } from '@openelement/core';
 
 export class GreetingCard extends DsdElement {
-  #name = signal('LessJS');
+  #name = signal('openElement');
 
   override render() {
     return (
@@ -283,7 +283,7 @@ customElements.define('greeting-card', GreetingCard);`}</code></pre></open-code-
 
           <h3>List Rendering</h3>
           <open-code-block><pre><code>{`const todos = signal([
-  { id: 1, text: 'Learn LessJS', done: false },
+  { id: 1, text: 'Learn openElement', done: false },
   { id: 2, text: 'Build an app', done: false },
 ]);
 

@@ -9,7 +9,7 @@ order: 3
 
           <h1>Routing &amp; Data</h1>
           <p class="subtitle">
-            LessJS uses filesystem routing. Files map to URLs, with dynamic segments, special files,
+            openElement uses filesystem routing. Files map to URLs, with dynamic segments, special files,
             and build-time data injection.
           </p>
 

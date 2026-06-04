@@ -1,9 +1,13 @@
 /**
- * Tests for LessPackageManifest types and LessRegistry.
+ * Tests for OpenElementPackageManifest types and LessRegistry.
  */
 
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import type { LessPackageManifest, ValidationError, ValidationWarning } from '../src/types.js';
+import type {
+  OpenElementPackageManifest,
+  ValidationError,
+  ValidationWarning,
+} from '../src/types.js';
 import {
   clear as clearRegistry,
   generateIndex,
@@ -14,7 +18,9 @@ import {
 } from '../src/registry.js';
 
 /** Minimal valid manifest for testing */
-function createTestManifest(overrides?: Partial<LessPackageManifest>): LessPackageManifest {
+function createTestManifest(
+  overrides?: Partial<OpenElementPackageManifest>,
+): OpenElementPackageManifest {
   return {
     schemaVersion: '1.0.0',
     packageName: '@test/ui',
@@ -24,7 +30,7 @@ function createTestManifest(overrides?: Partial<LessPackageManifest>): LessPacka
         tagName: 'test-button',
         className: 'TestButton',
         description: 'A test button',
-        less: {
+        openElement: {
           ssr: true,
           dsd: true,
           layer: 'dsd-interactive',
@@ -37,7 +43,7 @@ function createTestManifest(overrides?: Partial<LessPackageManifest>): LessPacka
         tagName: 'test-card',
         className: 'TestCard',
         description: 'A test card',
-        less: {
+        openElement: {
           ssr: true,
           dsd: true,
           layer: 'dsd-static',
@@ -80,8 +86,8 @@ Deno.test('validateManifest - invalid tag name', () => {
 Deno.test('validateManifest - duplicate tag names within package', () => {
   const manifest = createTestManifest({
     declarations: [
-      { tagName: 'test-dup', less: { module: '@test/ui/a' } },
-      { tagName: 'test-dup', less: { module: '@test/ui/b' } },
+      { tagName: 'test-dup', openElement: { module: '@test/ui/a' } },
+      { tagName: 'test-dup', openElement: { module: '@test/ui/b' } },
     ],
   });
   const result = validateManifest(manifest);
@@ -92,7 +98,7 @@ Deno.test('validateManifest - duplicate tag names within package', () => {
 Deno.test('validateManifest - unsafe module path', () => {
   const manifest = createTestManifest({
     declarations: [
-      { tagName: 'test-unsafe', less: { module: '../../../etc/passwd' } },
+      { tagName: 'test-unsafe', openElement: { module: '../../../etc/passwd' } },
     ],
   });
   const result = validateManifest(manifest);
@@ -103,7 +109,7 @@ Deno.test('validateManifest - unsafe module path', () => {
 Deno.test('validateManifest - invalid layer', () => {
   const manifest = createTestManifest({
     declarations: [
-      { tagName: 'test-bad-layer', less: { layer: 'invalid-layer' as never } },
+      { tagName: 'test-bad-layer', openElement: { layer: 'invalid-layer' as never } },
     ],
   });
   const result = validateManifest(manifest);
@@ -114,7 +120,7 @@ Deno.test('validateManifest - invalid layer', () => {
 Deno.test('validateManifest - invalid hydrate strategy', () => {
   const manifest = createTestManifest({
     declarations: [
-      { tagName: 'test-bad-hydrate', less: { hydrate: 'instant' as never } },
+      { tagName: 'test-bad-hydrate', openElement: { hydrate: 'instant' as never } },
     ],
   });
   const result = validateManifest(manifest);
@@ -156,7 +162,7 @@ Deno.test('registry - register and getByTagName', () => {
 
   const decl = getByTagName('test-button');
   assertEquals(decl?.tagName, 'test-button');
-  assertEquals(decl?.less?.module, '@test/ui/test-button');
+  assertEquals(decl?.openElement?.module, '@test/ui/test-button');
 
   const notFound = getByTagName('non-existent');
   assertEquals(notFound, undefined);

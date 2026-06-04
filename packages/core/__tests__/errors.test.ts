@@ -3,16 +3,16 @@
  * ADR-0053: Updated for unified error architecture.
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import { ErrorCode, LessError, SsrRenderError } from '../src/errors.ts';
+import { ErrorCode, OpenElementError, SsrRenderError } from '../src/errors.ts';
 
 Deno.test('errors', async (t) => {
-  await t.step('LessError has code, severity, phase, recoverable', () => {
-    const err = new LessError('test', ErrorCode.RENDER_ERROR, 'error', 'render', true);
+  await t.step('OpenElementError has code, severity, phase, recoverable', () => {
+    const err = new OpenElementError('test', ErrorCode.RENDER_ERROR, 'error', 'render', true);
     assertEquals(err.code, ErrorCode.RENDER_ERROR);
     assertEquals(err.severity, 'error');
     assertEquals(err.phase, 'render');
     assertEquals(err.recoverable, true);
-    assertEquals(err.name, 'LessError');
+    assertEquals(err.name, 'OpenElementError');
   });
 
   await t.step('SsrRenderError extends RenderError', () => {
@@ -26,7 +26,7 @@ Deno.test('errors', async (t) => {
   });
 
   await t.step('toJSON returns structured error', () => {
-    const err = new LessError('test error', ErrorCode.UNKNOWN, 'warning', 'build', false);
+    const err = new OpenElementError('test error', ErrorCode.UNKNOWN, 'warning', 'build', false);
     const json = err.toJSON() as Record<string, unknown>;
     assertEquals(json.code, ErrorCode.UNKNOWN);
     assertEquals(json.message, 'test error');

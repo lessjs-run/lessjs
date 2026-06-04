@@ -1,71 +1,72 @@
 import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@1';
 import {
-  createLessJsrPackageResolverPlugin,
-  parseLessPackageSpecifier,
-  resolveLessPackageExport,
-  resolveVirtualLessPackageRelative,
-  toVirtualLessPackageId,
+  createOpenJsrPackageResolverPlugin,
+  parseOpenPackageSpecifier,
+  resolveOpenPackageExport,
+  resolveVirtualOpenPackageRelative,
+  toVirtualOpenPackageId,
 } from '../src/ssg-package-resolver.ts';
 
-Deno.test('parseLessPackageSpecifier parses bare LessJS package ids', () => {
-  assertEquals(parseLessPackageSpecifier('@openelement/core'), {
+Deno.test('parseOpenPackageSpecifier parses bare openElement package ids', () => {
+  assertEquals(parseOpenPackageSpecifier('@openelement/core'), {
     packageName: 'core',
     subpath: '.',
   });
-  assertEquals(parseLessPackageSpecifier('@openelement/ui/less-card'), {
+  assertEquals(parseOpenPackageSpecifier('@openelement/ui/open-card'), {
     packageName: 'ui',
-    subpath: 'less-card',
+    subpath: 'open-card',
   });
 });
 
-Deno.test('parseLessPackageSpecifier parses JSR LessJS package ids', () => {
-  assertEquals(parseLessPackageSpecifier('jsr:@openelement/signals@^0.21/framework'), {
+Deno.test('parseOpenPackageSpecifier parses JSR openElement package ids', () => {
+  assertEquals(parseOpenPackageSpecifier('jsr:@openelement/signals@^0.21/framework'), {
     packageName: 'signals',
     range: '^0.21',
     subpath: 'framework',
   });
-  assertEquals(parseLessPackageSpecifier('jsr:@openelement/core@^0.21.9/navigation'), {
+  assertEquals(parseOpenPackageSpecifier('jsr:@openelement/core@^0.21.9/logger'), {
     packageName: 'core',
     range: '^0.21.9',
-    subpath: 'navigation',
+    subpath: 'logger',
   });
 });
 
-Deno.test('resolveLessPackageExport maps public subpaths to source files', () => {
-  assertEquals(resolveLessPackageExport('core', '.'), 'src/index.ts');
-  assertEquals(resolveLessPackageExport('core', 'navigation'), 'src/navigation.ts');
-  assertEquals(resolveLessPackageExport('ui', 'less-card'), 'src/less-card.tsx');
-  assertEquals(resolveLessPackageExport('signals', 'framework'), 'src/framework.ts');
-  assertEquals(resolveLessPackageExport('app', '.'), 'src/index.ts');
+Deno.test('resolveOpenPackageExport maps public subpaths to source files', () => {
+  assertEquals(resolveOpenPackageExport('core', '.'), 'src/index.ts');
+  assertEquals(resolveOpenPackageExport('core', 'logger'), 'src/logger.ts');
+  assertEquals(resolveOpenPackageExport('ui', 'open-card'), 'src/open-card.tsx');
+  assertEquals(resolveOpenPackageExport('protocols', 'build-types'), 'src/build-types.ts');
+  assertEquals(resolveOpenPackageExport('signals', 'framework'), 'src/framework.ts');
+  assertEquals(resolveOpenPackageExport('app', '.'), 'src/index.ts');
 });
 
-Deno.test('resolveLessPackageExport reports unknown LessJS subpaths clearly', () => {
+Deno.test('resolveOpenPackageExport reports unknown openElement subpaths clearly', () => {
   assertThrows(
-    () => resolveLessPackageExport('core', 'missing'),
+    () => resolveOpenPackageExport('core', 'missing'),
     Error,
     'Unknown @openelement/core export subpath',
   );
 });
 
-Deno.test('resolveVirtualLessPackageRelative keeps relative imports in package namespace', () => {
+Deno.test('resolveVirtualOpenPackageRelative keeps relative imports in package namespace', () => {
   assertEquals(
-    resolveVirtualLessPackageRelative(
+    resolveVirtualOpenPackageRelative(
       './errors.ts',
-      toVirtualLessPackageId('core', 'src/index.ts'),
+      toVirtualOpenPackageId('core', 'src/index.ts'),
     ),
-    toVirtualLessPackageId('core', 'src/errors.ts'),
+    toVirtualOpenPackageId('core', 'src/errors.ts'),
   );
   assertEquals(
-    resolveVirtualLessPackageRelative(
+    resolveVirtualOpenPackageRelative(
       '../shared.js',
-      toVirtualLessPackageId('content', 'src/sitemap/index.ts'),
+      toVirtualOpenPackageId('content', 'src/sitemap/index.ts'),
     ),
-    toVirtualLessPackageId('content', 'src/shared.ts'),
+    toVirtualOpenPackageId('content', 'src/shared.ts'),
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin resolves JSR and bare package ids', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin resolves JSR and bare package ids', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
     fetchSource: (url) =>
@@ -78,21 +79,21 @@ Deno.test('createLessJsrPackageResolverPlugin resolves JSR and bare package ids'
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
   assertEquals(
-    await resolveId('@openelement/ui/less-card'),
-    toVirtualLessPackageId('ui', 'src/less-card.tsx'),
+    await resolveId('@openelement/ui/open-card'),
+    toVirtualOpenPackageId('ui', 'src/open-card.tsx'),
   );
   assertEquals(
     await resolveId('jsr:@openelement/signals@^0.21/framework'),
-    toVirtualLessPackageId('signals', 'src/framework.ts'),
+    toVirtualOpenPackageId('signals', 'src/framework.ts'),
   );
   assertEquals(
-    await load(toVirtualLessPackageId('signals', 'src/framework.ts')),
+    await load(toVirtualOpenPackageId('signals', 'src/framework.ts')),
     'export const url = "https://jsr.io/@openelement/signals/0.21.9/src/framework.ts";',
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin fails fetch misses before Vite unresolved import', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin fails fetch misses before Vite unresolved import', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
     fetchSource: () => Promise.resolve(new Response('', { status: 404 })),
@@ -100,14 +101,14 @@ Deno.test('createLessJsrPackageResolverPlugin fails fetch misses before Vite unr
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
   await assertRejects(
-    () => Promise.resolve(load(toVirtualLessPackageId('core', 'src/index.ts'))),
+    () => Promise.resolve(load(toVirtualOpenPackageId('core', 'src/index.ts'))),
     Error,
     'Failed to fetch @openelement/core/src/index.ts',
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin can read local package sources before publish', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin can read local package sources before publish', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
     localPackageRoot: 'C:/repo',
@@ -116,13 +117,13 @@ Deno.test('createLessJsrPackageResolverPlugin can read local package sources bef
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
   assertEquals(
-    await load(toVirtualLessPackageId('core', 'src/index.ts')),
+    await load(toVirtualOpenPackageId('core', 'src/index.ts')),
     '// C:/repo/packages/core/src/index.ts',
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packages', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin does not intercept optional packages', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
   });
@@ -141,16 +142,16 @@ Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packag
   // Required packages ARE resolved by the resolver
   assertEquals(
     await resolveId('@openelement/core'),
-    toVirtualLessPackageId('core', 'src/index.ts'),
+    toVirtualOpenPackageId('core', 'src/index.ts'),
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin lets exact user aliases resolve first', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin lets exact user aliases resolve first', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
     userAliases: {
-      '@openelement/ui/less-layout': './app/components/site-layout.tsx',
+      '@openelement/ui/open-layout': './app/components/site-layout.tsx',
     },
   });
   const resolveId = plugin.resolveId as unknown as (
@@ -158,14 +159,14 @@ Deno.test('createLessJsrPackageResolverPlugin lets exact user aliases resolve fi
     importer?: string,
   ) => string | null | Promise<string | null>;
 
-  assertEquals(await resolveId('@openelement/ui/less-layout'), null);
+  assertEquals(await resolveId('@openelement/ui/open-layout'), null);
   assertEquals(
-    await resolveId('@openelement/ui/less-card'),
-    toVirtualLessPackageId('ui', 'src/less-card.tsx'),
+    await resolveId('@openelement/ui/open-card'),
+    toVirtualOpenPackageId('ui', 'src/open-card.tsx'),
   );
 });
 
-Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR source', async () => {
+Deno.test('createOpenJsrPackageResolverPlugin rewrites npm: specifiers from JSR source', async () => {
   const jsrSource = [
     `import * as marked from 'npm:marked@12.0.0';`,
     `import type { Tokens } from 'npm:marked@12.0.0';`,
@@ -175,18 +176,18 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
     `import 'npm:marked@12.0.0';`,
     `const dynamic = import('npm:gray-matter@4.0.3');`,
     `const literal = 'npm:not-a-real-import@1.0.0';`,
-    `export * from 'npm:@jsr/lessjs__signals@0.21.10/framework';`,
-    `import { rpc } from 'npm:@jsr/lessjs__rpc@0.21.10';`,
+    `export * from 'npm:@jsr/openelement__signals@0.21.10/framework';`,
+    `import { rpc } from 'npm:@jsr/openelement__rpc@0.21.10';`,
   ].join('\n');
 
-  const plugin = createLessJsrPackageResolverPlugin({
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.10',
     fetchSource: () => Promise.resolve(new Response(jsrSource)),
   });
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
-  const result = await load(toVirtualLessPackageId('core', 'src/render-ir.ts')) as string;
+  const result = await load(toVirtualOpenPackageId('core', 'src/render-ir.ts')) as string;
 
   // npm: specifiers stripped to bare packages (version and prefix removed)
   assertEquals(result.includes("from 'marked'"), true);
@@ -195,8 +196,8 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   assertEquals(result.includes("from '@openelement/core/context'"), true);
   assertEquals(result.includes("import 'marked'"), true);
   assertEquals(result.includes("import('gray-matter')"), true);
-  assertEquals(result.includes("from '@jsr/lessjs__signals/framework'"), true);
-  assertEquals(result.includes("from '@jsr/lessjs__rpc'"), true);
+  assertEquals(result.includes("from '@jsr/openelement__signals/framework'"), true);
+  assertEquals(result.includes("from '@jsr/openelement__rpc'"), true);
   assertEquals(result.includes("'npm:not-a-real-import@1.0.0'"), true);
 
   // npm: prefix and version should NOT remain
@@ -206,8 +207,8 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   assertEquals(result.includes('@2.1.0'), false);
 });
 
-Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers during workspace transforms', async () => {
-  const plugin = createLessJsrPackageResolverPlugin({
+Deno.test('createOpenJsrPackageResolverPlugin rewrites npm: specifiers during workspace transforms', async () => {
+  const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: 'C:/repo',
     version: '0.28.5',
   });

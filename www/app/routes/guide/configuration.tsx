@@ -21,20 +21,20 @@ export class ConfigurationPage extends DsdElement {
         <div class='container'>
           <h1>配置</h1>
           <p class='subtitle'>
-            LessJS 通过 Vite 插件配置。路由、island、静态输出、head 注入、PWA 和 middleware
+            openElement 通过 Vite 插件配置。路由、island、静态输出、head 注入、PWA 和 middleware
             是各自独立的关注点。
           </p>
           <h2>Minimal Configuration</h2>
           <open-code-block>
             <pre><code>import {'{'} defineConfig {'}'} from 'vite';
-import {'{'} lessjs {'}'} from '@openelement/app';
-export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
+import {'{'} openElement {'}'} from '@openelement/app';
+export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           </open-code-block>
           <p>
-            使用 <span class='inline-code'>lessjs()</span>{' '}
+            使用 <span class='inline-code'>openElement()</span>{' '}
             是推荐方式--它组合了核心插件、内容管线和
             i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用{' '}
-            <span class='inline-code'>lessPipeline()</span> from{' '}
+            <span class='inline-code'>openPipeline()</span> from{' '}
             <span class='inline-code'>@openelement/adapter-vite</span>。
           </p>
           <h2>Main Options</h2>
@@ -71,7 +71,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
           </table>
           <h2>JSX 配置（v0.24.1）</h2>
           <p>
-            LessJS v0.24.1 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
+            openElement v0.24.1 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
           </p>
           <open-code-block>
             <pre><code>{'// deno.json'}
@@ -93,17 +93,17 @@ export default defineConfig({'{'}
     jsx: 'automatic',
     jsxImportSource: '@openelement/core',
   {'}'},
-  plugins: [lessjs({'{'} ... {'}'})]
+  plugins: [openElement({'{'} ... {'}'})]
 {'}'});</code></pre>
           </open-code-block>
           <p>
             <span class='inline-code'>jsx: 'automatic'</span>{' '}
-            告诉 esbuild 使用 LessJS 的 jsx-runtime 而不是 React 的。Vite 的 SSR 和 client island
+            告诉 esbuild 使用 openElement 的 jsx-runtime 而不是 React 的。Vite 的 SSR 和 client island
             构建都会正确转换 <span class='inline-code'>.tsx</span> 文件。
           </p>
           <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
           <open-code-block>
-            <pre><code>lessjs({'{'}
+            <pre><code>openElement({'{'}
   html: {'{'} lang: 'en', title: 'My App' {'}'},
   inject: {'{'}
     stylesheets: ['https://cdn.example.com/theme.css'],
@@ -111,7 +111,7 @@ export default defineConfig({'{'}
   {'}'},
   packageIslands: ['@openelement/ui'],
   middleware: {'{'} logger: true, cors: true, csp: {'{'} policy: "default-src 'self'" {'}'} {'}'},
-  pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#050505' {'}'},
+  pwa: {'{'} name: 'My App', shortName: 'openElement', themeColor: '#050505' {'}'},
   content: {'{'} blog: {'{'} contentDir: 'posts' {'}'}, nav: {'{'} routesDir: 'app/routes' {'}'} {'}'},
   i18n: {'{'} locales: ['en', 'zh'], defaultLocale: 'en' {'}'},
 {'}'});</code></pre>
@@ -134,20 +134,20 @@ export default defineConfig({'{'}
         <div class='container'>
           <h1>Configuration</h1>
           <p class='subtitle'>
-            LessJS is configured through Vite plugins. Routes, islands, static output, head
+            openElement is configured through Vite plugins. Routes, islands, static output, head
             injection, PWA, and middleware are independent concerns.
           </p>
           <h2>Minimal Configuration</h2>
           <open-code-block>
             <pre><code>import {'{'} defineConfig {'}'} from 'vite';
-import {'{'} lessjs {'}'} from '@openelement/app';
-export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
+import {'{'} openElement {'}'} from '@openelement/app';
+export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           </open-code-block>
           <p>
-            Use <span class='inline-code'>lessjs()</span>{' '}
+            Use <span class='inline-code'>openElement()</span>{' '}
             as the recommended entry - it combines the core plugin, content pipeline, and i18n in a
             single call. If you only need core routing and island functionality, you can use{' '}
-            <span class='inline-code'>lessPipeline()</span> from{' '}
+            <span class='inline-code'>openPipeline()</span> from{' '}
             <span class='inline-code'>@openelement/adapter-vite</span> directly.
           </p>
           <h2>Options Reference</h2>
@@ -186,14 +186,14 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
             </tbody>
           </table>
           <p>
-            Future <code>less add</code>{' '}
+            Future <code>open add</code>{' '}
             support should update this option only after a package manifest passes validation. Until
             then, third-party packages should be added explicitly and reviewed like any other
             dependency.
           </p>
           <h2>JSX Configuration (v0.24.1)</h2>
           <p>
-            LessJS v0.24.1 uses JSX+Signal as the component model. Configure deno.json and
+            openElement v0.24.1 uses JSX+Signal as the component model. Configure deno.json and
             vite.config.ts:
           </p>
           <open-code-block>
@@ -216,7 +216,7 @@ export default defineConfig({'{'}
     jsx: 'automatic',
     jsxImportSource: '@openelement/core',
   {'}'},
-  plugins: [lessjs({'{'} ... {'}'})]
+  plugins: [openElement({'{'} ... {'}'})]
 {'}'});</code></pre>
           </open-code-block>
           <p>
@@ -226,7 +226,7 @@ export default defineConfig({'{'}
           </p>
           <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
           <open-code-block>
-            <pre><code>lessjs({'{'}
+            <pre><code>openElement({'{'}
   html: {'{'} lang: 'en', title: 'My App' {'}'},
   inject: {'{'}
     stylesheets: ['https://cdn.example.com/theme.css'],
@@ -234,7 +234,7 @@ export default defineConfig({'{'}
   {'}'},
   packageIslands: ['@openelement/ui'],
   middleware: {'{'} logger: true, cors: true, csp: {'{'} policy: "default-src 'self'" {'}'} {'}'},
-  pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#050505' {'}'},
+  pwa: {'{'} name: 'My App', shortName: 'openElement', themeColor: '#050505' {'}'},
   content: {'{'} blog: {'{'} contentDir: 'posts' {'}'}, nav: {'{'} routesDir: 'app/routes' {'}'} {'}'},
   i18n: {'{'} locales: ['en', 'zh'], defaultLocale: 'en' {'}'},
 {'}'});</code></pre>

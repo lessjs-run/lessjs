@@ -23,7 +23,7 @@ Deno.test('validateHubPackageRecord: valid record passes', () => {
     description: 'A test package',
     manifestHash: 'a'.repeat(64),
     compatibility: 'ssr-capable',
-    compatibilityJustification: 'Has LessJS SSR metadata.',
+    compatibilityJustification: 'Has openElement SSR metadata.',
     tags: [
       {
         tagName: 'test-button',
@@ -38,7 +38,7 @@ Deno.test('validateHubPackageRecord: valid record passes', () => {
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: 'less add @test/test-pkg',
+      command: 'open add @test/test-pkg',
       configChanges: ['SSR enabled'],
       warnings: [],
       ssrCapable: true,
@@ -65,7 +65,7 @@ Deno.test('validateHubPackageRecord: missing name fails', () => {
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: 'less add test',
+      command: 'open add test',
       configChanges: [],
       warnings: [],
       ssrCapable: false,
@@ -93,7 +93,7 @@ Deno.test('validateHubPackageRecord: invalid compatibility fails', () => {
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: 'less add test',
+      command: 'open add test',
       configChanges: [],
       warnings: [],
       ssrCapable: false,
@@ -120,7 +120,7 @@ Deno.test('validateHubPackageRecord: missing reports fails', () => {
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: 'less add test',
+      command: 'open add test',
       configChanges: [],
       warnings: [],
       ssrCapable: false,
@@ -179,7 +179,7 @@ Deno.test('validateHubSubmission: valid submission passes', () => {
       snapshotPaths: {},
       installGuidance: {
         safeToInstall: true,
-        command: 'less add test',
+        command: 'open add test',
         configChanges: [],
         warnings: [],
         ssrCapable: false,
@@ -217,7 +217,7 @@ Deno.test('validateHubSubmission: missing artifacts fails', () => {
       snapshotPaths: {},
       installGuidance: {
         safeToInstall: true,
-        command: 'less add test',
+        command: 'open add test',
         configChanges: [],
         warnings: [],
         ssrCapable: false,
@@ -246,7 +246,7 @@ Deno.test('validateHubPackageRecord: missing manifestHash fails', () => {
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: 'less add test',
+      command: 'open add test',
       configChanges: [],
       warnings: [],
       ssrCapable: false,
@@ -276,7 +276,7 @@ Deno.test('validateHubSubmission: empty artifact content fails', () => {
       snapshotPaths: {},
       installGuidance: {
         safeToInstall: true,
-        command: 'less add test',
+        command: 'open add test',
         configChanges: [],
         warnings: [],
         ssrCapable: false,

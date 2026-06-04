@@ -4,11 +4,11 @@
  * Extracted from @openelement/core in v0.21.0 (SOP-007).
  *
  * Parses and validates Custom Elements Manifest (CEM) JSON files.
- * Extracts LessJS-specific declarations, finds module paths for tags,
+ * Extracts openElement-specific declarations, finds module paths for tags,
  * and validates CEM structure.
  *
  * This package is standalone — usable by any tool that needs to
- * parse CEM files, not just LessJS.
+ * parse CEM files, not just openElement.
  */
 
 // v0.23.0: Canonical implementation moved from @openelement/core/cem-parser.
@@ -21,7 +21,7 @@ export {
   validateModulePaths,
 } from './cem-parser.js';
 
-// v0.23.0: Canonical type owner for CEM schema & LessJS manifest types.
+// v0.23.0: Canonical type owner for CEM schema & openElement manifest types.
 export type {
   CemAttribute,
   CemAttributeType,
@@ -48,16 +48,16 @@ export type {
   CemSchemaVersion,
   CemSlot,
   CustomElementsManifest,
-  LessAttribute,
-  LessCssPart,
-  LessCssProperty,
-  LessDeclaration,
-  LessElementExtensions,
-  LessEvent,
-  LessExport,
-  LessMember,
-  LessModule,
-  LessPackageExtensions,
-  LessPackageManifest,
-  LessSlot,
+  OpenElementAttribute,
+  OpenElementCssPart,
+  OpenElementCssProperty,
+  OpenElementDeclaration,
+  OpenElementEvent,
+  OpenElementExport,
+  OpenElementExtensions,
+  OpenElementMember,
+  OpenElementModule,
+  OpenElementPackageExtensions,
+  OpenElementPackageManifest,
+  OpenElementSlot,
 } from './types.js';

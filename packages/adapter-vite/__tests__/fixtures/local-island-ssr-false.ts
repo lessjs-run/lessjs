@@ -1,5 +1,5 @@
 /**
- * Fixture: Local island with less.ssr = false
+ * Fixture: Local island with openElement.ssr = false
  *
  * This component explicitly opts out of SSR by exporting
  * `less = { ssr: false }`. The SSR admission plan should
@@ -9,7 +9,7 @@
  * DOM globals. The class is just a placeholder for metadata export.
  */
 
-export const less = { ssr: false, dsd: false, hydrate: 'idle' };
+export const openElement = { ssr: false, dsd: false, hydrate: 'idle' };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-class-definition
 export default class LocalSsrFalse {

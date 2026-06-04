@@ -2,7 +2,7 @@
  * @openelement/core - Local WC Package Registry
  *
  * Provides registration, lookup, validation, and indexing for
- * LessPackageManifest instances. This is the foundation for
+ * OpenElementPackageManifest instances. This is the foundation for
  * the v0.16 WC Package Protocol.
  *
  * The registry is local (in-process) only. Public hub support
@@ -10,8 +10,8 @@
  */
 
 import type {
-  LessDeclaration,
-  LessPackageManifest,
+  OpenElementDeclaration,
+  OpenElementPackageManifest,
   RegistryIndex,
   RegistryIndexEntry,
   ValidationError,
@@ -19,14 +19,10 @@ import type {
   ValidationWarning,
 } from './types.js';
 
-// ©¤©¤©¤ Registry storage ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-const _packages: LessPackageManifest[] = [];
-
-// ©¤©¤©¤ Public API ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
+const _packages: OpenElementPackageManifest[] = [];
 
 /** Register a package manifest with the local registry. */
-export function register(manifest: LessPackageManifest): void {
+export function register(manifest: OpenElementPackageManifest): void {
   const existing = _packages.find((p) => p.packageName === manifest.packageName);
   if (existing) {
     const idx = _packages.indexOf(existing);
@@ -37,7 +33,7 @@ export function register(manifest: LessPackageManifest): void {
 }
 
 /** Look up a declaration by its custom element tag name. */
-export function getByTagName(tagName: string): LessDeclaration | undefined {
+export function getByTagName(tagName: string): OpenElementDeclaration | undefined {
   for (const pkg of _packages) {
     const decl = pkg.declarations.find((d) => d.tagName === tagName);
     if (decl) return decl;
@@ -46,12 +42,12 @@ export function getByTagName(tagName: string): LessDeclaration | undefined {
 }
 
 /** Get all registered package manifests. */
-export function getAll(): readonly LessPackageManifest[] {
+export function getAll(): readonly OpenElementPackageManifest[] {
   return _packages;
 }
 
 /** Validate a package manifest against the openElement protocol rules. */
-export function validate(manifest: LessPackageManifest): ValidationResult {
+export function validate(manifest: OpenElementPackageManifest): ValidationResult {
   const errors: ValidationError[] = [];
   const warnings: ValidationWarning[] = [];
 
@@ -121,35 +117,38 @@ export function validate(manifest: LessPackageManifest): ValidationResult {
     tagNames.add(decl.tagName);
 
     // 4. Unsafe module paths
-    if (decl.less?.module) {
-      if (isUnsafeModulePath(decl.less.module)) {
+    if (decl.openElement?.module) {
+      if (isUnsafeModulePath(decl.openElement.module)) {
         errors.push({
           code: 'UNSAFE_MODULE_PATH',
-          message: `Module path "${decl.less.module}" contains unsafe patterns`,
-          path: `${path}.less.module`,
+          message: `Module path "${decl.openElement.module}" contains unsafe patterns`,
+          path: `${path}.openElement.module`,
         });
       }
     }
 
     // 4. Invalid layer
     if (
-      decl.less?.layer &&
-      !['dsd-static', 'dsd-interactive', 'pure-island'].includes(decl.less.layer)
+      decl.openElement?.layer &&
+      !['dsd-static', 'dsd-interactive', 'pure-island'].includes(decl.openElement.layer)
     ) {
       errors.push({
         code: 'INVALID_LAYER',
         message:
-          `Invalid layer "${decl.less.layer}" (must be dsd-static, dsd-interactive, or pure-island)`,
-        path: `${path}.less.layer`,
+          `Invalid layer "${decl.openElement.layer}" (must be dsd-static, dsd-interactive, or pure-island)`,
+        path: `${path}.openElement.layer`,
       });
     }
 
     // 4. Invalid hydrate strategy
-    if (decl.less?.hydrate && !['load', 'idle', 'visible', 'only'].includes(decl.less.hydrate)) {
+    if (
+      decl.openElement?.hydrate &&
+      !['load', 'idle', 'visible', 'only'].includes(decl.openElement.hydrate)
+    ) {
       errors.push({
         code: 'INVALID_HYDRATE_STRATEGY',
-        message: `Invalid hydrate strategy "${decl.less.hydrate}"`,
-        path: `${path}.less.hydrate`,
+        message: `Invalid hydrate strategy "${decl.openElement.hydrate}"`,
+        path: `${path}.openElement.hydrate`,
       });
     }
   }
@@ -209,10 +208,10 @@ export function generateIndex(): RegistryIndex {
         tagName: decl.tagName,
         packageName: pkg.packageName,
         version: pkg.version,
-        module: decl.less?.module,
-        ssr: decl.less?.ssr,
-        dsd: decl.less?.dsd,
-        hydrate: decl.less?.hydrate,
+        module: decl.openElement?.module,
+        ssr: decl.openElement?.ssr,
+        dsd: decl.openElement?.dsd,
+        hydrate: decl.openElement?.hydrate,
       });
     }
   }
@@ -230,8 +229,6 @@ export function generateIndex(): RegistryIndex {
 export function clear(): void {
   _packages.length = 0;
 }
-
-// ©¤©¤©¤ Internal helpers ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Check if a tag name is a valid custom element name per HTML spec. */
 function isValidCustomElementName(name: string): boolean {

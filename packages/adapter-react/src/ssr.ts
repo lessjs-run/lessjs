@@ -12,7 +12,7 @@
  *
  * Why renderToStaticMarkup() instead of renderToString()?
  *   renderToString() adds data-reactroot attributes for client hydration.
- *   Since LessJS uses DSD (Declarative Shadow DOM) for SSR, we don't need
+ *   Since openElement uses DSD (Declarative Shadow DOM) for SSR, we don't need
  *   React's hydration markers - the browser handles DOM from the template.
  *   renderToStaticMarkup() produces clean HTML without extra attributes.
  *
@@ -24,8 +24,6 @@ import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('adapter-react');
 
-// ©¤©¤©¤ React Element Detection ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Symbol used by React to identify elements (React 17+). */
 const REACT_ELEMENT_TYPE = Symbol.for('react.element');
 /** Symbol used by React 19 for transitional elements. */
@@ -35,15 +33,12 @@ const REACT_TRANSITIONAL_ELEMENT_TYPE = Symbol.for('react.transitional.element')
  * Check if a value is a React element.
  *
  * React elements have a $$typeof property equal to Symbol.for('react.element')
- * (React ¡Ü18) or Symbol.for('react.transitional.element') (React 19).
  */
 export function isReactElement(value: unknown): boolean {
   if (typeof value !== 'object' || value === null) return false;
   const typeSymbol = (value as Record<string, unknown>).$$typeof;
   return typeSymbol === REACT_ELEMENT_TYPE || typeSymbol === REACT_TRANSITIONAL_ELEMENT_TYPE;
 }
-
-// ©¤©¤©¤ React SSR Rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Cached reference to renderToStaticMarkup once loaded */
 let _renderToStaticMarkup: ((element: unknown) => string) | undefined;
@@ -109,8 +104,6 @@ export async function renderReactToString(
     );
   }
 }
-
-// ©¤©¤©¤ Adapter Installation ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 let _installed = false;
 

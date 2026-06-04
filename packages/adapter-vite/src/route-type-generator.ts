@@ -1,8 +1,8 @@
 /**
  * @openelement/adapter-vite - Route Type Generator
  *
- * Generates `.less/routes.d.ts` with type-safe route parameter definitions
- * for the `virtual:less-routes` module. Only routes that have dynamic [param]
+ * Generates `.openElement/routes.d.ts` with type-safe route parameter definitions
+ * for the `virtual:open-routes` module. Only routes that have dynamic [param]
  * segments are included in the output.
  *
  * v0.25.0: Initial implementation for build-time route type code generation.
@@ -56,7 +56,7 @@ function generateParamsType(params: string[]): string {
 }
 
 /**
- * Generate the `.less/routes.d.ts` declaration file content.
+ * Generate the `.openElement/routes.d.ts` declaration file content.
  *
  * Only routes that have dynamic parameters (non-empty `params` array)
  * are included in the generated output. Static routes with no params
@@ -64,7 +64,7 @@ function generateParamsType(params: string[]): string {
  *
  * Example output:
  * ```typescript
- * declare module 'virtual:less-routes' {
+ * declare module 'virtual:open-routes' {
  *   interface RouteParams {
  *     '/blog/[slug]': { slug: string };
  *     '/registry/[package]/[component]': { package: string; component: string };
@@ -89,7 +89,7 @@ export function generateRouteTypes(routes: RouteEntry[]): string {
       ' * DO NOT EDIT MANUALLY',
       ' */',
       '',
-      "declare module 'virtual:less-routes' {",
+      "declare module 'virtual:open-routes' {",
       '  // eslint-disable-next-line @typescript-eslint/no-empty-interface',
       '  export interface RouteParams {',
       '  }',
@@ -112,7 +112,7 @@ export function generateRouteTypes(routes: RouteEntry[]): string {
     ' * DO NOT EDIT MANUALLY',
     ' */',
     '',
-    "declare module 'virtual:less-routes' {",
+    "declare module 'virtual:open-routes' {",
     '  export interface RouteParams {',
     ...paramEntries,
     '  }',

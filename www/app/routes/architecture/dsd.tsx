@@ -24,7 +24,7 @@ routeSheet.replaceSync(`
       .comparison-item:hover {
         border-color: var(--gray-4);
       }
-      .comparison-item.less {
+      .comparison-item.openElement {
         background: var(--gray-1);
         border-left: 3px solid var(--indigo-5);
       }
@@ -51,7 +51,7 @@ export class DsdGuidePage extends DsdElement {
         <div class="container">
           <h1>DSD 渲染架构</h1>
           <p class="subtitle">
-            Declarative Shadow DOM 是 LessJS 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
+            Declarative Shadow DOM 是 openElement 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
             shadow root，JavaScript 只负责后续升级和必要事件绑定。v0.20 起，DSD 组件默认以
             DsdElement + StyleSheet 实现。
           </p>
@@ -68,7 +68,7 @@ export class DsdGuidePage extends DsdElement {
   &lt;/template&gt;
 &lt;/my-card&gt;`}</code></pre></open-code-block>
 
-          <h2>为什么 LessJS 选择 DSD</h2>
+          <h2>为什么 openElement 选择 DSD</h2>
           <div class="comparison">
             <div class="comparison-item">
               <h3>传统 hydration</h3>
@@ -90,7 +90,7 @@ export class DsdGuidePage extends DsdElement {
 
           <h2>WHATWG DSD 属性</h2>
           <table>
-            <thead><tr><th>属性</th><th>LessJS 选项</th><th>用途</th></tr></thead>
+            <thead><tr><th>属性</th><th>openElement 选项</th><th>用途</th></tr></thead>
             <tbody>
               <tr><td><code>shadowrootmode</code></td><td>固定输出 open</td><td>启用声明式 shadow root。</td></tr>
               <tr><td><code>shadowrootdelegatesfocus</code></td><td><code>delegatesFocus</code></td><td>焦点委托。</td></tr>
@@ -117,7 +117,7 @@ export class DsdGuidePage extends DsdElement {
             就必须降级为 pure island，或通过 manifest 明确声明 SSR/fallback 行为。
           </p>
           <p>
-            LessJS 应通过 Playwright 验证目标浏览器行为。旧浏览器 polyfill 只能作为降级路径，不能替代真实浏览器验证。
+            openElement 应通过 Playwright 验证目标浏览器行为。旧浏览器 polyfill 只能作为降级路径，不能替代真实浏览器验证。
           </p>
 
           <h2>Reactive DSD（v0.21）</h2>
@@ -145,7 +145,7 @@ export class DsdGuidePage extends DsdElement {
         <div class="container">
           <h1>DSD Rendering Architecture</h1>
           <p class="subtitle">
-            Declarative Shadow DOM is the core LessJS rendering model: the server emits standard HTML,
+            Declarative Shadow DOM is the core openElement rendering model: the server emits standard HTML,
             the browser creates shadow roots during parsing, and JavaScript only upgrades components and
             binds necessary events. Since v0.20, DSD components are built on DsdElement + StyleSheet by default.
           </p>
@@ -163,7 +163,7 @@ export class DsdGuidePage extends DsdElement {
   &lt;/template&gt;
 &lt;/my-card&gt;`}</code></pre></open-code-block>
 
-          <h2>Why LessJS Uses DSD</h2>
+          <h2>Why openElement Uses DSD</h2>
           <div class="comparison">
             <div class="comparison-item">
               <h3>Traditional Hydration</h3>
@@ -185,7 +185,7 @@ export class DsdGuidePage extends DsdElement {
 
           <h2>WHATWG DSD Attributes</h2>
           <table>
-            <thead><tr><th>Attribute</th><th>LessJS Option</th><th>Purpose</th></tr></thead>
+            <thead><tr><th>Attribute</th><th>openElement Option</th><th>Purpose</th></tr></thead>
             <tbody>
               <tr><td><code>shadowrootmode</code></td><td>always open</td><td>Enables declarative shadow root output.</td></tr>
               <tr><td><code>shadowrootdelegatesfocus</code></td><td><code>delegatesFocus</code></td><td>Delegates focus into the shadow root.</td></tr>
@@ -213,7 +213,7 @@ export class DsdGuidePage extends DsdElement {
             islands or declare their SSR/fallback behavior in a manifest.
           </p>
           <p>
-            LessJS should validate target browser behavior with Playwright. Polyfills for older browsers
+            openElement should validate target browser behavior with Playwright. Polyfills for older browsers
             are graceful fallback, not a replacement for real-browser validation.
           </p>
 

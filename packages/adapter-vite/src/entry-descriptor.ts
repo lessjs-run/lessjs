@@ -11,8 +11,6 @@
  * Separating "what to generate" from "how to render it" makes the
  * entry pipeline testable, serializable, and diffable.
  *
- * ©¤©¤©¤ SSR Import Discovery Audit (Step 1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
- *
  * This file records where each island source becomes an SSR import:
  *
  * 1. Local island file:
@@ -31,7 +29,7 @@
  *    - Package islands remain client-side unless admitted into the SSR entry
  *
  * Audit completed: 2026-05-17
- * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+ * Auditor: AI agent (openElement v0.17.4 SOP compliance check)
  */
 
 import type {
@@ -39,13 +37,11 @@ import type {
   CompatibilityClassification,
   FrameworkOptions,
   HydrationStrategy,
-  LessPackageManifest,
+  OpenElementPackageManifest,
   RouteEntry,
   SsrAdmissionDecision,
 } from '@openelement/core';
 import { fileToTagName } from './route-scanner.js';
-
-// ©¤©¤©¤ Import declarations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Import declaration for the generated entry module */
 export interface ImportDecl {
@@ -56,8 +52,6 @@ export interface ImportDecl {
   /** Optional alias for the first name (e.g. import { logger as honoLogger }) */
   alias?: string;
 }
-
-// ©¤©¤©¤ Middleware declarations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** CORS origin configuration - string, array of strings, or serialized function body */
 export type CorsOriginConfig =
@@ -86,8 +80,6 @@ export interface MiddlewareDecl {
     csp?: CspConfig;
   };
 }
-
-// ©¤©¤©¤ Route declarations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** API route declaration (e.g. /api/hello) */
 export interface ApiRouteDecl {
@@ -126,8 +118,6 @@ export interface PageRouteDecl {
 /** Union type for all route declarations */
 export type RouteDecl = ApiRouteDecl | PageRouteDecl;
 
-// ©¤©¤©¤ Island declarations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Island component declaration for runtime upgrade detection */
 export interface IslandDecl {
   /** Custom element tag name */
@@ -161,8 +151,6 @@ export interface SsrAdmissionPlan {
   cemClassifications?: CompatibilityClassification[];
 }
 
-// ©¤©¤©¤ Special file declarations (v0.3.0) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Renderer declaration - wraps page SSR output (like Next.js layout.tsx) */
 export interface RendererDecl {
   /** Variable name for the imported module */
@@ -184,8 +172,6 @@ export interface MiddlewareScopeDecl {
   /** Full import path for Vite SSR */
   importPath: string;
 }
-
-// ©¤©¤©¤ Document config ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** HTML document wrapping configuration */
 export interface DocumentConfig {
@@ -216,8 +202,6 @@ export interface AppShellPlan {
   default: ResolvedAppShell;
   layouts: Record<string, ResolvedAppShell>;
 }
-
-// ©¤©¤©¤ Top-level descriptor ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Complete structured descriptor of the Hono entry module to be generated */
 export interface EntryDescriptor {
@@ -266,8 +250,6 @@ export interface EntryDescriptor {
   /** Route info for debug endpoint (dev only) */
   debugRoutes?: Array<{ path: string; type: string }>;
 }
-
-// ©¤©¤©¤ Builder: routes + options -> EntryDescriptor ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Build a structured EntryDescriptor from scanned routes and framework options.
@@ -323,7 +305,7 @@ export function buildEntryDescriptor(
     /** Local island metadata indexed by tag name. */
     islandMeta?: Record<string, Partial<IslandDecl>>;
     /** Package manifests discovered from npm/JSR packages */
-    packageManifests?: LessPackageManifest[];
+    packageManifests?: OpenElementPackageManifest[];
     /** CEM-derived compatibility classifications (from compatibility classifier) */
     cemClassifications?: CompatibilityClassification[];
     /** @security Injected as raw HTML without sanitization */
@@ -493,18 +475,19 @@ export function buildEntryDescriptor(
     reason: islandMeta[tagName]?.reason,
   }));
 
-  // Package islands (extracted from LessPackageManifest declarations)
+  // Package islands (extracted from OpenElementPackageManifest declarations)
   const packageIslandDecls: IslandDecl[] = packageManifests.flatMap((pkg) =>
     pkg.declarations
-      .filter((d) => d.less?.module)
+      .filter((d) => d.openElement?.module)
       .map((d) => ({
         tagName: d.tagName,
-        modulePath: d.less!.module!,
+        modulePath: d.openElement!.module!,
         isPackage: true,
         source: 'package',
-        hydrate: (d.less?.hydrate || options.upgradeStrategy || 'idle') as IslandDecl['hydrate'],
-        ssr: d.less?.hydrate === 'only' ? false : d.less?.ssr,
-        dsd: d.less?.hydrate === 'only' ? false : d.less?.dsd,
+        hydrate:
+          (d.openElement?.hydrate || options.upgradeStrategy || 'idle') as IslandDecl['hydrate'],
+        ssr: d.openElement?.hydrate === 'only' ? false : d.openElement?.ssr,
+        dsd: d.openElement?.hydrate === 'only' ? false : d.openElement?.dsd,
       }))
   );
 
@@ -520,7 +503,7 @@ export function buildEntryDescriptor(
   // --- Document ---
   const document: DocumentConfig = {
     lang: options.html?.lang || 'en',
-    title: options.html?.title || 'LessJS',
+    title: options.html?.title || 'openElement',
     headExtras: options.headExtras || '',
     allowHeadExtrasScripts: options.allowHeadExtrasScripts || false,
   };
@@ -639,21 +622,21 @@ export function buildSsrAdmissionPlan(
       reason = island.reason || 'client:only island is excluded from SSR';
     } else if (island.ssr === false) {
       renderPath = 'client-only';
-      reason = island.reason || 'less.ssr is false';
+      reason = island.reason || 'openElement.ssr is false';
     } else if (source === 'package') {
       // v0.17.4: Package islands with explicit ssr:true now go through SSR.
       // v0.18.0: If no CEM classification exists, apply conservative default.
       // CEM without Less extension defaults to client-only (ADR-0028).
       if (island.ssr === true) {
         renderPath = 'ssr+client';
-        reason = 'package island with less.ssr=true';
+        reason = 'package island with openElement.ssr=true';
       } else {
         renderPath = 'client-only';
         reason = 'package island has no validated SSR capability (conservative default)';
       }
     } else {
       renderPath = 'ssr+client';
-      reason = island.ssr === true ? 'less.ssr is true' : 'local island default SSR path';
+      reason = island.ssr === true ? 'openElement.ssr is true' : 'local island default SSR path';
     }
 
     if (renderPath === 'ssr+client') {

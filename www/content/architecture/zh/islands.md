@@ -15,7 +15,7 @@ order: 40
 
     <h1>Island Upgrade</h1>
     <p class="subtitle">
-      LessJS 的 island 是 DSD HTML 之后的 Custom Element upgrade。它不是整页
+      openElement 的 island 是 DSD HTML 之后的 Custom Element upgrade。它不是整页
       hydration，也不是把应用状态完整恢复到客户端。
     </p>
     <h2>为什么需要 Island</h2>
@@ -29,7 +29,7 @@ order: 40
         </ul>
       </div>
       <div class="comparison-item less">
-        <h3>LessJS Island Model</h3>
+        <h3>openElement Island Model</h3>
         <ul>
           <li>内容先由 SSG + DSD 输出。</li>
           <li>只有真正需要交互的组件才加载客户端模块。</li>

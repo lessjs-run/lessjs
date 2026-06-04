@@ -17,7 +17,7 @@ import { join } from 'node:path';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 function makeTempDir(): string {
-  return Deno.makeTempDirSync({ prefix: 'less-test-' });
+  return Deno.makeTempDirSync({ prefix: 'open-test-' });
 }
 
 function cleanup(dir: string) {
@@ -71,16 +71,16 @@ Deno.test('buildIslandChunkMap scans manifest.json for island chunks', () => {
     const manifest = {
       'src/islands/counter.ts': { file: 'islands/island-counter-abc123.js' },
       'src/islands/theme.ts': { file: 'islands/island-theme-def456.js' },
-      '.less-client-entry.ts': { file: 'islands/client.js' },
+      '.openElement-client-entry.ts': { file: 'islands/client.js' },
     };
     writeFileSync(join(viteDir, 'manifest.json'), JSON.stringify(manifest), 'utf-8');
 
-    const result = buildIslandChunkMap(tmp, 'dist', ['counter-island', 'less-theme-toggle']);
+    const result = buildIslandChunkMap(tmp, 'dist', ['counter-island', 'open-theme-toggle']);
 
     assertExists(result['counter-island']);
-    assertExists(result['less-theme-toggle']);
+    assertExists(result['open-theme-toggle']);
     assertExists(result['counter-island'].includes('counter'));
-    assertExists(result['less-theme-toggle'].includes('theme'));
+    assertExists(result['open-theme-toggle'].includes('theme'));
   } finally {
     cleanup(tmp);
   }

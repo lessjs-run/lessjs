@@ -1,31 +1,29 @@
 /**
- * @openelement/adapter-vite ¡ª Internal plugin factory.
- *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
  * This is the core build plugin implementation. It is NOT part of the
- * public API. Use `lessPipeline()` from the main entry instead.
+ * public API. Use `openPipeline()` from the main entry instead.
  *
- * Internal only: called by lessPipeline() and the @openelement/app umbrella.
+ * Internal only: called by openPipeline() and the @openelement/app umbrella.
  */
 
 import type { Alias, Plugin } from 'vite';
 import type {
   FrameworkOptions,
   HydrationStrategy,
-  LessPackageManifest,
+  OpenElementPackageManifest,
   RouteEntry,
 } from '@openelement/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('adapter-vite');
 
 import honoDevServer from '@hono/vite-dev-server';
-import { LessBuildContext } from './build-context.js';
+import { OpenElementBuildContext } from './build-context.js';
 import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
 import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
@@ -72,21 +70,19 @@ function mergeAliasOptions(
 }
 
 /**
- * openElement Framework Vite plugin ¡ª internal plugin factory.
- *
  * This is the core build plugin implementation. It is NOT part of the
- * public API. Use `lessPipeline()` from @openelement/adapter-vite instead.
+ * public API. Use `openPipeline()` from @openelement/adapter-vite instead.
  *
- * Internal only: called by lessPipeline() and the @openelement/app umbrella.
+ * Internal only: called by openPipeline() and the @openelement/app umbrella.
  * Jamstack: M=SSG+DSD, A=API Routes, J=Islands.
  *
  * @param options - Framework options
- * @param externalCtx - Optional shared LessBuildContext (used by lessjs() umbrella)
+ * @param externalCtx - Optional shared OpenElementBuildContext (used by openElement() umbrella)
  * @internal
  */
-export function less(
+export function createOpenPlugin(
   options: FrameworkOptions = {},
-  externalCtx?: LessBuildContext,
+  externalCtx?: OpenElementBuildContext,
 ): Plugin[] {
   const metaUrl = import.meta.url;
 
@@ -104,7 +100,7 @@ export function less(
     allowHeadExtrasScripts,
   };
 
-  const ctx = externalCtx || new LessBuildContext(resolvedOptions);
+  const ctx = externalCtx || new OpenElementBuildContext(resolvedOptions);
 
   // Pre-generate workspace aliases (sync, once, cached in ctx).
   // Phase 1 config, Phase 2 client build, and Phase 3 SSG build
@@ -123,9 +119,9 @@ export function less(
     log.debug('Workspace not available - aliases stay null');
   }
 
-  const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
+  const VIRTUAL_ENTRY_ID = 'virtual:open-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
-  const VIRTUAL_BUILD_TRIGGER_ID = 'virtual:less-build-trigger';
+  const VIRTUAL_BUILD_TRIGGER_ID = 'virtual:open-build-trigger';
   const RESOLVED_BUILD_TRIGGER_ID = '\0' + VIRTUAL_BUILD_TRIGGER_ID;
 
   let _cachedHubClientOnlyTags: string[] | null = null;
@@ -139,7 +135,7 @@ export function less(
   function generateEntry(
     routes: RouteEntry[],
     islandTagNames: string[] = [],
-    packageManifests: LessPackageManifest[] = [],
+    packageManifests: OpenElementPackageManifest[] = [],
     islandFiles: string[] = [],
   ): string {
     return generateHonoEntryCode(routes, {
@@ -162,7 +158,7 @@ export function less(
   }
 
   const corePlugin: Plugin = {
-    name: 'less:core',
+    name: 'open:core',
 
     config(userConfig) {
       if (userConfig.resolve?.alias) {
@@ -232,14 +228,14 @@ export function less(
             // Extract island declarations from manifests
             ctx.phase1.packageIslandDecls = ctx.phase1.packageManifests.flatMap((pkg) =>
               pkg.declarations
-                .filter((d) => d.less?.module)
+                .filter((d) => d.openElement?.module)
                 .map((d) => ({
                   tagName: d.tagName,
-                  modulePath: d.less!.module!,
+                  modulePath: d.openElement!.module!,
                   isPackage: true,
-                  hydrate: d.less?.hydrate as HydrationStrategy | undefined,
-                  ssr: d.less?.hydrate === 'only' ? false : d.less?.ssr,
-                  dsd: d.less?.hydrate === 'only' ? false : d.less?.dsd,
+                  hydrate: d.openElement?.hydrate as HydrationStrategy | undefined,
+                  ssr: d.openElement?.hydrate === 'only' ? false : d.openElement?.ssr,
+                  dsd: d.openElement?.hydrate === 'only' ? false : d.openElement?.dsd,
                 }))
             );
             log.info(
@@ -249,7 +245,7 @@ export function less(
         }
 
         // Cache routes for lazy load() regeneration (ctx.blogOptions may not
-        // be set yet - lessContent() buildStart() runs after this one).
+        // be set yet - openContent() buildStart() runs after this one).
         ctx.phase1.cachedRoutes = routes;
 
         ctx.phase1.honoEntryCode = generateEntry(
@@ -305,10 +301,10 @@ export function less(
           ctx.phase1.packageIslandDecls.length;
         log.info(
           `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
-            `${totalIslands} island(s) - LessJS Architecture`,
+            `${totalIslands} island(s) - openElement Architecture`,
         );
       } catch (err) {
-        throw new LessError(
+        throw new OpenElementError(
           `Route scan failed: ${err instanceof Error ? err.message : String(err)}`,
           'ROUTE_SCAN_ERROR',
           500,
@@ -319,7 +315,7 @@ export function less(
   };
 
   const virtualEntryPlugin: Plugin = {
-    name: 'less:virtual-entry',
+    name: 'open:virtual-entry',
 
     resolveId(id) {
       if (id === VIRTUAL_ENTRY_ID) return RESOLVED_ENTRY_ID;
@@ -332,7 +328,7 @@ export function less(
       }
       if (id === RESOLVED_ENTRY_ID) {
         // Always regenerate to pick up late-settled ctx fields (e.g., blogOptions
-        // from lessContent() buildStart() which runs after less:core buildStart()).
+        // from openContent() buildStart() which runs after open:core buildStart()).
         // In dev mode, load() is called lazily by the SSR runner, so all buildStart()
         // hooks have completed by this point.
         return generateEntry(

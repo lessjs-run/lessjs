@@ -14,7 +14,7 @@ export function islandTransformPlugin(islandsDir: string): Plugin {
   const normalizedDir = islandsDir.replace(/\\/g, '/');
 
   return {
-    name: 'less:island-transform',
+    name: 'open:island-transform',
 
     transform(code, id) {
       try {

@@ -15,7 +15,7 @@ order: 10
 
           <h1>Package Compatibility</h1>
           <p class="subtitle">
-            Introduced in v0.18.0, the Universal WC Engine enables LessJS to automatically detect
+            Introduced in v0.18.0, the Universal WC Engine enables openElement to automatically detect
             and classify third-party Web Component packages - deciding safely which ones can SSR
             and which must stay client-only.
           </p>
@@ -23,7 +23,7 @@ order: 10
           <h2>The Problem</h2>
           <p>
             Third-party Web Components come from different ecosystems. Some use Lit, some use
-            vanilla classes, some are browser-only with real-DOM dependencies. LessJS no longer
+            vanilla classes, some are browser-only with real-DOM dependencies. openElement no longer
             assumes every package is SSR-safe - it reads their <code>custom-elements.json</code>
             manifest and makes informed decisions.
           </p>
@@ -47,7 +47,7 @@ order: 10
             <tbody>
               <tr>
                 <td><code>ssr-capable</code></td>
-                <td>Explicit LessJS SSR declaration or adapter support</td>
+                <td>Explicit openElement SSR declaration or adapter support</td>
                 <td>Import in SSR bundle, participate in DSD rendering</td>
               </tr>
               <tr>
@@ -70,7 +70,7 @@ order: 10
 
           <h2>Build-Time Auto-Detection</h2>
           <p>
-            During the Vite plugin's <code>buildStart()</code> phase, LessJS automatically scans
+            During the Vite plugin's <code>buildStart()</code> phase, openElement automatically scans
             <code>node_modules</code> for <code>custom-elements.json</code> files:
           </p>
           <open-code-block><pre><code>// Pseudocode - actual implementation in route-scanner.ts
@@ -121,7 +121,7 @@ for debugging and audit purposes.
             </thead>
             <tbody>
               <tr>
-                <td>Has CEM + LessJS SSR extension</td>
+                <td>Has CEM + openElement SSR extension</td>
                 <td><code>ssr-capable</code></td>
                 <td>Auto-added to SSR bundle</td>
               </tr>
@@ -146,7 +146,7 @@ for debugging and audit purposes.
           <h2>Roadmap</h2>
           <ul class="compact-list">
             <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI - pre-install validation</li>
-            <li><strong>v0.18.2</strong>: <code>less add</code> - one-click install and configure</li>
+            <li><strong>v0.18.2</strong>: <code>open add</code> - one-click install and configure</li>
             <li><strong>v0.18.3</strong>: DOM simulation - experimental client-only component rendering</li>
           </ul>
 

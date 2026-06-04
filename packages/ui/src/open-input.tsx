@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-input
+ * @openelement/ui - open-input
  *
  * Minimal input field following Swiss International Style.
  * Clean borders, subtle focus states.
@@ -227,7 +227,7 @@ export class OpenInput extends DsdElement {
   private _handleChange(e: Event): void {
     const input = e.target as HTMLInputElement;
     this.dispatchEvent(
-      new CustomEvent('less-change', {
+      new CustomEvent('open-change', {
         detail: { value: input.value },
         bubbles: true,
         composed: false,
@@ -236,11 +236,11 @@ export class OpenInput extends DsdElement {
   }
 
   private _handleFocus(): void {
-    this.dispatchEvent(new CustomEvent('less-focus', { bubbles: true, composed: false }));
+    this.dispatchEvent(new CustomEvent('open-focus', { bubbles: true, composed: false }));
   }
 
   private _handleBlur(): void {
-    this.dispatchEvent(new CustomEvent('less-blur', { bubbles: true, composed: false }));
+    this.dispatchEvent(new CustomEvent('open-blur', { bubbles: true, composed: false }));
   }
 
   formResetCallback(): void {

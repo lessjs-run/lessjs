@@ -215,7 +215,7 @@ Deno.test('SSG report: handles string return from renderRoute (backward compat)'
   }
 });
 
-// 鈹€鈹€鈹€ Manifest Decisions (v0.17.2) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('SSG report: manifestDecisions is present (empty when no ctx)', async () => {
   if (existsSync(TEST_OUT_DIR)) {
@@ -242,8 +242,8 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   }
 
   // Create ctx with package island declarations
-  const { LessBuildContext } = await import('../src/build-context.js');
-  const ctx = new LessBuildContext({});
+  const { OpenElementBuildContext } = await import('../src/build-context.js');
+  const ctx = new OpenElementBuildContext({});
   ctx.phase1.packageManifests = [
     {
       schemaVersion: '1.0.0',
@@ -251,37 +251,37 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
       version: '0.17.2',
       declarations: [
         {
-          tagName: 'less-layout',
-          less: { module: '@openelement/ui/less-layout', hydrate: 'load', ssr: true },
+          tagName: 'open-layout',
+          openElement: { module: '@openelement/ui/open-layout', hydrate: 'load', ssr: true },
         },
         {
-          tagName: 'less-button',
-          less: { module: '@openelement/ui/less-button', hydrate: 'idle', ssr: false },
+          tagName: 'open-button',
+          openElement: { module: '@openelement/ui/open-button', hydrate: 'idle', ssr: false },
         },
-        { tagName: 'less-card', less: { module: '@openelement/ui/less-card' } }, // no ssr field -> default true
+        { tagName: 'open-card', openElement: { module: '@openelement/ui/open-card' } }, // no ssr field -> default true
       ],
     },
   ];
   ctx.phase1.packageIslandDecls = [
     {
-      tagName: 'less-layout',
-      modulePath: '@openelement/ui/less-layout',
+      tagName: 'open-layout',
+      modulePath: '@openelement/ui/open-layout',
       isPackage: true,
       hydrate: 'load',
       ssr: true,
       dsd: true,
     },
     {
-      tagName: 'less-button',
-      modulePath: '@openelement/ui/less-button',
+      tagName: 'open-button',
+      modulePath: '@openelement/ui/open-button',
       isPackage: true,
       hydrate: 'idle',
       ssr: false,
       dsd: true,
     },
     {
-      tagName: 'less-card',
-      modulePath: '@openelement/ui/less-card',
+      tagName: 'open-card',
+      modulePath: '@openelement/ui/open-card',
       isPackage: true,
       hydrate: 'idle',
     }, // no ssr -> default true
@@ -298,7 +298,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   });
 
   await t.step('package ssr:true is client-only before v0.18 admission', () => {
-    const layout = decisions.find((d) => d.tagName === 'less-layout');
+    const layout = decisions.find((d) => d.tagName === 'open-layout');
     assertExists(layout);
     assertEquals(layout.ssr, false);
     assertEquals(layout.dsd, true);
@@ -308,7 +308,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   });
 
   await t.step('ssr: false -> renderPath client-only', () => {
-    const button = decisions.find((d) => d.tagName === 'less-button');
+    const button = decisions.find((d) => d.tagName === 'open-button');
     assertExists(button);
     assertEquals(button.ssr, false);
     assertEquals(button.dsd, true);
@@ -317,7 +317,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   });
 
   await t.step('undefined package ssr defaults to client-only', () => {
-    const card = decisions.find((d) => d.tagName === 'less-card');
+    const card = decisions.find((d) => d.tagName === 'open-card');
     assertExists(card);
     assertEquals(card.ssr, false);
     assertEquals(card.renderPath, 'client-only');
@@ -329,7 +329,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   }
 });
 
-// 鈹€鈹€鈹€ CEM Compatibility Report (v0.18.0) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('SSG report: cemCompatibility is absent when no CEM classifications', async () => {
   if (existsSync(TEST_OUT_DIR)) {
@@ -354,15 +354,15 @@ Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassificat
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });
   }
 
-  const { LessBuildContext } = await import('../src/build-context.js');
-  const ctx = new LessBuildContext({});
+  const { OpenElementBuildContext } = await import('../src/build-context.js');
+  const ctx = new OpenElementBuildContext({});
 
   // Set up CEM classifications
   ctx.phase1.cemClassifications = [
     {
       tagName: 'ssr-button',
       tier: 'ssr-capable',
-      reason: 'LitElement with ssr: true (LessJS adapter required)',
+      reason: 'LitElement with ssr: true (openElement adapter required)',
       source: 'package',
       modulePath: './ssr-button.js',
       ssr: true,
@@ -372,7 +372,7 @@ Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassificat
     {
       tagName: 'client-button',
       tier: 'client-only',
-      reason: 'CEM-only package (no LessJS SSR declaration)',
+      reason: 'CEM-only package (no openElement SSR declaration)',
       source: 'package',
       modulePath: './client-button.js',
       ssr: false,
@@ -439,8 +439,8 @@ Deno.test('SSG report: cemCompatibility with only ssr-capable components', async
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });
   }
 
-  const { LessBuildContext } = await import('../src/build-context.js');
-  const ctx = new LessBuildContext({});
+  const { OpenElementBuildContext } = await import('../src/build-context.js');
+  const ctx = new OpenElementBuildContext({});
 
   ctx.phase1.cemClassifications = [
     {

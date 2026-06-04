@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-layout
+ * @openelement/ui - open-layout
  *
  * App layout component with header, sidebar, and footer.
  * Swiss International Style: Pure B&W, minimal.
@@ -514,7 +514,7 @@ export class OpenLayout extends DsdElement {
   private _computeEditUrl(): string {
     const path = this._currentPath();
     if (!path || path === '/') return '';
-    const EDIT_BASE = 'https://github.com/open-element/open-element/edit/main/www/app/routes';
+    const EDIT_BASE = 'https://github.com/open-element/openelement/edit/main/www/app/routes';
     const clean = path.replace(/\/$/, '').split('/').filter(Boolean);
     // Remove locale prefix if present (en/, zh/)
     if (['en', 'zh'].includes(clean[0])) clean.shift();
@@ -553,7 +553,7 @@ export class OpenLayout extends DsdElement {
       if (raw) return JSON.parse(raw);
       return [];
     } catch (e) {
-      console.warn('[less-layout] Failed to parse nav-items JSON:', e);
+      console.warn('[open-layout] Failed to parse nav-items JSON:', e);
       return [];
     }
   }
@@ -566,7 +566,7 @@ export class OpenLayout extends DsdElement {
       if (raw) return JSON.parse(raw);
       return [];
     } catch (e) {
-      console.warn('[less-layout] Failed to parse header-nav JSON:', e);
+      console.warn('[open-layout] Failed to parse header-nav JSON:', e);
       return [];
     }
   }
@@ -709,7 +709,7 @@ export class OpenLayout extends DsdElement {
             )}
             {this._renderHeaderNav()}
             <div className='header-right'>
-              {!noSearch && <less-search></less-search>}
+              {!noSearch && <open-search></open-search>}
               {!home && (
                 <button
                   type='button'
@@ -904,7 +904,7 @@ export class OpenLayout extends DsdElement {
     const initialTheme = (docTheme as 'dark' | 'light') || 'dark';
     provideContext(this, THEME_CTX, initialTheme);
 
-    // Listen for theme change events from less-theme-toggle
+    // Listen for theme change events from open-theme-toggle
     this._themeHandler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.theme) {
@@ -913,7 +913,7 @@ export class OpenLayout extends DsdElement {
         this._propagateTheme(detail.theme);
       }
     };
-    globalThis.addEventListener?.('less:theme-change', this._themeHandler);
+    globalThis.addEventListener?.('open:theme-change', this._themeHandler);
 
     this._propagateTheme(initialTheme);
 
@@ -940,7 +940,7 @@ export class OpenLayout extends DsdElement {
     this.routing.stop();
     this._docClickCleanup?.();
     if (this._themeHandler) {
-      globalThis.removeEventListener?.('less:theme-change', this._themeHandler);
+      globalThis.removeEventListener?.('open:theme-change', this._themeHandler);
     }
   }
 
@@ -1049,7 +1049,7 @@ export class OpenLayout extends DsdElement {
   }
 
   /**
-   * Recursively search for less-layout in parsed DOM, including
+   * Recursively search for open-layout in parsed DOM, including
    * inside <template shadowrootmode="open"> (DSD content).
    *
    * querySelector does not traverse template content, but SSG pages
@@ -1144,7 +1144,7 @@ export class OpenLayout extends DsdElement {
       const parsed = new DOMParser().parseFromString(html, 'text/html');
       const tmp = parsed.body;
       const newLayout = this._findOpenLayout(tmp);
-      if (!newLayout) throw new Error('No less-layout found');
+      if (!newLayout) throw new Error('No open-layout found');
 
       document.documentElement.lang = parsed.documentElement.lang || locale;
       if (parsed.title) document.title = parsed.title;
@@ -1179,7 +1179,7 @@ export class OpenLayout extends DsdElement {
 
       globalThis.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
-      console.warn('[less-layout] SPA navigation failed, reloading:', e);
+      console.warn('[open-layout] SPA navigation failed, reloading:', e);
       globalThis.location.reload();
     }
   }

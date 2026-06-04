@@ -92,7 +92,7 @@ export interface HubSnapshotMeta {
 
 export interface HubInstallGuidance {
   safeToInstall: boolean;
-  command: string; // e.g. "less add shoelace"
+  command: string; // e.g. "open add shoelace"
   configChanges: string[]; // config keys that will be added
   warnings: string[]; // known risks before install
   ssrCapable: boolean;

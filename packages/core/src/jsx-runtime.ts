@@ -5,7 +5,6 @@
  * Consumed by TypeScript/esbuild JSX transform when `jsxImportSource: "@openelement/core"`.
  *
  * Design (ADR-0057):
- * - jsx() / jsxs() return pure JavaScript VNode objects ¡ª zero DOM dependency
  * - Fragment groups multiple children without a wrapping element
  * - jsxDEV adds source-map information in development builds
  *
@@ -16,11 +15,7 @@
 
 import type { ComponentCtor, ComponentFn, VNode } from './vnode.ts';
 
-// ©¤©¤©¤ Fragment ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * Fragment symbol ¡ª groups children without emitting a wrapper element.
- *
  * Usage in TSX:
  *   return <><div>a</div><div>b</div></>;
  */
@@ -53,8 +48,6 @@ export function For(props: Record<string, unknown>): VNode {
   return createVNode(FOR_TAG, props);
 }
 
-// ©¤©¤©¤ Internal helper ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 function normaliseChildren(raw: unknown): (VNode | string)[] {
   if (raw == null) return [];
   if (Array.isArray(raw)) {
@@ -85,10 +78,7 @@ function createVNode(
   return vnode;
 }
 
-// ©¤©¤©¤ Public API ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
- * JSX factory for 0¨C1 children.
  * Called by the TypeScript JSX transform for elements with a single child.
  */
 export function jsx(
@@ -100,9 +90,7 @@ export function jsx(
 }
 
 /**
- * JSX factory for ¡Ý2 children.
  * Called by the TypeScript JSX transform for elements with multiple children.
- * Semantically identical to `jsx` ¡ª the distinction is made by the transform.
  */
 export function jsxs(
   tag: ComponentTag | typeof Fragment,
@@ -126,13 +114,10 @@ export function jsxDEV(
 ): VNode {
   const vnode = createVNode(tag, props, key);
   if (source) {
-    // Attach debug source info ¡ª stripped in production builds
     (vnode as VNode & { __source?: unknown }).__source = source;
   }
   return vnode;
 }
 
-// ©¤©¤©¤ JSX IntrinsicElements type declarations ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-// v0.24.2: Moved to jsx-types.d.ts ¡ª JSR does not allow declare global
 // augmentations in published packages. The ambient declarations in
 // jsx-types.d.ts provide the same TypeScript JSX type-checking.

@@ -1,12 +1,12 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import {
   createPluginMeta,
-  isLessBlogOptions,
-  isLessBuildContextLike,
-  isLessHeaderNavLink,
-  isLessI18nOptions,
-  isLessNavSection,
-  isLessPluginMeta,
+  isOpenBlogOptions,
+  isOpenBuildContextLike,
+  isOpenHeaderNavLink,
+  isOpenI18nOptions,
+  isOpenNavSection,
+  isOpenPluginMeta,
 } from '../index.ts';
 
 const blogCases: Array<[unknown, boolean]> = [
@@ -21,7 +21,7 @@ const blogCases: Array<[unknown, boolean]> = [
 for (let i = 0; i < 10; i++) {
   for (const [value, expected] of blogCases) {
     Deno.test(`protocols: blog options case ${i}.${String(expected)}.${JSON.stringify(value)}`, () => {
-      assertEquals(isLessBlogOptions(value), expected);
+      assertEquals(isOpenBlogOptions(value), expected);
     });
   }
 }
@@ -40,7 +40,7 @@ const navCases: Array<[unknown, boolean]> = [
 
 for (const [index, [value, expected]] of navCases.entries()) {
   Deno.test(`protocols: nav section validates shape ${index}`, () => {
-    assertEquals(isLessNavSection(value), expected);
+    assertEquals(isOpenNavSection(value), expected);
   });
 }
 
@@ -54,7 +54,7 @@ const headerCases: Array<[unknown, boolean]> = [
 
 for (const [index, [value, expected]] of headerCases.entries()) {
   Deno.test(`protocols: header nav validates shape ${index}`, () => {
-    assertEquals(isLessHeaderNavLink(value), expected);
+    assertEquals(isOpenHeaderNavLink(value), expected);
   });
 }
 
@@ -69,7 +69,7 @@ const i18nCases: Array<[unknown, boolean]> = [
 
 for (const [index, [value, expected]] of i18nCases.entries()) {
   Deno.test(`protocols: i18n options validate shape ${index}`, () => {
-    assertEquals(isLessI18nOptions(value), expected);
+    assertEquals(isOpenI18nOptions(value), expected);
   });
 }
 
@@ -82,8 +82,8 @@ for (let i = 0; i < 20; i++) {
       sitemapOptions: { hostname: 'https://example.com' },
       i18nOptions: { locales: ['en', 'zh'], defaultLocale: 'en' },
     });
-    assertEquals(isLessPluginMeta(meta), true);
-    assertEquals(isLessBuildContextLike({ plugins: meta }), true);
+    assertEquals(isOpenPluginMeta(meta), true);
+    assertEquals(isOpenBuildContextLike({ plugins: meta }), true);
   });
 }
 
@@ -97,6 +97,6 @@ const invalidMetaCases = [
 
 for (const [index, value] of invalidMetaCases.entries()) {
   Deno.test(`protocols: plugin meta rejects invalid shape ${index}`, () => {
-    assertEquals(isLessPluginMeta(value), false);
+    assertEquals(isOpenPluginMeta(value), false);
   });
 }

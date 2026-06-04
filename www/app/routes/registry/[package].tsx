@@ -319,7 +319,7 @@ export default class DocsRegistryDetail extends DsdElement {
           <div class="section">
             <div class="section-title">Usage</div>
             <div class="usage-hint">
-              Add this package to your LessJS project:
+              Add this package to your openElement project:
             </div>
             <div class="install-cmd">{pkg.installGuidance.command}</div>
             <div class="import-hint">

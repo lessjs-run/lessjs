@@ -14,7 +14,7 @@ import { expect, type Page, test } from '@playwright/test';
 async function readDeepLayoutState(page: Page) {
   return await page.evaluate(() => {
     const visit = (root: Document | ShadowRoot | Element): Element | null => {
-      const direct = root.querySelector?.('less-layout');
+      const direct = root.querySelector?.('open-layout');
       if (direct) return direct;
       const all = root.querySelectorAll?.('*') ?? [];
       for (const el of Array.from(all)) {
@@ -85,7 +85,7 @@ test.describe('Locale Routes', () => {
 });
 
 test.describe('Locale Switcher', () => {
-  test('less-layout has locale attribute', async ({ page }) => {
+  test('open-layout has locale attribute', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -93,7 +93,7 @@ test.describe('Locale Switcher', () => {
     expect(state.layoutLocale).toMatch(/^(en|zh)$/);
   });
 
-  test('less-layout supports locale switching via locales attribute', async ({ page }) => {
+  test('open-layout supports locale switching via locales attribute', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -123,7 +123,7 @@ test.describe('Locale Switcher', () => {
 
     await page.evaluate(() => {
       const visit = (root: Document | ShadowRoot | Element): Element | null => {
-        const direct = root.querySelector?.('less-layout');
+        const direct = root.querySelector?.('open-layout');
         if (direct) return direct;
         const all = root.querySelectorAll?.('*') ?? [];
         for (const el of Array.from(all)) {

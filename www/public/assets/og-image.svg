@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <title>LessJS — Less is More</title>
+  <title>openElement - The Open Element</title>
   <rect width="1200" height="630" fill="#050505" />
   <g transform="translate(160, 210)">
     <path
@@ -21,7 +21,7 @@
     fill="#ffffff"
     text-anchor="middle"
     dominant-baseline="central"
-  >LessJS</text>
+  >openElement</text>
   <text
     x="600"
     y="370"
@@ -31,7 +31,7 @@
     text-anchor="middle"
     dominant-baseline="central"
     letter-spacing="1"
-  >Less is More</text>
+  >The Open Element</text>
   <text
     x="600"
     y="430"
@@ -41,5 +41,5 @@
     text-anchor="middle"
     dominant-baseline="central"
     letter-spacing="0.5"
-  >DSD-first · SSG · Islands · Web Standards</text>
+  >DSD-first | SSG | Islands | Web Standards</text>
 </svg>

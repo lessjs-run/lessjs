@@ -5,13 +5,9 @@
  * Blog + Nav + Sitemap - build-time only, zero runtime.
  */
 
-import type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/types.ts';
+import type { BlogPost, BlogPostFrontmatter, OpenElementBlogOptions } from './blog/types.ts';
 
-// ©¤©¤©¤ Blog Module Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-export type { BlogPost, BlogPostFrontmatter, LessBlogOptions };
-
-// ©¤©¤©¤ Nav Module Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
+export type { BlogPost, BlogPostFrontmatter, OpenElementBlogOptions };
 
 /** A single navigation item (sidebar link) */
 export interface NavItem {
@@ -59,8 +55,6 @@ export interface NavOptions {
   exclude?: string[];
 }
 
-// ©¤©¤©¤ Sitemap Module Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Sitemap URL entry */
 export interface SitemapUrl {
   /** Full URL (e.g. 'https://openelement.org/guide/getting-started') */
@@ -87,12 +81,10 @@ export interface SitemapOptions {
   robotsTxt?: boolean;
 }
 
-// ©¤©¤©¤ Unified Content Plugin Options ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-/** Options for the lessContent() plugin */
-export interface LessContentOptions {
+/** Options for the openContent() plugin */
+export interface OpenElementContentOptions {
   /** Blog module config. Pass options to enable, false to disable */
-  blog?: LessBlogOptions | false;
+  blog?: OpenElementBlogOptions | false;
   /** Nav module config. Pass options to enable, falsy to disable */
   nav?: NavOptions;
   /** Sitemap module config. Pass options to enable, falsy to disable */

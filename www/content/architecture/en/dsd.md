@@ -15,7 +15,7 @@ order: 30
 
           <h1>DSD Rendering Architecture</h1>
           <p class="subtitle">
-            Declarative Shadow DOM is the core LessJS rendering model: the server emits standard HTML,
+            Declarative Shadow DOM is the core openElement rendering model: the server emits standard HTML,
             the browser creates shadow roots during parsing, and JavaScript only upgrades components and
             binds necessary events. Since v0.20, DSD components are built on DsdElement + StyleSheet by default.
           </p>
@@ -34,7 +34,7 @@ order: 30
 &lt;/template&gt;
 &lt;/my-card&gt;</code></pre></open-code-block>
 
-          <h2>Why LessJS Uses DSD</h2>
+          <h2>Why openElement Uses DSD</h2>
           <div class="comparison">
             <div class="comparison-item">
               <h3>Traditional Hydration</h3>
@@ -56,7 +56,7 @@ order: 30
 
           <h2>WHATWG DSD Attributes</h2>
           <table>
-            <thead><tr><th>Attribute</th><th>LessJS Option</th><th>Purpose</th></tr></thead>
+            <thead><tr><th>Attribute</th><th>openElement Option</th><th>Purpose</th></tr></thead>
             <tbody>
               <tr><td><code>shadowrootmode</code></td><td>always open</td><td>Enables declarative shadow root output.</td></tr>
               <tr><td><code>shadowrootdelegatesfocus</code></td><td><code>delegatesFocus</code></td><td>Delegates focus into the shadow root.</td></tr>
@@ -84,7 +84,7 @@ order: 30
             islands or declare their SSR/fallback behavior in a manifest.
           </p>
           <p>
-            LessJS should validate target browser behavior with Playwright. Polyfills for older browsers
+            openElement should validate target browser behavior with Playwright. Polyfills for older browsers
             are graceful fallback, not a replacement for real-browser validation.
           </p>
 

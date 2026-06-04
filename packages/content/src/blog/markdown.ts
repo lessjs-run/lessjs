@@ -8,7 +8,7 @@ import matter from 'gray-matter';
 import { marked } from 'marked';
 // @deno-types="npm:@types/sanitize-html@^2"
 import sanitizeHtml from 'npm:sanitize-html@^2.17.4';
-import type { BlogPost, LessBlogOptions } from './types.ts';
+import type { BlogPost, OpenElementBlogOptions } from './types.ts';
 
 /**
  * Allow-list HTML sanitizer using sanitize-html.
@@ -86,7 +86,7 @@ export async function parseMarkdownFile(
   filePath: string,
   fileContent: string,
   slug: string,
-  options?: LessBlogOptions,
+  options?: OpenElementBlogOptions,
 ): Promise<BlogPost> {
   const { data, content } = matter(fileContent);
 

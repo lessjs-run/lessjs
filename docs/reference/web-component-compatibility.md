@@ -1,13 +1,13 @@
 # Web Component Compatibility Baseline
 
 Status: v0.21.x hardening baseline\
-Scope: LessJS DSD components and first-party UI components
+Scope: openElement DSD components and first-party UI components
 
-LessJS should integrate with the Web Components ecosystem without pretending to replace it. The compatibility target is ordinary custom elements plus DSD-first rendering evidence.
+openElement should integrate with the Web Components ecosystem without pretending to replace it. The compatibility target is ordinary custom elements plus DSD-first rendering evidence.
 
 ## Compatibility Matrix
 
-| Area                        | LessJS expectation                                          | Evidence                                          |
+| Area                        | openElement expectation                                     | Evidence                                          |
 | --------------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
 | Custom element registration | Components work through `customElements.define()`           | `packages/core/__tests__/reactive-dsd.test.ts`    |
 | Shadow DOM                  | Server output uses standard DSD attributes                  | `packages/core/__tests__/dsd-conformance.test.ts` |
@@ -19,18 +19,18 @@ LessJS should integrate with the Web Components ecosystem without pretending to 
 
 ## OpenWC Alignment
 
-OpenWC is the testing and Web Component practice baseline. LessJS should be compatible with ordinary custom element testing patterns:
+OpenWC is the testing and Web Component practice baseline. openElement should be compatible with ordinary custom element testing patterns:
 
 - mount a custom element;
 - inspect shadow DOM;
 - assert attributes/properties/events/slots;
 - verify accessibility behavior for interactive components.
 
-LessJS does not claim to be an OpenWC replacement. It adds a DSD renderer, island admission, build reports, and Hub evidence around standard components.
+openElement does not claim to be an OpenWC replacement. It adds a DSD renderer, island admission, build reports, and Hub evidence around standard components.
 
 ## Open UI Alignment
 
-Open UI is a vocabulary and research baseline for component contracts. LessJS component docs should name:
+Open UI is a vocabulary and research baseline for component contracts. openElement component docs should name:
 
 - tag name;
 - attributes;

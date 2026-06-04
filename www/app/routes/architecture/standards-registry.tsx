@@ -19,13 +19,13 @@ export class StandardsRegistryGuidePage extends DsdElement {
         <div class="container">
           <h1>标准与 Registry 策略</h1>
           <p class="subtitle">
-            LessJS 的长期方向是 WC SSR/SSG 渲染内核和组件包协议。公共 registry hub 只有在本地索引、
+            openElement 的长期方向是 WC SSR/SSG 渲染内核和组件包协议。公共 registry hub 只有在本地索引、
             manifest、验证产物和安全治理成熟后才应该出现。
           </p>
 
           <h2>一句话边界</h2>
           <p>
-            LessJS 可以成为 Web Components 的 SSR/SSG 渲染内核和包协议，但不能承诺任意 Web Component
+            openElement 可以成为 Web Components 的 SSR/SSG 渲染内核和包协议，但不能承诺任意 Web Component
             都能被自动 SSR、自动注册和自动水合。所谓"自动"必须来自 manifest，而不是运行时猜测。
           </p>
 
@@ -34,7 +34,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
             <thead>
               <tr>
                 <th>参考</th>
-                <th>LessJS 如何使用</th>
+                <th>openElement 如何使用</th>
                 <th>不做什么</th>
               </tr>
             </thead>
@@ -52,7 +52,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
               <tr>
                 <td>Open UI</td>
                 <td>借鉴 parts、states、behavior、a11y、form semantics 的组件契约词汇。</td>
-                <td>不把 LessJS 变成 OpenWC 模板或 Open UI 实现库。</td>
+                <td>不把 openElement 变成 OpenWC 模板或 Open UI 实现库。</td>
               </tr>
               <tr>
                 <td>OpenWC</td>
@@ -62,7 +62,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
               <tr>
                 <td>Lit / FAST</td>
                 <td>作为 WC 作者体验和 adapter 输入。</td>
-                <td>不把任一作者库绑定成 LessJS 的定义。</td>
+                <td>不把任一作者库绑定成 openElement 的定义。</td>
               </tr>
               <tr>
                 <td>Scoped Custom Element Registries</td>
@@ -132,7 +132,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
           <ol>
             <li>把 renderer protocol、adapter contract 和 DSD diagnostics 文档化并加测试。</li>
             <li>把 <code>PackageIslandMeta</code> 扩展为 CEM-compatible 的包 manifest 草案。</li>
-            <li>先做 <code>less validate-manifest</code>，再做 <code>less add</code>。</li>
+            <li>先做 <code>less validate-manifest</code>，再做 <code>open add</code>。</li>
             <li>先做本地 registry index，再做公共 hub。</li>
           </ol>
 
@@ -152,14 +152,14 @@ export class StandardsRegistryGuidePage extends DsdElement {
         <div class="container">
           <h1>Standards & Registry Strategy</h1>
           <p class="subtitle">
-            The long-term LessJS direction is a WC SSR/SSG rendering kernel and component package
+            The long-term openElement direction is a WC SSR/SSG rendering kernel and component package
             protocol. A public registry hub should follow local indexing, manifests, validation artifacts,
             and security governance.
           </p>
 
           <h2>Boundary In One Sentence</h2>
           <p>
-            LessJS can become a Web Components SSR/SSG rendering kernel and package protocol, but it
+            openElement can become a Web Components SSR/SSG rendering kernel and package protocol, but it
             should not promise automatic SSR, registration, and hydration for arbitrary Web Components.
             Automation must come from manifests, not runtime guessing.
           </p>
@@ -169,8 +169,8 @@ export class StandardsRegistryGuidePage extends DsdElement {
             <thead>
               <tr>
                 <th>Reference</th>
-                <th>How LessJS Uses It</th>
-                <th>What LessJS Avoids</th>
+                <th>How openElement Uses It</th>
+                <th>What openElement Avoids</th>
               </tr>
             </thead>
             <tbody>
@@ -192,7 +192,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
               <tr>
                 <td>Open UI</td>
                 <td>Borrow vocabulary for parts, states, behavior, accessibility, and form semantics.</td>
-                <td>Do not turn LessJS into an OpenWC template or Open UI implementation library.</td>
+                <td>Do not turn openElement into an OpenWC template or Open UI implementation library.</td>
               </tr>
               <tr>
                 <td>OpenWC</td>
@@ -204,7 +204,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
               <tr>
                 <td>Lit / FAST</td>
                 <td>Treat them as WC authoring models and adapter inputs.</td>
-                <td>Do not bind LessJS's identity to one authoring library.</td>
+                <td>Do not bind openElement's identity to one authoring library.</td>
               </tr>
               <tr>
                 <td>Scoped Custom Element Registries</td>
@@ -278,7 +278,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
           <ol>
             <li>Document and test renderer protocol, adapter contract, and DSD diagnostics.</li>
             <li>Extend <code>PackageIslandMeta</code> toward a CEM-compatible package manifest draft.</li>
-            <li>Build <code>less validate-manifest</code> before <code>less add</code>.</li>
+            <li>Build <code>less validate-manifest</code> before <code>open add</code>.</li>
             <li>Build a local registry index before a public hub.</li>
           </ol>
 

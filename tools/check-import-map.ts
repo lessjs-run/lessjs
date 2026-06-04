@@ -1,6 +1,6 @@
 /**
  * Direct Import Map Checker — verifies that every bare import in a generated
- * LessJS project is declared in the project's deno.json imports map.
+ * openElement project is declared in the project's deno.json imports map.
  *
  * Usage: deno run --allow-read --allow-write --allow-run --allow-env tools/check-import-map.ts
  *
@@ -29,7 +29,7 @@ function fileURLToPath(url: URL): string {
 // 1. Generate a test project using local workspace create package
 // ---------------------------------------------------------------------------
 
-const tmpDir = Deno.makeTempDirSync({ prefix: 'lessjs-import-check-' });
+const tmpDir = Deno.makeTempDirSync({ prefix: 'openElement-import-check-' });
 const projectName = 'import-check-app';
 
 console.log(`Generating test project in ${tmpDir}...`);

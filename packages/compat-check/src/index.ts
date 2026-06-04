@@ -10,7 +10,7 @@
  *   - experimental-dom: Uses experimental DOM features
  *
  * This package is standalone — usable by any WC ecosystem tool,
- * not just LessJS. Use `npx @openelement/compat-check my-package` to
+ * not just openElement. Use `npx @openelement/compat-check my-package` to
  * check a package's SSR readiness.
  */
 
@@ -20,7 +20,7 @@ export {
   classifyComponent,
   classifyComponent as classifyTag,
   classifyComponents,
-  classifyLessManifest,
+  classifyOpenElementManifest,
   getClassificationSummary,
   isKnownSsrAdapter,
   isKnownSsrSuperclass,
@@ -52,6 +52,6 @@ export type {
 // v0.23.0: Validate-manifest moved from @openelement/core.
 export { validateManifest, validateManifestFromJson } from './validate-manifest.js';
 
-// v0.23.0: less-add moved from @openelement/core.
-export { generateAddPlan } from './less-add.js';
-export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
+// v0.23.0: install-plan moved from @openelement/core.
+export { generateAddPlan } from './install-plan.js';
+export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './install-plan.js';

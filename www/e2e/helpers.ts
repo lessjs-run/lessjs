@@ -1,5 +1,5 @@
 /**
- * E2E test helpers for LessJS docs site.
+ * E2E test helpers for openElement docs site.
  *
  * Provides utilities for verifying DSD structure,
  * custom element rendering, and island script loading.

@@ -12,7 +12,9 @@ const DEFAULT_OPENELEMENT_PACKAGES = new Set([
   'cem',
   'compat-check',
   'core',
+  'create',
   'hub',
+  'protocols',
   'router',
   'rpc',
   'runtime',
@@ -22,62 +24,45 @@ const DEFAULT_OPENELEMENT_PACKAGES = new Set([
 ]);
 
 const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
-  core: {
-    '.': 'src/index.ts',
-    'cem-parser': 'src/cem-parser.ts',
-    'cli/less-add': 'src/cli/less-add.ts',
-    'cli/validate-manifest': 'src/cli/validate-manifest.ts',
-    compatibility: 'src/compatibility.ts',
-    context: 'src/context.ts',
-    errors: 'src/errors.ts',
-    isr: 'src/isr.ts',
-    'jsx-runtime': 'src/jsx-runtime.ts',
-    'jsx-dev-runtime': 'src/jsx-runtime.ts',
-    'less-add': 'src/less-add.ts',
-    logger: 'src/logger.ts',
-    navigation: 'src/navigation.ts',
-    'render-dsd-stream': 'src/render-dsd-stream.ts',
-    'signal-context': 'src/signal-context.ts',
-    'style-sheet': 'src/style-sheet.ts',
-    types: 'src/types.ts',
-    'validate-manifest': 'src/validate-manifest.ts',
-  },
-  ui: {
-    '.': 'src/index.ts',
-    'less-button': 'src/less-button.tsx',
-    'less-callout': 'src/less-callout.tsx',
-    'less-card': 'src/less-card.tsx',
-    'less-code-block': 'src/less-code-block.tsx',
-    'less-dialog': 'src/less-dialog.tsx',
-    'docs-page-styles': 'src/docs-page-styles.ts',
-    'less-hero-ping': 'src/less-hero-ping.tsx',
-    'less-input': 'src/less-input.tsx',
-    'less-layout': 'src/less-layout.tsx',
-    'less-step-card': 'src/less-step-card.tsx',
-    'less-theme-toggle': 'src/less-theme-toggle.tsx',
-    'open-props-tokens': 'src/open-props-tokens.ts',
-    'open-props-tokens.js': 'src/open-props-tokens.ts',
-  },
-  runtime: { '.': 'src/index.ts' },
-  signals: {
-    '.': 'src/index.ts',
-    framework: 'src/framework.ts',
-  },
-  app: { '.': 'src/index.ts' },
   'adapter-vite': {
     '.': 'src/index.ts',
     'build-context': 'src/build-context.ts',
+    'head-injection': 'src/head-injection.ts',
+    plugin: 'src/plugin.ts',
+    'subpath-resolver': 'src/subpath-resolver.ts',
+    'optional-package-stubs': 'src/optional-package-stubs.ts',
+    'generated-data-resolver': 'src/generated-data-resolver.ts',
+    'plugin-mdx': 'src/plugin-mdx.ts',
+    'cli/build': 'src/cli/build.ts',
+    'cli/build-client': 'src/cli/build-client.ts',
+    'cli/build-ssg': 'src/cli/build-ssg.ts',
   },
-  rpc: { '.': 'src/index.ts' },
-  'style-sheet': { '.': 'src/index.ts' },
-  cem: { '.': 'src/index.ts' },
+  app: { '.': 'src/index.ts' },
+  cem: {
+    '.': 'src/index.ts',
+    types: 'src/types.ts',
+  },
   'compat-check': { '.': 'src/index.ts' },
+  core: {
+    '.': 'src/index.ts',
+    context: 'src/context.ts',
+    errors: 'src/errors.ts',
+    'island-transform': 'src/island-transform.ts',
+    isr: 'src/isr.ts',
+    'jsx-runtime': 'src/jsx-runtime.ts',
+    'jsx-dev-runtime': 'src/jsx-runtime.ts',
+    logger: 'src/logger.ts',
+    'render-dsd-stream': 'src/render-dsd-stream.ts',
+    'signal-context': 'src/signal-context.ts',
+    types: 'src/types.ts',
+  },
+  create: { '.': 'cli.ts' },
   hub: {
     '.': 'mod.ts',
     builder: 'src/builder.ts',
     'cli/check-index': 'src/cli/check-index.ts',
     'cli/hub-submit': 'src/cli/hub-submit.ts',
-    'cli/less-add': 'src/cli/less-add.ts',
+    'cli/install-guide': 'src/cli/install-guide.ts',
     'cli/validate': 'src/cli/validate.ts',
     indexer: 'src/indexer.ts',
     schema: 'src/schema.ts',
@@ -90,6 +75,35 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
     'define-routes': 'src/define-routes.ts',
     'page-loader': 'src/page-loader.ts',
     'pattern-translate': 'src/pattern-translate.ts',
+  },
+  protocols: {
+    '.': 'src/index.ts',
+    'build-types': 'src/build-types.ts',
+    validators: 'src/validators.ts',
+  },
+  rpc: { '.': 'src/index.ts' },
+  runtime: { '.': 'src/index.ts' },
+  signals: {
+    '.': 'src/index.ts',
+    framework: 'src/framework.ts',
+    'alien-engine': 'src/alien-engine.ts',
+  },
+  'style-sheet': { '.': 'src/index.ts' },
+  ui: {
+    '.': 'src/index.ts',
+    'docs-page-styles': 'src/docs-page-styles.ts',
+    'open-button': 'src/open-button.tsx',
+    'open-callout': 'src/open-callout.tsx',
+    'open-card': 'src/open-card.tsx',
+    'open-code-block': 'src/open-code-block.tsx',
+    'open-dialog': 'src/open-dialog.tsx',
+    'open-hero-ping': 'src/open-hero-ping.tsx',
+    'open-input': 'src/open-input.tsx',
+    'open-layout': 'src/open-layout.tsx',
+    'open-props-tokens': 'src/open-props-tokens.ts',
+    'open-props-tokens.js': 'src/open-props-tokens.ts',
+    'open-step-card': 'src/open-step-card.tsx',
+    'open-theme-toggle': 'src/open-theme-toggle.tsx',
   },
 };
 
@@ -124,7 +138,7 @@ export function parseOpenPackageSpecifier(id: string): OpenJsrPackageSpecifier |
   return null;
 }
 
-export function resolveLessPackageExport(packageName: string, subpath: string): string {
+export function resolveOpenPackageExport(packageName: string, subpath: string): string {
   const exports = OPENELEMENT_EXPORT_FILES[packageName];
   if (!exports) {
     throw new Error(`[openElement/SSG] Unknown openElement package: @openelement/${packageName}`);
@@ -140,11 +154,11 @@ export function resolveLessPackageExport(packageName: string, subpath: string): 
   );
 }
 
-export function toVirtualLessPackageId(packageName: string, sourcePath: string): string {
+export function toVirtualOpenPackageId(packageName: string, sourcePath: string): string {
   return `${VIRTUAL_OPENELEMENT_PACKAGE_PREFIX}${packageName}/${sourcePath}`;
 }
 
-export function resolveVirtualLessPackageRelative(id: string, importer: string): string | null {
+export function resolveVirtualOpenPackageRelative(id: string, importer: string): string | null {
   if (!importer.startsWith(VIRTUAL_OPENELEMENT_PACKAGE_PREFIX)) return null;
   if (!id.startsWith('./') && !id.startsWith('../')) return null;
 
@@ -160,7 +174,7 @@ export function resolveVirtualLessPackageRelative(id: string, importer: string):
     else resolved.push(part);
   }
 
-  return toVirtualLessPackageId(
+  return toVirtualOpenPackageId(
     packageName,
     resolveSourcePathExtension(packageName, resolved.join('/')),
   );
@@ -172,7 +186,7 @@ export function createOpenJsrPackageResolverPlugin(
   const fetchSource = options.fetchSource ?? fetch;
 
   return {
-    name: 'less:ssg-package-resolve',
+    name: 'open:ssg-package-resolve',
     enforce: 'pre',
     transform(code) {
       if (!code.includes('npm:')) return null;
@@ -187,13 +201,13 @@ export function createOpenJsrPackageResolverPlugin(
       const spec = parseOpenPackageSpecifier(id);
       if (spec) {
         if (!DEFAULT_OPENELEMENT_PACKAGES.has(spec.packageName)) return null;
-        return toVirtualLessPackageId(
+        return toVirtualOpenPackageId(
           spec.packageName,
-          resolveLessPackageExport(spec.packageName, spec.subpath),
+          resolveOpenPackageExport(spec.packageName, spec.subpath),
         );
       }
 
-      return resolveVirtualLessPackageRelative(id, importer ?? '');
+      return resolveVirtualOpenPackageRelative(id, importer ?? '');
     },
     async load(id) {
       if (options.workspaceRoot) return null;
@@ -278,10 +292,6 @@ function ensureTsExtension(path: string): string {
  * `@lit/reactive-element`.
  *
  * Handles:
- *   npm:package@version        �� package
- *   npm:@scope/pkg@version     �� @scope/pkg
- *   npm:package@version/sub    �� package/sub
- *   npm:@scope/pkg@version/sub �� @scope/pkg/sub
  */
 const NPM_SPECIFIER_RE =
   /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\2/g;

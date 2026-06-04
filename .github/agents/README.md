@@ -1,6 +1,6 @@
 # GitHub Agent Prompts
 
-This directory contains Copilot-style review prompts for LessJS maintainers.
+This directory contains Copilot-style review prompts for openElement maintainers.
 They are documentation assets, not CI configuration and not runtime inputs.
 
 ## Files

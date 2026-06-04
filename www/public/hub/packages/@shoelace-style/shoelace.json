@@ -9,7 +9,7 @@
   "homepage": "https://shoelace.style",
   "manifestHash": "ec01e908669c64a8a2cec05c738496adda632f86a79d1edc730764a0ce7d728a",
   "compatibility": "client-only",
-  "compatibilityJustification": "Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.",
+  "compatibilityJustification": "Shoelace uses Lit internally but does not publish openElement SSR metadata. All components are client-only.",
   "tags": [
     {
       "tagName": "sl-alert",
@@ -20,7 +20,7 @@
       "snapshotMeta": {
         "tagName": "sl-alert",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "open": "",
           "variant": "primary"
@@ -102,7 +102,7 @@
       "snapshotMeta": {
         "tagName": "sl-animated-image",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "src": "https://placehold.co/200x150/339af0/fff?text=GIF"
         },
@@ -160,7 +160,7 @@
       "snapshotMeta": {
         "tagName": "sl-avatar",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "image": "https://placehold.co/40x40/339af0/fff?text=JS"
         },
@@ -227,7 +227,7 @@
       "snapshotMeta": {
         "tagName": "sl-badge",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "variant": "primary"
         },
@@ -274,7 +274,7 @@
       "snapshotMeta": {
         "tagName": "sl-button",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "variant": "primary"
         },
@@ -467,7 +467,7 @@
       "snapshotMeta": {
         "tagName": "sl-card",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "<div slot=\"header\">Card Header</div><div>This is the card body content.</div><div slot=\"footer\">Card Footer</div>",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -501,7 +501,7 @@
       "snapshotMeta": {
         "tagName": "sl-carousel",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "navigation": "",
           "pagination": "",
@@ -607,7 +607,7 @@
       "snapshotMeta": {
         "tagName": "sl-checkbox",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "checked": ""
         },
@@ -727,7 +727,7 @@
       "snapshotMeta": {
         "tagName": "sl-color-picker",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "value": "#339af0"
         },
@@ -873,7 +873,7 @@
       "snapshotMeta": {
         "tagName": "sl-details",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "open": "",
           "summary": "Details"
@@ -950,7 +950,7 @@
       "snapshotMeta": {
         "tagName": "sl-dialog",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "open": "",
           "label": "Dialog"
@@ -1037,7 +1037,7 @@
       "snapshotMeta": {
         "tagName": "sl-divider",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -1062,7 +1062,7 @@
       "snapshotMeta": {
         "tagName": "sl-drawer",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "open": "",
           "label": "Drawer"
@@ -1163,7 +1163,7 @@
       "snapshotMeta": {
         "tagName": "sl-dropdown",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "open": ""
         },
@@ -1267,7 +1267,7 @@
       "snapshotMeta": {
         "tagName": "sl-icon",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "name": "star"
         },
@@ -1323,7 +1323,7 @@
       "snapshotMeta": {
         "tagName": "sl-icon-button",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "name": "gear",
           "label": "Settings"
@@ -1404,7 +1404,7 @@
       "snapshotMeta": {
         "tagName": "sl-image-comparer",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -1449,7 +1449,7 @@
       "snapshotMeta": {
         "tagName": "sl-input",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "placeholder": "Type something...",
           "value": "Hello"
@@ -1730,7 +1730,7 @@
       "snapshotMeta": {
         "tagName": "sl-menu",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "<sl-menu-item>Item 1</sl-menu-item><sl-menu-item>Item 2</sl-menu-item>",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -1759,7 +1759,7 @@
       "snapshotMeta": {
         "tagName": "sl-menu-item",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "checked": ""
         },
@@ -1832,7 +1832,7 @@
       "snapshotMeta": {
         "tagName": "sl-progress-bar",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "value": "50"
         },
@@ -1879,7 +1879,7 @@
       "snapshotMeta": {
         "tagName": "sl-radio",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "checked": ""
         },
@@ -1935,7 +1935,7 @@
       "snapshotMeta": {
         "tagName": "sl-radio-group",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "label": "Select one"
         },
@@ -2032,7 +2032,7 @@
       "snapshotMeta": {
         "tagName": "sl-range",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "value": "50"
         },
@@ -2160,7 +2160,7 @@
       "snapshotMeta": {
         "tagName": "sl-rating",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "value": "3"
         },
@@ -2239,7 +2239,7 @@
       "snapshotMeta": {
         "tagName": "sl-select",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "placeholder": "Choose an option"
         },
@@ -2456,7 +2456,7 @@
       "snapshotMeta": {
         "tagName": "sl-skeleton",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "effect": "pulse"
         },
@@ -2483,7 +2483,7 @@
       "snapshotMeta": {
         "tagName": "sl-spinner",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2499,7 +2499,7 @@
       "snapshotMeta": {
         "tagName": "sl-split-panel",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2583,7 +2583,7 @@
       "snapshotMeta": {
         "tagName": "sl-switch",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "checked": ""
         },
@@ -2696,7 +2696,7 @@
       "snapshotMeta": {
         "tagName": "sl-tab",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2754,7 +2754,7 @@
       "snapshotMeta": {
         "tagName": "sl-tab-group",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "<sl-tab slot=\"nav\" panel=\"a\">Tab A</sl-tab> <sl-tab slot=\"nav\" panel=\"b\">Tab B</sl-tab><sl-tab-panel name=\"a\">Panel A</sl-tab-panel> <sl-tab-panel name=\"b\">Panel B</sl-tab-panel>",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2822,7 +2822,7 @@
       "snapshotMeta": {
         "tagName": "sl-tab-panel",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2860,7 +2860,7 @@
       "snapshotMeta": {
         "tagName": "sl-table",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -2876,7 +2876,7 @@
       "snapshotMeta": {
         "tagName": "sl-tag",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "variant": "primary",
           "size": "medium"
@@ -2937,7 +2937,7 @@
       "snapshotMeta": {
         "tagName": "sl-textarea",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "placeholder": "Type something...",
           "value": "Hello World"
@@ -3142,7 +3142,7 @@
       "snapshotMeta": {
         "tagName": "sl-tooltip",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "content": "Tooltip content",
           "open": "",
@@ -3248,7 +3248,7 @@
       "snapshotMeta": {
         "tagName": "sl-tree",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {},
         "demoSlots": "<sl-tree-item expanded>Branch<sl-tree-item>Leaf</sl-tree-item></sl-tree-item>",
         "themeCssUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css",
@@ -3294,7 +3294,7 @@
       "snapshotMeta": {
         "tagName": "sl-tree-item",
         "importSpec": "@shoelace-style/shoelace",
-        "importUrl": "https://esm.sh/@shoelace-style/shoelace@2.20.1",
+        "importUrl": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1",
         "demoAttrs": {
           "expanded": ""
         },
@@ -3375,21 +3375,21 @@
     }
   ],
   "reports": {
-    "validation": "{\"packageName\":\"@shoelace-style/shoelace\",\"version\":\"2.20.1\",\"valid\":true,\"compatibility\":\"client-only\",\"tags\":39,\"errors\":[],\"warnings\":[{\"code\":\"NO_LESS_SSR\",\"severity\":\"warning\",\"message\":\"No LessJS SSR metadata found.\"}]}"
+    "validation": "{\"packageName\":\"@shoelace-style/shoelace\",\"version\":\"2.20.1\",\"valid\":true,\"compatibility\":\"client-only\",\"tags\":39,\"errors\":[],\"warnings\":[{\"code\":\"NO_LESS_SSR\",\"severity\":\"warning\",\"message\":\"No openElement SSR metadata found.\"}]}"
   },
   "snapshotPaths": {},
   "installGuidance": {
     "safeToInstall": true,
-    "command": "less add @shoelace-style/shoelace",
+    "command": "open add @shoelace-style/shoelace",
     "configChanges": [
-      "packages[\"@shoelace-style/shoelace\"] — client-only (no SSR)"
+      "packages[\"@shoelace-style/shoelace\"] - client-only (no SSR)"
     ],
     "warnings": [
       "This package has no SSR metadata. It will render on the client only."
     ],
     "ssrCapable": false
   },
-  "submittedAt": "2026-05-19T02:38:21.418Z",
+  "submittedAt": "2026-06-04T16:16:47.699Z",
   "submittedBy": "hub-scanner",
-  "validatorVersion": "0.19.0"
+  "validatorVersion": "0.30.1"
 }

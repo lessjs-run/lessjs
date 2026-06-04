@@ -1,5 +1,5 @@
 /**
- * LessJS dev:fast — zero-bundler development server.
+ * openElement dev:fast — zero-bundler development server.
  *
  * Uses Deno.serve + Hono to serve pre-built SSR output directly.
  * No Vite, no virtual modules. Cold start target < 1s.
@@ -64,7 +64,7 @@ app.get('*', async (c) => {
       return c.html(indexHtml);
     } catch {
       return c.html(
-        '<!DOCTYPE html><html><body><h1>LessJS dev:fast</h1><p>No build output found. Run <code>deno task build:docs</code> first.</p></body></html>',
+        '<!DOCTYPE html><html><body><h1>openElement dev:fast</h1><p>No build output found. Run <code>deno task build:docs</code> first.</p></body></html>',
         503,
       );
     }

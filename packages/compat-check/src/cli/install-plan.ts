@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * @openelement/core/cli/less-add - CLI for adding Web Component packages.
+ * @openelement/core/cli/install-plan - CLI for adding Web Component packages.
  *
  * Usage:
- *   deno run -A jsr:@openelement/core/cli/less-add @scope/package --dry-run
- *   deno run -A jsr:@openelement/core/cli/less-add ./local/package/custom-elements.json
- *   deno run -A jsr:@openelement/core/cli/less-add @scope/package --json
+ *   deno run -A jsr:@openelement/core/cli/install-plan @scope/package --dry-run
+ *   deno run -A jsr:@openelement/core/cli/install-plan ./local/package/custom-elements.json
+ *   deno run -A jsr:@openelement/core/cli/install-plan @scope/package --json
  *
  * Exit codes:
  *   0 - plan generated (valid)
@@ -14,7 +14,7 @@
 
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { generateAddPlan } from '../less-add.ts';
+import { generateAddPlan } from '../install-plan.ts';
 
 // ─── CLI Entry Point ──────────────────────────────────────────────────
 
@@ -27,7 +27,7 @@ async function main() {
 
   const spec = args.find((a) => !a.startsWith('--'));
   if (!spec) {
-    console.error('Usage: less-add <package-spec> [--dry-run] [--json]');
+    console.error('Usage: install-plan <package-spec> [--dry-run] [--json]');
     console.error('  <package-spec> can be:');
     console.error('    @scope/package     - JSR/npm package');
     console.error('    ./custom-elements.json - local CEM file');
@@ -67,7 +67,7 @@ async function main() {
     // Human-readable output
     const dryTag = flags.dryRun ? ' (dry run)' : '';
     console.info(
-      `\n  less add${dryTag}: ${plan.packageName}${plan.version ? ` v${plan.version}` : ''}`,
+      `\n  open add${dryTag}: ${plan.packageName}${plan.version ? ` v${plan.version}` : ''}`,
     );
     console.info(`  ${'─'.repeat(50)}`);
 

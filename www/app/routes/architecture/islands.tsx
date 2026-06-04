@@ -22,7 +22,7 @@ routeSheet.replaceSync(`
       .comparison-item:hover {
         border-color: var(--gray-4);
       }
-      .comparison-item.less {
+      .comparison-item.openElement {
         background: var(--gray-1);
         border-left: 3px solid var(--indigo-5);
       }
@@ -49,7 +49,7 @@ export class IslandsGuidePage extends DsdElement {
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
-            LessJS 的 island 是 DSD HTML 之后的 Custom Element upgrade。它不是整页
+            openElement 的 island 是 DSD HTML 之后的 Custom Element upgrade。它不是整页
             hydration，也不是把应用状态完整恢复到客户端。
           </p>
           <h2>为什么需要 Island</h2>
@@ -63,7 +63,7 @@ export class IslandsGuidePage extends DsdElement {
               </ul>
             </div>
             <div class="comparison-item less">
-              <h3>LessJS Island Model</h3>
+              <h3>openElement Island Model</h3>
               <ul>
                 <li>内容先由 SSG + DSD 输出。</li>
                 <li>只有真正需要交互的组件才加载客户端模块。</li>
@@ -136,7 +136,7 @@ export default class MyCounter extends DsdElement {
 if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</code></pre></open-code-block>
           <h2>Package Islands</h2>
           <p>
-            可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry
+            可复用包可以导出 island metadata，openElement 在构建时读取这些信息，用于 SSR 注册和 client entry
             生成。
           </p>
           <h2>当前边界</h2>
@@ -160,7 +160,7 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
-            LessJS islands are Custom Element upgrades that follow DSD HTML. This is not full-page
+            openElement islands are Custom Element upgrades that follow DSD HTML. This is not full-page
             hydration - it does not restore the entire application state on the client.
           </p>
           <h2>Why Islands</h2>
@@ -174,7 +174,7 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
               </ul>
             </div>
             <div class="comparison-item less">
-              <h3>LessJS Island Model</h3>
+              <h3>openElement Island Model</h3>
               <ul>
                 <li>Content is first rendered by SSG + DSD.</li>
                 <li>Only components that truly need interactivity load client modules.</li>
@@ -223,20 +223,20 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
           </p>
           <h2>Package Islands</h2>
           <p>
-            Reusable packages can export island metadata. LessJS reads this at build time for SSR
+            Reusable packages can export island metadata. openElement reads this at build time for SSR
             registration and client entry generation.
           </p>
           <p>
             Today that metadata is intentionally minimal. Future package islands should be driven by a
             CEM-compatible manifest that declares tag, module, export, strategy, SSR renderability, DSD
             constraints, hydration events, diagnostics, and fallback behavior. That protocol is required
-            before <code>less add</code>, automatic registration, or registry hub claims are stable.
+            before <code>open add</code>, automatic registration, or registry hub claims are stable.
           </p>
           <h2>Current Boundaries</h2>
           <p>
             The current implementation should be treated as framework-supported package island scanning,
             not a general-purpose component marketplace. If a package cannot explain its SSR and hydration
-            behavior, LessJS should render it as static host markup or a pure island instead of guessing.
+            behavior, openElement should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
             <a href={`/{loc}/architecture/dsd`} class="nav-link">&larr; DSD Architecture</a>

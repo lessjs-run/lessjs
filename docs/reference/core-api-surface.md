@@ -1,4 +1,4 @@
-# LessJS Core API Surface — v0.24.4 (HARDENED)
+# openElement Core API Surface — v0.24.4 (HARDENED)
 
 > Status: **HARDENED**\
 > Version: v0.24.4\
@@ -56,7 +56,7 @@ here is either internal or removed.
 | API                                      | Signature                                            | Stability |
 | ---------------------------------------- | ---------------------------------------------------- | --------- |
 | `defineIsland(tagName, Class, options?)` | `(string, Constructor, IslandOptions?): Constructor` | HARDENED  |
-| `bindEvents(host)`                       | `(HTMLElement): void`                                | STABLE    |
+| `bindSsrProps(host)`                     | `(HTMLElement): void`                                | STABLE    |
 | `getSsrProps(el)`                        | `(HTMLElement): Record<string, unknown> \| null`     | STABLE    |
 
 ## Prop Declarations (Types)
@@ -83,13 +83,13 @@ here is either internal or removed.
 | API                   | Signature                                 | Stability |
 | --------------------- | ----------------------------------------- | --------- |
 | `ErrorBoundary`       | `abstract class extends DsdElement`       | STABLE    |
-| `LessError`           | `{ code, severity, phase, message, ... }` | STABLE    |
-| `RenderError`         | `extends LessError`                       | STABLE    |
-| `SsrRenderError`      | `extends LessError`                       | STABLE    |
-| `BuildError`          | `extends LessError`                       | STABLE    |
-| `IslandRenderError`   | `extends LessError`                       | STABLE    |
-| `NavigationError`     | `extends LessError`                       | STABLE    |
-| `PropValidationError` | `extends LessError`                       | STABLE    |
+| `OpenElementError`    | `{ code, severity, phase, message, ... }` | STABLE    |
+| `RenderError`         | `extends OpenElementError`                | STABLE    |
+| `SsrRenderError`      | `extends OpenElementError`                | STABLE    |
+| `BuildError`          | `extends OpenElementError`                | STABLE    |
+| `IslandRenderError`   | `extends OpenElementError`                | STABLE    |
+| `NavigationError`     | `extends OpenElementError`                | STABLE    |
+| `PropValidationError` | `extends OpenElementError`                | STABLE    |
 
 ## HTML Escaping
 
@@ -109,29 +109,29 @@ here is either internal or removed.
 
 | API                  | Signature                      | Stability |
 | -------------------- | ------------------------------ | --------- |
-| `createLogger(name)` | `(string): LessLogger`         | STABLE    |
-| `LessLogger`         | `{ info, warn, error, debug }` | STABLE    |
+| `createLogger(name)` | `(string): OpenElementLogger`  | STABLE    |
+| `OpenElementLogger`  | `{ info, warn, error, debug }` | STABLE    |
 | `LogLevel`           | `enum`                         | STABLE    |
 
 ## Data Contracts (Types)
 
-| API                        | Role                                                         | Stability |
-| -------------------------- | ------------------------------------------------------------ | --------- |
-| `RenderOutput`             | `renderDsd()` result                                         | HARDENED  |
-| `RenderError`              | Machine-readable error                                       | HARDENED  |
-| `DsdBuildReport`           | Build-time DSD evidence                                      | HARDENED  |
-| `LessPackageManifest`      | Package metadata                                             | HARDENED  |
-| `ComponentLayer`           | `'dsd-static' \| 'dsd-interactive' \| 'pure-island'`         | HARDENED  |
-| `HydrationStrategy`        | `'load' \| 'idle' \| 'visible' \| 'only'`                    | HARDENED  |
-| `StrategySource`           | `'directive' \| 'island-options' \| 'manifest' \| 'default'` | HARDENED  |
-| `ManifestDecision`         | SSR admission decision                                       | HARDENED  |
-| `SsrAdmissionDecision`     | Per-tag SSR decision                                         | HARDENED  |
-| `ValidationResult`         | Manifest validation result                                   | HARDENED  |
-| `ValidationError`          | Validation error                                             | HARDENED  |
-| `ValidationWarning`        | Validation warning                                           | HARDENED  |
-| `ValidationDiagnostic`     | Single diagnostic                                            | HARDENED  |
-| `ValidatedTag`             | Per-tag validation                                           | HARDENED  |
-| `ManifestValidationReport` | Full validation report                                       | HARDENED  |
+| API                          | Role                                                         | Stability |
+| ---------------------------- | ------------------------------------------------------------ | --------- |
+| `RenderOutput`               | `renderDsd()` result                                         | HARDENED  |
+| `RenderError`                | Machine-readable error                                       | HARDENED  |
+| `DsdBuildReport`             | Build-time DSD evidence                                      | HARDENED  |
+| `OpenElementPackageManifest` | Package metadata                                             | HARDENED  |
+| `ComponentLayer`             | `'dsd-static' \| 'dsd-interactive' \| 'pure-island'`         | HARDENED  |
+| `HydrationStrategy`          | `'load' \| 'idle' \| 'visible' \| 'only'`                    | HARDENED  |
+| `StrategySource`             | `'directive' \| 'island-options' \| 'manifest' \| 'default'` | HARDENED  |
+| `ManifestDecision`           | SSR admission decision                                       | HARDENED  |
+| `SsrAdmissionDecision`       | Per-tag SSR decision                                         | HARDENED  |
+| `ValidationResult`           | Manifest validation result                                   | HARDENED  |
+| `ValidationError`            | Validation error                                             | HARDENED  |
+| `ValidationWarning`          | Validation warning                                           | HARDENED  |
+| `ValidationDiagnostic`       | Single diagnostic                                            | HARDENED  |
+| `ValidatedTag`               | Per-tag validation                                           | HARDENED  |
+| `ManifestValidationReport`   | Full validation report                                       | HARDENED  |
 
 ## Renamed in v0.24.4
 
@@ -143,7 +143,7 @@ here is either internal or removed.
 | `renderToDOM()`     | `renderToDom()`     | PascalCase acronym  |
 | `getSSRProps()`     | `getSsrProps()`     | PascalCase acronym  |
 | `island()`          | `defineIsland()`    | verbNoun convention |
-| `lessBind()`        | `bindEvents()`      | No brand prefix     |
+| `lessBind()`        | `bindSsrProps()`    | No brand prefix     |
 
 ## Removed in v0.24.x
 

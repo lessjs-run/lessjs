@@ -27,7 +27,7 @@ Deno.test('hub-submit: --help prints usage', async () => {
 
 // Test dry-run mode
 Deno.test('hub-submit: --dry-run on a valid dir', async () => {
-  const tempDir = await Deno.makeTempDir({ prefix: 'lessjs-hub-submit-' });
+  const tempDir = await Deno.makeTempDir({ prefix: 'openElement-hub-submit-' });
   await Deno.writeTextFile(
     `${tempDir}/deno.json`,
     JSON.stringify({ name: '@test/hub-fixture', version: '1.0.0' }),
@@ -77,7 +77,7 @@ Deno.test('hub-submit: CLI parses --submit flag correctly', () => {
   // Import parseArgs directly to test flag parsing
   // We can't easily import the module, so we test the CLI output
   // by checking that --submit is advertised in help
-  const helpText = `less hub submit - Submit a package to the LessJS Registry Hub
+  const helpText = `less hub submit - Submit a package to the openElement Registry Hub
 
 USAGE:
   less hub submit [options]

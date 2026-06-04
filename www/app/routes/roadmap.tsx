@@ -7,7 +7,7 @@ export const tagName = 'page-roadmap';
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import '../islands/less-search.tsx';
+import '../islands/open-search.tsx';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
@@ -243,7 +243,7 @@ export class RoadmapPage extends DsdElement {
             <div>
               <h1>Roadmap</h1>
               <p class="subtitle">
-                LessJS roadmap labels are product truth, not aspiration. The current
+                openElement roadmap labels are product truth, not aspiration. The current
                 line is v0.29.2 — structured renderer IR, single async render path,
                 core simplification (33→26 files), and unified attribute serialization.
               </p>

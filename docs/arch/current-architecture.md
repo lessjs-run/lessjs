@@ -1,13 +1,13 @@
-# Current Architecture - v0.30.0
+# Current Architecture - v0.30.1
 
 > Status: **CURRENT (CONTRACT-FROZEN)**\
-> Version line: v0.30.0\
-> Governing decisions: ADR-0077, ADR-0078, ADR-0080\
+> Version line: v0.30.1\
+> Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081\
 > Last hardened: 2026-06-04
 
 ## Architecture Center
 
-LessJS is a DSD-first Web Components application framework.
+openElement is a DSD-first Web Components application framework.
 
 The architecture is designed around deterministic output:
 
@@ -18,7 +18,7 @@ The architecture is designed around deterministic output:
 - generated projects as release artifacts;
 - package graph gates before publish.
 
-LessJS owns the Web Component and DSD application layer. Hono, Vite, Deno, JSR,
+openElement owns the Web Component and DSD application layer. Hono, Vite, Deno, JSR,
 and Web Platform APIs remain the substrate.
 
 ## Layer Model
@@ -81,7 +81,7 @@ kernel must not import a concrete build adapter.
 
 ## Public Component Contract
 
-The only LessJS component render contract is:
+The only openElement component render contract is:
 
 ```tsx
 import { DsdElement, type VNode } from '@openelement/core';
@@ -159,11 +159,11 @@ deno task publish:dry-run
 
 ## No Backward Compatibility
 
-v0.30.0 is the architecture contract freeze before later product-facing shell
-work. Removed pre-freeze APIs are not preserved with deprecation shims.
+v0.30.1 is the post-freeze cleanup line. Removed pre-freeze APIs are not
+preserved with deprecation shims.
 
 ## Next Architecture Work
 
-UI Shell, Ocean-Island, and `@openelement/ui/css` remain deferred to the next product
-surface release. They must build on the v0.30.0 contract instead of reopening
-the renderer or metadata cleanup arc.
+UI Shell, Ocean-Island, and `@openelement/ui/css` remain deferred to the next
+product surface release. They must build on the v0.30.1 contract instead of
+reopening the renderer or metadata cleanup arc.

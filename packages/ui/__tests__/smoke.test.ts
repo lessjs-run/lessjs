@@ -6,47 +6,47 @@
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 
-Deno.test('less-ui - index exports manifest (WC Package Protocol)', async () => {
+Deno.test('open-ui - index exports manifest (WC Package Protocol)', async () => {
   const mod = await import('../src/index.ts');
   assertExists(mod.manifest, 'manifest export should exist');
   assertEquals(typeof mod.manifest, 'object');
   assertEquals(mod.manifest.packageName, '@openelement/ui');
   assertEquals(mod.manifest.declarations.length, 10);
-  assertEquals(mod.manifest.declarations[0].tagName, 'less-card');
-  assertEquals(mod.manifest.declarations[1].tagName, 'less-callout');
-  assertEquals(mod.manifest.declarations[2].tagName, 'less-step-card');
-  assertEquals(mod.manifest.declarations[3].tagName, 'less-button');
-  assertEquals(mod.manifest.declarations[4].tagName, 'less-input');
-  assertEquals(mod.manifest.declarations[5].tagName, 'less-theme-toggle');
-  assertEquals(mod.manifest.declarations[6].tagName, 'less-code-block');
-  assertEquals(mod.manifest.declarations[7].tagName, 'less-dialog');
-  assertEquals(mod.manifest.declarations[8].tagName, 'less-layout');
-  assertEquals(mod.manifest.declarations[9].tagName, 'less-hero-ping');
+  assertEquals(mod.manifest.declarations[0].tagName, 'open-card');
+  assertEquals(mod.manifest.declarations[1].tagName, 'open-callout');
+  assertEquals(mod.manifest.declarations[2].tagName, 'open-step-card');
+  assertEquals(mod.manifest.declarations[3].tagName, 'open-button');
+  assertEquals(mod.manifest.declarations[4].tagName, 'open-input');
+  assertEquals(mod.manifest.declarations[5].tagName, 'open-theme-toggle');
+  assertEquals(mod.manifest.declarations[6].tagName, 'open-code-block');
+  assertEquals(mod.manifest.declarations[7].tagName, 'open-dialog');
+  assertEquals(mod.manifest.declarations[8].tagName, 'open-layout');
+  assertEquals(mod.manifest.declarations[9].tagName, 'open-hero-ping');
 });
 
-Deno.test('less-ui - less-theme-toggle exports tagName', async () => {
-  const mod = await import('../src/less-theme-toggle.tsx');
-  assertEquals(mod.tagName, 'less-theme-toggle');
-  assertExists(mod.LessThemeToggle, 'LessThemeToggle class should be exported');
+Deno.test('open-ui - open-theme-toggle exports tagName', async () => {
+  const mod = await import('../src/open-theme-toggle.tsx');
+  assertEquals(mod.tagName, 'open-theme-toggle');
+  assertExists(mod.OpenThemeToggle, 'OpenThemeToggle class should be exported');
 });
 
-Deno.test('less-ui - open-props-tokens exports openPropsTokenSheet', async () => {
+Deno.test('open-ui - open-props-tokens exports openPropsTokenSheet', async () => {
   const mod = await import('../src/open-props-tokens.ts');
   assertExists(mod.openPropsTokenSheet, 'openPropsTokenSheet should be exported');
 });
 
-Deno.test('less-ui - all components export tagName', async () => {
+Deno.test('open-ui - all components export tagName', async () => {
   const components = [
-    'less-button',
-    'less-callout',
-    'less-card',
-    'less-code-block',
-    'less-dialog',
-    'less-hero-ping',
-    'less-input',
-    'less-layout',
-    'less-step-card',
-    'less-theme-toggle',
+    'open-button',
+    'open-callout',
+    'open-card',
+    'open-code-block',
+    'open-dialog',
+    'open-hero-ping',
+    'open-input',
+    'open-layout',
+    'open-step-card',
+    'open-theme-toggle',
   ];
   for (const name of components) {
     const mod = await import(`../src/${name}.tsx`);

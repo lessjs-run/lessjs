@@ -1,6 +1,6 @@
 # @openelement/hub - Registry Hub SDK
 
-Schema, builder, indexer, and submission pipeline for the LessJS Registry Hub.
+Schema, builder, indexer, and submission pipeline for the openElement Registry Hub.
 
 ## Usage
 

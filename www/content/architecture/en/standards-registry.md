@@ -15,14 +15,14 @@ order: 20
 
           <h1>Standards &amp; Registry Strategy</h1>
           <p class="subtitle">
-            The long-term LessJS direction is a WC SSR/SSG rendering kernel and component package
+            The long-term openElement direction is a WC SSR/SSG rendering kernel and component package
             protocol. A public registry hub should follow local indexing, manifests, validation artifacts,
             and security governance.
           </p>
 
           <h2>Boundary In One Sentence</h2>
           <p>
-            LessJS can become a Web Components SSR/SSG rendering kernel and package protocol, but it
+            openElement can become a Web Components SSR/SSG rendering kernel and package protocol, but it
             should not promise automatic SSR, registration, and hydration for arbitrary Web Components.
             Automation must come from manifests, not runtime guessing.
           </p>
@@ -32,8 +32,8 @@ order: 20
             <thead>
               <tr>
                 <th>Reference</th>
-                <th>How LessJS Uses It</th>
-                <th>What LessJS Avoids</th>
+                <th>How openElement Uses It</th>
+                <th>What openElement Avoids</th>
               </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@ order: 20
               <tr>
                 <td>Open UI</td>
                 <td>Borrow vocabulary for parts, states, behavior, accessibility, and form semantics.</td>
-                <td>Do not turn LessJS into an OpenWC template or Open UI implementation library.</td>
+                <td>Do not turn openElement into an OpenWC template or Open UI implementation library.</td>
               </tr>
               <tr>
                 <td>OpenWC</td>
@@ -67,7 +67,7 @@ order: 20
               <tr>
                 <td>Lit / FAST</td>
                 <td>Treat them as WC authoring models and adapter inputs.</td>
-                <td>Do not bind LessJS's identity to one authoring library.</td>
+                <td>Do not bind openElement's identity to one authoring library.</td>
               </tr>
               <tr>
                 <td>Scoped Custom Element Registries</td>
@@ -141,7 +141,7 @@ order: 20
           <ol>
             <li>Document and test renderer protocol, adapter contract, and DSD diagnostics.</li>
             <li>Extend <code>PackageIslandMeta</code> toward a CEM-compatible package manifest draft.</li>
-            <li>Build <code>less validate-manifest</code> before <code>less add</code>.</li>
+            <li>Build <code>less validate-manifest</code> before <code>open add</code>.</li>
             <li>Build a local registry index before a public hub.</li>
           </ol>
 

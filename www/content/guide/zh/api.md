@@ -1,71 +1,70 @@
 ---
-title: 'API 参考'
-section: '参考'
+title: 'API Reference'
+section: 'Reference'
 label: 'API'
 order: 70
 ---
 
-## 核心 API
+## Core API
 
 ### renderDsd(input, options?)
 
-唯一的渲染入口。将自定义元素渲染为 DSD HTML。
+The single rendering entry point. Renders a custom element to DSD HTML.
 
 ```ts
 import { renderDsd } from '@openelement/core';
 
-// 按标签名 — 自动从 customElements 注册表查找
-const result = await renderDsd('less-layout', {
+// By tag name — auto-looks up from customElements registry
+const result = await renderDsd('open-layout', {
   props: {
-    currentPath: '/zh/guide/getting-started',
-    locale: 'zh',
+    currentPath: '/guide/getting-started',
+    locale: 'en',
   },
 });
 
-// 按类 — 直接使用
+// By class — direct use
 const result = await renderDsd(MyComponent, {
-  props: { title: '你好' },
+  props: { title: 'Hello' },
 });
 
 // result: { html: string, errors: [], metrics: {...}, hydrationHints: [] }
 console.log(result.html);
 ```
 
-**参数:**
+**Parameters:**
 
-| 参数      | 类型                                 | 描述                           |
-| --------- | ------------------------------------ | ------------------------------ |
-| `input`   | `string \| CustomElementConstructor` | 标签名（自动查注册表）或组件类 |
-| `options` | `RenderDsdOptions`                   | 渲染选项对象                   |
+| Param     | Type                                 | Description                                                                           |
+| --------- | ------------------------------------ | ------------------------------------------------------------------------------------- |
+| `input`   | `string \| CustomElementConstructor` | Tag name (auto-lookup) or component class                                             |
+| `options` | `RenderDsdOptions`                   | Component class, props, source info, DSD options, collector, nesting depth, and hooks |
 
-**返回:** `Promise<RenderOutput>` — 包含 `html`、`errors`、`metrics`、`hydrationHints`。
+**Returns:** `Promise<RenderOutput>` — contains `html`, `errors`, `metrics`, `hydrationHints`.
 
 ### renderDsdTree(node)
 
-异步 VNode 树转 HTML 字符串。处理嵌套自定义元素的 DSD 渲染。
+Async VNode tree to HTML string renderer. Handles nested custom elements with DSD.
 
 ```ts
 import { renderDsdTree } from '@openelement/core';
-import { jsx } from '@openelement/core/jsx-runtime';
 
 const vnode = jsx('div', { class: 'greeting', children: 'hello' });
 const html = await renderDsdTree(vnode);
 // → '<div class="greeting">hello</div>'
 ```
 
-**参数:**
+**Parameters:**
 
-| 参数   | 类型      | 描述                      |
-| ------ | --------- | ------------------------- |
-| `node` | `unknown` | VNode、字符串、数字或片段 |
+| Param  | Type      | Description                        |
+| ------ | --------- | ---------------------------------- |
+| `node` | `unknown` | VNode, string, number, or fragment |
 
-**返回:** `Promise<string>` — 转义后的 HTML 字符串，已注册自定义元素包含 DSD。
+**Returns:** `Promise<string>` — escaped HTML string with DSD for registered custom elements.
 
-## 组件模型
+## Component Model
 
 ### DsdElement
 
-所有 DSD 原生组件的基类。
+Base class for all DSD-native components.
 
 ```tsx
 import { DsdElement } from '@openelement/core';
@@ -98,22 +97,22 @@ customElements.define('my-counter', MyCounter);
 
 ### Fragment
 
-不产生额外 DOM 的空包装器：
+Empty wrapper for grouping children without extra DOM:
 
 ```tsx
 render() {
   return (
     <>
-      <span>一</span>
-      <span>二</span>
+      <span>one</span>
+      <span>two</span>
     </>
   )
 }
 ```
 
-## JSX 运行时 (Subpath)
+## JSX Runtime (Subpath)
 
-从 `@openelement/core/jsx-runtime` 导入：
+Import from `@openelement/core/jsx-runtime`:
 
 ```ts
 import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
@@ -121,7 +120,7 @@ import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 
 ### For
 
-信号数组的列表渲染：
+List rendering with signal arrays:
 
 ```tsx
 <For each={this.#items}>
@@ -131,7 +130,7 @@ import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 
 ### Show
 
-条件渲染：
+Conditional rendering:
 
 ```tsx
 <Show when={this.#loading}>
@@ -140,9 +139,9 @@ import { For, jsx, jsxDEV, jsxs, Show } from '@openelement/core/jsx-runtime';
 </Show>;
 ```
 
-## 信号
+## Signals
 
-从 `@openelement/signals` 导入：
+Import from `@openelement/signals`:
 
 ```ts
 import { computed, effect, signal } from '@openelement/signals';
@@ -151,14 +150,14 @@ const count = signal(0);
 const double = computed(() => count.value * 2);
 
 effect(() => {
-  console.log('count 变了:', count.value);
+  console.log('count changed:', count.value);
 });
 ```
 
 ## Islands
 
 ```tsx
-// 创建 island
+// Create an island
 import { defineIsland } from '@openelement/core';
 
 defineIsland('my-widget', {
@@ -168,22 +167,22 @@ defineIsland('my-widget', {
 ```
 
 ```tsx
-// 在页面中使用
+// Use in a page
 <my-widget client:idle />;
 ```
 
-水合策略：`client:load`（立即）、`client:idle`（空闲时）、`client:visible`（可见时）、`client:only`（仅 CSR，无 SSR）。
+Hydration strategies: `client:load` (immediate), `client:idle` (requestIdleCallback), `client:visible` (IntersectionObserver), `client:only` (CSR only, no SSR).
 
 ## wrapInDocument
 
-将内容包装为完整 HTML 文档：
+Wraps content in a complete HTML document:
 
 ```ts
 import { wrapInDocument } from '@openelement/core';
 
 const html = wrapInDocument(content, {
-  title: '我的页面',
-  lang: 'zh',
+  title: 'My Page',
+  lang: 'en',
   headExtras: '<link rel="stylesheet" href="/styles.css">',
 });
 ```

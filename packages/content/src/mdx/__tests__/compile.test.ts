@@ -5,14 +5,14 @@ Deno.test('compileMdx extracts frontmatter and markdown body', async () => {
   const mod = await compileMdx(`---
 title: Hello MDX
 tags:
-  - lessjs
+  - openElement
 ---
 
 # Hello
 `);
 
   assertEquals(mod.frontmatter.title, 'Hello MDX');
-  assertEquals(mod.frontmatter.tags, ['lessjs']);
+  assertEquals(mod.frontmatter.tags, ['openElement']);
   assertStringIncludes(mod.content, '# Hello');
 });
 
@@ -23,8 +23,8 @@ Deno.test('compileMdx targets @openelement/core JSX runtime', async () => {
 });
 
 Deno.test('compileMdx preserves JSX component usage for DSD render path', async () => {
-  const mod = await compileMdx('<less-counter client:idle count={1} />');
-  assertStringIncludes(mod.code, 'less-counter');
+  const mod = await compileMdx('<open-counter client:idle count={1} />');
+  assertStringIncludes(mod.code, 'open-counter');
   assertStringIncludes(mod.code, 'client:idle');
 });
 

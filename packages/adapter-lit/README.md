@@ -1,6 +1,6 @@
 # @openelement/adapter-lit
 
-Lit adapter for LessJS DSD rendering.
+Lit adapter for openElement DSD rendering.
 
 The adapter lets `@openelement/core` render Lit `TemplateResult` values into clean
 Declarative Shadow DOM HTML. It does not use `@lit-labs/ssr` and does not emit
@@ -59,7 +59,7 @@ binds only declared events. It is not full-page hydration.
 
 ## Boundary
 
-Lit is the current practical authoring adapter, not the definition of LessJS.
+Lit is the current practical authoring adapter, not the definition of openElement.
 Future FAST or plain-string adapters should integrate through the same renderer
 protocol once that protocol is stable.
 

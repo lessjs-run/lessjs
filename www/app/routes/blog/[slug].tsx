@@ -2,7 +2,7 @@
  * Blog Post Page - Dynamic Route
  *
  * Renders individual blog posts from @openelement/generated/blog-data.
- * The `slug` param is set by LessJS dynamic routing: /blog/:slug
+ * The `slug` param is set by openElement dynamic routing: /blog/:slug
  * Data comes from generated app data, not @openelement/content module state.
  */
 import { DsdElement } from '@openelement/core';

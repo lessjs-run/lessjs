@@ -50,7 +50,7 @@ export function createGeneratedDataResolverPlugin(
   const allowFallback = options.allowFallback ?? true;
 
   return {
-    name: options.name ?? 'less:generated-data',
+    name: options.name ?? 'open:generated-data',
     enforce: 'pre',
 
     resolveId(id) {

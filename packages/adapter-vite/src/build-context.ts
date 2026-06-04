@@ -1,15 +1,15 @@
 /**
- * @openelement/adapter-vite - LessJS Build Context
+ * @openelement/adapter-vite - openElement Build Context
  *
  * Shared mutable state for all openElement Vite plugins.
  * Replaces the closure-captured variables (honoEntryCode, scannedIslandTagNames, etc.)
  * with a single object that's explicitly passed around.
  *
- * Also replaces the .less/ temp directory as IPC between build phases:
- * - Phase 1 (less:build) writes metadata -> ctx fields
+ * Also replaces the .openElement/ temp directory as IPC between build phases:
+ * - Phase 1 (open:build) writes metadata -> ctx fields
  * - Phase 2 (build-client) reads metadata -> ctx fields
  * - Phase 3 (build-ssg) reads metadata -> ctx fields
- * - Sub-plugins (lessContent, lessI18n) write their data -> ctx fields
+ * - Sub-plugins (openContent, openI18n) write their data -> ctx fields
  *
  * ctx is passed via explicit parameter - no globalThis or module-level discovery.
  * use openElement() from @openelement/app for the recommended unified entry.
@@ -22,13 +22,12 @@ import type {
   CompatibilityClassification,
   FrameworkOptions,
   HydrationStrategy,
-  LessPackageManifest,
+  OpenElementPackageManifest,
   RouteEntry,
 } from '@openelement/core';
-import type { LessPluginMeta } from '@openelement/protocols/build-types';
+import type { OpenElementPluginMeta } from '@openelement/protocols/build-types';
 import type { IslandDecl, SsrAdmissionPlan } from './entry-descriptor.js';
 
-// ©¤©¤©¤ Phase Branded Types (compile-time ordering enforcement) ©¤©¤©¤
 // These branded types ensure Phase 2 can only run after Phase 1,
 // and Phase 3 can only run after Phase 2. The compiler catches
 // out-of-order phase calls at build time.
@@ -36,7 +35,6 @@ export type Phase1Token = { readonly __phase1: unique symbol };
 export type Phase2Token = { readonly __phase2: unique symbol };
 export type Phase3Token = { readonly __phase3: unique symbol };
 
-// ©¤©¤©¤ Phase 1: Route scanning & build metadata ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase1Meta {
   /** The generated Hono entry module code (virtual module content) */
   honoEntryCode: string = '';
@@ -54,7 +52,7 @@ export class Phase1Meta {
   islandMeta: Record<string, Partial<IslandDecl>> = {};
 
   /** Package manifests discovered from npm/JSR packages */
-  packageManifests: LessPackageManifest[] = [];
+  packageManifests: OpenElementPackageManifest[] = [];
 
   /** Package island declarations extracted from manifests */
   packageIslandDecls: IslandDecl[] = [];
@@ -75,13 +73,11 @@ export class Phase1Meta {
   userResolveAlias: Record<string, string> | Alias[] | null = null;
 }
 
-// ©¤©¤©¤ Phase 2: Client island build state ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase2Meta {
   /** Generated client island entry code */
   clientEntryCode: string = '';
 }
 
-// ©¤©¤©¤ Phase 3: SSG rendering state ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export class Phase3Meta {
   /** Generated SSG entry code (for viteBuild SSR input) */
   ssgEntryCode: string = '';
@@ -95,13 +91,13 @@ export class Phase3Meta {
   /** Base URL path (default: '/') */
   base: string = '/';
 
-  /** Middleware config from less() options */
+  /** Middleware config from createOpenPlugin() options */
   middleware: FrameworkOptions['middleware'] | null = null;
 
-  /** HTML document options from less() options */
+  /** HTML document options from createOpenPlugin() options */
   html: { lang?: string; title?: string } | null = null;
 
-  /** PWA config from less() options */
+  /** PWA config from createOpenPlugin() options */
   pwa: FrameworkOptions['pwa'] | null = null;
 
   /** Island hydration strategy (default: 'idle') */
@@ -110,7 +106,7 @@ export class Phase3Meta {
   /** View Transitions enabled (default: true) */
   viewTransition: boolean = true;
 
-  /** Speculation Rules config from less() options */
+  /** Speculation Rules config from createOpenPlugin() options */
   speculation: FrameworkOptions['speculation'] | null = null;
 
   /** Extra HTML to inject into <head> */
@@ -147,9 +143,8 @@ export class Phase3Meta {
   skipPreResolution?: boolean;
 }
 
-// ©¤©¤©¤ Plugin data from content/i18n sub-plugins ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-export class PluginMeta implements LessPluginMeta {
-  /** Index signature to satisfy LessPluginMeta interface */
+export class PluginMeta implements OpenElementPluginMeta {
+  /** Index signature to satisfy OpenElementPluginMeta interface */
   [key: string]: unknown;
 
   /** Blog options from @openelement/content plugin */
@@ -174,8 +169,7 @@ export class PluginMeta implements LessPluginMeta {
   } | null = null;
 }
 
-// ©¤©¤©¤ Root context ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-export class LessBuildContext {
+export class OpenElementBuildContext {
   /** Phase completion tokens - used for compile-time ordering enforcement */
   readonly _phaseTokens: {
     1: Phase1Token | null;

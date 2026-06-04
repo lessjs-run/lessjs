@@ -10,7 +10,7 @@
  * - Preserves unknown CEM fields for future compatibility
  * - Rejects invalid tag names and unresolved module paths
  * - Detects duplicate tags before SSR registration
- * - Conservative defaults: less.ssr ??= false, less.dsd ??= false
+ * - Conservative defaults: openElement.ssr ??= false, openElement.dsd ??= false
  *
  * @see https://github.com/webcomponents/custom-elements-manifest
  */
@@ -21,13 +21,11 @@ import type {
   CemParseResult,
   CemParseWarning,
   CustomElementsManifest,
-  LessDeclaration,
-  LessElementExtensions,
+  OpenElementDeclaration,
+  OpenElementExtensions,
 } from './types.js';
 import { isValidTagName } from '@openelement/core';
 import type { CompatibilityClassification, CompatibilityTier } from '@openelement/core';
-
-// ©¤©¤©¤ Validators ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Validate module path (must be relative path, not absolute or URL) */
 function isValidModulePath(path: string): boolean {
@@ -39,8 +37,6 @@ function isValidModulePath(path: string): boolean {
 function isCemCustomElement(decl: { kind?: string }): decl is CemCustomElement {
   return decl.kind === 'custom-element';
 }
-
-// ©¤©¤©¤ CEM Parser ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Parse a Custom Elements Manifest JSON string.
@@ -206,14 +202,12 @@ export async function readCemFile(filePath: string): Promise<CemParseResult> {
   }
 }
 
-// ©¤©¤©¤ CEM to openElement Conversion ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
  * Convert CEM declarations to openElement compatibility classifications.
  *
  * Applies conservative defaults:
- * - less.ssr ??= false (CEM describes elements, not SSR safety)
- * - less.dsd ??= false
+ * - openElement.ssr ??= false (CEM describes elements, not SSR safety)
+ * - openElement.dsd ??= false
  * - hydrate.strategy ??= 'idle'
  *
  * @param manifest - Parsed CEM manifest
@@ -249,35 +243,35 @@ export function classifyCemManifest(
       seenTags.add(tagName);
 
       // Apply conservative defaults only if less field exists
-      const hasLessField = decl.less !== undefined;
-      const less: LessElementExtensions = decl.less ?? {};
-      less.ssr ??= false;
-      less.dsd ??= false;
-      if (less.hydrate === undefined) {
-        less.hydrate = 'idle';
+      const hasOpenElementField = decl.openElement !== undefined;
+      const openElement: OpenElementExtensions = decl.openElement ?? {};
+      openElement.ssr ??= false;
+      openElement.dsd ??= false;
+      if (openElement.hydrate === undefined) {
+        openElement.hydrate = 'idle';
       }
 
-      // Classify based on LessJS extensions
+      // Classify based on openElement extensions
       let tier: CompatibilityTier = 'client-only';
-      let reason = hasLessField
-        ? 'LessJS manifest exists but ssr not enabled'
-        : 'CEM-only package (no LessJS SSR declaration)';
+      let reason = hasOpenElementField
+        ? 'openElement manifest exists but ssr not enabled'
+        : 'CEM-only package (no openElement SSR declaration)';
 
-      if (less.ssr === true) {
+      if (openElement.ssr === true) {
         // Check if a renderer/capability is declared
         if (decl.superClass?.name === 'LitElement') {
           tier = 'ssr-capable';
-          reason = 'LitElement with less.ssr = true (Lit adapter required)';
-        } else if (less.layer) {
+          reason = 'LitElement with openElement.ssr = true (Lit adapter required)';
+        } else if (openElement.layer) {
           tier = 'ssr-capable';
-          reason = `LessJS manifest declares ssr: true with layer: ${less.layer}`;
+          reason = `openElement manifest declares ssr: true with layer: ${openElement.layer}`;
         } else {
           tier = 'experimental-dom';
-          reason = 'less.ssr = true but no adapter/layer declared (experimental)';
+          reason = 'openElement.ssr = true but no adapter/layer declared (experimental)';
         }
-      } else if (less.ssr === false && hasLessField) {
+      } else if (openElement.ssr === false && hasOpenElementField) {
         tier = 'client-only';
-        reason = 'less.ssr = false (explicit client-only)';
+        reason = 'openElement.ssr = false (explicit client-only)';
       }
 
       classifications.push({
@@ -286,9 +280,9 @@ export function classifyCemManifest(
         reason,
         source: 'package',
         modulePath: mod.path,
-        ssr: less.ssr,
-        dsd: less.dsd,
-        hydrate: less.hydrate,
+        ssr: openElement.ssr,
+        dsd: openElement.dsd,
+        hydrate: openElement.hydrate,
       });
     }
   }
@@ -297,18 +291,18 @@ export function classifyCemManifest(
 }
 
 /**
- * Extract LessJS declarations from CEM manifest.
+ * Extract openElement declarations from CEM manifest.
  *
- * Converts CEM custom-element declarations into openElement LessDeclaration format.
- * Only includes fields that map directly (CEM -> LessJS).
+ * Converts CEM custom-element declarations into openElement OpenElementDeclaration format.
+ * Only includes fields that map directly (CEM -> openElement).
  *
  * @param manifest - Parsed CEM manifest
  * @returns Array of openElement declarations
  */
 export function extractLessDeclarations(
   manifest: CustomElementsManifest,
-): LessDeclaration[] {
-  const declarations: LessDeclaration[] = [];
+): OpenElementDeclaration[] {
+  const declarations: OpenElementDeclaration[] = [];
 
   for (const mod of manifest.modules) {
     if (!mod.declarations) continue;
@@ -317,7 +311,7 @@ export function extractLessDeclarations(
       if (!isCemCustomElement(decl)) continue;
       if (!decl.tagName) continue;
 
-      // Convert CEM attributes -> LessJS attributes
+      // Convert CEM attributes -> openElement attributes
       const attributes = decl.attributes?.map((attr) => ({
         name: attr.name,
         type: attr.type,
@@ -327,20 +321,20 @@ export function extractLessDeclarations(
         fieldName: attr.propertyName,
       }));
 
-      // Convert CEM events -> LessJS events
+      // Convert CEM events -> openElement events
       const events = decl.events?.map((evt) => ({
         name: evt.name,
         type: evt.type,
         description: evt.description,
       }));
 
-      // Convert CEM slots -> LessJS slots
+      // Convert CEM slots -> openElement slots
       const slots = decl.slots?.map((slot) => ({
         name: slot.name || '',
         description: slot.description,
       }));
 
-      // Convert CEM CSS properties -> LessJS CSS properties
+      // Convert CEM CSS properties -> openElement CSS properties
       const cssProperties = decl.cssProperties?.map((prop) => ({
         name: prop.name,
         default: prop.defaultValue,
@@ -348,7 +342,7 @@ export function extractLessDeclarations(
         type: prop.syntax,
       }));
 
-      // Convert CEM CSS parts -> LessJS CSS parts
+      // Convert CEM CSS parts -> openElement CSS parts
       const cssParts = decl.cssParts?.map((part) => ({
         name: part.name,
         description: part.description,
@@ -364,7 +358,7 @@ export function extractLessDeclarations(
         slots,
         cssProperties,
         cssParts,
-        less: decl.less,
+        openElement: decl.openElement,
         description: decl.description,
       });
     }

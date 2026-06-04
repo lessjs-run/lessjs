@@ -57,7 +57,7 @@ function makeRecord(
     snapshotPaths: {},
     installGuidance: {
       safeToInstall: true,
-      command: `less add ${scope ? scope + '/' : ''}${name}`,
+      command: `open add ${scope ? scope + '/' : ''}${name}`,
       configChanges: [],
       warnings: [],
       ssrCapable: compat === 'ssr-capable',
@@ -111,7 +111,7 @@ Deno.test('searchPackages: searches by name', () => {
 Deno.test('searchPackages: searches by scope/name', () => {
   const entries = [
     entry('core', 'client-only', ['sl-btn'], false, '', '@shoelace'),
-    entry('core', 'ssr-capable', ['less-btn'], true, '', '@openelement'),
+    entry('core', 'ssr-capable', ['open-btn'], true, '', '@openelement'),
   ];
 
   const result = searchPackages(entries, 'shoelace');

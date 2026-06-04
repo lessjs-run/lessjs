@@ -1,4 +1,4 @@
-import { lessjs } from '@openelement/app';
+import { openElement } from '@openelement/app';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { defineConfig } from 'vite';
 
@@ -48,7 +48,7 @@ body {
   color: var(--text-primary, #FFFFFF);
 }
 
-/* Light mode override ¡ª theme toggle adds [data-theme="light"] to html */
+/* Light mode override -- theme toggle adds [data-theme="light"] to html */
 [data-theme="light"] {
   --bg-obsidian: #f6f7f9;
   --bg-panel: #ffffff;
@@ -98,14 +98,14 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 600,
   },
-  // v0.24.1 (ADR-0057): Configure esbuild JSX transform to use LessJS automatic runtime.
+  // v0.24.1 (ADR-0057): Configure esbuild JSX transform to use openElement automatic runtime.
   // Must match root deno.json compilerOptions.jsx / jsxImportSource.
   esbuild: {
     jsx: 'automatic',
     jsxImportSource: '@openelement/core',
   },
   plugins: [
-    lessjs({
+    openElement({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
       componentsDir: 'app/components',
@@ -117,8 +117,8 @@ export default defineConfig({
         import: '@openelement/ui/open-layout',
         props: {
           logoText: 'openElement',
-          footerText: 'Built with openElement Framework ¡ª The Open Element for Web Components',
-          githubUrl: 'https://github.com/open-element/open-element',
+          footerText: 'Built with openElement Framework - The Open Element for Web Components',
+          githubUrl: 'https://github.com/open-element/openelement',
         },
       },
       packageIslands: ['@openelement/ui', '@shoelace-style/shoelace'],
@@ -135,7 +135,7 @@ export default defineConfig({
       },
       pwa: {
         name: 'openElement Framework',
-        shortName: 'openEle',
+        shortName: 'openElement',
         themeColor: '#040508',
         backgroundColor: '#040508',
       },
@@ -199,21 +199,21 @@ export default defineConfig({
             src: 'https://gc.zgo.at/count.js',
             async: true,
             integrity: 'sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi',
-            attrs: { 'data-goatcounter': 'https://lessjs.goatcounter.com/count' },
+            attrs: { 'data-goatcounter': 'https://openelement.goatcounter.com/count' },
           },
         ],
         headFragments: [
-          '<meta property="og:site_name" content="LessJS">',
+          '<meta property="og:site_name" content="openElement">',
           '<meta property="og:type" content="website">',
-          '<meta property="og:title" content="LessJS - Less is More">',
+          '<meta property="og:title" content="openElement - The Open Element">',
           '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
-          '<meta property="og:url" content="https://lessjs.org">',
-          '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
+          '<meta property="og:url" content="https://openelement.org">',
+          '<meta property="og:image" content="https://openelement.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
-          '<meta name="description" content="LessJS ¡ª Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
+          '<meta name="description" content="openElement - The Open Element. DSD-first Web Standards framework with SSG, islands, and Web Components.">',
           '<style>html{visibility:visible!important;}body{background:#040508;color:#fff;}</style>',
-          '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
-          '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',
+          '<link rel="icon" type="image/svg+xml" href="/assets/open-favicon.svg" />',
+          '<link rel="apple-touch-icon" href="/assets/open-logo.svg" />',
           colorTokensStyle,
         ],
       },
@@ -224,7 +224,7 @@ export default defineConfig({
         },
         nav: {
           routesDir: 'app/routes',
-          // Minimal headerNav; less-layout auto-filters sidebar.
+          // Minimal headerNav; open-layout auto-filters sidebar.
           // v0.31 UI-shell debt: derive this from route meta scanning.
           headerNav: [
             { href: '/guide/getting-started', label: 'Guide' },
@@ -235,7 +235,7 @@ export default defineConfig({
           ],
         },
         sitemap: {
-          hostname: 'https://lessjs.org',
+          hostname: 'https://openelement.org',
         },
       },
       i18n: {

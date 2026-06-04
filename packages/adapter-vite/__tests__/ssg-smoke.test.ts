@@ -19,7 +19,7 @@ const WWW_DIR = join(ROOT, 'www');
 const WWW_DIST = join(WWW_DIR, 'dist');
 
 function hasSsrBundle(): boolean {
-  // ADR 0011 + S2 fix: Phase 1 artifacts (_virtual_less-hono-entry-*.js)
+  // ADR 0011 + S2 fix: Phase 1 artifacts (_virtual_open-hono-entry-*.js)
   // are cleaned from dist/assets/ by closeBundle because they are build-time
   // only and must not be deployed to public static hosting.
   // The real SSR bundle is at dist/server/entry.js.
@@ -73,7 +73,7 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assert(hasSsrBundle(), 'SSR bundle should exist');
     assert(hasServerEntry(), 'Server entry bundle should exist');
 
-    // ADR 0011: Build metadata is now in LessBuildContext, not .less/build-metadata.json.
+    // ADR 0011: Build metadata is now in OpenElementBuildContext, not .openElement/build-metadata.json.
     // Verify the build produced real output instead.
     assert(existsSync(join(WWW_DIST, 'index.html')), 'index.html should exist after build');
   });
@@ -143,7 +143,7 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
       'SSG output should preserve Declarative Shadow DOM',
     );
     assertStringIncludes(indexHtml, '<open-layout');
-    assert(hasIslandChunk('less-layout-'), 'UI package island chunk should exist');
+    assert(hasIslandChunk('open-layout-'), 'UI package island chunk should exist');
     assert(existsSync(join(WWW_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
     assert(existsSync(join(WWW_DIST, 'en', 'roadmap', 'index.html')), 'i18n roadmap should exist');
     const roadmapHtml = readFileSync(join(WWW_DIST, 'roadmap', 'index.html'), 'utf-8');

@@ -4,7 +4,7 @@ export const tagName = 'engine-architecture';
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import '@openelement/ui/less-code-block';
+import '@openelement/ui/open-code-block';
 
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`
@@ -307,7 +307,7 @@ export class ArchitecturePage extends DsdElement {
               </div>
               <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
               <p class="lede">
-                LessJS is now organized around explicit package ownership:
+                openElement is now organized around explicit package ownership:
                 protocols own shared contracts, core stays the runtime kernel,
                 runtime owns authoring imports, app owns configuration, and
                 adapter-vite owns Vite implementation.
@@ -386,7 +386,7 @@ hub ───────────▶ compat-check, core`}</code></pre>
               </div>
               <div class="card">
                 <h3>{isZh ? '为什么需要 signals facade？' : 'Why signals facade?'}</h3>
-                <p>LessJS uses alien-signals as the engine. The public LessJS contract is .value, subscribe(), and DSD integration semantics.</p>
+                <p>openElement uses alien-signals as the engine. The public openElement contract is .value, subscribe(), and DSD integration semantics.</p>
               </div>
             </div>
           </section>
@@ -404,7 +404,7 @@ hub ───────────▶ compat-check, core`}</code></pre>
               </p>
             </div>
             <div class="gate-grid">
-              <div class="gate"><strong>0 cycles</strong><span>Internal LessJS package dependencies must remain acyclic.</span></div>
+              <div class="gate"><strong>0 cycles</strong><span>Internal openElement package dependencies must remain acyclic.</span></div>
               <div class="gate"><strong>18 packages</strong><span>Every package in packages/ must be present in the publish workflow.</span></div>
               <div class="gate"><strong>direct imports</strong><span>Each source-level @openelement/* import must be declared in that package's deno.json.</span></div>
               <div class="gate"><strong>0.23.0</strong><span>Unified version releases keep JSR packages resolvable as one set.</span></div>

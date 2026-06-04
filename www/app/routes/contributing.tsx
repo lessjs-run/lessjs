@@ -57,18 +57,18 @@ export class ContributingPage extends DsdElement {
       
         <div class='container'>
           <h1>Contributing to openElement</h1>
-          <p class='subtitle'>感谢你对 LessJS 框架的兴趣！</p>
+          <p class='subtitle'>感谢你对 openElement 框架的兴趣！</p>
           <h2>开发环境设置</h2>
           <open-code-block>
-            <pre><code>git clone https://github.com/open-element/open-element.git
-cd lessjs
+            <pre><code>git clone https://github.com/open-element/openelement.git
+cd openElement
 deno install
 deno task test
 deno task docs:dev</code></pre>
           </open-code-block>
           <h2>Deno-first 工具链</h2>
           <p>
-            LessJS 的 core CLI、SSG、Serverless API、测试、发布和文档站任务都以 Deno 2.7+
+            openElement 的 core CLI、SSG、Serverless API、测试、发布和文档站任务都以 Deno 2.7+
             为默认运行环境。
           </p>
           <h2>开发规范</h2>
@@ -106,15 +106,15 @@ deno task docs:dev</code></pre>
           <p class='subtitle'>Thank you for your interest in the openElement Framework!</p>
           <h2>Development Setup</h2>
           <open-code-block>
-            <pre><code>git clone https://github.com/open-element/open-element.git
-cd lessjs
+            <pre><code>git clone https://github.com/open-element/openelement.git
+cd openElement
 deno install
 deno task test
 deno task docs:dev</code></pre>
           </open-code-block>
           <h2>Deno-first Toolchain</h2>
           <p>
-            LessJS core CLI, SSG, serverless API, tests, publishing, and docs site tasks all use
+            openElement core CLI, SSG, serverless API, tests, publishing, and docs site tasks all use
             Deno 2.7+ as the default runtime. Vite 8 runs via{' '}
             <span class='inline-code'>deno run -A npm:vite</span> - no{' '}
             <span class='inline-code'>npm</span> or <span class='inline-code'>npx</span>{' '}

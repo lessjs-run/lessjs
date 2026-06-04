@@ -46,7 +46,7 @@ export class DeploymentPage extends DsdElement {
         <div class='container'>
           <h1>部署</h1>
           <p class='subtitle'>
-            LessJS 优先部署静态文件。运行时 API 路由在应用需要动态行为时，通过 serverless 或 edge
+            openElement 优先部署静态文件。运行时 API 路由在应用需要动态行为时，通过 serverless 或 edge
             adapter 单独部署。
           </p>
           <h2>Build Once</h2>
@@ -114,19 +114,19 @@ export class DeploymentPage extends DsdElement {
           </table>
           <h2>No Production SSR Server by Default</h2>
           <p>
-            LessJS 主路径不需要长期运行的生产 SSR 服务器。静态页面应保持静态；动态行为应为显式 API
+            openElement 主路径不需要长期运行的生产 SSR 服务器。静态页面应保持静态；动态行为应为显式 API
             或未来的 ISR。这使托管便宜、可缓存、运维轻量。
           </p>
           <h2>PWA 支持</h2>
           <p>
-            LessJS 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
+            openElement 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
             构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
           </p>
           <open-code-block><pre><code>{`// vite.config.ts
-import { lessjs } from '@openelement/app';
+import { openElement } from '@openelement/app';
 
 export default defineConfig({
-  plugins: [lessjs({
+  plugins: [openElement({
     pwa: {
       injectManifest: true,
     },
@@ -159,7 +159,7 @@ export default defineConfig({
         <div class='container'>
           <h1>Deployment</h1>
           <p class='subtitle'>
-            LessJS prioritizes static file deployment. Runtime API routes are deployed separately
+            openElement prioritizes static file deployment. Runtime API routes are deployed separately
             via serverless or edge adapters when the app needs dynamic behavior.
           </p>
           <h2>Build Once</h2>
@@ -201,21 +201,21 @@ export default defineConfig({
           </p>
           <h2>No Production SSR Server by Default</h2>
           <p>
-            LessJS's main path doesn't need a long-running production SSR server. Static pages stay
+            openElement's main path doesn't need a long-running production SSR server. Static pages stay
             static; dynamic behavior should be explicit API or future ISR. This keeps hosting cheap,
             cacheable, and operationally lightweight.
           </p>
           <h2>PWA Support</h2>
           <p>
-            LessJS supports Progressive Web Apps. Place your manifest and service worker in the
+            openElement supports Progressive Web Apps. Place your manifest and service worker in the
             <code>public/</code> directory — they're automatically copied to the output during build.
             CSP meta and view transition metadata can be auto-injected via the Vite plugin.
           </p>
           <open-code-block><pre><code>{`// vite.config.ts
-import { lessjs } from '@openelement/app';
+import { openElement } from '@openelement/app';
 
 export default defineConfig({
-  plugins: [lessjs({
+  plugins: [openElement({
     pwa: {
       injectManifest: true,
     },

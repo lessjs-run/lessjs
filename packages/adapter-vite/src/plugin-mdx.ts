@@ -1,12 +1,12 @@
 import type { Plugin } from 'vite';
 import mdx from '@mdx-js/rollup';
 
-export interface LessMdxPluginOptions {
+export interface OpenMdxPluginOptions {
   jsxImportSource?: string;
   development?: boolean;
 }
 
-export function mdxPlugin(options: LessMdxPluginOptions = {}): Plugin {
+export function mdxPlugin(options: OpenMdxPluginOptions = {}): Plugin {
   const plugin = mdx({
     jsxImportSource: options.jsxImportSource ?? '@openelement/core',
     providerImportSource: undefined,
@@ -15,9 +15,9 @@ export function mdxPlugin(options: LessMdxPluginOptions = {}): Plugin {
 
   return {
     ...plugin,
-    name: 'less:mdx',
+    name: 'open:mdx',
     enforce: 'pre',
   };
 }
 
-export { mdxPlugin as lessMdx };
+export { mdxPlugin as openMdx };

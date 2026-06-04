@@ -33,7 +33,7 @@ export class DocsPage extends DsdElement {
         <div class='shell'>
           <h1>Docs</h1>
           <p class='lede'>
-            LessJS documentation is organized around what you want to do.
+            openElement documentation is organized around what you want to do.
             Pick an entry path and follow the workflow.
           </p>
           <div class='paths'>

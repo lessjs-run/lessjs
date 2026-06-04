@@ -30,7 +30,7 @@ export type ErrorPhase =
 
 // ─── Base Error ─────────────────────────────────────────────────────
 
-export class LessError extends Error {
+export class OpenElementError extends Error {
   public readonly code: string;
   public readonly severity: ErrorSeverity;
   public readonly phase: ErrorPhase;
@@ -62,7 +62,7 @@ export class LessError extends Error {
     }
 
     super(message, cause ? { cause } : undefined);
-    this.name = 'LessError';
+    this.name = 'OpenElementError';
     this.code = code ?? ErrorCode.UNKNOWN;
     this.severity = severity;
     this.phase = phase;
@@ -84,7 +84,7 @@ export class LessError extends Error {
 
 // ─── SsrRenderError (backward compat) ────────────────────────────────
 
-export class SsrRenderError extends LessError {
+export class SsrRenderError extends OpenElementError {
   public readonly componentPath: string;
   public readonly sourceError: Error;
 
@@ -105,7 +105,7 @@ export class SsrRenderError extends LessError {
 
 // ─── New ADR-0053 error classes ─────────────────────────────────────
 
-export class RenderError extends LessError {
+export class RenderError extends OpenElementError {
   public readonly componentPath: string;
   public readonly tagName: string;
 
@@ -136,7 +136,7 @@ export class IslandRenderError extends RenderError {
   }
 }
 
-export class PropValidationError extends LessError {
+export class PropValidationError extends OpenElementError {
   public readonly propertyName: string;
   public readonly receivedValue: unknown;
 
@@ -155,7 +155,7 @@ export class PropValidationError extends LessError {
   }
 }
 
-export class NavigationError extends LessError {
+export class NavigationError extends OpenElementError {
   public readonly route: string;
 
   constructor(route: string, cause?: Error) {
@@ -165,7 +165,7 @@ export class NavigationError extends LessError {
   }
 }
 
-export class BuildError extends LessError {
+export class BuildError extends OpenElementError {
   constructor(message: string, cause?: Error) {
     super(message, 'BUILD_ERROR', 'error', 'build', false, cause);
     this.name = 'BuildError';
@@ -174,7 +174,7 @@ export class BuildError extends LessError {
 
 // ─── Error Telemetry ────────────────────────────────────────────────
 
-export type ErrorTelemetryHook = (error: LessError) => void;
+export type ErrorTelemetryHook = (error: OpenElementError) => void;
 
 let _telemetryHook: ErrorTelemetryHook | undefined;
 
@@ -182,13 +182,13 @@ export function setErrorTelemetryHook(hook: ErrorTelemetryHook): void {
   _telemetryHook = hook;
 }
 
-export function reportError(error: LessError): void {
+export function reportError(error: OpenElementError): void {
   if (_telemetryHook) {
     try {
       _telemetryHook(error);
     } catch { /* must not throw */ }
   } else {
-    console.error(`[LessJS:${error.code}] ${error.message}`);
+    console.error(`[openElement:${error.code}] ${error.message}`);
   }
 }
 
@@ -196,7 +196,7 @@ export function reportError(error: LessError): void {
 
 export interface SsrErrorEntry {
   componentPath: string;
-  error: LessError;
+  error: OpenElementError;
   phase: ErrorPhase;
 }
 

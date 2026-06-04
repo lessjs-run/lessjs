@@ -6,7 +6,7 @@
  *   2. injectClientScript - add client script tags to HTML
  *   3. injectCspMeta - add CSP meta tags to HTML
  *
- * LessJS Architecture constraints verified:
+ * openElement Architecture constraints verified:
  *   - S (Static): DSD content visible without JS
  *   - K+I (Knowledge + Isolated): Islands are the only JS
  */
@@ -40,7 +40,7 @@ async function setupSsgFixtures() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LessJS</title>
+  <title>openElement</title>
 </head>
 <body>
 <docs-home><template shadowroot="open" shadowrootmode="open"><style>:host { display: block; }</style>
@@ -64,7 +64,7 @@ async function setupSsgFixtures() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LessJS</title>
+  <title>openElement</title>
 </head>
 <body>
 <docs-about><template shadowroot="open" shadowrootmode="open"><style>:host { display: block; }</style>

@@ -9,7 +9,7 @@
  * This module is only called by the virtual module plugin's load() hook.
  */
 
-import type { LessI18nOptions } from './types.ts';
+import type { OpenElementI18nOptions } from './types.ts';
 
 /**
  * Pure function: load i18n configuration.
@@ -18,7 +18,7 @@ import type { LessI18nOptions } from './types.ts';
  * This replaces the stateful initI18nData() + getI18nOptions() pattern.
  * For virtual module consumers, use @openelement/generated/i18n instead.
  */
-export function loadI18nData(options: LessI18nOptions): LessI18nOptions {
+export function loadI18nData(options: OpenElementI18nOptions): OpenElementI18nOptions {
   return {
     ...options,
     locales: [...options.locales],

@@ -18,7 +18,7 @@ import type { CustomElementsManifest } from '@openelement/cem/types';
 
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 
-// 鈹€鈹€鈹€ Helpers 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 function makeValidManifest(
   overrides?: Partial<CustomElementsManifest>,
@@ -45,7 +45,7 @@ function makeValidManifest(
   };
 }
 
-// 鈹€鈹€鈹€ Schema Validation 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - valid manifest returns valid=true', () => {
   const report = validateManifest(makeValidManifest());
@@ -126,7 +126,7 @@ Deno.test('validateManifest - exports without declarations returns warning', () 
   assert(report.warnings.some((w) => w.code === 'EXPORTS_WITHOUT_DECLARATIONS'));
 });
 
-// 鈹€鈹€鈹€ Tag Name Validation 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - empty tag name returns error', () => {
   const manifest = makeValidManifest({
@@ -170,7 +170,7 @@ Deno.test('validateManifest - invalid tag name returns error', () => {
   assert(report.errors.some((e) => e.code === 'INVALID_TAG_NAME'));
 });
 
-// 鈹€鈹€鈹€ Duplicate Detection 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - duplicate tags return error', () => {
   const manifest = makeValidManifest({
@@ -204,7 +204,7 @@ Deno.test('validateManifest - duplicate tags return error', () => {
   assert(report.errors.some((e) => e.code === 'DUPLICATE_TAG'));
 });
 
-// 鈹€鈹€鈹€ Module Path Validation 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - absolute module path returns error', () => {
   const manifest = makeValidManifest({
@@ -269,7 +269,7 @@ Deno.test('validateManifest - URL module path returns error', () => {
   assert(report.errors.some((e) => e.code === 'INVALID_MODULE_PATH'));
 });
 
-// 鈹€鈹€鈹€ Less Extension Validation 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - invalid ssr type returns error', () => {
   const manifest = makeValidManifest({
@@ -282,7 +282,7 @@ Deno.test('validateManifest - invalid ssr type returns error', () => {
             kind: 'custom-element',
             tagName: 'my-element',
             className: 'MyElement',
-            less: { ssr: 'yes' as unknown as boolean },
+            openElement: { ssr: 'yes' as unknown as boolean },
           },
         ],
       },
@@ -303,7 +303,7 @@ Deno.test('validateManifest - invalid dsd type returns error', () => {
             kind: 'custom-element',
             tagName: 'my-element',
             className: 'MyElement',
-            less: { dsd: 1 as unknown as boolean },
+            openElement: { dsd: 1 as unknown as boolean },
           },
         ],
       },
@@ -324,7 +324,7 @@ Deno.test('validateManifest - invalid hydrate strategy returns error', () => {
             kind: 'custom-element',
             tagName: 'my-element',
             className: 'MyElement',
-            less: { hydrate: 'never' as 'load' | 'idle' | 'visible' | 'only' },
+            openElement: { hydrate: 'never' as 'load' | 'idle' | 'visible' | 'only' },
           },
         ],
       },
@@ -345,7 +345,9 @@ Deno.test('validateManifest - invalid layer returns error', () => {
             kind: 'custom-element',
             tagName: 'my-element',
             className: 'MyElement',
-            less: { layer: 'invalid-layer' as 'dsd-static' | 'dsd-interactive' | 'pure-island' },
+            openElement: {
+              layer: 'invalid-layer' as 'dsd-static' | 'dsd-interactive' | 'pure-island',
+            },
           },
         ],
       },
@@ -355,7 +357,7 @@ Deno.test('validateManifest - invalid layer returns error', () => {
   assert(report.errors.some((e) => e.code === 'INVALID_LAYER'));
 });
 
-// 鈹€鈹€鈹€ Compatibility Determination 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - CEM-only package defaults to client-only', () => {
   const report = validateManifest(makeValidManifest());
@@ -373,7 +375,7 @@ Deno.test('validateManifest - ssr:true tag sets ssr-capable', () => {
             kind: 'custom-element',
             tagName: 'my-element',
             className: 'MyElement',
-            less: { ssr: true },
+            openElement: { ssr: true },
           },
         ],
       },
@@ -390,7 +392,7 @@ Deno.test('validateManifest - errors set overall to rejected', () => {
   assertEquals(report.compatibility, 'rejected');
 });
 
-// 鈹€鈹€鈹€ Tag Result Structure 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - per-tag results have correct structure', () => {
   const report = validateManifest(makeValidManifest());
@@ -420,7 +422,7 @@ Deno.test('validateManifest - invalid tag marks tag as not valid', () => {
   assertEquals(report.tags[0].valid, false);
 });
 
-// 鈹€鈹€鈹€ JSON Convenience Wrapper 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifestFromJson - valid JSON returns valid report', () => {
   const json = JSON.stringify(makeValidManifest());
@@ -449,7 +451,7 @@ Deno.test('validateManifest - output is deterministic for same input', () => {
   assertEquals(report1.valid, report2.valid);
 });
 
-// 鈹€鈹€鈹€ Edge Cases 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('validateManifest - empty modules with no declarations passes basic validation', () => {
   const manifest = makeValidManifest({

@@ -1,6 +1,6 @@
 # @openelement/create
 
-Project scaffold for LessJS.
+Project scaffold for openElement.
 
 ## Usage
 
@@ -25,11 +25,11 @@ my-app/
 ```
 
 The scaffold uses `@openelement/app` and includes `packageIslands: ['@openelement/ui']`
-for the built-in LessJS UI components.
+for the built-in openElement UI components.
 
 ## Current Scope
 
-This CLI creates a working LessJS project. It is not the future `less add`
+This CLI creates a working openElement project. It is not the future `open add`
 registry installer. Package install automation should come later and must first
 validate a package manifest, show a dry-run diff, and generate explicit
 registration code.

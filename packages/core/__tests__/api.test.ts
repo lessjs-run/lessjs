@@ -1,10 +1,10 @@
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import type { LessApiContext } from '../src/types.ts';
+import type { OpenElementApiContext } from '../src/types.ts';
 
-Deno.test('LessApiContext type has correct shape', () => {
+Deno.test('OpenElementApiContext type has correct shape', () => {
   // Verify the type is importable and has the expected structure.
   // Runtime construction is done inline by the build pipeline.
-  const ctx: LessApiContext = {
+  const ctx: OpenElementApiContext = {
     request: new Request('https://example.com/api/items/1'),
     params: { id: '1' },
     env: { MODE: 'test' },
@@ -17,8 +17,8 @@ Deno.test('LessApiContext type has correct shape', () => {
   assertEquals(ctx.platform, { runtime: 'test' });
 });
 
-Deno.test('LessApiContext optional platform defaults to undefined', () => {
-  const ctx: LessApiContext = {
+Deno.test('OpenElementApiContext optional platform defaults to undefined', () => {
+  const ctx: OpenElementApiContext = {
     request: new Request('https://example.com/api/health'),
     params: {},
     env: {},

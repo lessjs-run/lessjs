@@ -1,9 +1,9 @@
 /**
- * @openelement/create - Minimal project scaffold for LessJS framework.
+ * @openelement/create - Minimal project scaffold for openElement framework.
  *
  * Usage: deno run -A jsr:@openelement/create my-app
  *
- * LessJS Architecture: Keep It Simple, Stupid.
+ * openElement Architecture: Keep It Simple, Stupid.
  * One template, zero prompts, instant start.
  */
 
@@ -51,7 +51,7 @@ function loadWorkspaceVersion(pkg: string): string {
   } catch (e) {
     throw new Error(
       `Failed to read version for @openelement/${dir} from ${wsPath}. ` +
-        `Run this script from the LessJS workspace or ensure deno.json is accessible.\n` +
+        `Run this script from the openElement workspace or ensure deno.json is accessible.\n` +
         `Original error: ${e}`,
     );
   }
@@ -140,7 +140,7 @@ node_modules/
   "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"], "jsx": "react-jsx", "jsxImportSource": "@openelement/core" }
 }
 `,
-    'vite.config.ts': `import { lessjs } from '@openelement/app';
+    'vite.config.ts': `import { openElement } from '@openelement/app';
 import { defineConfig } from 'vite';
 import deno from '@deno/vite-plugin';
 
@@ -157,11 +157,11 @@ export default defineConfig({
   plugins: [
     // SOP-015: Virtual module passthrough — @deno/vite-plugin doesn't
     // support the "virtual:" scheme. This resolve hook intercepts virtual
-    // module IDs before @deno/vite-plugin, letting the lessjs plugin handle them.
+    // module IDs before @deno/vite-plugin, letting the openElement plugin handle them.
     { name: 'virtual-passthrough', resolveId(id) { if (id.startsWith('virtual:')) return '\0' + id; }, enforce: 'pre' },
     deno(),
-    lessjs({
-    html: { title: 'My LessJS App' },
+    openElement({
+    html: { title: 'My openElement App' },
     // Use pre-built UI components from @openelement/ui
     // (JSR distributes compiled JS - no decorator errors)
     packageIslands: ['@openelement/ui'],
@@ -210,9 +210,9 @@ export default class HomePage extends DsdElement {
   override render() {
     return (
       <>
-        <h1>Hello from LessJS!</h1>
+        <h1>Hello from openElement!</h1>
         <p>
-          Your LessJS app is running. Edit <code>app/routes/index.tsx</code> to
+          Your openElement app is running. Edit <code>app/routes/index.tsx</code> to
           get started.
         </p>
         <my-counter></my-counter>
@@ -315,7 +315,7 @@ async function main() {
     console.info(`  created ${path}`);
   }
 
-  console.info(`\nLessJS project created at ./${relativeTarget}/`);
+  console.info(`\nopenElement project created at ./${relativeTarget}/`);
   console.info(`\n  cd ${relativeTarget}`);
   console.info('  deno task dev');
 }

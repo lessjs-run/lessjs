@@ -14,7 +14,7 @@ currentPath='/en/guide/configuration'
 
     <h1>Configuration</h1>
     <p class='subtitle'>
-      LessJS is configured through Vite plugins. Routes, islands, static output, head
+      openElement is configured through Vite plugins. Routes, islands, static output, head
       injection, PWA, and middleware are independent concerns.
     </p>
     <h2>Minimal Configuration</h2>
@@ -26,10 +26,10 @@ export default defineConfig();</code></pre>
 </open-code-block>
 
 <p>
-Use <span class='inline-code'>lessjs()</span>
+Use <span class='inline-code'>openElement()</span>
 as the recommended entry - it combines the core plugin, content pipeline, and i18n in a
 single call. If you only need core routing and island functionality, you can use
-<span class='inline-code'>lessPipeline()</span> from
+<span class='inline-code'>openPipeline()</span> from
 <span class='inline-code'>@openelement/adapter-vite</span> directly.
 </p>
 <h2>Options Reference</h2>
@@ -68,14 +68,14 @@ protocol.
 </tbody>
 </table>
 <p>
-Future <code>less add</code>
+Future <code>open add</code>
 support should update this option only after a package manifest passes validation. Until
 then, third-party packages should be added explicitly and reviewed like any other
 dependency.
 </p>
 <h2>JSX Configuration</h2>
 <p>
-LessJS uses JSX+Signal as the component model. Configure deno.json and
+openElement uses JSX+Signal as the component model. Configure deno.json and
 vite.config.ts:
 </p>
 <open-code-block>
@@ -87,17 +87,17 @@ vite.config.ts:
 <open-code-block>
 <pre><code>// vite.config.ts
 export default defineConfig(,
-plugins: [lessjs()]
+plugins: [openElement()]
 });</code></pre>
 </open-code-block>
 <p>
 <span class='inline-code'>jsx: 'automatic'</span>
-tells esbuild to use LessJS's jsx-runtime instead of React's. Both Vite SSR and client
+tells esbuild to use openElement's jsx-runtime instead of React's. Both Vite SSR and client
 island builds will correctly transform <span class='inline-code'>.tsx</span> files.
 </p>
 <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
 <open-code-block>
-<pre><code>lessjs(,
+<pre><code>openElement(,
 inject: ,
 packageIslands: ['@openelement/ui'],
 middleware: },

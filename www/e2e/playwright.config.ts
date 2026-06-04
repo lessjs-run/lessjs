@@ -1,5 +1,5 @@
 /**
- * Playwright configuration for LessJS E2E tests.
+ * Playwright configuration for openElement E2E tests.
  *
  * Tests run against the built www site (static HTML).
  * Uses a simple HTTP server instead of Vite preview (which may fail
@@ -13,7 +13,7 @@
 import { defineConfig } from '@playwright/test';
 import process from 'node:process';
 
-const PORT = Number(process.env.LESSJS_E2E_PORT ?? 4174);
+const PORT = Number(process.env.openElement_E2E_PORT ?? 4174);
 const baseURL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({

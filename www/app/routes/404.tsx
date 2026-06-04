@@ -4,7 +4,7 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import '../islands/less-search.tsx';
+import '../islands/open-search.tsx';
 
 const POPULAR_LINKS = [
   { href: '/guide/getting-started', label: 'Getting Started' },

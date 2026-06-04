@@ -25,7 +25,7 @@ test.describe('DSD Layers', () => {
   test('homepage has correct HTML structure', async ({ page }) => {
     // Page should have a title
     const title = await page.title();
-    expect(title).toContain('LessJS');
+    expect(title).toContain('openElement');
 
     // HTML lang attribute
     const lang = await page.getAttribute('html', 'lang');
@@ -46,7 +46,7 @@ test.describe('DSD Layers', () => {
   });
 
   test('shadow root content includes style elements', async ({ page }) => {
-    // Shadow roots should contain <style> elements (LessJS component styles)
+    // Shadow roots should contain <style> elements (openElement component styles)
     const hasStyles = await page.evaluate(() => {
       const allElements = document.querySelectorAll('*');
       for (const el of allElements) {

@@ -215,7 +215,7 @@ export function printBuildManifest(options: {
 
   // Print table using ASCII-only output so build logs remain portable.
   console.info('');
-  console.info(`== LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)} ==`);
+  console.info(`== openElement Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)} ==`);
 
   if (manifest.islands.length > 0 || manifest.clientEntry) {
     console.info('\n  Client Islands:');

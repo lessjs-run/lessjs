@@ -3,7 +3,7 @@
  *
  * Internationalization module for openElement.
  */
-export interface LessI18nOptions {
+export interface OpenElementI18nOptions {
   /** Available locale codes, e.g. ['en', 'zh'] */
   locales: string[];
   /** Default locale, e.g. 'en' */

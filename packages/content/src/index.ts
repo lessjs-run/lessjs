@@ -9,8 +9,8 @@
  */
 
 import type { Plugin, ViteDevServer } from 'vite';
-import type { LessContentOptions } from './types.ts';
-import type { LessBuildContextLike } from '@openelement/protocols/build-types';
+import type { OpenElementContentOptions } from './types.ts';
+import type { OpenElementBuildContextLike } from '@openelement/protocols/build-types';
 import { loadBlogData, writeBlogDataModule } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { writeNavModule } from './nav/writer.ts';
@@ -22,7 +22,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 
 const log = createLogger('content');
 
-export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/types.ts';
+export type { BlogPost, BlogPostFrontmatter, OpenElementBlogOptions } from './blog/types.ts';
 export { parseMarkdownFile, slugFromFilename } from './blog/markdown.ts';
 export { generateBlogRoutes, scanPosts } from './blog/routes.ts';
 export { loadBlogData } from './blog/blog-data.ts';
@@ -39,10 +39,10 @@ export {
 export { type SearchIndexEntry, writeSearchIndex } from './search/writer.ts';
 export type {
   HeaderNavLink,
-  LessContentOptions,
   NavItem,
   NavOptions,
   NavSection,
+  OpenElementContentOptions,
   RouteMeta,
 } from './types.ts';
 
@@ -53,20 +53,19 @@ export {
   scanHtmlFiles,
 } from './sitemap/generator.ts';
 export type { SitemapOptions, SitemapUrl } from './types.ts';
-export function lessContent(
-  options: LessContentOptions & { ctx?: LessBuildContextLike } = {},
+export function openContent(
+  options: OpenElementContentOptions & { ctx?: OpenElementBuildContextLike } = {},
 ): Plugin[] {
   const blogOpts = options.blog === false ? null : (options.blog || null);
   const navOpts = options.nav || null;
   const sitemapOpts = options.sitemap || null;
-  // ctx must be explicitly provided (via lessjs() umbrella or direct param)
+  // ctx must be explicitly provided (via openElement() umbrella or direct param)
   const ctx = options.ctx;
 
   const contentPlugin: Plugin = {
-    name: 'less:content',
+    name: 'open:content',
 
     async buildStart() {
-      // ©¤©¤©¤ Blog module ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
       if (blogOpts) {
         const contentDir = blogOpts.contentDir ?? 'posts';
         const basePath = blogOpts.basePath ?? '/blog';
@@ -99,7 +98,6 @@ export function lessContent(
         }
       }
 
-      // ©¤©¤©¤ Nav module ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
       if (navOpts) {
         const resolvedNavOpts = {
           ...navOpts,
@@ -138,7 +136,6 @@ export function lessContent(
         log.info(`Nav: ${navSections.length} section(s) configured`);
       }
 
-      // ©¤©¤©¤ Sitemap module ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
       if (sitemapOpts) {
         if (ctx) {
           ctx.plugins.sitemapOptions = sitemapOpts as unknown as Record<string, unknown>;
@@ -191,4 +188,4 @@ export function lessContent(
   return [contentPlugin];
 }
 
-export default lessContent;
+export default openContent;

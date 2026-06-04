@@ -7,7 +7,7 @@
  *   - Layout custom elements are present
  *   - Page titles are correct per route
  *
- * NOTE: LessJS uses Shadow DOM encapsulation. Navigation links and
+ * NOTE: openElement uses Shadow DOM encapsulation. Navigation links and
  * layout elements are inside shadow roots. Tests use `page.evaluate`
  * with shadow root traversal, or Playwright's piercing locator syntax.
  */
@@ -16,18 +16,18 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Direct URL Access', () => {
   const routes = [
-    { path: '/', titleContains: 'LessJS' },
-    { path: '/guide/getting-started', titleContains: 'LessJS' },
-    { path: '/guide/architecture', titleContains: 'LessJS' },
-    { path: '/guide/islands', titleContains: 'LessJS' },
-    { path: '/guide/dsd', titleContains: 'LessJS' },
-    { path: '/guide/routing', titleContains: 'LessJS' },
-    { path: '/changelog', titleContains: 'LessJS' },
-    { path: '/roadmap', titleContains: 'LessJS' },
-    { path: '/community', titleContains: 'LessJS' },
-    { path: '/contributing', titleContains: 'LessJS' },
-    { path: '/ui', titleContains: 'LessJS' },
-    { path: '/blog', titleContains: 'LessJS' },
+    { path: '/', titleContains: 'openElement' },
+    { path: '/guide/getting-started', titleContains: 'openElement' },
+    { path: '/guide/architecture', titleContains: 'openElement' },
+    { path: '/guide/islands', titleContains: 'openElement' },
+    { path: '/guide/dsd', titleContains: 'openElement' },
+    { path: '/guide/routing', titleContains: 'openElement' },
+    { path: '/changelog', titleContains: 'openElement' },
+    { path: '/roadmap', titleContains: 'openElement' },
+    { path: '/community', titleContains: 'openElement' },
+    { path: '/contributing', titleContains: 'openElement' },
+    { path: '/ui', titleContains: 'openElement' },
+    { path: '/blog', titleContains: 'openElement' },
   ];
 
   for (const route of routes) {
@@ -53,7 +53,7 @@ test.describe('Link Navigation', () => {
       // Walk light DOM
       document.querySelectorAll('a[href]').forEach((a) => allLinks.push(a as HTMLAnchorElement));
 
-      // Walk shadow roots (less-layout, docs-home, etc.)
+      // Walk shadow roots (open-layout, docs-home, etc.)
       document.querySelectorAll('*').forEach((el) => {
         if (el.shadowRoot) {
           el.shadowRoot.querySelectorAll('a[href]').forEach((a) =>
@@ -114,7 +114,7 @@ test.describe('Link Navigation', () => {
     await page.waitForLoadState('networkidle');
 
     await page.evaluate(() => {
-      const layout = document.querySelector('less-layout');
+      const layout = document.querySelector('open-layout');
       const guide = layout?.shadowRoot?.querySelector<HTMLAnchorElement>(
         'a[data-nav*="/guide/getting-started"]',
       );
@@ -123,12 +123,12 @@ test.describe('Link Navigation', () => {
 
     await page.waitForURL(/\/guide\/getting-started\/?$/);
     await page.waitForFunction(() => {
-      const layout = document.querySelector('less-layout');
+      const layout = document.querySelector('open-layout');
       return !!layout?.shadowRoot?.querySelector('.docs-sidebar');
     });
 
     const state = await page.evaluate(() => {
-      const layout = document.querySelector('less-layout')!;
+      const layout = document.querySelector('open-layout')!;
       const sidebar = layout.shadowRoot!.querySelector('.docs-sidebar')!;
       const rect = sidebar.getBoundingClientRect();
       const style = getComputedStyle(sidebar);
@@ -152,10 +152,10 @@ test.describe('Link Navigation', () => {
     await page.waitForLoadState('networkidle');
 
     // Page should still have custom elements (layout intact)
-    // less-layout exists in light DOM (it's the top-level wrapper)
+    // open-layout exists in light DOM (it's the top-level wrapper)
     const hasLayout = await page.evaluate(() => {
       // Check both light DOM and that the element is defined
-      const layout = document.querySelector('less-layout');
+      const layout = document.querySelector('open-layout');
       if (layout) return true;
       // Fallback: check if any custom elements with shadow roots exist
       const all = document.querySelectorAll('*');

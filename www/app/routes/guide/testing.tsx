@@ -18,7 +18,7 @@ export class TestingPage extends DsdElement {
         <div class='container'>
           <h1>测试</h1>
           <p class='subtitle'>
-            LessJS 测试应保护框架契约：路由扫描、DSD 输出、island 元数据、middleware 范围、SSG
+            openElement 测试应保护框架契约：路由扫描、DSD 输出、island 元数据、middleware 范围、SSG
             后处理和包边界。
           </p>
           <h2>项目测试</h2>
@@ -31,7 +31,7 @@ export class TestingPage extends DsdElement {
           </p>
           <h2>Playwright E2E 测试</h2>
           <p>
-            LessJS 包含 Playwright 端到端测试，在真实浏览器中验证 SSG 输出。
+            openElement 包含 Playwright 端到端测试，在真实浏览器中验证 SSG 输出。
           </p>
           <div class='nav-row'>
             <a href='/guide/error-handling' class='nav-link'>← 错误处理</a>
@@ -50,7 +50,7 @@ export class TestingPage extends DsdElement {
         <div class='container'>
           <h1>Testing</h1>
           <p class='subtitle'>
-            LessJS testing should protect framework contracts: route scanning, DSD output, island
+            openElement testing should protect framework contracts: route scanning, DSD output, island
             metadata, middleware scope, SSG post-processing, and package boundaries.
           </p>
           <h2>Project Testing</h2>
@@ -74,7 +74,7 @@ export class TestingPage extends DsdElement {
           </p>
           <h2>Playwright E2E Tests</h2>
           <p>
-            LessJS includes Playwright end-to-end tests that verify SSG output in real browsers.
+            openElement includes Playwright end-to-end tests that verify SSG output in real browsers.
             They confirm DSD is correctly parsed, Custom Elements upgrade, and island strategies
             work as expected.
           </p>

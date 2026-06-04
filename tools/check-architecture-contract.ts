@@ -1,5 +1,5 @@
 /**
- * v0.30.0 architecture contract gate.
+ * v0.30.1 architecture contract gate.
  *
  * This gate checks current source and current documentation only. Historical ADRs,
  * old release notes, generated data, fixtures, and tests are intentionally not
@@ -100,7 +100,7 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
   },
   {
     file: 'packages/core/src/island.ts',
-    fragment: 'this as unknown as { __bindEventsDone?: boolean }',
+    fragment: 'this as unknown as { __ssrPropsBound?: boolean }',
     reason: 'Private marker injected on wrapped custom element instances.',
   },
   {
@@ -134,7 +134,7 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     reason: 'Native CSSStyleSheet and SSR shim constructor unification.',
   },
   {
-    file: 'packages/ui/src/less-code-block.tsx',
+    file: 'packages/ui/src/open-code-block.tsx',
     fragment: 'globalThis as unknown as Record<string, unknown>',
     reason: 'Optional Prism global loaded by the docs site.',
   },
@@ -179,6 +179,7 @@ function isCurrentDocOrExample(path: string): boolean {
   if (path.startsWith('docs/reference/')) return true;
   if (path.startsWith('docs/guide/')) return true;
   if (path === 'README.md' || path === 'README.zh.md') return true;
+  if (path === 'CONTRIBUTING.md') return true;
   if (path.startsWith('packages/') && path.endsWith('/README.md')) return true;
   if (path.startsWith('packages/') && path.includes('/src/')) return true;
   if (path.startsWith('www/app/routes/guide/')) return true;
@@ -315,6 +316,16 @@ function assertMojibake(files: TextFile[]): void {
   const badChars = [
     '\uFFFD',
     '\u951f',
+    '\u9239',
+    '\u9225',
+    '\u9242',
+    '\u9241',
+    '\u9283',
+    '\u923f',
+    '\u9983',
+    '\u9514',
+    '\u72c5',
+    '\u7b0d',
   ];
   for (const file of files) {
     for (const bad of badChars) {
@@ -369,6 +380,18 @@ async function main(): Promise<void> {
     currentDocs,
     /\brawHtml\b|data-on-/,
     'current source/docs must use trustedHtml and VNode event handlers',
+  );
+  failMatches(
+    'rename-contract',
+    production.concat(currentDocs),
+    /\blessjs\b|\blessPipeline\b|\bless-plugin\b|\bless-add\b|\bless-install-guide\b|\bless:|virtual:less|less-devtool|less:ready|\bLess(?:PackageManifest|BuildContext|Error|ContentOptions|I18nOptions|BlogOptions|Renderer|Middleware|Logger)\b|classifyLessManifest/,
+    'active source/docs must use openElement naming for public and observable contracts',
+  );
+  failMatches(
+    'metadata-contract',
+    production.concat(currentDocs),
+    /export const less\b|\.less\b|\bless\s*\?:|\bless\s*:\s*\{|\bless\.(?:ssr|dsd|hydrate|module|layer)/,
+    'active metadata must use export const openElement and manifest.openElement',
   );
   failMatches(
     'core-render',

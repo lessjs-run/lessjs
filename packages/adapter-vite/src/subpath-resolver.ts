@@ -1,6 +1,4 @@
 /**
- * @openelement/adapter-vite ¡ª JSR Subpath Resolution (ADR 0016).
- *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
  * When @openelement/core is loaded from JSR (https:// import.meta.url),
@@ -16,7 +14,7 @@
 
 import type { Plugin } from 'vite';
 
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 import { transform as esbuildTransform } from 'esbuild';
 
 /** Virtual module ID prefix for JSR remote resolution */
@@ -33,7 +31,6 @@ export const CORE_SUBPATHS: Record<string, string> = {
   errors: 'errors.ts',
 };
 
-// ©¤©¤©¤ Source cache (avoids redundant network requests) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 // M-08 fix: Add max size limit to prevent unbounded memory growth in long dev sessions
 
 const JSR_CACHE_MAX = 100;
@@ -51,8 +48,6 @@ function cacheSet(key: string, value: string): void {
   }
   jsrSourceCache.set(key, value);
 }
-
-// ©¤©¤©¤ URL helpers ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 const OPENELEMENT_PACKAGE_SRC_BASE_RE = /\/@openelement\/([^/]+)\/([^/]+)\/src\/.*$/;
 
@@ -74,8 +69,6 @@ function getOpenPackageSrcBase(metaUrl: string, packageName: string): string {
     .replace(/\/src\/.*$/, '/src/');
 }
 
-// ©¤©¤©¤ Plugin factory ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
  * Create the core subpath resolution plugin for JSR remote execution.
  *
@@ -94,7 +87,7 @@ export function createCoreResolvePlugin(metaUrl: string): Plugin {
   }
 
   return {
-    name: 'less:core-resolve',
+    name: 'open:core-resolve',
     enforce: 'pre',
 
     resolveId(source, importer, options) {
@@ -157,14 +150,14 @@ export function createCoreResolvePlugin(metaUrl: string): Plugin {
         const resp = await fetch(url, { signal: controller.signal });
         if (!resp.ok) {
           throw new Error(
-            `[less:core-resolve] Failed to fetch ${url}: HTTP ${resp.status}`,
+            `[open:core-resolve] Failed to fetch ${url}: HTTP ${resp.status}`,
           );
         }
         tsCode = await resp.text();
         clearTimeout(timeoutId);
       } catch (err) {
         clearTimeout(timeoutId);
-        throw new LessError(
+        throw new OpenElementError(
           `Failed to load @openelement/core module from JSR: ${filePath}. ` +
             `URL: ${url}. Error: ${err instanceof Error ? err.message : String(err)}`,
           'JSR_FETCH_ERROR',
@@ -183,7 +176,7 @@ export function createCoreResolvePlugin(metaUrl: string): Plugin {
         });
         jsCode = result.code;
       } catch (err) {
-        throw new LessError(
+        throw new OpenElementError(
           `Failed to compile @openelement/core module from JSR: ${filePath}. ` +
             `Error: ${err instanceof Error ? err.message : String(err)}`,
           'JSR_COMPILE_ERROR',

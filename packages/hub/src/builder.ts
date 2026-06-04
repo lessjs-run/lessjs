@@ -3,7 +3,7 @@
  *
  * v0.19.0: Construct HubPackageRecord instances from validation/build artifacts.
  *
- * The builder is the bridge between LessJS engine artifacts and the Hub.
+ * The builder is the bridge between openElement engine artifacts and the Hub.
  * It never executes package code - it reads pre-generated evidence.
  *
  * @see ADR-0030
@@ -126,7 +126,7 @@ export function buildInstallGuidance(
     case 'rejected': {
       safeToInstall = false;
       warnings.push(
-        'This package failed validation and cannot be installed through LessJS.',
+        'This package failed validation and cannot be installed through openElement.',
       );
       break;
     }
@@ -153,7 +153,7 @@ export function buildInstallGuidance(
 
   return {
     safeToInstall,
-    command: `less add ${packageFullName}`,
+    command: `open add ${packageFullName}`,
     configChanges,
     warnings,
     ssrCapable,

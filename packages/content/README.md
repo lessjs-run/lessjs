@@ -15,7 +15,7 @@ deno add jsr:@openelement/content
 
 ```json
 {
-  ".": "./src/index.ts", // lessContent() 插件
+  ".": "./src/index.ts", // openContent() 插件
   "./blog-data": "./src/blog/blog-data.ts", // loadBlogData() 纯函数
   "./mdx": "./src/mdx/index.ts", // compileMdx() build-time MDX 编译
   "./nav": "./src/nav/index.ts", // Nav 扫描工具
@@ -40,7 +40,7 @@ const mod = await compileMdx(source, {
 });
 ```
 
-`.mdx` 文件里的 LessJS custom elements 和 `client:*` 属性会编译到同一条 JSX/DSD
+`.mdx` 文件里的 openElement custom elements 和 `client:*` 属性会编译到同一条 JSX/DSD
 路径；不引入浏览器端 MDX parser，也不引入 React provider 概念。
 
 ## 使用
@@ -49,12 +49,12 @@ const mod = await compileMdx(source, {
 
 ```ts
 // vite.config.ts
-import { lessjs } from '@openelement/app';
+import { openElement } from '@openelement/app';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
-    lessjs({
+    openElement({
       content: {
         blog: { contentDir: 'content/blog', basePath: '/blog' },
         nav: { routesDir: 'app/routes', headerNav: [...] },
@@ -69,17 +69,17 @@ export default defineConfig({
 
 ```ts
 // vite.config.ts
-import { lessContent } from '@openelement/content';
+import { openContent } from '@openelement/content';
 import { less } from '@openelement/adapter-vite';
-import { LessBuildContext } from '@openelement/adapter-vite/build-context';
+import { OpenElementBuildContext } from '@openelement/adapter-vite/build-context';
 import { defineConfig } from 'vite';
 
-const ctx = new LessBuildContext({});
+const ctx = new OpenElementBuildContext({});
 
 export default defineConfig({
   plugins: [
-    ...less({ routesDir: 'app/routes' }, ctx),
-    ...lessContent({
+    ...createOpenPlugin({ routesDir: 'app/routes' }, ctx),
+    ...openContent({
       blog: { contentDir: 'content/blog', basePath: '/blog' },
       ctx, // ctx 必须显式传递
     }),

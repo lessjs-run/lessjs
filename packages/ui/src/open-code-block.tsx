@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-code-block
+ * @openelement/ui - open-code-block
  *
  * Code block with copy button AND syntax highlighting via Prism.
  *
@@ -261,7 +261,7 @@ export class OpenCodeBlock extends DsdElement {
         this._copyTimer = undefined;
       }, 2000);
     } catch (e) {
-      console.warn('[less-code-block] Clipboard write failed:', e);
+      console.warn('[open-code-block] Clipboard write failed:', e);
       this._internals?.states.add('failed');
       this._internals?.states.delete('copied');
       this._updateCopyButtonDOM();

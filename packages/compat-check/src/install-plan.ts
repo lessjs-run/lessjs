@@ -1,22 +1,20 @@
 /**
- * @openelement/compat-check - `less add` Safe Install Flow
+ * @openelement/compat-check - `open add` Safe Install Flow
  *
  * Produces a deterministic install plan for adding a third-party Web Component
- * package to a LessJS project. Every plan is validated first - invalid packages
+ * package to a openElement project. Every plan is validated first - invalid packages
  * are rejected before any files are touched.
  *
- * v0.18.2: Entry point for `less add` CLI.
+ * v0.18.2: Entry point for `open add` CLI.
  * v0.23.0: Types moved to canonical owner @openelement/compat-check/types.
  *
- * @see docs/sop/v0.18.2-less-add-install-flow.md
+ * @see docs/sop/v0.18.2-install-plan-install-flow.md
  */
 
 import type { ManifestValidationReport } from './types.js';
 import { validateManifestFromJson } from './validate-manifest.js';
 
 export type { ManifestValidationReport };
-
-// ©¤©¤©¤ Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Package resolution source */
 export type PackageSource = 'local' | 'jsr' | 'npm';
@@ -45,7 +43,7 @@ export interface AddTagEntry {
   modulePath?: string;
 }
 
-/** Install plan produced by `less add` */
+/** Install plan produced by `open add` */
 export interface AddPlan {
   /** Package name */
   packageName: string;
@@ -67,8 +65,6 @@ export interface AddPlan {
   statusUpdates: string[];
 }
 
-// ©¤©¤©¤ Add Options ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 export interface AddOptions {
   /** Package specifier (e.g. '@scope/package', './local-path', 'npm:package') */
   spec: string;
@@ -77,8 +73,6 @@ export interface AddOptions {
   /** Whether this is a dry run */
   dryRun?: boolean;
 }
-
-// ©¤©¤©¤ Plan Generator ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Generate an install plan for adding a Web Component package.
@@ -191,7 +185,7 @@ export function generateAddPlan(options: AddOptions): AddPlan {
     .join(', ');
 
   plan.fileMutations.push({
-    filePath: `src/less-imports.ts`,
+    filePath: `src/open-imports.ts`,
     type: 'add',
     description: `Create/update client registration for ${
       report.tags.filter((t) => t.valid).length
@@ -224,7 +218,7 @@ export function generateAddPlan(options: AddOptions): AddPlan {
   // Rollback hint
   if (!dryRun) {
     plan.statusUpdates.push(
-      `\n??  Rollback: revert changes to vite.config.ts and src/less-imports.ts`,
+      `\n??  Rollback: revert changes to vite.config.ts and src/open-imports.ts`,
     );
   }
 

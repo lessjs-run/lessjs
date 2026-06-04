@@ -1,8 +1,8 @@
-﻿/**
+/**
  * v0.27.0 Regression Tests — Build Output Integrity
  *
  * Prevents recurrence of the three production bugs discovered in v0.27.0:
- *   Bug 1: Sidebar disappears on docs pages (less-layout DSD missing)
+ *   Bug 1: Sidebar disappears on docs pages (open-layout DSD missing)
  *   Bug 2: [object Object] in rendered HTML (VNode stringified)
  *   Bug 3: Search panel theme not following (dialog::backdrop isolation)
  *
@@ -37,24 +37,24 @@ Deno.test('v0.27.0 regression: docs-sidebar is present in guide pages', () => {
   assertStringIncludes(html, 'docs-sidebar', 'Sidebar must be present in docs pages');
 });
 
-Deno.test('v0.27.0 regression: less-layout has DSD template', () => {
+Deno.test('v0.27.0 regression: open-layout has DSD template', () => {
   const html = readPage(DOCS_PAGE);
   // Count shadowrootmode attributes — layout should contribute at least 1
   const count = (html.match(/shadowrootmode="open"/g) || []).length;
   assert(count >= 5, `Expected >= 5 DSD templates in docs page, got ${count}`);
 });
 
-Deno.test('v0.27.0 regression: less-search is present in output', () => {
+Deno.test('v0.27.0 regression: open-search is present in output', () => {
   for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
     const html = readPage(page);
-    assert(html.includes('<less-search'), `less-search missing in ${page}`);
+    assert(html.includes('<open-search'), `open-search missing in ${page}`);
   }
 });
 
-Deno.test('v0.27.0 regression: less-theme-toggle is present in output', () => {
+Deno.test('v0.27.0 regression: open-theme-toggle is present in output', () => {
   for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
     const html = readPage(page);
-    assert(html.includes('<open-theme-toggle'), `less-theme-toggle missing in ${page}`);
+    assert(html.includes('<open-theme-toggle'), `open-theme-toggle missing in ${page}`);
   }
 });
 
@@ -123,7 +123,7 @@ Deno.test('v0.27.0 regression: parse5 not in core deno.json', () => {
 // ─── Registry Hub iframe ─────────────────────────────────────────────
 
 Deno.test('v0.27.0 regression: Registry iframe has data-srcdoc', () => {
-  const page = join(DIST, 'en', 'registry', '@openelement~ui', 'less-card', 'index.html');
+  const page = join(DIST, 'en', 'registry', '@openelement~ui', 'open-card', 'index.html');
   if (!existsSync(page)) return; // skip if not built
   const html = readPage(page);
   assert(html.includes('data-srcdoc'), 'data-srcdoc missing from registry component page');
@@ -131,11 +131,11 @@ Deno.test('v0.27.0 regression: Registry iframe has data-srcdoc', () => {
 
 // ─── Custom element count sanity ─────────────────────────────────────
 
-Deno.test('v0.27.0 regression: less-layout tags not duplicated', () => {
+Deno.test('v0.27.0 regression: open-layout tags not duplicated', () => {
   const html = readPage(DOCS_PAGE);
-  // less-layout should appear exactly once as the wrapper (opening + closing)
+  // open-layout should appear exactly once as the wrapper (opening + closing)
   const opens = (html.match(/<open-layout/g) || []).length;
-  const closes = (html.match(/<\\/open-layout>/g) || []).length;
-  assertEquals(opens, closes, 'Mismatched less-layout tags');
-  assert(opens >= 1 && opens <= 3, `less-layout appears ${opens} times, expected 1-3`);
+  const closes = (html.match(/<\/open-layout>/g) || []).length;
+  assertEquals(opens, closes, 'Mismatched open-layout tags');
+  assert(opens >= 1 && opens <= 3, `open-layout appears ${opens} times, expected 1-3`);
 });

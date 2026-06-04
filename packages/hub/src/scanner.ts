@@ -12,7 +12,7 @@
 import { buildPackageRecord } from './builder.ts';
 import { buildIndex } from './indexer.ts';
 import { resolve } from 'node:path';
-import { LESSJS_UI_VERSION, VALIDATOR_VERSION } from './constants.ts';
+import { openElement_UI_VERSION, VALIDATOR_VERSION } from './constants.ts';
 import { validateHubPackageRecord } from './schema.ts';
 import type {
   BuildPackageRecordOptions,
@@ -30,8 +30,6 @@ import { renderBatchWithPlaywright } from './snapshot-playwright.ts';
 import type { PlaywrightRenderOptions } from './snapshot-playwright.ts';
 import { DEMO_ATTRS, DEMO_SLOTS } from './demo-config.ts';
 import { toCdnUrl } from './cdn-url.ts';
-
-// ©¤©¤©¤ Known WC Packages ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 interface KnownWcPackage {
   name: string;
@@ -52,50 +50,48 @@ interface KnownWcPackage {
 
 /**
  * Discovered Web Component packages from the current project.
- * When a package has a known LessJS adapter or explicit SSR support,
+ * When a package has a known openElement adapter or explicit SSR support,
  * it's classified as ssr-capable. Otherwise client-only.
  */
 const WC_PACKAGES: KnownWcPackage[] = [
-  // ©¤©¤ LessJS UI (local, SSR-capable) ©¤©¤
   {
     name: 'ui',
     scope: '@openelement',
-    version: LESSJS_UI_VERSION,
+    version: openElement_UI_VERSION,
     source: 'local',
     description:
-      'LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.',
-    repository: 'https://github.com/open-element/open-element',
+      'openElement UI component library with DSD-native DsdElement components. All components are SSR-capable.',
+    repository: 'https://github.com/open-element/openelement',
     homepage: 'https://openelement.org',
     compatibility: 'ssr-capable',
     justification:
-      'First-party LessJS package. Ocean components extend DsdElement with declared SSR metadata.',
+      'First-party openElement package. Ocean components extend DsdElement with declared SSR metadata.',
     tagNames: [
-      'less-button',
-      'less-card',
-      'less-callout',
-      'less-code-block',
-      'less-dialog',
-      'less-hero-ping',
-      'less-input',
-      'less-layout',
-      'less-step-card',
-      'less-theme-toggle',
+      'open-button',
+      'open-card',
+      'open-callout',
+      'open-code-block',
+      'open-dialog',
+      'open-hero-ping',
+      'open-input',
+      'open-layout',
+      'open-step-card',
+      'open-theme-toggle',
     ],
     modulePaths: {
-      'less-button': 'packages/ui/src/less-button.ts',
-      'less-card': 'packages/ui/src/less-card.ts',
-      'less-callout': 'packages/ui/src/less-callout.ts',
-      'less-code-block': 'packages/ui/src/less-code-block.ts',
-      'less-dialog': 'packages/ui/src/less-dialog.ts',
-      'less-hero-ping': 'packages/ui/src/less-hero-ping.ts',
-      'less-input': 'packages/ui/src/less-input.ts',
-      'less-layout': 'packages/ui/src/less-layout.ts',
-      'less-step-card': 'packages/ui/src/less-step-card.ts',
-      'less-theme-toggle': 'packages/ui/src/less-theme-toggle.ts',
+      'open-button': 'packages/ui/src/open-button.ts',
+      'open-card': 'packages/ui/src/open-card.ts',
+      'open-callout': 'packages/ui/src/open-callout.ts',
+      'open-code-block': 'packages/ui/src/open-code-block.ts',
+      'open-dialog': 'packages/ui/src/open-dialog.ts',
+      'open-hero-ping': 'packages/ui/src/open-hero-ping.ts',
+      'open-input': 'packages/ui/src/open-input.ts',
+      'open-layout': 'packages/ui/src/open-layout.ts',
+      'open-step-card': 'packages/ui/src/open-step-card.ts',
+      'open-theme-toggle': 'packages/ui/src/open-theme-toggle.ts',
     },
   },
 
-  // ©¤©¤ Shoelace (npm, client-only) ©¤©¤
   {
     name: 'shoelace',
     scope: '@shoelace-style',
@@ -107,7 +103,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
     homepage: 'https://shoelace.style',
     compatibility: 'client-only',
     justification:
-      'Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.',
+      'Shoelace uses Lit internally but does not publish openElement SSR metadata. All components are client-only.',
     cemPath: 'node_modules/@shoelace-style/shoelace/cdn/custom-elements.json',
     tagNames: [
       'sl-alert',
@@ -195,10 +191,6 @@ const WC_PACKAGES: KnownWcPackage[] = [
     },
   },
 ];
-
-// ©¤©¤©¤ Scanner ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-// ©¤©¤©¤ CEM Data Extraction ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Raw CEM JSON parsing interface (intentionally loose).
@@ -308,7 +300,7 @@ function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
   // Determine import URL based on source
   // IMPORTANT: For local/JSR packages (like @openelement/ui), use per-component
   // subpath imports instead of the full package bundle, because importing the
-  // full @openelement/ui pulls in less-layout which has complex dependencies
+  // full @openelement/ui pulls in open-layout which has complex dependencies
   // and can fail in iframe srcdoc contexts. For npm packages (like Shoelace),
   // the full bundle import works fine in iframes.
   let importUrl = '';
@@ -353,7 +345,6 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   const records: (HubPackageRecord | null)[] = new Array(numPackages).fill(null);
   const skipSnapshots = Deno.args.includes('--skip-snapshots');
 
-  // ©¤©¤ Phase 1: Collect all items to render ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   // SSR-capable Lit components use renderSnapshotLit (fast, in-process).
   // Client-only npm components use Playwright (batch, one browser instance).
   const playwrightItems: PlaywrightRenderOptions[] = [];
@@ -400,7 +391,6 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     }
   }
 
-  // ©¤©¤ Phase 2: Render SSR-capable Lit components (in-process) ©¤©¤©¤©¤©¤©¤©¤©¤©¤
   for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility !== 'ssr-capable') continue;
@@ -446,7 +436,6 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     await buildAndStoreRecord(pkg, tags, records, pkgIdx, errors);
   }
 
-  // ©¤©¤ Phase 3: Render client-only components via Playwright ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   let playwrightResults: Map<string, { html: string; success: boolean; error?: string }> =
     new Map();
   if (playwrightItems.length > 0) {
@@ -460,7 +449,6 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     }
   }
 
-  // ©¤©¤ Phase 4: Assemble records for client-only packages ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility === 'ssr-capable') continue; // already handled
@@ -556,7 +544,11 @@ async function buildAndStoreRecord(
       tags: tags.length,
       errors: [],
       warnings: pkg.compatibility === 'client-only'
-        ? [{ code: 'NO_LESS_SSR', severity: 'warning', message: 'No LessJS SSR metadata found.' }]
+        ? [{
+          code: 'NO_LESS_SSR',
+          severity: 'warning',
+          message: 'No openElement SSR metadata found.',
+        }]
         : [],
     }),
     repository: pkg.repository,

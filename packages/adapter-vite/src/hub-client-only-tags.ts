@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 
 export interface HubClientOnlyTag {
   tagName?: string;
@@ -59,7 +59,7 @@ export async function loadHubClientOnlyTags(
       `${error instanceof Error ? error.message : String(error)}`;
 
     if (options.onError === 'throw') {
-      throw new LessError(message, 'HUB_DATA_IMPORT_ERROR', 500, false);
+      throw new OpenElementError(message, 'HUB_DATA_IMPORT_ERROR', 500, false);
     }
 
     options.logger?.warn?.(message);

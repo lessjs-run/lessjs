@@ -8,7 +8,7 @@
  * Usage:
  * ```ts
  * class MyBoundary extends ErrorBoundary {
- *   onError(error: LessError) {
+ *   onError(error: OpenElementError) {
  *     return html`<error-panel .message=${error.message}></error-panel>`;
  *   }
  *   render() {
@@ -20,16 +20,16 @@
 
 import { type VNode } from './vnode.js';
 import { DsdElement } from './dsd-element.js';
-import { ErrorCode, type ErrorSeverity, LessError } from './errors.js';
+import { ErrorCode, type ErrorSeverity, OpenElementError } from './errors.js';
 
 export abstract class ErrorBoundary extends DsdElement {
-  private _error: LessError | null = null;
+  private _error: OpenElementError | null = null;
 
   get hasError(): boolean {
     return this._error !== null;
   }
 
-  get error(): LessError | null {
+  get error(): OpenElementError | null {
     return this._error;
   }
 
@@ -37,7 +37,7 @@ export abstract class ErrorBoundary extends DsdElement {
    * Render fallback UI when a child component's render() throws.
    * Subclasses MUST override this.
    */
-  abstract onError(error: LessError): VNode;
+  abstract onError(error: OpenElementError): VNode;
 
   /**
    * Capture and reset error state on re-render.
@@ -62,7 +62,7 @@ export abstract class ErrorBoundary extends DsdElement {
    * Call this from parent to catch a child's error.
    */
   catchError(error: Error): void {
-    const lessError = error instanceof LessError ? error : new LessError(
+    const lessError = error instanceof OpenElementError ? error : new OpenElementError(
       error.message,
       ErrorCode.BOUNDARY_CAUGHT,
       'error' as ErrorSeverity,

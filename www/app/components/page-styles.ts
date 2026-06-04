@@ -1,5 +1,5 @@
 /**
- * LessJS Docs - Shared Page Styles
+ * openElement Docs - Shared Page Styles
  *
  * v0.27.0 Typography overhaul:
  * - Unified type scale per docs/design/typography.md

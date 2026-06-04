@@ -9,13 +9,13 @@ order: 2
 
           <h1>Core Concepts</h1>
           <p class="subtitle">
-            Understand the three core building blocks of LessJS: the Component Model (DsdElement + JSX),
+            Understand the three core building blocks of openElement: the Component Model (DsdElement + JSX),
             Property Declaration (static props), and the Reactivity System (Signals).
           </p>
 
           <h2>Component Model: DsdElement + JSX</h2>
           <p>
-            LessJS components are native Web Components extending <code>DsdElement</code>. JSX provides
+            openElement components are native Web Components extending <code>DsdElement</code>. JSX provides
             type-safe templates that compile to VNode trees, outputting Declarative Shadow DOM during SSR.
           </p>
           <open-code-block><pre><code>import  from '@openelement/core';

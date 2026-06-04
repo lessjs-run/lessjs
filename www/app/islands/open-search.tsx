@@ -5,10 +5,9 @@
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * v0.30.1 (ADR-0081): VNode full-path event binding via data-signal-render.
- *   - All data-on-* attributes replaced with JSX onClick/onInput.
- *   - String concatenation replaced with JSX VNode generation.
- *   - XSS protection via JSX auto-escaping (no manual escapeHtml/escapeAttr).
+ * v0.30.1 (ADR-0081): dynamic results are VNodes, and events are JSX handlers.
+ * Text escaping is owned by JSX, so this island does not manually concatenate
+ * HTML or import escape helpers.
  *
  * @csspart trigger - The search trigger button
  * @csspart icon - The search SVG icon
@@ -33,7 +32,7 @@ interface FlexSearchDocumentConstructor {
   Document: new (opts: Record<string, unknown>) => unknown;
 }
 
-export const tagName = 'less-search';
+export const tagName = 'open-search';
 
 const sheet = new StyleSheet();
 sheet.replaceSync(`
@@ -167,7 +166,7 @@ sheet.replaceSync(`
   }
 `);
 
-export default class LessSearch extends DsdElement {
+export default class OpenSearch extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
   // ── Signals ──────────────────────────────────────────────────────────────
@@ -311,10 +310,14 @@ export default class LessSearch extends DsdElement {
     }
 
     if (this.#query.value.length >= 2) {
-      return [<div class='empty'>No results found for &ldquo;{this.#query.value}&rdquo;</div>];
+      return [
+        <div key='empty-no-results' class='empty'>
+          No results found for &ldquo;{this.#query.value}&rdquo;
+        </div>,
+      ];
     }
 
-    return [<div class='empty'>Type at least 2 characters to search</div>];
+    return [<div key='empty-min-query' class='empty'>Type at least 2 characters to search</div>];
   }
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -369,4 +372,4 @@ export default class LessSearch extends DsdElement {
   }
 }
 
-defineCustomElement(tagName, LessSearch);
+defineCustomElement(tagName, OpenSearch);

@@ -76,8 +76,6 @@ export function dsdHostNode(params: Omit<Extract<RenderNode, { kind: 'dsd-host' 
   return { kind: 'dsd-host', ...params } satisfies RenderNode;
 }
 
-// ─── camelCase �?kebab-case ─────────────────────────────────────
-
 export function camelToKebab(str: string): string {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
@@ -247,7 +245,6 @@ export async function renderToNode(
     for (const child of children) childNodes.push(await renderToNode(child, eventContext));
   }
 
-  // Custom Element �?DSD
   if (
     typeof customElements !== 'undefined' &&
     customElements.get &&

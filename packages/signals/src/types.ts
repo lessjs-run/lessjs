@@ -9,7 +9,7 @@
 export type Unsubscribe = () => void;
 
 /**
- * LessJS WritableSignal - user-friendly wrapper around Signal.State
+ * openElement WritableSignal - user-friendly wrapper around Signal.State
  * Uses .value syntax (like Preact/Solid) instead of .get()/.set() (TC39)
  */
 export interface WritableSignal<T> {
@@ -22,7 +22,7 @@ export interface WritableSignal<T> {
 }
 
 /**
- * LessJS ReadonlySignal - derived from computed or manually created read-only
+ * openElement ReadonlySignal - derived from computed or manually created read-only
  */
 export interface ReadonlySignal<T> {
   /** Read the current value */

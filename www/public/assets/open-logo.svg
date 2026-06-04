@@ -1,16 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
-  <title>Less logo — inverted</title>
-  <desc>Inverted Less symbol for dark backgrounds</desc>
-  <rect x="0" y="0" width="140" height="140" rx="4" ry="4" fill="#000000" />
+  <title>openElement logo</title>
+  <desc>Angle bracket with anchor dot, the openElement framework symbol</desc>
   <g transform="translate(20, 17)">
     <path
       d="M 5 106 L 95 53 L 5 0"
       fill="none"
-      stroke="#ffffff"
+      stroke="#000000"
       stroke-width="8"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
-    <circle cx="107" cy="53" r="5" fill="#ffffff" />
+    <circle cx="107" cy="53" r="5" fill="#000000" />
   </g>
 </svg>

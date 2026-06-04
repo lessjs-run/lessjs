@@ -110,16 +110,16 @@ if (typeof globalThis.HTMLElement === 'undefined') {
 // --- Component Export Shape ----------------------------------
 
 const COMPONENT_FILES = [
-  'less-button',
-  'less-card',
-  'less-input',
-  'less-code-block',
-  'less-layout',
-  'less-theme-toggle',
+  'open-button',
+  'open-card',
+  'open-input',
+  'open-code-block',
+  'open-layout',
+  'open-theme-toggle',
 ];
 
 for (const name of COMPONENT_FILES) {
-  Deno.test(`less-${name}: exports tagName`, async () => {
+  Deno.test(`open-${name}: exports tagName`, async () => {
     const mod = await import(`../src/${name}.tsx`);
     assertExists(mod.tagName, `${name} must export tagName`);
     assertEquals(typeof mod.tagName, 'string');
@@ -127,7 +127,7 @@ for (const name of COMPONENT_FILES) {
     assertExists(mod.tagName.includes('-'), `tagName "${mod.tagName}" must contain a hyphen`);
   });
 
-  Deno.test(`less-${name}: exports DsdElement-compatible class`, async () => {
+  Deno.test(`open-${name}: exports DsdElement-compatible class`, async () => {
     const mod = await import(`../src/${name}.tsx`);
     const className = Object.keys(mod).find((k) => k !== 'tagName' && typeof mod[k] === 'function');
     assertExists(className, `${name} should export a class`);
@@ -161,20 +161,20 @@ Deno.test('index: re-exports all components', async () => {
   const mod = await import('../src/index.ts');
 
   // Components
-  assertExists(mod.LessButton);
-  assertExists(mod.LessCard);
-  assertExists(mod.LessInput);
-  assertExists(mod.LessCodeBlock);
-  assertExists(mod.LessLayout);
-  assertExists(mod.LessThemeToggle);
+  assertExists(mod.OpenButton);
+  assertExists(mod.OpenCard);
+  assertExists(mod.OpenInput);
+  assertExists(mod.OpenCodeBlock);
+  assertExists(mod.OpenLayout);
+  assertExists(mod.OpenThemeToggle);
 
   // Tag names
-  assertExists(mod.lessButtonTagName);
-  assertExists(mod.lessCardTagName);
-  assertExists(mod.lessInputTagName);
-  assertExists(mod.lessCodeBlockTagName);
-  assertExists(mod.lessLayoutTagName);
-  assertExists(mod.lessThemeToggleTagName);
+  assertExists(mod.openButtonTagName);
+  assertExists(mod.openCardTagName);
+  assertExists(mod.openInputTagName);
+  assertExists(mod.openCodeBlockTagName);
+  assertExists(mod.openLayoutTagName);
+  assertExists(mod.openThemeToggleTagName);
 
   // Tokens
   assertExists(mod.openPropsTokenSheet);
@@ -189,32 +189,32 @@ Deno.test('index: manifest has correct declarations', async () => {
   assertEquals(manifest.packageName, '@openelement/ui');
   assertEquals(Array.isArray(manifest.declarations), true);
 
-  // Each declaration with `less.module` is an island entry
-  const islandDecls = manifest.declarations.filter((d: any) => d.less?.module);
+  // Each declaration with `openElement.module` is an island entry
+  const islandDecls = manifest.declarations.filter((d: any) => d.openElement?.module);
   assertEquals(islandDecls.length > 0, true, 'manifest should have island declarations');
 
   for (const decl of islandDecls) {
     assertExists(decl.tagName, 'island declaration must have tagName');
-    assertExists(decl.less!.module, 'island declaration must have less.module');
-    assertEquals(typeof decl.less!.hydrate, 'string');
+    assertExists(decl.openElement!.module, 'island declaration must have openElement.module');
+    assertEquals(typeof decl.openElement!.hydrate, 'string');
   }
 });
 
 // --- Component Instantiation & render() ---------------------
 
 const COMPONENT_CLASSES = [
-  ['less-button', 'LessButton'],
-  ['less-card', 'LessCard'],
-  ['less-input', 'LessInput'],
-  ['less-code-block', 'LessCodeBlock'],
-  ['less-layout', 'LessLayout'],
-  ['less-theme-toggle', 'LessThemeToggle'],
+  ['open-button', 'OpenButton'],
+  ['open-card', 'OpenCard'],
+  ['open-input', 'OpenInput'],
+  ['open-code-block', 'OpenCodeBlock'],
+  ['open-layout', 'OpenLayout'],
+  ['open-theme-toggle', 'OpenThemeToggle'],
 ];
 
 const REACTIVE_PROPERTY_CASES = [
-  ['less-button', 'LessButton', ['variant', 'size', 'disabled', 'href', 'target', 'type']],
-  ['less-card', 'LessCard', ['variant']],
-  ['less-input', 'LessInput', [
+  ['open-button', 'OpenButton', ['variant', 'size', 'disabled', 'href', 'target', 'type']],
+  ['open-card', 'OpenCard', ['variant']],
+  ['open-input', 'OpenInput', [
     'type',
     'placeholder',
     'label',
@@ -224,7 +224,7 @@ const REACTIVE_PROPERTY_CASES = [
     'required',
     'error',
   ]],
-  ['less-layout', 'LessLayout', [
+  ['open-layout', 'OpenLayout', [
     'home',
     'currentPath',
     'navItems',
@@ -233,11 +233,11 @@ const REACTIVE_PROPERTY_CASES = [
     'logoSub',
     'githubUrl',
   ]],
-  ['less-theme-toggle', 'LessThemeToggle', ['theme']],
+  ['open-theme-toggle', 'OpenThemeToggle', ['theme']],
 ];
 
 for (const [fileName, className] of COMPONENT_CLASSES) {
-  Deno.test(`less-${fileName}: can be instantiated and render()`, async () => {
+  Deno.test(`open-${fileName}: can be instantiated and render()`, async () => {
     const mod = await import(`../src/${fileName}.tsx`);
     const Cls = mod[className as keyof typeof mod] as { new (): { render(): unknown } };
     const instance = new Cls();
@@ -247,7 +247,7 @@ for (const [fileName, className] of COMPONENT_CLASSES) {
 }
 
 for (const [fileName, className, props] of REACTIVE_PROPERTY_CASES) {
-  Deno.test(`less-${fileName}: reactive properties are not shadowed by class fields`, async () => {
+  Deno.test(`open-${fileName}: reactive properties are not shadowed by class fields`, async () => {
     const mod = await import(`../src/${fileName}.tsx`);
     const Cls = mod[className as keyof typeof mod] as { new (): object };
     const instance = new Cls() as Record<string, unknown>;
@@ -261,26 +261,26 @@ for (const [fileName, className, props] of REACTIVE_PROPERTY_CASES) {
   });
 }
 
-Deno.test('less-layout: _navLink generates correct HTML', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: _navLink generates correct HTML', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   // _navLink is private, but we can test render output indirectly
   // Just instantiating and rendering covers _navLink via render()
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-theme-toggle: renders toggle button', async () => {
-  const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-  const instance = new LessThemeToggle();
+Deno.test('open-theme-toggle: renders toggle button', async () => {
+  const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+  const instance = new OpenThemeToggle();
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-theme-toggle: renders and handles theme', async () => {
-  const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
+Deno.test('open-theme-toggle: renders and handles theme', async () => {
+  const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
   // Just test render() and property assignment (no DOM needed for render)
-  const instance = new LessThemeToggle();
+  const instance = new OpenThemeToggle();
   instance.setAttribute('theme', 'light');
   let result = instance.render();
   assertExists(result);
@@ -294,27 +294,27 @@ Deno.test('less-theme-toggle: renders and handles theme', async () => {
   assertEquals((instance as any)._theme.value, 'light');
 });
 
-Deno.test('less-button: renders with properties', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: renders with properties', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('href', '#test');
   instance.setAttribute('variant', 'primary');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-input: renders with properties', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: renders with properties', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   instance.setAttribute('type', 'text');
   instance.setAttribute('placeholder', 'Enter text');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-code-block: renders with properties', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: renders with properties', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   // language is not a declared reactive property -set via any for test
   (instance as any).language = 'typescript';
   const result = instance.render();
@@ -323,7 +323,7 @@ Deno.test('less-code-block: renders with properties', async () => {
 
 // --- Enhanced Component Tests for Coverage ------------------
 
-// Mock document and localStorage for less-theme-toggle tests
+// Mock document and localStorage for open-theme-toggle tests
 // Returns a restore function to undo the mocks
 function setupDOMMocks(): () => void {
   const savedDoc = (globalThis as any).document;
@@ -358,20 +358,20 @@ function setupDOMMocks(): () => void {
 // To properly test these, we would need a DOM shim library like linkedom or happy-dom.
 
 /*
-Deno.test('less-theme-toggle: _handleToggle switches theme from dark to light', async () => {
+Deno.test('open-theme-toggle: _handleToggle switches theme from dark to light', async () => {
   // ... test code ...
 });
 
-Deno.test('less-code-block: _copy method success path', async () => {
+Deno.test('open-code-block: _copy method success path', async () => {
   // ... test code ...
 });
 */
 
-Deno.test('less-theme-toggle: _handleToggle switches theme from light to dark', async () => {
+Deno.test('open-theme-toggle: _handleToggle switches theme from light to dark', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     (instance as any)._theme.value = 'light';
 
     const calls: any[] = [];
@@ -388,7 +388,7 @@ Deno.test('less-theme-toggle: _handleToggle switches theme from light to dark', 
   }
 });
 
-Deno.test('less-code-block: _copy method success path', async () => {
+Deno.test('open-code-block: _copy method success path', async () => {
   // This test requires navigator.clipboard which is only available in browser contexts.
   // Deno test runner does not provide a full clipboard API.
   // Skip if clipboard API is not available.
@@ -396,8 +396,8 @@ Deno.test('less-code-block: _copy method success path', async () => {
     return; // Skip in Deno test -this is tested in browser E2E
   }
 
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
 
   let clipboardText = '';
   (globalThis as any).navigator.clipboard.writeText = async (text: string) => {
@@ -424,11 +424,11 @@ Deno.test('less-code-block: _copy method success path', async () => {
   assertEquals((instance as any)._copyState, 'idle');
 });
 
-Deno.test('less-code-block: _copy method failure path', async () => {
+Deno.test('open-code-block: _copy method failure path', async () => {
   const savedNavigator = (globalThis as any).navigator;
   try {
-    const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-    const instance = new LessCodeBlock();
+    const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+    const instance = new OpenCodeBlock();
 
     // Mock clipboard.writeText to throw
     (globalThis as any).navigator = {
@@ -462,12 +462,12 @@ Deno.test('less-code-block: _copy method failure path', async () => {
   }
 });
 
-Deno.test('less-input: _handleInput dispatches custom event', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: _handleInput dispatches custom event', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
 
   let dispatchedEvent: any = null;
-  instance.addEventListener('less-input', (e: Event) => {
+  instance.addEventListener('open-input', (e: Event) => {
     dispatchedEvent = e;
   });
 
@@ -485,9 +485,9 @@ Deno.test('less-input: _handleInput dispatches custom event', async () => {
   assertEquals((dispatchedEvent as CustomEvent).detail.value, 'test input value');
 });
 
-Deno.test('less-input: render with error message', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: render with error message', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   instance.setAttribute('label', 'Test Label');
   instance.setAttribute('required', '');
   instance.setAttribute('error', 'This field is required');
@@ -495,20 +495,20 @@ Deno.test('less-input: render with error message', async () => {
   assertExists(result);
 });
 
-Deno.test('less-input: render without label', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: render without label', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   instance.setAttribute('placeholder', 'Enter text');
   instance.removeAttribute('label');
   const result = instance.render();
   assertExists(result);
 });
 
-// --- less-input Form Callbacks (coverage) ------------------
+// --- open-input Form Callbacks (coverage) ------------------
 
-Deno.test('less-input: connectedCallback sets internals', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: connectedCallback sets internals', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   // Mock attachInternals for Deno (not a real browser)
   let setFormValueCalled = false;
   (instance as any).attachInternals = () => ({
@@ -530,9 +530,9 @@ Deno.test('less-input: connectedCallback sets internals', async () => {
   assertEquals(setFormValueCalled, true);
 });
 
-Deno.test('less-input: connectedCallback with existing value', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: connectedCallback with existing value', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   let capturedValue = '';
   (instance as any)._internals = {
     setFormValue: (val: string) => {
@@ -544,9 +544,9 @@ Deno.test('less-input: connectedCallback with existing value', async () => {
   assertEquals(capturedValue, 'hello');
 });
 
-Deno.test('less-input: formResetCallback resets state', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: formResetCallback resets state', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   let setFormValueCalled = false;
   (instance as any)._internals = {
     setFormValue: (val: string) => {
@@ -562,9 +562,9 @@ Deno.test('less-input: formResetCallback resets state', async () => {
   assertEquals(setFormValueCalled, true);
 });
 
-Deno.test('less-input: formResetCallback handles missing internals', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: formResetCallback handles missing internals', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   (instance as any)._internals = undefined;
   instance.setAttribute('value', 'some value');
   instance.setAttribute('error', 'some error');
@@ -574,9 +574,9 @@ Deno.test('less-input: formResetCallback handles missing internals', async () =>
   assertEquals(instance.getAttribute('error'), null);
 });
 
-Deno.test('less-input: formDisabledCallback sets disabled', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: formDisabledCallback sets disabled', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   assertEquals(instance.hasAttribute('disabled'), false);
   instance.formDisabledCallback(true);
   assertEquals(instance.hasAttribute('disabled'), true);
@@ -584,11 +584,11 @@ Deno.test('less-input: formDisabledCallback sets disabled', async () => {
   assertEquals(instance.hasAttribute('disabled'), false);
 });
 
-Deno.test('less-input: _handleInput event composed:false (I-constraint)', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: _handleInput event composed:false (I-constraint)', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   let dispatchedEvent: any = null;
-  instance.addEventListener('less-input', (e: Event) => {
+  instance.addEventListener('open-input', (e: Event) => {
     dispatchedEvent = e;
   });
   const mockEvent = { target: { value: 'test' } } as any;
@@ -598,44 +598,44 @@ Deno.test('less-input: _handleInput event composed:false (I-constraint)', async 
   assertEquals(dispatchedEvent.bubbles, true);
 });
 
-Deno.test('less-input: render with error includes aria attributes', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: render with error includes aria attributes', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   instance.setAttribute('error', 'Required field');
   const result = instance.render() as any;
   // The render result is a TemplateResult; we verify the structure exists
   assertExists(result);
 });
 
-// --- less-code-block Enhanced Tests --------------------------
+// --- open-code-block Enhanced Tests --------------------------
 
-Deno.test('less-code-block: render with _copyState=copied', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: render with _copyState=copied', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   (instance as any)._copyState = 'copied';
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-code-block: render with _copyState=failed', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: render with _copyState=failed', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   (instance as any)._copyState = 'failed';
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-code-block: render with _copyState=idle (default)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: render with _copyState=idle (default)', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   assertEquals((instance as any)._copyState, 'idle');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-code-block: _copy success path (mocked clipboard)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: _copy success path (mocked clipboard)', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   // Mock clipboard -must be set before _copy is called
   let writtenText = '';
   const mockWriteText = async (text: string) => {
@@ -662,9 +662,9 @@ Deno.test('less-code-block: _copy success path (mocked clipboard)', async () => 
   assertEquals((instance as any)._copyState, 'idle');
 });
 
-Deno.test('less-code-block: _copy failure path (mocked clipboard)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
-  const instance = new LessCodeBlock();
+Deno.test('open-code-block: _copy failure path (mocked clipboard)', async () => {
+  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
+  const instance = new OpenCodeBlock();
   (globalThis as any).navigator = {
     clipboard: {
       writeText: async () => {
@@ -686,28 +686,28 @@ Deno.test('less-code-block: _copy failure path (mocked clipboard)', async () => 
   assertEquals((instance as any)._copyState, 'idle');
 });
 
-// --- less-button Branch Coverage --------------------------
+// --- open-button Branch Coverage --------------------------
 
-Deno.test('less-button: renders as anchor with href', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: renders as anchor with href', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('href', 'https://example.com');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-button: renders anchor with target=_blank', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: renders anchor with target=_blank', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('href', 'https://example.com');
   instance.setAttribute('target', '_blank');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-button: disabled anchor removes href', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: disabled anchor removes href', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('href', 'https://example.com');
   instance.setAttribute('disabled', '');
   const result = instance.render();
@@ -715,31 +715,31 @@ Deno.test('less-button: disabled anchor removes href', async () => {
   // disabled anchor: hrefAttr = undefined, aria-disabled = "true"
 });
 
-Deno.test('less-button: renders as button without href', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: renders as button without href', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('type', 'submit');
   instance.setAttribute('disabled', '');
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-button: anchor with same-origin target', async () => {
-  const { LessButton } = await import('../src/less-button.tsx');
-  const instance = new LessButton();
+Deno.test('open-button: anchor with same-origin target', async () => {
+  const { OpenButton } = await import('../src/open-button.tsx');
+  const instance = new OpenButton();
   instance.setAttribute('href', '/about');
   instance.setAttribute('target', '_self');
   const result = instance.render();
   assertExists(result);
 });
 
-// --- less-theme-toggle Enhanced Coverage ------------------
+// --- open-theme-toggle Enhanced Coverage ------------------
 
-Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
+Deno.test('open-theme-toggle: connectedCallback with theme=light', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     instance.setAttribute('theme', 'light');
     // Don't call connectedCallback (the test DOM is intentionally minimal).
     // Instead, test the logic directly by replicating what connectedCallback does
@@ -752,11 +752,11 @@ Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback with theme=dark', async () => {
+Deno.test('open-theme-toggle: connectedCallback with theme=dark', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     instance.setAttribute('theme', 'dark');
     if (instance.getAttribute('theme') === 'dark') {
       (instance as any)._theme.value = 'dark';
@@ -767,7 +767,7 @@ Deno.test('less-theme-toggle: connectedCallback with theme=dark', async () => {
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback reads document data-theme', async () => {
+Deno.test('open-theme-toggle: connectedCallback reads document data-theme', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const _data: Record<string, string> = {};
@@ -785,8 +785,8 @@ Deno.test('less-theme-toggle: connectedCallback reads document data-theme', asyn
         _data[key] = value;
       },
     };
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     // Simulate the connectedCallback logic without actually calling it
     if (
       !instance.getAttribute('theme') &&
@@ -801,50 +801,50 @@ Deno.test('less-theme-toggle: connectedCallback reads document data-theme', asyn
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', async () => {
-  const orig = localStorage.getItem('less-theme');
-  localStorage.setItem('less-theme', 'light');
+Deno.test('open-theme-toggle: connectedCallback reads localStorage fallback', async () => {
+  const orig = localStorage.getItem('open-theme');
+  localStorage.setItem('open-theme', 'light');
   const savedDoc = (globalThis as any).document;
   (globalThis as any).document = {
     documentElement: { dataset: {}, setAttribute: () => {} },
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     // Simulate localStorage fallback logic
-    const saved = localStorage.getItem('less-theme');
+    const saved = localStorage.getItem('open-theme');
     if (saved === 'light') {
       (instance as any)._theme.value = 'light';
     }
     assertEquals((instance as any)._theme.value, 'light');
   } finally {
     (globalThis as any).document = savedDoc;
-    if (orig === null) localStorage.removeItem('less-theme');
-    else localStorage.setItem('less-theme', orig);
+    if (orig === null) localStorage.removeItem('open-theme');
+    else localStorage.setItem('open-theme', orig);
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback defaults to dark', async () => {
-  const orig = localStorage.getItem('less-theme');
-  localStorage.removeItem('less-theme');
+Deno.test('open-theme-toggle: connectedCallback defaults to dark', async () => {
+  const orig = localStorage.getItem('open-theme');
+  localStorage.removeItem('open-theme');
   const savedDoc = (globalThis as any).document;
   (globalThis as any).document = {
     documentElement: { dataset: {}, setAttribute: () => {} },
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     assertEquals((instance as any)._theme.value, 'dark');
   } finally {
     (globalThis as any).document = savedDoc;
-    if (orig !== null) localStorage.setItem('less-theme', orig);
+    if (orig !== null) localStorage.setItem('open-theme', orig);
   }
 });
 
-Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
-  const orig = localStorage.getItem('less-theme');
+Deno.test('open-theme-toggle: _handleToggle switches dark->light', async () => {
+  const orig = localStorage.getItem('open-theme');
   const savedDoc = (globalThis as any).document;
   (globalThis as any).document = {
     documentElement: {
@@ -854,22 +854,22 @@ Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     (instance as any)._theme.value = 'dark';
     (instance as any)._handleToggle();
     assertEquals((instance as any)._theme.value, 'light');
-    assertEquals(localStorage.getItem('less-theme'), 'light');
+    assertEquals(localStorage.getItem('open-theme'), 'light');
   } finally {
     (globalThis as any).document = savedDoc;
-    if (orig === null) localStorage.removeItem('less-theme');
-    else localStorage.setItem('less-theme', orig);
+    if (orig === null) localStorage.removeItem('open-theme');
+    else localStorage.setItem('open-theme', orig);
   }
 });
 
-// --- less-theme-toggle theme initialization priority ----
+// --- open-theme-toggle theme initialization priority ----
 
-Deno.test('less-theme-toggle: connectedCallback full path with theme=light', async () => {
+Deno.test('open-theme-toggle: connectedCallback full path with theme=light', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const savedMatchMedia = (globalThis as any).matchMedia;
@@ -886,8 +886,8 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=light', asy
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     instance.setAttribute('theme', 'light');
 
     (instance as any)._initTheme();
@@ -900,7 +900,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=light', asy
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', async () => {
+Deno.test('open-theme-toggle: connectedCallback full path with theme=dark', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const savedMatchMedia = (globalThis as any).matchMedia;
@@ -917,8 +917,8 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', asyn
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
     instance.setAttribute('theme', 'dark');
 
     (instance as any)._initTheme();
@@ -931,7 +931,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', asyn
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.dataset', async () => {
+Deno.test('open-theme-toggle: connectedCallback reads document.documentElement.dataset', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const savedMatchMedia = (globalThis as any).matchMedia;
@@ -948,8 +948,8 @@ Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.d
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
 
     (instance as any)._initTheme();
     assertEquals((instance as any)._theme.value, 'light');
@@ -961,9 +961,9 @@ Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.d
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', async () => {
-  const orig = localStorage.getItem('less-theme');
-  localStorage.setItem('less-theme', 'light');
+Deno.test('open-theme-toggle: connectedCallback reads localStorage fallback', async () => {
+  const orig = localStorage.getItem('open-theme');
+  localStorage.setItem('open-theme', 'light');
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const savedMatchMedia = (globalThis as any).matchMedia;
@@ -974,8 +974,8 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
     };
     (globalThis as any).localStorage = localStorage;
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
 
     (instance as any)._initTheme();
     assertEquals((instance as any)._theme.value, 'light');
@@ -984,14 +984,14 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
     (globalThis as any).matchMedia = savedMatchMedia;
-    if (orig === null) localStorage.removeItem('less-theme');
-    else localStorage.setItem('less-theme', orig);
+    if (orig === null) localStorage.removeItem('open-theme');
+    else localStorage.setItem('open-theme', orig);
   }
 });
 
-Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async () => {
-  const orig = localStorage.getItem('less-theme');
-  localStorage.removeItem('less-theme');
+Deno.test('open-theme-toggle: connectedCallback defaults to dark theme', async () => {
+  const orig = localStorage.getItem('open-theme');
+  localStorage.removeItem('open-theme');
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
   const savedMatchMedia = (globalThis as any).matchMedia;
@@ -1003,8 +1003,8 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
     (globalThis as any).localStorage = localStorage;
     // Stub matchMedia to return dark preference (ensures deterministic default)
     (globalThis as any).matchMedia = () => ({ matches: false });
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
-    const instance = new LessThemeToggle();
+    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
+    const instance = new OpenThemeToggle();
 
     (instance as any)._initTheme();
     assertEquals((instance as any)._theme.value, 'dark');
@@ -1013,23 +1013,23 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
     (globalThis as any).matchMedia = savedMatchMedia;
-    if (orig !== null) localStorage.setItem('less-theme', orig);
+    if (orig !== null) localStorage.setItem('open-theme', orig);
   }
 });
 
-// --- less-input connectedCallback full path ----------------
+// --- open-input connectedCallback full path ----------------
 
-Deno.test('less-input: connectedCallback with attachInternals mock', () => {
+Deno.test('open-input: connectedCallback with attachInternals mock', () => {
   // Requires real DOM ElementInternals API - skip in Deno test environment
 });
 
-Deno.test('less-input: connectedCallback with existing value', () => {
+Deno.test('open-input: connectedCallback with existing value', () => {
   // Requires real DOM ElementInternals API - skip in Deno test environment
 });
 
-Deno.test('less-input: _handleInput syncs form value via internals', async () => {
-  const { LessInput } = await import('../src/less-input.tsx');
-  const instance = new LessInput();
+Deno.test('open-input: _handleInput syncs form value via internals', async () => {
+  const { OpenInput } = await import('../src/open-input.tsx');
+  const instance = new OpenInput();
   let lastFormValue = '';
   (instance as any)._internals = {
     setFormValue: (val: string) => {
@@ -1044,11 +1044,11 @@ Deno.test('less-input: _handleInput syncs form value via internals', async () =>
   assertEquals(lastFormValue, 'typed text');
 });
 
-// --- less-layout Branch Coverage --------------------------
+// --- open-layout Branch Coverage --------------------------
 
-Deno.test('less-layout: _navLink with active and icon', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: _navLink with active and icon', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   // navItems expects NavSection[]: [{ section: string, items: NavItem[] }]
   instance.setAttribute(
     'nav-items',
@@ -1066,36 +1066,36 @@ Deno.test('less-layout: _navLink with active and icon', async () => {
   assertExists(result);
 });
 
-Deno.test('less-layout: home=true renders home layout (no sidebar)', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: home=true renders home layout (no sidebar)', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute('home', '');
   const result = instance.render();
   assertExists(result);
   // home=true means no sidebar, no mobile menu -just main slot
 });
 
-Deno.test('less-layout: currentPath highlights active nav link', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: currentPath highlights active nav link', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute('current-path', '');
   // Use default nav -/guide/getting-started exists in DEFAULT_NAV
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
+Deno.test('open-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
   // DEFAULT_NAV was removed -navItems must be passed via app shell attributes.
-  const instance = new LessLayout();
+  const instance = new OpenLayout();
   // Without navItems, sidebar should render empty
   assertExists(instance);
   assertEquals(instance.getAttribute('nav-items'), null);
 });
 
-Deno.test('less-layout: custom headerNav renders custom links', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: custom headerNav renders custom links', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute(
     'header-nav',
     JSON.stringify([
@@ -1107,9 +1107,9 @@ Deno.test('less-layout: custom headerNav renders custom links', async () => {
   assertExists(result);
 });
 
-Deno.test('less-layout: custom navItems override default nav', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: custom navItems override default nav', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute(
     'nav-items',
     JSON.stringify([
@@ -1120,9 +1120,9 @@ Deno.test('less-layout: custom navItems override default nav', async () => {
   assertExists(result);
 });
 
-Deno.test('less-layout: custom logo text and github URL', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: custom logo text and github URL', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute('logo-text', 'MyApp');
   instance.setAttribute('logo-sub', 'v2');
   instance.setAttribute('github-url', 'https://github.com/example/repo');
@@ -1130,9 +1130,9 @@ Deno.test('less-layout: custom logo text and github URL', async () => {
   assertExists(result);
 });
 
-Deno.test('less-layout: blocks unsafe URL schemes in rendered links', async () => {
-  const { LessLayout } = await import('../src/less-layout.tsx');
-  const instance = new LessLayout();
+Deno.test('open-layout: blocks unsafe URL schemes in rendered links', async () => {
+  const { OpenLayout } = await import('../src/open-layout.tsx');
+  const instance = new OpenLayout();
   instance.setAttribute('github-url', 'javascript:alert(1)');
   instance.setAttribute('edit-url', 'data:text/html,<script>alert(1)</script>');
   instance.setAttribute(

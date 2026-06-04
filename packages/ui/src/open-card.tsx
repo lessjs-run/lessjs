@@ -1,6 +1,6 @@
 /** @jsxImportSource @openelement/core */
 /**
- * @openelement/ui - less-card
+ * @openelement/ui - open-card
  *
  * Minimal card container with optional header and footer.
  * Swiss International Style: borders are whispers, not shouts.

@@ -1,16 +1,10 @@
 /**
- * @openelement/router �� Client Router
- *
  * URLPattern-based SPA router. One Router instance per <open-layout>.
  *
  * start() sets up:
- *   1. Click delegation �� intercept all <a> clicks in shadow root
- *   2. Navigation API intercept �� prevent full-page loads
- *   3. Unified contentLoader callback �� fetch + swap page content
- *   4. Locale management �� update lang-switch after navigation
  *
  * Consumer contract:
- *   less-layout calls `router.start(opts)` once in connectedCallback.
+ *   open-layout calls `router.start(opts)` once in connectedCallback.
  *   The Router takes over all navigation from that point.
  *   When the caller swaps content (in contentLoader), it must call
  *   router.syncAfterSwap(shadowRoot) to update lang-switch.
@@ -43,7 +37,6 @@ export interface RouterStartOptions {
 
 /**
  * Router class that encapsulates all locale/path/navigation logic.
- * Instantiated by less-layout �� no signal dependencies.
  */
 export class Router {
   #el: HTMLElement;
@@ -54,9 +47,6 @@ export class Router {
     this.#el = element;
   }
 
-  // ������ Public Locale API ��������������������������������������������������������������������������������
-
-  /** Available locales from [locales] attribute or prop �� lazy (SSR-safe) */
   get locales(): string[] {
     return this.#parseLocales();
   }
@@ -82,7 +72,6 @@ export class Router {
     return `/${target}${path}`;
   }
 
-  /** Label for the other locale (e.g. "����" or "EN") */
   switchLabel(): string {
     const { locale } = this.#parseUrl();
     const target = this.locales.find((l) => l !== locale) || this.locales[0];
@@ -107,8 +96,6 @@ export class Router {
     link.setAttribute('href', this.switchPath());
   }
 
-  // ������ SPA Navigation �� start/stop ������������������������������������������������������������
-
   /**
    * Start the SPA router.
    *
@@ -116,7 +103,6 @@ export class Router {
    * Both paths route through the same contentLoader callback.
    *
    * Call once per component lifecycle (in connectedCallback).
-   * Returns void �� cleanup is internal. Call stop() to dispose.
    */
   start(opts: RouterStartOptions): void {
     this.#options = opts;
@@ -126,7 +112,6 @@ export class Router {
     }
     this.#setupNavigationApi();
 
-    // Listen for popstate (back/forward �� Navigation API handles this natively
     // but we need the fallback for browsers without Navigation API)
     this.#setupPopState();
   }
@@ -165,8 +150,6 @@ export class Router {
     history.replaceState(null, '', url.pathname + url.search + url.hash);
     this.#navigateNow(url.pathname);
   }
-
-  // ������ Setup helpers ����������������������������������������������������������������������������������������
 
   #setupClickDelegation(root: ShadowRoot): void {
     const handler = (e: Event) => {
@@ -230,7 +213,7 @@ export class Router {
         prev?.();
       };
     } catch {
-      // Navigation API not available �� relying on popstate fallback
+      // Navigation API interception is optional; fall back to popstate routing.
     }
   }
 
@@ -245,8 +228,6 @@ export class Router {
       prev?.();
     };
   }
-
-  // ������ Core navigation logic ������������������������������������������������������������������������
 
   #navigateNow(pathname: string): void {
     const { locale } = this.#parseUrlFrom(pathname);
@@ -273,8 +254,6 @@ export class Router {
       location.reload();
     });
   }
-
-  // ������ Internal helpers ����������������������������������������������������������������������������������
 
   #parseUrl(): { locale: string; path: string } {
     if (typeof globalThis.location === 'undefined') {
@@ -314,7 +293,6 @@ export class Router {
 }
 
 /**
- * v0.28.1: Locale path normalization �� kept local (not imported from @openelement/i18n)
  * because router publishes to JSR independently and i18n may not be in the dependency graph.
  * 15 lines of duplication is acceptable for independent packages.
  */

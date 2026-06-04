@@ -15,7 +15,7 @@ The single rendering entry point. Renders a custom element to DSD HTML.
 import { renderDsd } from '@openelement/core';
 
 // By tag name — auto-looks up from customElements registry
-const result = await renderDsd('less-layout', {
+const result = await renderDsd('open-layout', {
   props: {
     currentPath: '/guide/getting-started',
     locale: 'en',

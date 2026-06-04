@@ -12,7 +12,7 @@
 
 import type { FrameworkOptions } from '@openelement/core';
 
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 import { escapeAttr as escapeHtmlAttr } from '@openelement/core';
 import { createLogger } from '@openelement/core/logger';
 // @deno-types="npm:@types/sanitize-html@^2"
@@ -65,7 +65,7 @@ function sanitizeHeadHtml(html: string, context: string): string {
 
 function assertSafeAttributeName(name: string, context: string): void {
   if (!/^[A-Za-z_:][A-Za-z0-9_.:-]*$/.test(name) || /^on/i.test(name)) {
-    throw new LessError(
+    throw new OpenElementError(
       `Unsafe attribute in ${context}: "${name}"`,
       'UNSAFE_HEAD_INJECTION',
       400,
@@ -80,9 +80,9 @@ function assertSafeAttributeName(name: string, context: string): void {
  */
 export function assertNoScriptTags(html: string, context: string): void {
   if (/<script[\s>/]/i.test(html)) {
-    throw new LessError(
+    throw new OpenElementError(
       `${context} must not contain <script> tags. Use inject.scripts for scripts so ` +
-        'LessJS can validate script URLs and mark the generated head injection as trusted.',
+        'openElement can validate script URLs and mark the generated head injection as trusted.',
       'UNSAFE_HEAD_INJECTION',
       400,
       false,
@@ -104,7 +104,7 @@ export function validateSafeUrl(url: string, context: string): string {
     const blockedProtocols = ['javascript:', 'data:', 'vbscript:', 'file:'];
     for (const proto of blockedProtocols) {
       if (lower.startsWith(proto)) {
-        throw new LessError(
+        throw new OpenElementError(
           `Unsafe URL in ${context}: "${url}" - ${proto} protocol is not allowed`,
           'UNSAFE_URL',
           400,
@@ -113,8 +113,8 @@ export function validateSafeUrl(url: string, context: string): string {
       }
     }
   } catch (e) {
-    // H-01 fix: Re-throw LessError so security warnings are not swallowed
-    if (e instanceof LessError) throw e;
+    // H-01 fix: Re-throw OpenElementError so security warnings are not swallowed
+    if (e instanceof OpenElementError) throw e;
     // v0.14.3: decodeURIComponent can throw for two reasons:
     //   1. Malicious URLs with invalid percent-encoding (e.g., "%ZZ")
     //   2. Legitimate URLs with lone surrogates (rare, but valid URI-encoded)
@@ -125,7 +125,7 @@ export function validateSafeUrl(url: string, context: string): string {
           'This may be a legitimate encoding issue or a malicious URL.',
       );
     }
-    throw new LessError(
+    throw new OpenElementError(
       `Invalid URL in ${context}: "${url}" - malformed percent-encoding`,
       'UNSAFE_URL',
       400,

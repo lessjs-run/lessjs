@@ -3,13 +3,11 @@ import type { VNode } from './vnode.js';
 /**
  * @openelement/core - Public types.
  *
- * LessJS Architecture types:
+ * openElement Architecture types:
  * - SSG is always on (no ssr.preRender option)
  * - No CSR/SPA mode
  * - UI is generic head injection, not tied to one component library
  * - Islands are the only client JS allowed
- *
- * ©¤©¤©¤ SSR Import Discovery Audit (Step1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
  *
  * This file ONLY defines types. It does NOT handle SSR imports.
  * For SSR import logic, see:
@@ -19,13 +17,11 @@ import type { VNode } from './vnode.js';
  *   - render-dsd.ts (nested element rendering)
  *
  * Audit completed: 2026-05-17
- * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+ * Auditor: AI agent (openElement v0.17.4 SOP compliance check)
  */
 
-// ©¤©¤©¤ WC Package Protocol (v0.16+) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** API route context passed to simple handlers */
-export interface LessApiContext {
+export interface OpenElementApiContext {
   request: Request;
   params: Record<string, string>;
   env: Record<string, string | undefined>;
@@ -33,7 +29,7 @@ export interface LessApiContext {
 }
 
 /** Custom element attribute descriptor (CEM-compatible) */
-export interface LessAttribute {
+export interface OpenElementAttribute {
   /** Attribute name */
   name: string;
   /** Attribute type (e.g. 'string', 'boolean', 'number') */
@@ -49,7 +45,7 @@ export interface LessAttribute {
 }
 
 /** Custom element class member descriptor (CEM-compatible) */
-export interface LessMember {
+export interface OpenElementMember {
   /** Member name */
   name: string;
   /** Member kind */
@@ -69,7 +65,7 @@ export interface LessMember {
 }
 
 /** Custom element event descriptor (CEM-compatible) */
-export interface LessEvent {
+export interface OpenElementEvent {
   /** Event name */
   name: string;
   /** Event type (e.g. 'CustomEvent<{ value: string }>') */
@@ -79,7 +75,7 @@ export interface LessEvent {
 }
 
 /** Custom element slot descriptor (CEM-compatible) */
-export interface LessSlot {
+export interface OpenElementSlot {
   /** Slot name (empty string for default slot) */
   name: string;
   /** Description */
@@ -87,7 +83,7 @@ export interface LessSlot {
 }
 
 /** Custom element CSS custom property descriptor (CEM-compatible) */
-export interface LessCssProperty {
+export interface OpenElementCssProperty {
   /** CSS property name (e.g. '--button-padding') */
   name: string;
   /** Default value */
@@ -99,15 +95,15 @@ export interface LessCssProperty {
 }
 
 /** Custom element CSS part descriptor (CEM-compatible) */
-export interface LessCssPart {
+export interface OpenElementCssPart {
   /** Part name */
   name: string;
   /** Description */
   description?: string;
 }
 
-/** SSR/DSD/hydration declarations for a LessJS custom element */
-export interface LessElementExtensions {
+/** SSR/DSD/hydration declarations for a openElement custom element */
+export interface OpenElementExtensions {
   /** Whether this component can be server-side rendered */
   ssr?: boolean;
   /** Whether this component uses Declarative Shadow DOM for SSR output */
@@ -116,16 +112,16 @@ export interface LessElementExtensions {
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
   hydrate?: HydrationStrategy;
-  /** Module path for import (e.g. '@openelement/ui/less-button') */
+  /** Module path for import (e.g. '@openelement/ui/open-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
   export?: string;
 }
 
-/** Package-level LessJS declarations */
-export interface LessPackageExtensions {
-  /** Minimum LessJS core version required */
-  lessjsVersion?: string;
+/** Package-level openElement declarations */
+export interface OpenElementPackageExtensions {
+  /** Minimum openElement core version required */
+  openElementVersion?: string;
   /** Adapter required for SSR rendering (e.g. 'lit', 'vanilla') */
   adapter?: string;
   /** Whether this package provides a default CSS stylesheet */
@@ -135,17 +131,17 @@ export interface LessPackageExtensions {
 }
 
 /** Named export descriptor within a package module */
-export interface LessExport {
-  /** Export name (e.g. 'LessButton') */
+export interface OpenElementExport {
+  /** Export name (e.g. 'OpenButton') */
   name: string;
-  /** Reference path (e.g. './less-button.js') */
+  /** Reference path (e.g. './open-button.js') */
   path?: string;
   /** Description */
   description?: string;
 }
 
-/** Custom element declaration within a LessJS package manifest */
-export interface LessDeclaration {
+/** Custom element declaration within a openElement package manifest */
+export interface OpenElementDeclaration {
   /** Custom element tag name (must be valid per HTML spec) */
   tagName: string;
   /** Element class name */
@@ -153,29 +149,29 @@ export interface LessDeclaration {
   /** Super class name (e.g. 'LitElement') */
   superclassName?: string;
   /** Attributes */
-  attributes?: LessAttribute[];
+  attributes?: OpenElementAttribute[];
   /** Class members */
-  members?: LessMember[];
+  members?: OpenElementMember[];
   /** Events */
-  events?: LessEvent[];
+  events?: OpenElementEvent[];
   /** Slots */
-  slots?: LessSlot[];
+  slots?: OpenElementSlot[];
   /** CSS custom properties */
-  cssProperties?: LessCssProperty[];
+  cssProperties?: OpenElementCssProperty[];
   /** CSS shadow parts */
-  cssParts?: LessCssPart[];
-  /** LessJS SSR/DSD/hydration extensions */
-  less?: LessElementExtensions;
+  cssParts?: OpenElementCssPart[];
+  /** openElement SSR/DSD/hydration extensions */
+  openElement?: OpenElementExtensions;
   /** Description */
   description?: string;
 }
 
-/** Module entry within a LessJS package manifest */
-export interface LessModule {
-  /** Module path relative to package root (e.g. './less-button.js') */
+/** Module entry within a openElement package manifest */
+export interface OpenElementModule {
+  /** Module path relative to package root (e.g. './open-button.js') */
   path: string;
   /** Named exports from this module */
-  exports?: LessExport[];
+  exports?: OpenElementExport[];
   /** Declarations defined in this module */
   declarations?: string[];
 }
@@ -184,7 +180,7 @@ export interface LessModule {
  *
  * Structured, tool-consumable metadata for an entire WC package.
  */
-export interface LessPackageManifest {
+export interface OpenElementPackageManifest {
   /** Schema version of the manifest format */
   schemaVersion: string;
   /** Package name on JSR/npm (e.g. '@openelement/ui') */
@@ -202,14 +198,14 @@ export interface LessPackageManifest {
   /** Repository URL */
   repository?: string;
   /** Custom element declarations in this package */
-  declarations: LessDeclaration[];
+  declarations: OpenElementDeclaration[];
   /** Module entry points */
-  modules?: LessModule[];
-  /** Package-level LessJS extensions */
-  less?: LessPackageExtensions;
+  modules?: OpenElementModule[];
+  /** Package-level openElement extensions */
+  openElement?: OpenElementPackageExtensions;
 }
 
-/** Result of validating a LessPackageManifest */
+/** Result of validating a OpenElementPackageManifest */
 export interface ValidationResult {
   /** Whether the manifest is valid */
   valid: boolean;
@@ -294,14 +290,14 @@ export interface FrameworkOptions {
 
   /**
    * Package names to scan for WC manifests.
-   * Each package should export a `manifest` LessPackageManifest in its main entry.
+   * Each package should export a `manifest` OpenElementPackageManifest in its main entry.
    * Example: ['@openelement/ui'] will scan package.main.manifest.
    */
   packageIslands?: string[];
 
   /**
    * Application shell rendered around routes during SSG/SSR.
-   * - undefined/'default': import and render @openelement/ui/less-layout.
+   * - undefined/'default': import and render @openelement/ui/open-layout.
    * - false: render route content directly.
    * - object: import and render a user-provided custom element shell.
    */
@@ -328,7 +324,7 @@ export interface FrameworkOptions {
   html?: {
     /** Language attribute (default: 'en') */
     lang?: string;
-    /** Document title (default: 'LessJS') */
+    /** Document title (default: 'openElement') */
     title?: string;
   };
 
@@ -494,7 +490,7 @@ export interface FrameworkOptions {
 export type SpecialFileType = 'renderer' | 'middleware';
 
 /**
- * LessRenderer interface for _renderer.ts files.
+ * OpenElementRenderer interface for _renderer.ts files.
  *
  * Renderers wrap route VNode trees, like Next.js layout.tsx or SvelteKit +layout.svelte.
  * They apply to their directory and all subdirectories.
@@ -503,9 +499,9 @@ export type SpecialFileType = 'renderer' | 'middleware';
  * Usage:
  * ```ts
  * // app/routes/_renderer.ts
- * import type { LessRenderer } from '@openelement/core';
+ * import type { OpenElementRenderer } from '@openelement/core';
  *
- * const renderer: LessRenderer = {
+ * const renderer: OpenElementRenderer = {
  *   wrap(child, ctx) {
  *     return jsx('main', { children: [child] });
  *   }
@@ -513,7 +509,7 @@ export type SpecialFileType = 'renderer' | 'middleware';
  * export default renderer;
  * ```
  */
-export interface LessRenderer {
+export interface OpenElementRenderer {
   /**
    * Wrap a route VNode with layout chrome.
    * @param node - The route's VNode tree, before SSR or CSR backend rendering
@@ -527,7 +523,7 @@ export interface LessRenderer {
 }
 
 /**
- * LessMiddleware interface for _middleware.ts files.
+ * OpenElementMiddleware interface for _middleware.ts files.
  *
  * Middleware is mounted as Hono middleware on the directory prefix.
  * Like Next.js middleware.ts or SvelteKit hooks.server.ts.
@@ -535,7 +531,7 @@ export interface LessRenderer {
  * Usage:
  * ```ts
  * // app/routes/api/_middleware.ts
- * import type { LessMiddleware } from '@openelement/core';
+ * import type { OpenElementMiddleware } from '@openelement/core';
  * import type { MiddlewareHandler } from 'hono';
  *
  * const middleware: MiddlewareHandler = async (c, next) => {
@@ -546,13 +542,13 @@ export interface LessRenderer {
  * ```
  */
 /**
- * LessMiddleware type for _middleware.ts files.
+ * OpenElementMiddleware type for _middleware.ts files.
  *
  * Middleware is mounted as Hono middleware on the directory prefix.
  * Uses a generic function type to avoid importing Hono at runtime.
  * When used with Hono, the actual type is Hono.MiddlewareHandler.
  */
-export interface LessMiddlewareContext {
+export interface OpenElementMiddlewareContext {
   req: {
     raw?: Request;
     path?: string;
@@ -572,8 +568,8 @@ export interface LessMiddlewareContext {
   [key: string]: unknown;
 }
 
-export type LessMiddleware = (
-  c: LessMiddlewareContext,
+export type OpenElementMiddleware = (
+  c: OpenElementMiddlewareContext,
   next: () => Promise<void>,
 ) => Promise<void> | void;
 
@@ -598,8 +594,6 @@ export interface RouteEntry {
 }
 
 export type { SsrContext } from './context.js';
-
-// ©¤©¤©¤ DSD Render Types (from render-dsd.ts refactoring) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /** Component layer in the three-layer model */
 export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
@@ -631,8 +625,6 @@ export interface HydrateEventDescriptor {
 export type Unsubscribe = () => void;
 
 /**
- * ReactiveHost protocol ¡ª explicit interface for DsdElement Signal integration.
- *
  * Instead of Duck Typing signals via `isSignalLike()`, external signal libraries
  * and reactive sources target this protocol. DsdElement implements ReactiveHost,
  * and the template runtime calls `host.subscribeTo(source)` during binding.
@@ -918,9 +910,9 @@ export interface ManifestDecision {
   tagName: string;
   /** Package name that declares this component */
   packageName: string;
-  /** Whether this component supports SSR (from manifest `less.ssr`) */
+  /** Whether this component supports SSR (from manifest `openElement.ssr`) */
   ssr: boolean;
-  /** Whether this component uses Declarative Shadow DOM (from manifest `less.dsd`) */
+  /** Whether this component uses Declarative Shadow DOM (from manifest `openElement.dsd`) */
   dsd: boolean;
   /** Hydration strategy from manifest (load/idle/visible/only) */
   hydrate?: string;
@@ -1070,8 +1062,6 @@ export class DsdRenderCollector {
     };
   }
 }
-
-// ©¤©¤©¤ CEM (Custom Elements Manifest) Types (v0.18.0) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * CEM compatibility report section in dsd-report.json.
@@ -1303,8 +1293,8 @@ export interface CemCustomElement extends CemBase {
   shadowRootMode?: 'open' | 'closed';
   /** Whether the element is a form-associated custom element */
   formAssociated?: boolean;
-  /** LessJS SSR/DSD/hydration extensions (non-standard, LessJS-specific) */
-  less?: LessElementExtensions;
+  /** openElement SSR/DSD/hydration extensions (non-standard, openElement-specific) */
+  openElement?: OpenElementExtensions;
 }
 
 /** CEM reference to another declaration */
@@ -1378,8 +1368,6 @@ export interface CustomElementsManifest {
   [key: string]: unknown;
 }
 
-// ©¤©¤©¤ CEM Parse Result Types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Result of parsing a CEM file */
 export interface CemParseResult {
   /** Whether parsing succeeded */
@@ -1434,8 +1422,6 @@ export interface CompatibilityClassification {
   /** Hydration strategy */
   hydrate?: string;
 }
-
-// ©¤©¤©¤ CEM Validation Types (v0.18.1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * A single validation diagnostic - either an error or warning.
@@ -1507,7 +1493,6 @@ export interface ManifestValidationReport {
   tags: ValidatedTag[];
 }
 
-// v0.29.6: DsdComponentConstructor ¡ª precise type for component constructors
 // with framework-convention static properties (styles, tagName, observedAttributes)
 export interface DsdComponentConstructor extends CustomElementConstructor {
   styles?:

@@ -1,5 +1,5 @@
 /**
- * Tests for @openelement/core `less add` safe install flow.
+ * Tests for @openelement/core `open add` safe install flow.
  *
  * Tests cover:
  * - SSR-capable package plan generation
@@ -10,7 +10,7 @@
  * - File mutation generation
  */
 
-import { generateAddPlan } from '../src/less-add.ts';
+import { generateAddPlan } from '../src/install-plan.ts';
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';

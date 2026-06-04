@@ -3,7 +3,7 @@
  *
  * Tests cover:
  * - defineIsland() registration and metadata markers
- * - getSsrProps / bindEvents
+ * - getSsrProps / bindSsrProps
  * - Strategy implementations (load, idle, visible, only)
  * - Tag name validation
  * - DSD opt-out (dsd: false -> pure-island layer)
@@ -17,7 +17,7 @@
 import { assertEquals, assertStringIncludes, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import {
   _clearAllVisibilityTimeouts,
-  bindEvents,
+  bindSsrProps,
   defineIsland,
   getIslandMeta,
   getSsrProps,
@@ -348,7 +348,7 @@ Deno.test('island: wraps connectedCallback for SSR prop binding', () => {
   }
 });
 
-Deno.test('island: marks prototype as __lessIslandWrapped', () => {
+Deno.test('island: marks prototype as __openIslandWrapped', () => {
   setupMocks();
   try {
     const tag = `wrap-marker-${Date.now()}`;
@@ -356,7 +356,7 @@ Deno.test('island: marks prototype as __lessIslandWrapped', () => {
     defineIsland(tag, Cls, { strategy: 'load' });
 
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
-    assertEquals(proto.__lessIslandWrapped, true);
+    assertEquals(proto.__openIslandWrapped, true);
   } finally {
     teardownMocks();
   }
@@ -370,12 +370,12 @@ Deno.test('island: does not double-wrap connectedCallback', () => {
 
     defineIsland(tag, Cls, { strategy: 'load' });
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
-    const firstWrap = proto.__lessIslandWrapped;
+    const firstWrap = proto.__openIslandWrapped;
 
     // Call island again with same class (should not double-wrap)
     defineIsland(tag, Cls, { strategy: 'load' });
     assertEquals(firstWrap, true);
-    assertEquals(proto.__lessIslandWrapped, true);
+    assertEquals(proto.__openIslandWrapped, true);
   } finally {
     teardownMocks();
   }
@@ -441,9 +441,9 @@ Deno.test('getSsrProps: handles complex nested JSON', () => {
   assertEquals((props?.nested as Record<string, unknown>)?.a, true);
 });
 
-// ─── bindEvents ──────────────────────────────────────────────────
+// ─── bindSsrProps ──────────────────────────────────────────────────
 
-Deno.test('bindEvents: sets properties from data-ssr-props', () => {
+Deno.test('bindSsrProps: sets properties from data-ssr-props', () => {
   const data: Record<string, unknown> = { count: 0, label: '' };
   const el = {
     getAttribute: (name: string) =>
@@ -465,12 +465,12 @@ Deno.test('bindEvents: sets properties from data-ssr-props', () => {
     },
   } as unknown as HTMLElement;
 
-  bindEvents(el);
+  bindSsrProps(el);
   assertEquals(data.count, 42);
   assertEquals(data.label, 'hello');
 });
 
-Deno.test('bindEvents: does nothing when no data-ssr-props', () => {
+Deno.test('bindSsrProps: does nothing when no data-ssr-props', () => {
   const el = {
     getAttribute: () => null,
     tagName: 'DIV',
@@ -478,10 +478,10 @@ Deno.test('bindEvents: does nothing when no data-ssr-props', () => {
   } as unknown as HTMLElement;
 
   // Should not throw
-  bindEvents(el);
+  bindSsrProps(el);
 });
 
-Deno.test('bindEvents: skips read-only properties gracefully', () => {
+Deno.test('bindSsrProps: skips read-only properties gracefully', () => {
   const el = {
     getAttribute: (name: string) =>
       name === 'data-ssr-props' ? JSON.stringify({ readonly: 'changed' }) : null,
@@ -496,11 +496,11 @@ Deno.test('bindEvents: skips read-only properties gracefully', () => {
   });
 
   // Should not throw
-  bindEvents(el);
+  bindSsrProps(el);
   assertEquals((el as unknown as Record<string, unknown>).readonly, 'fixed');
 });
 
-Deno.test('bindEvents: handles empty object in data-ssr-props', () => {
+Deno.test('bindSsrProps: handles empty object in data-ssr-props', () => {
   const el = {
     getAttribute: (name: string) => name === 'data-ssr-props' ? '{}' : null,
     tagName: 'DIV',
@@ -508,7 +508,7 @@ Deno.test('bindEvents: handles empty object in data-ssr-props', () => {
   } as unknown as HTMLElement;
 
   // Should not throw
-  bindEvents(el);
+  bindSsrProps(el);
 });
 
 // ─── defineIsland() - dsd option ─────────────────────────────────────

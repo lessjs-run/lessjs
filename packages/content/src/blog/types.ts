@@ -27,7 +27,7 @@ export interface BlogPost {
 }
 
 /** Blog plugin configuration options */
-export interface LessBlogOptions {
+export interface OpenElementBlogOptions {
   /** Directory containing .md files (default: 'posts') */
   contentDir?: string;
   /** Base URL path for blog (default: '/blog') */
@@ -42,7 +42,7 @@ export interface LessBlogOptions {
   trustedHtml?: boolean;
   /**
    * Layout component tag name for wrapping blog pages.
-   * Default: 'less-layout' (from @openelement/ui)
+   * Default: 'open-layout' (from @openelement/ui)
    */
   layoutTag?: string;
   /**

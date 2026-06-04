@@ -1,5 +1,5 @@
 /**
- * @openelement/ui - LessJS UI Component Library
+ * @openelement/ui - openElement UI Component Library
  *
  * Swiss International Style: Pure B&W, minimal, typography-driven.
  * Zero Lit dependency - built on DsdElement (native HTMLElement).
@@ -22,7 +22,7 @@
  * import '@openelement/ui';
  *
  * // Or import specific components
- * import { LessButton } from '@openelement/ui/open-button';
+ * import { OpenButton } from '@openelement/ui/open-button';
  * ```
  *
  * @module @openelement/ui

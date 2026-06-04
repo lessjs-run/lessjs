@@ -2,15 +2,15 @@
  * @openelement/adapter-vite - build-context.ts tests (Deno)
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
-import { LessBuildContext } from '../src/build-context.ts';
+import { OpenElementBuildContext } from '../src/build-context.ts';
 
-Deno.test('LessBuildContext creates instance without error', () => {
-  const ctx = new LessBuildContext({});
+Deno.test('OpenElementBuildContext creates instance without error', () => {
+  const ctx = new OpenElementBuildContext({});
   assertExists(ctx);
 });
 
-Deno.test('LessBuildContext has empty default mutable state', () => {
-  const ctx = new LessBuildContext({});
+Deno.test('OpenElementBuildContext has empty default mutable state', () => {
+  const ctx = new OpenElementBuildContext({});
 
   // Empty state
   assertEquals(ctx.phase1.honoEntryCode, '');
@@ -22,8 +22,8 @@ Deno.test('LessBuildContext has empty default mutable state', () => {
   assertEquals(ctx.phase1.userResolveAlias, null);
 });
 
-Deno.test('LessBuildContext reset clears all mutable state', () => {
-  const ctx = new LessBuildContext({});
+Deno.test('OpenElementBuildContext reset clears all mutable state', () => {
+  const ctx = new OpenElementBuildContext({});
 
   // Mutate
   ctx.phase1.honoEntryCode = 'test code';

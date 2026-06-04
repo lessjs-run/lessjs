@@ -8,9 +8,7 @@
  * @module @openelement/core/logger
  */
 
-import { LessError } from './errors.js';
-
-// ©¤©¤©¤ Log Level ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
+import { OpenElementError } from './errors.js';
 
 /** Log level enum - higher value = less verbose */
 export enum LogLevel {
@@ -21,8 +19,6 @@ export enum LogLevel {
   SILENT = 4,
 }
 
-// ©¤©¤©¤ Prefix Map ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 const PREFIX_MAP: Record<string, string> = {
   core: '[openElement]',
   ssg: '[openElement/SSG]',
@@ -30,18 +26,14 @@ const PREFIX_MAP: Record<string, string> = {
   signal: '[openElement/Signal]',
 };
 
-// ©¤©¤©¤ DEBUG compile-time constant ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 declare const DEBUG: boolean;
 const _DEBUG: boolean = typeof DEBUG === 'undefined' ? true : DEBUG;
 
-// ©¤©¤©¤ Logger ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-export class LessLogger {
+export class OpenElementLogger {
   constructor(private prefix: string) {}
 
   logError(msg: string, err?: unknown): void {
-    if (err instanceof LessError) {
+    if (err instanceof OpenElementError) {
       console.error(`${this.prefix} ${msg}`, {
         code: err.code,
         severity: err.severity,
@@ -79,9 +71,7 @@ export class LessLogger {
   debug = this.logDebug;
 }
 
-// ©¤©¤©¤ Factory ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
-export function createLogger(scope: string): LessLogger {
+export function createLogger(scope: string): OpenElementLogger {
   const prefix = PREFIX_MAP[scope] ?? `[openElement/${scope}]`;
-  return new LessLogger(prefix);
+  return new OpenElementLogger(prefix);
 }

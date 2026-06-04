@@ -2,7 +2,7 @@
  * @openelement/ui - Design System
  * Two plates. Zero noise.
  *
- * Dogfooding: uses real less-button, less-card, less-input components.
+ * Dogfooding: uses real open-button, open-card, open-input components.
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { DsdElement } from '@openelement/core';

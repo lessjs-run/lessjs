@@ -1,26 +1,29 @@
 {
   "schema": "hub-index-v1",
-  "updatedAt": "2026-05-19T03:07:00.000Z",
+  "updatedAt": "2026-06-04T16:16:47.701Z",
   "packages": [
     {
       "name": "ui",
       "scope": "@openelement",
-      "version": "0.18.3",
-      "description": "LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.",
+      "version": "0.30.1",
+      "description": "openElement UI component library with DSD-native DsdElement components. All components are SSR-capable.",
       "compatibility": "ssr-capable",
       "tags": [
-        "less-button",
-        "less-card",
-        "less-code-block",
-        "less-dialog",
-        "less-hero-ping",
-        "less-input",
-        "less-theme-toggle"
+        "open-button",
+        "open-card",
+        "open-callout",
+        "open-code-block",
+        "open-dialog",
+        "open-hero-ping",
+        "open-input",
+        "open-layout",
+        "open-step-card",
+        "open-theme-toggle"
       ],
       "source": "local",
       "safeToInstall": true,
       "ssrCapable": true,
-      "submittedAt": "2026-05-19T02:38:21.412Z"
+      "submittedAt": "2026-06-04T16:16:47.647Z"
     },
     {
       "name": "shoelace",
@@ -72,7 +75,7 @@
       "source": "npm",
       "safeToInstall": true,
       "ssrCapable": false,
-      "submittedAt": "2026-05-19T02:38:21.418Z"
+      "submittedAt": "2026-06-04T16:16:47.699Z"
     }
   ]
 }

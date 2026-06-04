@@ -14,17 +14,17 @@
  * Where `CSSRuleLike` has exactly one property: `cssText: string`.
  *
  * The shim is intentionally NOT a full CSSOM polyfill - it only implements
- * the surface that LessJS touches.
+ * the surface that openElement touches.
  */
 
 // -- Types -------------------------------------------------------
 
-/** Minimal rule interface - only the field LessJS reads. */
+/** Minimal rule interface - only the field openElement reads. */
 export interface StyleSheetRule {
   cssText: string;
 }
 
-/** The surface LessJS uses from CSSStyleSheet. */
+/** The surface openElement uses from CSSStyleSheet. */
 export interface StyleSheetLike {
   replaceSync(text: string): void;
   readonly cssRules: StyleSheetRule[];

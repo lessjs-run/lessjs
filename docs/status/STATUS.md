@@ -2,15 +2,18 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.30.1 (Clean Architecture Sweep - IN PROGRESS)
+## Current Version Line: v0.30.1 (Clean Architecture Sweep - Local Verified)
 
-v0.30.1 Status: **IN PROGRESS.** Governing docs:
+v0.30.1 Status: **LOCAL VERIFIED; REMOTE CI PENDING.** Governing docs:
 `docs/adr/ADR-0081-vnode-event-unification.md` and
-`docs/sop/v0.30.1/SOP-013-islands-fix-openelement-rename.md`. The line must
-finish the `@openelement` rename, remove stale `less-*` active contracts, make
-dynamic island UI VNode-only, keep HTML injection behind an explicit trusted
-boundary, repair mojibake/current-doc drift, and make `arch:check` prove the
-active architecture.
+`docs/sop/v0.30.1/SOP-013-islands-fix-openelement-rename.md`. The line finishes
+the `@openelement` rename, removes stale `less-*` active contracts, makes
+dynamic island UI VNode-only, keeps HTML injection behind an explicit trusted
+boundary, repairs current-doc drift, and makes `arch:check` prove the active
+architecture. Local gates passed on 2026-06-04, including `deno task test`
+(1296 passed), `deno task build` (363 HTML files, 333 DSD-report pages, 0
+errors), `deno task publish:dry-run` (19 packages), and `deno task test:e2e`
+(101 passed).
 
 v0.30.0 Status: **IMPLEMENTED.** The architecture freeze collapsed the active
 renderer contract to `VNode | null`, added architecture contract gates, aligned
@@ -31,7 +34,7 @@ JSR consumers.
 
 v0.28.3 Status: **IMPLEMENTED.** The v0.28 pre-freeze closure added router,
 runtime, and protocols unit-test floors; removed dependency drift from the
-lockfile; compiled MDX through the existing LessJS JSX and DSD pipeline; and
+lockfile; compiled MDX through the existing openElement JSX and DSD pipeline; and
 aligned all 19 packages to `0.28.3`.
 
 v0.28.2 Status: **IMPLEMENTED.** Deprecated adapter compatibility helpers were
@@ -44,7 +47,7 @@ v0.28.1 Status: **IMPLEMENTED.** Hygiene-only cycle for v0.28 anchors,
 `.gitignore` leaks, strategic-docs sync, and SOP index cleanup.
 
 v0.28.0 Status: **IMPLEMENTED.** Architecture contracts stabilization
-(`createAdapterRegistry`, `LessRenderer`, `onRenderError`), full Open Props
+(`createAdapterRegistry`, `OpenElementRenderer`, `onRenderError`), full Open Props
 migration, CI composite action, docs-site theme gates, and signal-driven
 registry work.
 
@@ -52,7 +55,7 @@ v0.27.0 Status: **IMPLEMENTED.** Virtual module coupling removed from route
 files, island transform extracted to `@openelement/core`, zero-bundler dev server,
 SSG rendering robustness, and www/ documentation overhaul.
 
-v0.25.0 Status: **IMPLEMENTED.** Declarative DX. `lessPipeline()`, 14 SOPs, and
+v0.25.0 Status: **IMPLEMENTED.** Declarative DX. `openPipeline()`, 14 SOPs, and
 route types.
 
 v0.24.x Status: **IMPLEMENTED.** JSX+Signal component model and
@@ -64,6 +67,12 @@ v0.23.x and earlier: **HISTORICAL.**
 
 v0.31 remains deferred until v0.30.1 is clean and gate-proven. Its planned scope
 is UI Shell/Ocean-Island/@openelement UI work, not renderer or rename cleanup.
+
+## Stable Target: v1.0
+
+v1.0 remains the stable engine target. It should freeze the cleaned v0.30.x
+renderer, metadata, package graph, and trust-boundary contracts after the v0.31
+product-surface work proves those contracts in real applications.
 
 ## Current Product Center
 
@@ -93,8 +102,9 @@ is UI Shell/Ocean-Island/@openelement UI work, not renderer or rename cleanup.
 
 ## Package Version State
 
-All 19 packages are currently aligned to **v0.30.0** under `@openelement/*`.
-v0.30.1 must bump all 19 packages together after the cleanup gates pass.
+All 19 packages are currently aligned to **v0.30.1** under `@openelement/*`.
+v0.30.1 has local proof and must not be called remote-released until GitHub
+Actions pass on `dev` and after merge on `main`.
 
 ## Architecture Positioning
 
@@ -104,10 +114,10 @@ v0.30.1 must bump all 19 packages together after the cleanup gates pass.
 
 ## v0.30 Release Line
 
-| Version | Theme                        | Status      | Headline                                                     |
-| ------- | ---------------------------- | ----------- | ------------------------------------------------------------ |
-| v0.30.0 | Architecture Contract Freeze | Done        | VNode/null renderer contract, graph gate, architecture gate  |
-| v0.30.1 | Clean Architecture Sweep     | In Progress | openElement rename closure, VNode-only islands, trusted HTML |
+| Version | Theme                        | Status         | Headline                                                     |
+| ------- | ---------------------------- | -------------- | ------------------------------------------------------------ |
+| v0.30.0 | Architecture Contract Freeze | Done           | VNode/null renderer contract, graph gate, architecture gate  |
+| v0.30.1 | Clean Architecture Sweep     | Local Verified | openElement rename closure, VNode-only islands, trusted HTML |
 
 ## v0.28 Release Line
 
@@ -136,6 +146,5 @@ v0.30.1 must bump all 19 packages together after the cleanup gates pass.
 ## Last Completed Line: v0.30.0
 
 v0.30.0 is the completed architecture contract freeze. v0.30.1 is the active
-cleanup line and must not be marked complete until
-`docs/sop/v0.30.1/SOP-013-islands-fix-openelement-rename.md` exit criteria are
-proven locally and remotely.
+cleanup line with local proof complete. Remote release closure is still gated on
+`dev` and `main` CI.

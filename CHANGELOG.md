@@ -1,15 +1,41 @@
+## v0.30.1 - Clean Architecture Sweep (2026-06-04)
+
+### Public Contract
+
+- Renamed the current app facade to `openElement()`.
+- Aligned active package metadata, protocol validators, route metadata, Vite
+  plugin names, virtual module ids, UI subpaths, and component tags with the
+  openElement vocabulary.
+- Removed active LessJS compatibility names from the current source and current
+  docs. Historical archives remain historical.
+
+### Renderer and Islands
+
+- Kept dynamic island UI on the VNode renderer path.
+- Removed framework-authored `data-on-*` event binding and active
+  `data-signal-html` dynamic UI.
+- Preserved `trustedHtml` only for audited non-interactive content boundaries.
+
+### Docs and Release
+
+- Updated current architecture, SOP, ADR, status, package docs, and www content
+  for v0.30.1.
+- Bumped all 19 packages and internal `jsr:@openelement/*` ranges to `0.30.1`.
+
+---
+
 ## v0.26.0 — Framework Decoupling + SSG Robustness (2026-05-29)
 
 > **Previous**: v0.25.0 | **SOPs**: 5 | **ADR**: ADR-0061
 
 ### Virtual Modules Removed from Route Files
 
-60 route files no longer import from `virtual:less-nav` or `virtual:less-blog-data`.
+60 route files no longer import from `virtual:open-nav` or `virtual:open-blog-data`.
 Data now flows through `@openelement/content/nav`, `@openelement/content/blog-data`, and
 `@openelement/i18n/data` — framework-owned ESM exports, not Vite virtual modules.
 
 ```diff
-- import { headerNav, navSections } from 'virtual:less-nav';
+- import { headerNav, navSections } from 'virtual:open-nav';
 + import { headerNav, navSections } from '@openelement/content/nav';
 ```
 
@@ -59,34 +85,34 @@ build:docs ✅ 0 FAILED, sitemap 478 URLs
 
 > **Previous**: v0.24.4 | **SOPs**: 14 | **ADR**: ADR-0058/0059/0060
 
-### Breaking: less() Removed
+### Breaking: createOpenPlugin() Removed
 
-`less()` fully removed from `@openelement/adapter-vite`. `lessPipeline()` is the
+`createOpenPlugin()` fully removed from `@openelement/adapter-vite`. `openPipeline()` is the
 only public build entry. Zero backward compatibility.
 
 ```diff
-- import { less } from '@openelement/adapter-vite';
-+ import { lessPipeline } from '@openelement/adapter-vite';
+- import { createOpenPlugin } from '@openelement/adapter-vite/plugin';
++ import { openPipeline } from '@openelement/adapter-vite';
 ```
 
 ### 14 SOPs Delivered
 
-| SOP | Feature                                 |
-| --- | --------------------------------------- |
-| 001 | `lessPipeline()` declarative entry      |
-| 002 | `.less/routes.d.ts` type generation     |
-| 003 | `static head` metadata                  |
-| 004 | `static client` declaration             |
-| 005 | SignalContext (DOM-tree context)        |
-| 006 | CSS token convergence (20→2 imports)    |
-| 007 | Scanner AST hardening                   |
-| 008 | `as any` hardening (21→0 in core/src)   |
-| 009 | test-utils.ts infrastructure            |
-| 010 | `less()` full removal (not @deprecated) |
-| 011 | island.test.ts old name cleanup         |
-| 012 | `_dsdHydrated` removal, unified render  |
-| 013 | 14 pages string→JSX                     |
-| 014 | Full regression (943 tests)             |
+| SOP | Feature                                             |
+| --- | --------------------------------------------------- |
+| 001 | `openPipeline()` declarative entry                  |
+| 002 | `.less/routes.d.ts` type generation                 |
+| 003 | `static head` metadata                              |
+| 004 | `static client` declaration                         |
+| 005 | SignalContext (DOM-tree context)                    |
+| 006 | CSS token convergence (20→2 imports)                |
+| 007 | Scanner AST hardening                               |
+| 008 | `as any` hardening (21→0 in core/src)               |
+| 009 | test-utils.ts infrastructure                        |
+| 010 | `createOpenPlugin()` full removal (not @deprecated) |
+| 011 | island.test.ts old name cleanup                     |
+| 012 | `_dsdHydrated` removal, unified render              |
+| 013 | 14 pages string→JSX                                 |
+| 014 | Full regression (943 tests)                         |
 
 ### Critical Fixes
 
@@ -110,16 +136,16 @@ only public build entry. Zero backward compatibility.
 
 ### API Naming Convention
 
-- **verbNoun**: `island()` → `defineIsland()`, `lessBind()` → `bindEvents()`
+- **verbNoun**: `island()` → `defineIsland()`, `lessBind()` → `bindSsrProps()`
 - **PascalCase acronyms**: `renderDSD()` → `renderDsd()`, `renderToDOM()` → `renderToDom()`, `getSSRProps()` → `getSsrProps()`
 - **No backward compatibility** — old names removed entirely
 
-### less() Public API Removal
+### createOpenPlugin() Public API Removal
 
-- `less()` removed from `@openelement/adapter-vite` public exports
-- `lessPipeline()` is the sole build pipeline entry
+- `createOpenPlugin()` removed from `@openelement/adapter-vite` public exports
+- `openPipeline()` is the sole build pipeline entry
 - `lessCompat` removed, `@deprecated` aliases removed
-- `less-plugin.ts` marked `@internal`
+- `plugin.ts` marked `@internal`
 
 ### SSG Robustness
 
@@ -179,14 +205,14 @@ only public build entry. Zero backward compatibility.
 
 All 10 UI components migrated from `html` tagged templates to JSX:
 
-- `less-button`, `less-card`, `less-callout`, `less-code-block`, `less-dialog`, `less-hero-ping`, `less-input`, `less-layout`, `less-step-card`, `less-theme-toggle`
+- `open-button`, `open-card`, `open-callout`, `open-code-block`, `open-dialog`, `open-hero-ping`, `open-input`, `open-layout`, `open-step-card`, `open-theme-toggle`
 - Legacy template helpers replaced with JSX equivalents (`onClick`/`disabled`/`ariaInvalid`/inline SVG)
 
 ### Migration: `www/app/islands/`
 
 6 island components migrated to JSX:
 
-- `counter-island`, `less-search`, `less-term`, `less-toc`, `reactive-showcase`, `shoelace-showcase`
+- `counter-island`, `open-search`, `less-term`, `less-toc`, `reactive-showcase`, `shoelace-showcase`
 - `api-consumer` left unchanged (uses Lit's `html`)
 
 ### Bug Fixes
@@ -232,7 +258,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### CLI Organization (SOP-003)
 
-- **Rename**: `hub/src/cli/less-add.ts` → `hub/src/cli/less-install-guide.ts` — eliminates naming collision with `compat-check/src/cli/less-add.ts`
+- **Rename**: `hub/src/cli/install-plan.ts` → `hub/src/cli/install-guide.ts` — eliminates naming collision with `compat-check/src/cli/install-plan.ts`
 - **Data relocation**: `_hub-data-full.ts` (3867L) moved from `routes/registry/` to `app/data/registry/hub-data.ts`
 - **Changelog**: `changelog.ts` (was 1956L inline HTML) now reads `CHANGELOG.md` at build time. Single source of truth; self-contained renderer, zero external deps.
 
@@ -279,7 +305,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
   migrated from core. Zero-dependency standalone package; canonical owner of all
   CEM-related types and parsing logic.
 - **@openelement/compat-check** — Compatibility classification, manifest validation,
-  and `less-add` tooling migrated from core. Standalone package for build-time
+  and `install-plan` tooling migrated from core. Standalone package for build-time
   compatibility checks.
 - **@openelement/core** — Refined to a pure runtime kernel: `DsdElement`, `html`,
   `renderDSD`, islands, navigation, logger, and errors only. Zero alien-signals
@@ -292,7 +318,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 2. `StyleSheet`: migrated from `@openelement/core` to `@openelement/style-sheet`
    (or import via `@openelement/runtime`)
 3. Removed core exports: `./signals`, `./style-sheet`, `./cem-parser`,
-   `./compatibility`, `./validate-manifest`, `./less-add`
+   `./compatibility`, `./validate-manifest`, `./install-plan`
 4. `@openelement/adapter-vite`: removed `./build-context` export
 5. `@openelement/create` templates now use `@openelement/runtime` instead of multiple
    sub-package imports
@@ -301,7 +327,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 - `@openelement/runtime`: Unified component authoring entry point
 - `@openelement/cem`: Canonical owner of CEM types and parsing
-- `@openelement/compat-check`: Compatibility classification + manifest validation + less-add
+- `@openelement/compat-check`: Compatibility classification + manifest validation + install-plan
 
 ### CI / Tooling
 
@@ -367,8 +393,8 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 ### Fixed
 
-- Client island builds in JSR consumers now reuse the LessJS package resolver,
-  so package islands such as `@openelement/ui/less-card` resolve from JSR in Phase 2.
+- Client island builds in JSR consumers now reuse the openElement package resolver,
+  so package islands such as `@openelement/ui/open-card` resolve from JSR in Phase 2.
 
 ## 0.21.13 (2026-05-25)
 

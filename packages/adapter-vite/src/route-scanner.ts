@@ -21,13 +21,13 @@
  * 1. Local island files:
  *    - Scanned by `scanIslands()` (lines 212-257)
  *    - Metadata read by `scanIslandMeta()` (lines 284-319)
- *    - SSR decision: `less.ssr` field (static read, no import)
+ *    - SSR decision: `openElement.ssr` field (static read, no import)
  *
  * 2. Package manifest islands:
  *    - Discovered by `scanPackageManifests()` (lines 334-383)
  *    - Imports package module to read `manifest` export
  *    - Browser-only packages: caught by try/catch (line 345-349)
- *    - SSR decision: `manifest.declarations[].less.ssr` field
+ *    - SSR decision: `manifest.declarations[].openElement.ssr` field
  *
  * 3. CEM manifests (v0.18.0):
  *    - Discovered by `scanCemManifests()` - reads custom-elements.json from
@@ -39,7 +39,7 @@
  *    - See: `packages/core/src/jsx-render-string.ts` and `renderDsdTree()`
  *
  * Audit completed: 2026-05-17
- * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+ * Auditor: AI agent (openElement v0.17.4 SOP compliance check)
  *
  * ─── v0.25: AST Upgrade ───────────────────────────────────
  *
@@ -54,11 +54,11 @@
 
 import type {
   CompatibilityClassification,
-  LessPackageManifest,
+  OpenElementPackageManifest,
   RouteEntry,
   SpecialFileType,
 } from '@openelement/core';
-import { LessError } from '@openelement/core/errors';
+import { OpenElementError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
@@ -110,11 +110,11 @@ function readStaticStringExport(
       if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName) continue;
       if (!declaration.initializer) return undefined;
 
-      const value = unwrapStaticLessExpression(declaration.initializer);
+      const value = unwrapStaticOpenElementExpression(declaration.initializer);
       if (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)) {
         return value.text;
       }
-      throw new LessError(
+      throw new OpenElementError(
         `Invalid static ${exportName} export: expected a string literal.`,
         'STATIC_METADATA_ERROR',
         500,
@@ -388,7 +388,7 @@ export interface LocalIslandMeta {
  * and reading the `less` export directly, instead of regex-scanning source text.
  *
  * Supported form:
- *   export const less = { ssr: false, dsd: false, hydrate: 'only' }
+ *   export const openElement = { ssr: false, dsd: false, hydrate: 'only' }
  *
  * This is more reliable than regex because it handles:
  * - Comments inside the object literal
@@ -421,25 +421,25 @@ export async function scanIslandMeta(
       continue;
     }
 
-    // Read the `less` export directly — no regex needed
-    const lessExport = readStaticLessExport(source);
-    if (!lessExport) continue;
+    // Read the `openElement` export directly; no regex needed.
+    const openElementExport = readStaticOpenElementExport(source);
+    if (!openElementExport) continue;
 
-    const hydrate: LocalIslandMeta['hydrate'] = lessExport.hydrate &&
-        ['load', 'idle', 'visible', 'only'].includes(lessExport.hydrate)
-      ? lessExport.hydrate
+    const hydrate: LocalIslandMeta['hydrate'] = openElementExport.hydrate &&
+        ['load', 'idle', 'visible', 'only'].includes(openElementExport.hydrate)
+      ? openElementExport.hydrate
       : undefined;
 
     meta[tagName] = {
       tagName,
       filePath,
-      ssr: hydrate === 'only' ? false : lessExport.ssr,
-      dsd: hydrate === 'only' ? false : lessExport.dsd,
+      ssr: hydrate === 'only' ? false : openElementExport.ssr,
+      dsd: hydrate === 'only' ? false : openElementExport.dsd,
       hydrate,
       reason: hydrate === 'only'
-        ? 'local island exports less.hydrate=only'
-        : lessExport.ssr === false
-        ? 'local island exports less.ssr=false'
+        ? 'local island exports openElement.hydrate=only'
+        : openElementExport.ssr === false
+        ? 'local island exports openElement.ssr=false'
         : undefined,
     };
   }
@@ -448,13 +448,13 @@ export async function scanIslandMeta(
 }
 
 /**
- * v0.28.6: Static AST extraction of `export const less = { ... }`.
+ * v0.28.6: Static AST extraction of `export const openElement = { ... }`.
  *
  * The scanner intentionally does not execute island modules. It accepts only a
  * static object literal with boolean `ssr`/`dsd` and string `hydrate` values.
  * Dynamic metadata is rejected instead of guessed.
  */
-function readStaticLessExport(source: string): {
+function readStaticOpenElementExport(source: string): {
   ssr?: boolean;
   dsd?: boolean;
   hydrate?: LocalIslandMeta['hydrate'];
@@ -473,26 +473,28 @@ function readStaticLessExport(source: string): {
     if (!isExported) continue;
 
     for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== 'less') continue;
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== 'openElement') continue;
       if (!declaration.initializer) {
-        throw staticLessError('less export must have an initializer');
+        throw staticOpenElementError('openElement export must have an initializer');
       }
 
-      const initializer = unwrapStaticLessExpression(declaration.initializer);
+      const initializer = unwrapStaticOpenElementExpression(declaration.initializer);
       if (!ts.isObjectLiteralExpression(initializer)) {
-        throw staticLessError(
-          `less export must be a static object literal, got ${ts.SyntaxKind[initializer.kind]}`,
+        throw staticOpenElementError(
+          `openElement export must be a static object literal, got ${
+            ts.SyntaxKind[initializer.kind]
+          }`,
         );
       }
 
-      return readLessObjectLiteral(initializer);
+      return readOpenElementObjectLiteral(initializer);
     }
   }
 
   return null;
 }
 
-function unwrapStaticLessExpression(expression: ts.Expression): ts.Expression {
+function unwrapStaticOpenElementExpression(expression: ts.Expression): ts.Expression {
   let current = expression;
   while (
     ts.isAsExpression(current) ||
@@ -504,7 +506,7 @@ function unwrapStaticLessExpression(expression: ts.Expression): ts.Expression {
   return current;
 }
 
-function readLessObjectLiteral(object: ts.ObjectLiteralExpression): {
+function readOpenElementObjectLiteral(object: ts.ObjectLiteralExpression): {
   ssr?: boolean;
   dsd?: boolean;
   hydrate?: LocalIslandMeta['hydrate'];
@@ -517,29 +519,31 @@ function readLessObjectLiteral(object: ts.ObjectLiteralExpression): {
 
   for (const property of object.properties) {
     if (!ts.isPropertyAssignment(property)) {
-      throw staticLessError(`unsupported less metadata syntax: ${ts.SyntaxKind[property.kind]}`);
+      throw staticOpenElementError(
+        `unsupported openElement metadata syntax: ${ts.SyntaxKind[property.kind]}`,
+      );
     }
     if (property.name.kind === ts.SyntaxKind.ComputedPropertyName) {
-      throw staticLessError('computed less metadata keys are not supported');
+      throw staticOpenElementError('computed openElement metadata keys are not supported');
     }
 
     const key = propertyNameToString(property.name);
     if (!key || !['ssr', 'dsd', 'hydrate'].includes(key)) continue;
 
-    const value = unwrapStaticLessExpression(property.initializer);
+    const value = unwrapStaticOpenElementExpression(property.initializer);
     if (key === 'ssr' || key === 'dsd') {
       if (value.kind !== ts.SyntaxKind.TrueKeyword && value.kind !== ts.SyntaxKind.FalseKeyword) {
-        throw staticLessError(`less.${key} must be a boolean literal`);
+        throw staticOpenElementError(`openElement.${key} must be a boolean literal`);
       }
       meta[key] = value.kind === ts.SyntaxKind.TrueKeyword;
       continue;
     }
 
     if (!ts.isStringLiteral(value) && !ts.isNoSubstitutionTemplateLiteral(value)) {
-      throw staticLessError('less.hydrate must be a string literal');
+      throw staticOpenElementError('openElement.hydrate must be a string literal');
     }
     if (!['load', 'idle', 'visible', 'only'].includes(value.text)) {
-      throw staticLessError(`less.hydrate has unsupported value "${value.text}"`);
+      throw staticOpenElementError(`openElement.hydrate has unsupported value "${value.text}"`);
     }
     meta.hydrate = value.text as LocalIslandMeta['hydrate'];
   }
@@ -554,9 +558,9 @@ function propertyNameToString(name: ts.PropertyName): string | null {
   return null;
 }
 
-function staticLessError(message: string): LessError {
-  return new LessError(
-    `Invalid static island metadata export "less": ${message}. Accepted shape: export const less = { ssr?: boolean, dsd?: boolean, hydrate?: "load" | "idle" | "visible" | "only" } as const.`,
+function staticOpenElementError(message: string): OpenElementError {
+  return new OpenElementError(
+    `Invalid static island metadata export "openElement": ${message}. Accepted shape: export const openElement = { ssr?: boolean, dsd?: boolean, hydrate?: "load" | "idle" | "visible" | "only" } as const.`,
     'ISLAND_METADATA_ERROR',
     500,
     false,
@@ -564,8 +568,8 @@ function staticLessError(message: string): LessError {
 }
 
 /**
- * Scan package exports for LessPackageManifest.
- * Packages should export a `manifest` LessPackageManifest in their main entry.
+ * Scan package exports for OpenElementPackageManifest.
+ * Packages should export a `manifest` OpenElementPackageManifest in their main entry.
  *
  * Example package export:
  * ```ts
@@ -574,12 +578,12 @@ function staticLessError(message: string): LessError {
  * ```
  *
  * @param packageNames - List of package names to scan (e.g., ['@openelement/ui'])
- * @returns Array of LessPackageManifest
+ * @returns Array of OpenElementPackageManifest
  */
 export async function scanPackageManifests(
   packageNames: string[],
-): Promise<LessPackageManifest[]> {
-  const allManifests: LessPackageManifest[] = [];
+): Promise<OpenElementPackageManifest[]> {
+  const allManifests: OpenElementPackageManifest[] = [];
 
   for (const pkg of packageNames) {
     // @vite-ignore suppresses unanalyzable-dynamic-import JSR warning.
@@ -593,7 +597,7 @@ export async function scanPackageManifests(
         );
         continue;
       }
-      throw new LessError(
+      throw new OpenElementError(
         `Failed to scan package manifest from "${pkg}": ${
           e instanceof Error ? e.message : String(e)
         }`,
@@ -603,11 +607,11 @@ export async function scanPackageManifests(
       );
     }
     if (mod.manifest && typeof mod.manifest === 'object') {
-      const manifest = mod.manifest as LessPackageManifest;
+      const manifest = mod.manifest as OpenElementPackageManifest;
       if (manifest.packageName && manifest.declarations) {
         allManifests.push(manifest);
       } else {
-        throw new LessError(
+        throw new OpenElementError(
           `Invalid manifest in ${pkg}: missing packageName or declarations`,
           'PACKAGE_MANIFEST_ERROR',
           500,
@@ -615,7 +619,7 @@ export async function scanPackageManifests(
         );
       }
     } else {
-      throw new LessError(
+      throw new OpenElementError(
         `Package ${pkg} does not export a manifest`,
         'PACKAGE_MANIFEST_ERROR',
         500,

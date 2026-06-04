@@ -21,7 +21,7 @@ export { isSignalLike, unwrapSignalLike } from '../src/signal-like.ts';
 export type { SignalLike } from '../src/signal-like.ts';
 
 // ── Island / SSR ──────────────────────────────────────────────────
-export { bindEvents, defineIsland, getSsrProps } from '../src/island.ts';
+export { bindSsrProps, defineIsland, getSsrProps } from '../src/island.ts';
 export type { IslandOptions } from '../src/island.ts';
 
 // ── Rendering ─────────────────────────────────────────────────────

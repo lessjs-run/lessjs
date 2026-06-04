@@ -70,7 +70,7 @@ showcaseStyles.replaceSync(`
 `);
 
 const FRAMEWORKS = [
-  'LessJS',
+  'openElement',
   'Astro',
   'Fresh',
   'Next.js',

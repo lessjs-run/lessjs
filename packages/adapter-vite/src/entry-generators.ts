@@ -56,7 +56,7 @@ export function generateClientEntry(
   islands.forEach(validateClientIslandEntry);
 
   if (islands.length === 0) {
-    return '// LessJS Client Entry - No islands detected, zero client JS needed\n';
+    return '// openElement Client Entry - No islands detected, zero client JS needed\n';
   }
 
   const islandMap = islands
@@ -81,7 +81,7 @@ export function generateClientEntry(
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
 
-  return `// LessJS Client Entry (v0.21 - load/idle/visible/only)
+  return `// openElement Client Entry (v0.21 - load/idle/visible/only)
 // load islands import immediately.
 // idle islands import during browser idle time.
 // visible islands import when their host enters the viewport.
@@ -114,7 +114,7 @@ function __onReady(fn) {
 }
 
 function __dispatchReady(strategy, tags) {
-  document.dispatchEvent(new CustomEvent('less:ready', {
+  document.dispatchEvent(new CustomEvent('open:ready', {
     detail: { strategy: strategy, islands: tags }
   }));
 }

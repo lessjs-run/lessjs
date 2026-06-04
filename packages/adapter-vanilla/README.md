@@ -1,6 +1,6 @@
 # @openelement/adapter-vanilla
 
-Vanilla Web Component SSR adapter for [LessJS](https://github.com/open-element/open-element).
+Vanilla Web Component SSR adapter for [openElement](https://github.com/open-element/openelement).
 
 ## Overview
 

@@ -3,7 +3,7 @@
  *
  * Pure function: EntryDescriptor -> string (virtual module code).
  *
- * LessJS Architecture (v0.5.0):
+ * openElement Architecture (v0.5.0):
  * - API routes use Hono standard app.route() (not app.all + fetch transform)
  * - Island upgrade is handled by the client entry (built by Vite in Phase 2).
  *   No inline script in SSG HTML; the client entry is a Vite-built module
@@ -20,7 +20,6 @@
  * imports are still emitted explicitly so consumer import maps can be checked.
  */
 
-// ©¤©¤©¤ SSR Import Discovery Audit (Step1) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 // This file controls which islands become SSR imports:
 //
 // 1. Local island files:
@@ -38,9 +37,8 @@
 //    - Package islands remain client-side unless admitted into the SSR entry
 //
 // Audit completed: 2026-05-17
-// Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+// Auditor: AI agent (openElement v0.17.4 SOP compliance check)
 //
-// ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 import type {
   ApiRouteDecl,
@@ -55,7 +53,7 @@ import type {
 import type {
   FrameworkOptions,
   HydrationStrategy,
-  LessPackageManifest,
+  OpenElementPackageManifest,
   RouteEntry,
 } from '@openelement/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
@@ -63,8 +61,6 @@ import { buildEntryDescriptor } from './entry-descriptor.js';
 // Re-export for consumers that import from entry-renderer.ts
 export { buildEntryDescriptor } from './entry-descriptor.js';
 export type { EntryDescriptor } from './entry-descriptor.js';
-
-// ©¤©¤©¤ Import rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderImport(imp: ImportDecl): string {
   const names = imp.alias ? `${imp.names[0]} as ${imp.alias}` : imp.names.join(', ');
@@ -76,8 +72,6 @@ function routeTagNameExpr(varName: string, fallback: string): string {
   return JSON.stringify(fallback);
 }
 
-// ©¤©¤©¤ CORS config rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 function renderCorsOrigin(origin: CorsOriginConfig): string {
   if (typeof origin === 'object' && !Array.isArray(origin)) return origin.body;
   return JSON.stringify(origin);
@@ -85,8 +79,6 @@ function renderCorsOrigin(origin: CorsOriginConfig): string {
 
 const CORS_ALLOW =
   "allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], allowHeaders: ['Content-Type', 'Authorization'], credentials: true, maxAge: 86400";
-
-// ©¤©¤©¤ Middleware rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
   if (mw.comment) {
@@ -188,8 +180,6 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
   lines.push('');
 }
 
-// ©¤©¤©¤ API route rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /**
  * Render an API route using Hono's standard app.route().
  *
@@ -221,8 +211,6 @@ function renderApiRoute(lines: string[], route: ApiRouteDecl): void {
   lines.push(`}`);
   lines.push('');
 }
-
-// ©¤©¤©¤ Page route rendering ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 function renderPageRoute(
   lines: string[],
@@ -259,7 +247,7 @@ function renderPageRoute(
 
   // Wrap with renderers from outer to inner (v0.3.0)
   // SSG mode: headExtras is injected via Vite define as __HEAD_EXTRAS__
-  // (ADR 0008 Phase A: replaces the old .less/head-extras.html runtime file read).
+  // (ADR 0008 Phase A: replaces the old .openElement/head-extras.html runtime file read).
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
   const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
 
@@ -301,8 +289,6 @@ function renderPageRoute(
   lines.push(`})`);
   lines.push('');
 }
-
-// ©¤©¤©¤ Main renderer ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 
 /**
  * Render an EntryDescriptor into a complete virtual module string.
@@ -354,7 +340,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- Document wrapper ---
-  // ADR 0013: import directly from source files instead of less-runtime barrel.
+  // ADR 0013: import directly from source files instead of a runtime barrel.
   lines.push(`import { wrapInDocument } from '@openelement/core';`);
   lines.push(`import { jsx } from '@openelement/core/jsx-runtime';`);
   lines.push(`import { createLogger } from '@openelement/core/logger';`);
@@ -510,9 +496,9 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- SSG: headExtras via define injection ---
-  // ADR 0008 Phase A: Instead of reading .less/head-extras.html at runtime,
+  // ADR 0008 Phase A: Instead of reading .openElement/head-extras.html at runtime,
   // headExtras is injected via Vite's define option as __HEAD_EXTRAS__.
-  // This eliminates the .less/head-extras.html temp file and avoids the
+  // This eliminates the .openElement/head-extras.html temp file and avoids the
   // Vite SSR AsyncFunction syntax errors that large inline strings cause.
   // The build-ssg.ts SSR build config includes:
   //   define: { __HEAD_EXTRAS__: JSON.stringify(headExtras) }
@@ -520,7 +506,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(
       '// SSG: headExtras injected via Vite define (ADR 0008 Phase A)',
     );
-    lines.push('// Replaces the old .less/head-extras.html runtime file read');
+    lines.push('// Replaces the old .openElement/head-extras.html runtime file read');
     lines.push('const __headExtras = __HEAD_EXTRAS__ || "";');
     lines.push('');
   }
@@ -638,7 +624,6 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Export ---
   lines.push('export default app');
 
-  // ©¤©¤ SSG Utility Re-exports ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
   // ADR 0008 Phase C: After viteBuild(ssr:true, noExternal) produces a
   // self-contained ESM bundle, build-ssg.ts imports it and needs access
   // to these utility functions from the same module scope.
@@ -653,7 +638,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   if (desc.isSSG) {
     lines.push('');
     lines.push(
-      '// ©¤©¤ SSG Utility Re-exports (ADR 0008 Phase C) ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤',
+      '// - SSG Utility Re-exports (ADR 0008 Phase C) -',
     );
     lines.push('// Used by build-ssg.ts after importing the SSR bundle.');
     lines.push(
@@ -676,14 +661,13 @@ export function renderEntry(desc: EntryDescriptor): string {
       'export { locales, getDefaultLocale, getI18nOptions } from "@openelement/generated/i18n"',
     );
 
-    // ©¤©¤ ADR 0014: renderRoute() - DSD-first rendering API ©¤©¤©¤©¤©¤©¤©¤
     // The SSR bundle owns all rendering knowledge (tagName -> component
     // mapping, customElements registry, renderDsd, wrapInDocument).
     // build-ssg.ts only calls renderRoute() and getStaticPaths() -
     // no globalThis access, no source file regex, no direct renderDsd().
     lines.push('');
     lines.push(
-      '// ©¤©¤ ADR 0014: DSD-first rendering API ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤',
+      '// - ADR 0014: DSD-first rendering API -',
     );
     lines.push(
       '// build-ssg.ts calls these - never touches customElements directly.',
@@ -771,7 +755,7 @@ export function renderEntry(desc: EntryDescriptor): string {
       '  const componentCount = (content.match(/<template shadowrootmode="open"/g) || []).length;',
     );
     lines.push('  const fullHtml = wrapInDocument(content, {');
-    lines.push('    title: title || "LessJS",');
+    lines.push('    title: title || "openElement",');
     lines.push('    lang: lang || locale || "en",');
     lines.push(
       '    headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
@@ -822,8 +806,6 @@ export function renderEntry(desc: EntryDescriptor): string {
   return lines.join('\n');
 }
 
-// ©¤©¤©¤ Convenience wrapper ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
-
 /** Options for the Hono entry code generator */
 export interface HonoEntryOptions {
   routesDir?: string;
@@ -835,7 +817,7 @@ export interface HonoEntryOptions {
   /** Relative file paths for local islands (preserves subdirectory structure) */
   islandFiles?: string[];
   islandMeta?: Record<string, Partial<IslandDecl>>;
-  packageManifests?: LessPackageManifest[];
+  packageManifests?: OpenElementPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;

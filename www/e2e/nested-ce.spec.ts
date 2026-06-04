@@ -5,7 +5,7 @@
  *   - Custom elements exist in the DOM after DSD parsing
  *   - Nested CEs are real DOM elements (not raw text)
  *   - Island scripts load and upgrade elements
- *   - LessJS UI components are present
+ *   - openElement UI components are present
  */
 
 import { expect, test } from '@playwright/test';
@@ -45,10 +45,10 @@ test.describe('Nested Custom Elements', () => {
     expect(nestedAsText).toEqual([]);
   });
 
-  test('LessJS components are present in the DOM', async ({ page }) => {
+  test('openElement components are present in the DOM', async ({ page }) => {
     const tags = await getCustomElementTags(page);
     // The docs site should have custom elements (any hyphenated tags)
-    // These may include less-*, docs-*, page-*, code-block, etc.
+    // These may include open-*, docs-*, page-*, code-block, etc.
     expect(tags.length).toBeGreaterThan(0);
     // At minimum, the page should have custom element tags
     const hasHyphenatedTags = tags.some((t) => t.includes('-'));

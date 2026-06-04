@@ -7,7 +7,6 @@
  * @module @openelement/signals/engine
  */
 
-// ©¤©¤©¤ Internal Logger ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export const _log = {
   warn: (...args: unknown[]) => {
     console.warn('[openElement/Signal]', ...args);
@@ -17,10 +16,8 @@ export const _log = {
   },
 };
 
-// ©¤©¤©¤ Symbols ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export const NODE = Symbol('node');
 
-// ©¤©¤©¤ Engine types ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 export interface SignalOptions<T> {
   equals?: (a: T, b: T) => boolean;
   [key: symbol]: (() => void) | undefined;
@@ -47,7 +44,6 @@ export interface SignalEngineNamespace {
   };
 }
 
-// ©¤©¤©¤ Polyfill types (kept for reference, no longer used) ©¤©¤©¤©¤©¤©¤©¤©¤
 // v0.22.1: These types were used by polyfill.ts which has been removed.
 // Kept to avoid breaking downstream type-only consumers if any exist.
 export interface ReactiveNode {

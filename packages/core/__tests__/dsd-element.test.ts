@@ -442,42 +442,6 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
   document.body.removeChild(el);
 });
 
-Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively', async () => {
-  if (!hasDOM) return;
-
-  const { signal } = await import('@openelement/signals');
-  const tagName = `test-sightml-${Math.random().toString(36).slice(2, 7)}`;
-
-  const htmlSig = signal('<b>bold</b>');
-
-  class HtmlBindElement extends DsdElement {
-    constructor() {
-      super();
-      this.registerSignal('content', htmlSig);
-    }
-    override render(): VNode | null {
-      return jsx('div', { 'data-signal-html': 'content', children: 'fallback' });
-    }
-  }
-  customElements.define(tagName, HtmlBindElement);
-
-  const el = document.createElement(tagName) as DsdElement;
-  const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = `<div data-signal-html="content">fallback</div>`;
-  document.body.appendChild(el);
-
-  const div = shadow.querySelector('div')!;
-  assertExists(div);
-
-  assertEquals(div.innerHTML, '<b>bold</b>');
-
-  htmlSig.value = '<i>italic</i>';
-  await new Promise((r) => setTimeout(r, 50));
-  assertEquals(div.innerHTML, '<i>italic</i>');
-
-  document.body.removeChild(el);
-});
-
 // ─── v0.28.1: data-signal-class + CSR event re-binding ─────────────────────
 
 Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness', async () => {

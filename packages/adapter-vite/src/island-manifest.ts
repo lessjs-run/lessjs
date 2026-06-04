@@ -11,7 +11,7 @@ import type { HydrationStrategy } from '@openelement/core';
 
 /** Island manifest entry for a single custom element */
 export interface IslandManifestEntry {
-  /** Custom element tag name (e.g. 'less-theme-toggle') */
+  /** Custom element tag name (e.g. 'open-theme-toggle') */
   tagName: string;
   /** Client chunk URL relative to site root */
   chunkUrl: string;

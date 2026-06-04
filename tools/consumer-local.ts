@@ -21,7 +21,7 @@ function vitePath(path: string): string {
   return path.replace(/\\/g, '/');
 }
 
-const tmpRoot = Deno.makeTempDirSync({ prefix: 'lessjs-consumer-local-' });
+const tmpRoot = Deno.makeTempDirSync({ prefix: 'openelement-consumer-local-' });
 const projectName = 'consumer-test-app';
 
 console.log(`Generating test project from local workspace...`);
@@ -146,36 +146,36 @@ const aliases = [
     replacement: vitePath(join(uiSrc, 'open-props-tokens.ts')),
   },
   {
-    find: '@openelement/ui/less-button',
-    replacement: vitePath(join(uiSrc, 'less-button.ts')),
+    find: '@openelement/ui/open-button',
+    replacement: vitePath(join(uiSrc, 'open-button.ts')),
   },
   {
-    find: '@openelement/ui/less-card',
-    replacement: vitePath(join(uiSrc, 'less-card.ts')),
+    find: '@openelement/ui/open-card',
+    replacement: vitePath(join(uiSrc, 'open-card.ts')),
   },
   {
-    find: '@openelement/ui/less-input',
-    replacement: vitePath(join(uiSrc, 'less-input.ts')),
+    find: '@openelement/ui/open-input',
+    replacement: vitePath(join(uiSrc, 'open-input.ts')),
   },
   {
-    find: '@openelement/ui/less-code-block',
-    replacement: vitePath(join(uiSrc, 'less-code-block.ts')),
+    find: '@openelement/ui/open-code-block',
+    replacement: vitePath(join(uiSrc, 'open-code-block.ts')),
   },
   {
-    find: '@openelement/ui/less-layout',
-    replacement: vitePath(join(uiSrc, 'less-layout.ts')),
+    find: '@openelement/ui/open-layout',
+    replacement: vitePath(join(uiSrc, 'open-layout.ts')),
   },
   {
-    find: '@openelement/ui/less-theme-toggle',
-    replacement: vitePath(join(uiSrc, 'less-theme-toggle.ts')),
+    find: '@openelement/ui/open-theme-toggle',
+    replacement: vitePath(join(uiSrc, 'open-theme-toggle.ts')),
   },
   {
-    find: '@openelement/ui/less-hero-ping',
-    replacement: vitePath(join(uiSrc, 'less-hero-ping.ts')),
+    find: '@openelement/ui/open-hero-ping',
+    replacement: vitePath(join(uiSrc, 'open-hero-ping.ts')),
   },
   {
-    find: '@openelement/ui/less-dialog',
-    replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
+    find: '@openelement/ui/open-dialog',
+    replacement: vitePath(join(uiSrc, 'open-dialog.ts')),
   },
   // Parent @openelement/ui alias MUST come after all @openelement/ui/* subpath aliases
   {
@@ -192,20 +192,20 @@ const viteConfigPath = join(appDir, 'vite.config.ts');
 let viteConfig = readFileSync(viteConfigPath, 'utf-8');
 
 viteConfig = viteConfig.replace(
-  "import { lessjs } from '@openelement/app';",
-  `import { lessPipeline } from ${
+  "import { openElement } from '@openelement/app';",
+  `import { openPipeline } from ${
     JSON.stringify(
       pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
     )
   };`,
 );
-viteConfig = viteConfig.replace('lessjs({', 'lessPipeline({');
+viteConfig = viteConfig.replace('openElement({', 'openPipeline({');
 viteConfig = viteConfig.replace(
   "packageIslands: ['@openelement/ui'],",
   `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
 );
 viteConfig = viteConfig.replace(
-  'plugins: [lessPipeline',
+  'plugins: [openPipeline',
   `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
 );
 writeFileSync(viteConfigPath, viteConfig);
@@ -248,7 +248,7 @@ if (!existsSync(indexHtmlPath)) {
 }
 
 const indexHtml = readFileSync(indexHtmlPath, 'utf-8');
-if (!indexHtml.includes('Hello from LessJS')) {
+if (!indexHtml.includes('Hello from openElement')) {
   console.error('dist/index.html does not contain expected content');
   console.error('Last 300 chars:', indexHtml.substring(indexHtml.length - 300));
   rmSync(tmpRoot, { recursive: true, force: true });

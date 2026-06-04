@@ -1,4 +1,4 @@
-// LessJS Theme Initialization — L2 (browser API)
+// openElement Theme Initialization - L2 (browser API)
 // Runs before page render to prevent FOUC (Flash of Unstyled Content).
 // Reads saved theme from localStorage or prefers-color-scheme.
 // Default: light theme (white background, black text).
@@ -15,7 +15,7 @@
     }
     if (globalThis.caches?.keys) {
       caches.keys().then((keys) => {
-        keys.filter((k) => k.startsWith('less-')).forEach((k) => caches.delete(k).catch(() => {}));
+        keys.filter((k) => k.startsWith('open-')).forEach((k) => caches.delete(k).catch(() => {}));
       }).catch(() => {});
     }
   } catch { /* ignore */ }
@@ -24,13 +24,13 @@
   const uncloak = () => {
     // Make sure page is visible even if theme detection fails
     document.documentElement.style.visibility = 'visible';
-    const cloak = document.getElementById('less-anti-flash');
+    const cloak = document.getElementById('open-anti-flash');
     if (cloak) cloak.remove();
   };
 
   let saved;
   try {
-    saved = localStorage.getItem('less-theme');
+    saved = localStorage.getItem('open-theme');
   } catch {
     // localStorage may be blocked in private browsing or restricted contexts
   }
@@ -42,7 +42,7 @@
     // matchMedia may be unavailable in old WebViews
   }
 
-  // Match less-theme-toggle default: dark when no preference saved
+  // Match open-theme-toggle default: dark when no preference saved
   const theme = saved || (prefersDark ? 'dark' : 'dark');
   try {
     document.documentElement.setAttribute('data-theme', theme);

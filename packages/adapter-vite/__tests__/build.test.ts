@@ -2,8 +2,8 @@
 /**
  * @openelement/adapter-vite - build / entry-generators tests (Deno)
  *
- * ADR 0011: closeBundle writes metadata to ctx, not .less/build-metadata.json.
- * Tests verify LessBuildContext fields instead of filesystem.
+ * ADR 0011: closeBundle writes metadata to ctx, not .openElement/build-metadata.json.
+ * Tests verify OpenElementBuildContext fields instead of filesystem.
  */
 import {
   assertEquals,
@@ -13,7 +13,7 @@ import {
 } from 'jsr:@std/assert@^1.0.0';
 import { generateClientEntry } from '../src/entry-generators.ts';
 import { buildPlugin } from '../src/build.ts';
-import { LessBuildContext } from '../src/build-context.ts';
+import { OpenElementBuildContext } from '../src/build-context.ts';
 
 /**
  * Call a Vite ObjectHook that may be a plain function or { handler, order? }.
@@ -96,7 +96,7 @@ Deno.test('build - generateClientEntry', async (t) => {
     assertFalse(code.includes("if (!customElements.get('my-counter'))"));
   });
 
-  await t.step('includes LessJS Client Entry comment', () => {
+  await t.step('includes openElement Client Entry comment', () => {
     const islands = [
       {
         tagName: 'my-counter',
@@ -105,7 +105,7 @@ Deno.test('build - generateClientEntry', async (t) => {
       },
     ];
     const code = generateClientEntry(islands);
-    assertStringIncludes(code, 'LessJS Client Entry');
+    assertStringIncludes(code, 'openElement Client Entry');
   });
 
   await t.step('no legacy SSR client imports (v0.5.0 CE-native upgrade)', () => {
@@ -133,14 +133,14 @@ Deno.test('build - generateClientEntry', async (t) => {
     ];
     const code = generateClientEntry(islands);
     assertStringIncludes(code, 'requestIdleCallback');
-    assertStringIncludes(code, 'less:ready');
+    assertStringIncludes(code, 'open:ready');
     assertStringIncludes(code, 'function __load');
   });
 });
 
 // --- buildPlugin tests --------------------------------------------------------
-// ADR 0011: closeBundle writes metadata to ctx fields, not .less/build-metadata.json.
-// Tests create a real LessBuildContext and verify fields after closeBundle().
+// ADR 0011: closeBundle writes metadata to ctx fields, not .openElement/build-metadata.json.
+// Tests create a real OpenElementBuildContext and verify fields after closeBundle().
 // NOTE: Phase 2/3 (buildClient, buildSSG) require a real Vite project with
 // routes/islands - they are tested in ssg-smoke.test.ts instead.
 
@@ -151,7 +151,7 @@ Deno.test('buildPlugin - configResolved', () => {
   // If we reach here without error, the hook ran.
   // We can't directly inspect `base` (it's closed over), but closeBundle will use it.
   assertEquals(typeof plugin.name, 'string');
-  assertEquals(plugin.name, 'less:build');
+  assertEquals(plugin.name, 'open:build');
 });
 
 Deno.test({
@@ -162,7 +162,7 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn(t) {
-    const ctx = new LessBuildContext({});
+    const ctx = new OpenElementBuildContext({});
     const plugin = buildPlugin({}, ctx);
     const config = makeConfig('build');
     callHook(plugin.configResolved, config);
@@ -195,7 +195,7 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn(t) {
-    const ctx = new LessBuildContext({});
+    const ctx = new OpenElementBuildContext({});
     const plugin = buildPlugin({}, ctx);
     const config = makeConfig('serve'); // dev mode
     callHook(plugin.configResolved, config);
@@ -216,7 +216,7 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn(t) {
-    const ctx = new LessBuildContext({});
+    const ctx = new OpenElementBuildContext({});
     const options = {
       build: { outDir: 'custom-dist' },
       islandsDir: 'src/islands',
@@ -252,7 +252,7 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn(t) {
-    const ctx = new LessBuildContext({});
+    const ctx = new OpenElementBuildContext({});
     const options = {
       ssr: { noExternal: [/@openelement\/.*/, 'lit'] },
     };
@@ -282,7 +282,7 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   async fn(t) {
-    const ctx = new LessBuildContext({});
+    const ctx = new OpenElementBuildContext({});
     const plugin = buildPlugin({}, ctx);
     const config = makeConfig('build', '/base'); // no trailing slash
     callHook(plugin.configResolved, config);

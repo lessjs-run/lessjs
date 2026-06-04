@@ -22,4 +22,4 @@ order: 100
           <div class='metric'><span class='label'>路由切换 (SPA)</span><span class='value'>~0ms（无整页重载）</span></div>
 
           <h2>包体积</h2>
-          <p>LessJS 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
+          <p>openElement 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>

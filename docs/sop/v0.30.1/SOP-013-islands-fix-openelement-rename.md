@@ -2,10 +2,10 @@
 
 > Version: v0.30.1
 > Date: 2026-06-04
-> Status: In Progress
+> Status: Local Gate Passed; Remote CI Pending
 > ADR: `docs/adr/ADR-0081-vnode-event-unification.md`
 > Output: openElement rename closure, VNode-only dynamic island UI, trusted HTML
-> boundary, stale-route cleanup, and gate-proven architecture hygiene.
+> boundary, current-doc cleanup, and gate-proven architecture hygiene.
 
 ## Summary
 
@@ -27,23 +27,23 @@ files:
 - tracked files: 961
 - text files: 921
 - tracked bytes read: 12,471,185
-- `@lessjs`: 0 matches
-- `LessJS`: 1,909 matches, mostly historical/current docs and public copy
-- `lessjs` domains: 42 matches
+- `@openElement`: 0 matches
+- `openElement`: 1,909 matches, mostly current docs and public copy
+- `openElement` domains: 42 matches
 - `virtual:less`: 515 matches, mostly historical/generated content
 - `@openelement/ui/less-*`: 102 matches
-- `<less-*>`: 89 matches
+- `<open-*>`: 89 matches
 - `data-on-*`: 84 matches
 - `data-signal-html`: 60 matches
 - `innerHTML`: 350 matches
 - `rawHtml`: 27 matches
-- mojibake/replacement text: 11,450 matches
+- mojibake/replacement text: 11,450 matches across historical archives and
+  damaged current docs
 - `as unknown as`: 191 matches
 
-`deno task arch:check` currently fails and is part of the work, not an optional
-follow-up. The first failure set includes stale type-escape allowlist entries,
-mojibake in active source, and gate drift after `less-*` files were renamed to
-`open-*`.
+The first cleanup pass made `deno task arch:check` pass. The remaining work is
+to keep that gate green while updating current docs, website content, and release
+metadata.
 
 ## Workstreams
 
@@ -55,7 +55,7 @@ mojibake in active source, and gate drift after `less-*` files were renamed to
 
 ### 2. Finish the `@openelement` and `open-*` rename
 
-- Replace active root import-map entries such as
+- Replace active root import-map entries and package exports such as
   `@openelement/ui/less-button` with `@openelement/ui/open-button`.
 - Update package exports, generated entry references, consumer smoke helpers,
   docs examples, and website imports to the same `open-*` subpaths.
@@ -65,7 +65,7 @@ mojibake in active source, and gate drift after `less-*` files were renamed to
 
 ### 3. Make dynamic island UI VNode-only
 
-- Do not restore `_bindEvents()`.
+- Do not restore `_bindSsrProps()`.
 - Keep `data-signal-render` as an internal hydration marker while documenting
   the public model as "signals return VNodes".
 - Rewrite framework-authored interactive dynamic content from HTML strings to
@@ -89,11 +89,11 @@ mojibake in active source, and gate drift after `less-*` files were renamed to
 ### 5. Repair architecture gates
 
 - Update `tools/check-architecture-contract.ts` after the rename:
-  `less-code-block.tsx` allowlist entries become `open-code-block.tsx`.
+  stale `less-*` allowlist entries become explicit `open-*` checks.
 - Add active-source checks for:
   - stale `@openelement/ui/less-*` imports;
-  - active `<less-*>` tags;
-  - `_bindEvents`;
+  - active `<open-*>` tags;
+  - `_bindSsrProps`;
   - `data-on-*` in production UI;
   - `data-signal-html` in islands;
   - island imports of `escapeHtml` or `escapeAttr`;
@@ -109,6 +109,9 @@ mojibake in active source, and gate drift after `less-*` files were renamed to
 - Update `docs/status/STATUS.md` so it reflects v0.30.1, not v0.28.x.
 - Update `README.md`, `README.zh.md`, `CONTRIBUTING.md`, and agent prompts to
   match the current openElement identity.
+- Remove or redirect stale current architecture docs that still claim LessJS
+  v0.27 is current. `docs/arch/current-architecture.md` is the single current
+  architecture source.
 - Keep older historical ADRs readable but do not spend this release rewriting
   every old archive solely for branding.
 
@@ -117,8 +120,8 @@ mojibake in active source, and gate drift after `less-*` files were renamed to
 - Bump all 19 packages to `0.30.1`.
 - Align internal `jsr:@openelement/*` ranges to `^0.30.1`.
 - Update `www/app/data/version.ts` and Hub constants.
-- Regenerate or explicitly restore deterministic lock state. The release must
-  not accidentally remove `deno.lock` without an intentional lock policy.
+- Regenerate Hub/site generated data after the rename so package URLs, registry
+  records, and version badges agree with v0.30.1.
 - Add `docs/changelog/v0.30.1.md` and `docs/release/v0.30.1.md`.
 
 ### 8. Verification and release closure
@@ -136,6 +139,7 @@ deno task dsd:check-report
 deno task publish:dry-run
 deno task graph:check
 deno task arch:check
+deno task test:e2e
 ```
 
 Then push `dev`, watch CI, fix failures until green, fast-forward/merge to
@@ -143,19 +147,19 @@ Then push `dev`, watch CI, fix failures until green, fast-forward/merge to
 
 ## Exit Criteria
 
-- [ ] `git ls-files opc-doc` is empty.
-- [ ] `deno task arch:check` passes with no stale allowlist entries.
-- [ ] root import map and package exports expose `open-*`, not `less-*`, UI
+- [x] `git ls-files opc-doc` is empty.
+- [x] `deno task arch:check` passes with no stale allowlist entries.
+- [x] root import map and package exports expose `open-*`, not `less-*`, UI
       subpaths.
-- [ ] active framework-authored UI has no `data-on-*`.
-- [ ] active islands have no `data-signal-html`.
-- [ ] active islands do not import `escapeHtml` or `escapeAttr`.
-- [ ] all reviewed `innerHTML` use is either renderer internals, devtools,
+- [x] active framework-authored UI has no `data-on-*`.
+- [x] active islands have no `data-signal-html`.
+- [x] active islands do not import `escapeHtml` or `escapeAttr`.
+- [x] all reviewed `innerHTML` use is either renderer internals, devtools,
       syntax highlighting, trusted content, or Hub snapshot display.
-- [ ] current docs and current source contain no mojibake/replacement text.
-- [ ] all 19 packages are versioned `0.30.1`.
-- [ ] changelog and release note for v0.30.1 exist.
-- [ ] local full gate passes.
+- [x] current docs and current source contain no mojibake/replacement text.
+- [x] all 19 packages are versioned `0.30.1`.
+- [x] changelog and release note for v0.30.1 exist.
+- [x] local full gate passes, including `deno task test:e2e`.
 - [ ] dev CI passes.
 - [ ] main CI passes after merge.
 

@@ -34,7 +34,7 @@ export class ApiPage extends DsdElement {
         <div class='container'>
           <h1>API Routes</h1>
           <p class='subtitle'>
-            LessJS 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，适合部署到
+            openElement 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，适合部署到
             serverless 或 edge runtime。
           </p>
           <h2>Design Principles</h2>
@@ -81,7 +81,7 @@ export class ApiPage extends DsdElement {
         <div class='container'>
           <h1>API Routes</h1>
           <p class='subtitle'>
-            LessJS's server layer is Hono. API routes use standard Request/Response semantics and
+            openElement's server layer is Hono. API routes use standard Request/Response semantics and
             are suitable for serverless or edge runtime deployment.
           </p>
           <h2>Design Principles</h2>
@@ -118,15 +118,15 @@ export default app;</code></pre>
           </open-code-block>
           <open-code-block>
             <pre><code>{'// app/routes/api/health.ts — simple endpoint, no Hono needed'}
-import type {'{'} LessApiContext {'}'} from '@openelement/core';
+import type {'{'} OpenElementApiContext {'}'} from '@openelement/core';
 
-export default function GET(ctx: LessApiContext) {'{'}
+export default function GET(ctx: OpenElementApiContext) {'{'}
   return Response.json({'{'} ok: true, mode: ctx.env.MODE ?? 'production' {'}'});
 {'}'}</code></pre>
           </open-code-block>
           <h2>Request Validation</h2>
           <p>
-            LessJS does not mandate a validation library. Zod with{' '}
+            openElement does not mandate a validation library. Zod with{' '}
             <span class='inline-code'>@hono/zod-validator</span> is a practical default.
           </p>
           <h2>Type-Safe RPC</h2>

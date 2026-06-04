@@ -1,6 +1,6 @@
 # @openelement/core
 
-Pure LessJS runtime package.
+Pure openElement runtime package.
 
 `@openelement/core` owns the platform-facing runtime primitives:
 
@@ -8,7 +8,7 @@ Pure LessJS runtime package.
 - **DsdElement** — zero-framework base class for DSD components
 - **static props** — ES2022 class fields for reactive properties
 - **DSD rendering** — `renderDsd()`, `renderDsdStream()`
-- **Unified errors** — LessError hierarchy, ErrorBoundary, telemetry
+- **Unified errors** — OpenElementError hierarchy, ErrorBoundary, telemetry
 - **Signal utilities** — `isSignalLike()`, `unwrapSignalLike()`
 - **Island metadata** — island detection, strategy, hydration
 - **Navigation** — SPA helpers
@@ -50,7 +50,7 @@ class MyButton extends DsdElement {
 
 ```ts
 import {
-  bindEvents,
+  bindSsrProps,
   defineIsland,
   DsdElement,
   ErrorBoundary,
@@ -58,7 +58,7 @@ import {
   getSsrProps,
   isSignalLike,
   isVNode,
-  LessError,
+  OpenElementError,
   renderDsd,
   renderDsdStream,
   renderToDom,

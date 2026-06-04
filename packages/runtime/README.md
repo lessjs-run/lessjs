@@ -1,12 +1,12 @@
 # @openelement/runtime
 
-Component authoring facade: the single import for writing LessJS components.
+Component authoring facade: the single import for writing openElement components.
 
 `@openelement/runtime` re-exports the complete authoring surface from the runtime
 kernel (`@openelement/core`), signals engine (`@openelement/signals`), and stylesheet
 abstraction (`@openelement/style-sheet`).
 
-**Use `@openelement/runtime` as your only import when writing LessJS components.**
+**Use `@openelement/runtime` as your only import when writing openElement components.**
 
 ## Install
 
@@ -44,7 +44,7 @@ customElements.define(tagName, MyButton);
 
 From `@openelement/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
 `renderDsdTree`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
-`ErrorBoundary`, `LessError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindEvents`, `getSsrProps`.
+`ErrorBoundary`, `OpenElementError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindSsrProps`, `getSsrProps`.
 
 From `@openelement/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.
 

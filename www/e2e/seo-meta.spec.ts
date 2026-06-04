@@ -19,7 +19,7 @@ test.describe('SEO Meta Tags', () => {
 
   test('has Open Graph site name', async ({ page }) => {
     const content = await page.locator('meta[property="og:site_name"]').getAttribute('content');
-    expect(content).toBe('LessJS');
+    expect(content).toBe('openElement');
   });
 
   test('has Open Graph type', async ({ page }) => {
@@ -29,7 +29,7 @@ test.describe('SEO Meta Tags', () => {
 
   test('has Open Graph title', async ({ page }) => {
     const content = await page.locator('meta[property="og:title"]').getAttribute('content');
-    expect(content).toContain('LessJS');
+    expect(content).toContain('openElement');
   });
 
   test('has Open Graph description', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('SEO Meta Tags', () => {
 
   test('has Open Graph URL', async ({ page }) => {
     const content = await page.locator('meta[property="og:url"]').getAttribute('content');
-    expect(content).toContain('lessjs.org');
+    expect(content).toContain('openelement.org');
   });
 
   test('has Open Graph image', async ({ page }) => {
@@ -57,7 +57,7 @@ test.describe('SEO Meta Tags', () => {
   test('has description meta tag', async ({ page }) => {
     const content = await page.locator('meta[name="description"]').getAttribute('content');
     expect(content).toBeTruthy();
-    expect(content).toContain('LessJS');
+    expect(content).toContain('openElement');
   });
 });
 
@@ -118,7 +118,7 @@ test.describe('Sitemap & Robots', () => {
     expect(response?.ok()).toBe(true);
 
     const content = await page.textContent('body');
-    expect(content).toContain('lessjs.org');
+    expect(content).toContain('openelement.org');
   });
 
   test('robots.txt is accessible', async ({ page }) => {

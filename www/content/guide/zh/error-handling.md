@@ -1,5 +1,5 @@
 ---
-title: '错误处理'
+title: 'Error Handling'
 section: 'Production'
 label: 'Error Handling'
 order: 30
@@ -10,30 +10,33 @@ locale=
 locales=
 navItems=
 headerNav=
-currentPath='/guide/error-handling'
+currentPath='/zh/guide/error-handling'
 
-    <h1>错误处理</h1>
+    <h1>Error Handling</h1>
     <p class='subtitle'>
-      LessJS 区分框架错误、构建时渲染错误、API 错误和浏览器 island
-      故障。目标是在不泄露生产环境内部信息的前提下实现清晰诊断。
+      openElement distinguishes between framework errors, build-time render errors, API errors, and
+      browser island failures. The goal is clear diagnostics without leaking internal
+      information in production.
     </p>
     <h2>Error Hierarchy</h2>
     <div class='error-hierarchy'>
-      LessError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |--
+      OpenElementError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |--
       ValidationError 422 |-- ConflictError 409 |-- RateLimitError 429 |-- SsrRenderError 500
       |-- IslandUpgradeError 500
     </div>
     <h2>Operational vs Programming</h2>
     <p>
-      LessJS 区分操作错误（not found, validation, rate limit -
-      返回结构化状态）和编程错误（render failure, broken import - 构建时失败或开发诊断）。
+      openElement distinguishes operational errors (not found, validation, rate limit - return
+      structured status) from programming errors (render failure, broken import - fail build
+      or show dev diagnostics).
     </p>
     <h2>Structured Logging</h2>
     <p>
-      LessJS 使用 createLogger(scope) 提供带 scope 的分级日志，包括 DEBUG、INFO、WARN、ERROR
-      级别。
+      openElement uses <span class='inline-code'>createLogger(scope)</span> 
+      for scoped log levels (DEBUG, INFO, WARN, ERROR). Each message carries a prefix
+      identifying its source - e.g. <span class='inline-code'>[openElement/SSG]</span>.
     </p>
     <div class='nav-row'>
-      <a href='/guide/security-middleware' class='nav-link'>← 安全与 Middleware</a>
+      <a href='/guide/security-middleware' class='nav-link'>← Security &amp; Middleware</a>
       <a href='/guide/testing' class='nav-link'>Testing →</a>
     </div>

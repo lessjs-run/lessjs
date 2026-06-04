@@ -31,7 +31,7 @@ Deno.test('buildPackageRecord: produces valid record', async () => {
     version: '2.0.0',
     source: 'npm',
     compatibility: 'ssr-capable',
-    compatibilityJustification: 'Has LessJS SSR metadata.',
+    compatibilityJustification: 'Has openElement SSR metadata.',
     tags: sampleTags,
     validationReport: JSON.stringify({ packageName: '@example/my-package', valid: true }),
     dsdReport: JSON.stringify({ totalPages: 1, dsdComponents: 2 }),
@@ -53,7 +53,7 @@ Deno.test('buildPackageRecord: produces valid record', async () => {
   assertEquals(record.reports.dsd, opts.dsdReport);
   assertEquals(record.installGuidance.safeToInstall, true);
   assertEquals(record.installGuidance.ssrCapable, true);
-  assertEquals(record.installGuidance.command, 'less add @example/my-package');
+  assertEquals(record.installGuidance.command, 'open add @example/my-package');
   assertEquals(record.submittedBy, 'testuser');
   assertEquals(record.validatorVersion, '0.19.0');
   // manifestHash should be empty when no manifestContent provided
@@ -186,5 +186,5 @@ Deno.test('buildInstallGuidance: rejected not safe to install', () => {
 
 Deno.test('buildInstallGuidance: scoped package correct command', () => {
   const guidance = buildInstallGuidance('ssr-capable', sampleTags, 'my-pkg', '@scope');
-  assertEquals(guidance.command, 'less add @scope/my-pkg');
+  assertEquals(guidance.command, 'open add @scope/my-pkg');
 });

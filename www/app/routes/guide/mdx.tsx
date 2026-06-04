@@ -51,7 +51,7 @@ title: Counter demo
 
 # Counter
 
-<less-counter client:idle count={1} />`}
+<open-counter client:idle count={1} />`}
           </open-code-block>
         </section>
       </article>

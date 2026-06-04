@@ -1,12 +1,12 @@
-# Contributing to LessJS
+# Contributing to openElement
 
 Thanks for your interest in contributing! Here's how to get started.
 
 ## Development Setup
 
 ```bash
-git clone https://github.com/open-element/open-element.git
-cd lessjs
+git clone https://github.com/open-element/openelement.git
+cd openElement
 deno task dev      # Start dev server at localhost:5173
 deno task build    # Production build (3-phase SSG)
 deno task test     # Run all tests
@@ -19,14 +19,14 @@ packages/
   core/           # Pure runtime - DSD rendering, Islands, Navigation
   adapter-vite/   # Vite plugin + SSG build pipeline
   adapter-lit/    # Lit -> DSD adapter
-  app/            # Umbrella package: lessjs() = less() + content + i18n
+  app/            # Umbrella package: openElement() = createOpenPlugin() + content + i18n
   content/        # Blog + Navigation + Sitemap
   i18n/           # Internationalization
   ui/             # Web Components + design tokens
   signals/        # TC39 Signals polyfill
   rpc/            # Fetch-based RPC controller
   create/         # Scaffolding CLI
-www/              # lessjs.run website
+www/              # openelement.org website
 ```
 
 ## Before Submitting a PR
@@ -42,7 +42,7 @@ www/              # lessjs.run website
 - TypeScript with Deno
 - Single quotes, semicolons, 2-space indent
 - Use `createLogger()` for logging (not console.log)
-- Use `LessError` subclasses for errors (not generic Error)
+- Use `OpenElementError` subclasses for errors (not generic Error)
 - Reference ADR numbers in comments for architectural decisions
 
 ## Release Process

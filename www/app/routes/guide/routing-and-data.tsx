@@ -29,7 +29,7 @@ function RoutingDataZh() {
     <>
       <h1>路由与数据</h1>
       <p class='subtitle'>
-        LessJS 使用文件系统路由。文件即 URL、动态片段、特殊文件和构建时数据注入。
+        openElement 使用文件系统路由。文件即 URL、动态片段、特殊文件和构建时数据注入。
       </p>
 
       <h2>文件系统路由</h2>
@@ -92,7 +92,7 @@ customElements.define('page-post', PostPage);`}</code></pre></open-code-block>
       </table>
 
       <h2>构建时数据注入 (SSG)</h2>
-      <p>LessJS 的默认生产产物是静态 HTML。构建过程分三个阶段：</p>
+      <p>openElement 的默认生产产物是静态 HTML。构建过程分三个阶段：</p>
       <table>
         <thead><tr><th>阶段</th><th>输入</th><th>输出</th></tr></thead>
         <tbody>
@@ -159,7 +159,7 @@ function RoutingDataEn() {
     <>
       <h1>Routing &amp; Data</h1>
       <p class='subtitle'>
-        LessJS uses filesystem routing. Files map to URLs, with dynamic segments, special files,
+        openElement uses filesystem routing. Files map to URLs, with dynamic segments, special files,
         and build-time data injection.
       </p>
 
@@ -224,7 +224,7 @@ customElements.define('page-post', PostPage);`}</code></pre></open-code-block>
       </table>
 
       <h2>Build-time Data Injection (SSG)</h2>
-      <p>LessJS's default production output is static HTML. The build process has three phases:</p>
+      <p>openElement's default production output is static HTML. The build process has three phases:</p>
       <table>
         <thead><tr><th>Phase</th><th>Input</th><th>Output</th></tr></thead>
         <tbody>

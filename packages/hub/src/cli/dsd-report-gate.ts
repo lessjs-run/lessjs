@@ -10,8 +10,8 @@
  * 2. Unknown error types fail the gate by default.
  *
  * Override thresholds only for investigation:
- * - LESSJS_DSD_MAX_NON_RECOVERABLE=<number>
- * - LESSJS_DSD_MAX_UNKNOWN_ERROR_TYPES=<number>
+ * - openElement_DSD_MAX_NON_RECOVERABLE=<number>
+ * - openElement_DSD_MAX_UNKNOWN_ERROR_TYPES=<number>
  */
 
 export interface RenderError {
@@ -62,14 +62,14 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
   },
   {
     pattern: /React SSR rendering failed/,
-    description: 'adapter-react SSR boundary — React islands render client-only',
+    description: 'adapter-react SSR boundary - React islands render client-only',
   },
 ];
 
-// v0.28.4: Native LessJS/page/demo components must have zero non-recoverable
+// v0.28.4: Native openElement/page/demo components must have zero non-recoverable
 // render errors by default. Third-party errors are classified separately for
 // diagnostics, not used as implicit native tolerance.
-export const NATIVE_TAG_PREFIXES = ['less-', 'page-', 'demo-'];
+export const NATIVE_TAG_PREFIXES = ['open-', 'page-', 'demo-'];
 export const DEFAULT_MAX_NON_RECOVERABLE = 0;
 export const DEFAULT_MAX_UNKNOWN_ERROR_TYPES = 0;
 
@@ -109,7 +109,7 @@ export function evaluateDsdReportGate(
   const nonRecoverable = allErrors.filter((e) => !e.recoverable);
   const recoverable = allErrors.filter((e) => e.recoverable);
 
-  // Split by component origin: native (less-*, page-*, demo-*) vs third-party
+  // Split by component origin: native (open-*, page-*, demo-*) vs third-party
   const isNative = (tag: string | undefined) =>
     !tag || NATIVE_TAG_PREFIXES.some((p) => tag.startsWith(p));
   const nativeNonRecoverable = nonRecoverable.filter((e) => isNative(e.tagName));
@@ -186,11 +186,11 @@ function main() {
   try {
     gate = evaluateDsdReportGate(report, {
       maxNonRecoverable: readThreshold(
-        'LESSJS_DSD_MAX_NON_RECOVERABLE',
+        'openElement_DSD_MAX_NON_RECOVERABLE',
         DEFAULT_MAX_NON_RECOVERABLE,
       ),
       maxUnknownErrorTypes: readThreshold(
-        'LESSJS_DSD_MAX_UNKNOWN_ERROR_TYPES',
+        'openElement_DSD_MAX_UNKNOWN_ERROR_TYPES',
         DEFAULT_MAX_UNKNOWN_ERROR_TYPES,
       ),
     });

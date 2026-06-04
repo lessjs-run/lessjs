@@ -35,7 +35,7 @@ Deno.test('buildEntryDescriptor: default options produce correct structure', () 
   assertEquals(desc.middleware.length, 4); // requestId, logger, cors, securityHeaders
   assertEquals(desc.debugRoutes?.length, 3); // all 3 non-special routes
   assertEquals(desc.document.lang, 'en');
-  assertEquals(desc.document.title, 'LessJS');
+  assertEquals(desc.document.title, 'openElement');
   assertEquals(desc.document.headExtras, '');
 });
 

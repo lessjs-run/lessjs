@@ -79,7 +79,7 @@ export function wrapInDocument(
   } = {},
 ): string {
   const {
-    title = 'LessJS',
+    title = 'openElement',
     lang = 'en',
     clientScript = '',
     meta,

@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run -A
 /**
- * @openelement/hub - `less add` CLI
+ * @openelement/hub - `open add` CLI
  *
- * v0.19.0: One-command package installation for LessJS projects.
+ * v0.19.0: One-command package installation for openElement projects.
  *
  * Usage:
- *   deno run -A packages/hub/src/cli/less-install-guide.ts <package-name> [options]
+ *   deno run -A packages/hub/src/cli/install-guide.ts <package-name> [options]
  *
  * Options:
  *   --apply      Actually update project config (default: dry-run)
@@ -85,7 +85,7 @@ function parseArgs(args: string[]): LessAddOptions {
 
   if (!opts.packageSpec) {
     error('Package name is required.');
-    error('Usage: less add <package-name> [--apply] [--source jsr|npm|local]');
+    error('Usage: open add <package-name> [--apply] [--source jsr|npm|local]');
     Deno.exit(1);
   }
 
@@ -94,9 +94,9 @@ function parseArgs(args: string[]): LessAddOptions {
 
 function printHelp() {
   log(`
-less add <package-name> [options]
+open add <package-name> [options]
 
-Add a Web Component package to your LessJS project.
+Add a Web Component package to your openElement project.
 
 Options:
   --apply              Actually update project config (default: dry-run)
@@ -106,9 +106,9 @@ Options:
   --help, -h           Show this help
 
 Examples:
-  less add @shoelace-style/shoelace
-  less add @shoelace-style/shoelace --apply
-  less add @openelement/ui --source jsr
+  open add @shoelace-style/shoelace
+  open add @shoelace-style/shoelace --apply
+  open add @openelement/ui --source jsr
 `);
 }
 
@@ -331,7 +331,7 @@ async function classifyCompatibility(
   // Default: client-only
   return {
     tier: 'client-only',
-    justification: 'No LessJS SSR metadata detected. Client-only by default.',
+    justification: 'No openElement SSR metadata detected. Client-only by default.',
     tags,
   };
 }
@@ -409,7 +409,7 @@ function printSummary(
 
   // Usage example
   log('');
-  log('  To use in a LessJS route:');
+  log('  To use in a openElement route:');
   if (pkg.source === 'npm') {
     log(`    import '${fullName}';`);
   } else if (pkg.source === 'jsr') {
@@ -451,7 +451,7 @@ async function applyToConfig(
     configText = await Deno.readTextFile(configPath);
   } catch {
     error(`No deno.json found at ${configPath}`);
-    error('Run this command from your LessJS project root.');
+    error('Run this command from your openElement project root.');
     return false;
   }
 
@@ -503,7 +503,7 @@ async function applyToConfig(
   log(`    1. Import in your route:  import '${fullName}';`);
   if (tier === 'client-only') {
     log('    2. This is a client-only component - avoid SSR import.');
-    log('       Use <less-client-only> wrapper or client:only directive.');
+    log('       Use <open-client-only> wrapper or client:only directive.');
   } else {
     log('    2. Use the component in your template.');
   }

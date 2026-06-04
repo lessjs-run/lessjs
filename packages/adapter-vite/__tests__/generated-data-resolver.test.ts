@@ -31,8 +31,8 @@ Deno.test('generatedDataPath keeps generated data location consumer-configurable
   const normalized = (path: string | null) => path?.replaceAll('\\', '/');
 
   assert(
-    normalized(generatedDataPath('/site', GENERATED_NAV_ID, '.less/generated'))?.endsWith(
-      '/site/.less/generated/_generated-nav.ts',
+    normalized(generatedDataPath('/site', GENERATED_NAV_ID, '.openElement/generated'))?.endsWith(
+      '/site/.openElement/generated/_generated-nav.ts',
     ),
   );
 });
@@ -43,7 +43,7 @@ Deno.test('generated data resolver resolves only @openelement/generated namespac
 
   assertEquals(resolveId(GENERATED_NAV_ID), '\0open:generated-data:@openelement/generated/nav');
   assertEquals(resolveId('@openelement/content/' + 'nav'), null);
-  assertEquals(resolveId('virtual:less-' + 'nav'), null);
+  assertEquals(resolveId('virtual:open-' + 'nav'), null);
 });
 
 Deno.test('generated data resolver provides fallback modules before first generation', () => {

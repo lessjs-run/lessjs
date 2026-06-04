@@ -14,7 +14,7 @@ import {
 
 import { assert, assertEquals, assertExists } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 
-// 鈹€鈹€鈹€ Test Fixtures 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 const SSR_CAPABLE_CEM = JSON.stringify({
   schemaVersion: '1.0.0',
@@ -30,7 +30,7 @@ const SSR_CAPABLE_CEM = JSON.stringify({
           tagName: 'ssr-capable-element',
           className: 'MyElement',
           superClass: { name: 'LitElement' },
-          less: { ssr: true, dsd: true, hydrate: 'load' },
+          openElement: { ssr: true, dsd: true, hydrate: 'load' },
         },
       ],
       exports: [
@@ -56,7 +56,7 @@ const CLIENT_ONLY_CEM = JSON.stringify({
           kind: 'custom-element',
           tagName: 'client-only-element',
           className: 'ClientOnlyElement',
-          // No less.ssr declaration
+          // No openElement.ssr declaration
         },
       ],
     },
@@ -112,7 +112,7 @@ const INVALID_CEM_DUPLICATE_TAG = JSON.stringify({
   ],
 });
 
-// 鈹€鈹€鈹€ Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('CEM Parser: parse valid SSR-capable manifest', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -193,9 +193,9 @@ Deno.test('CEM Parser: preserve unknown fields', () => {
   assertEquals(manifest.anotherField.nested, true);
 });
 
-// 鈹€鈹€鈹€ Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
-Deno.test('Classify: SSR-capable with less.ssr = true', () => {
+Deno.test('Classify: SSR-capable with openElement.ssr = true', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
   const classifications = classifyCemManifest(result.manifest!);
 
@@ -260,9 +260,9 @@ Deno.test('Classify: conservative defaults applied', () => {
   assertEquals(classifications[0].hydrate, 'idle'); // default
 });
 
-// 鈹€鈹€鈹€ Extract Less Declarations Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
-Deno.test('Extract: convert CEM to LessDeclaration', () => {
+Deno.test('Extract: convert CEM to OpenElementDeclaration', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
   const declarations = extractLessDeclarations(result.manifest!);
 
@@ -270,8 +270,8 @@ Deno.test('Extract: convert CEM to LessDeclaration', () => {
   assertEquals(declarations[0].tagName, 'ssr-capable-element');
   assertEquals(declarations[0].className, 'MyElement');
   assertEquals(declarations[0].superclassName, 'LitElement');
-  assertExists(declarations[0].less);
-  assertEquals(declarations[0].less!.ssr, true);
+  assertExists(declarations[0].openElement);
+  assertEquals(declarations[0].openElement!.ssr, true);
 });
 
 Deno.test('Extract: preserve attributes from CEM', () => {
@@ -303,7 +303,7 @@ Deno.test('Extract: preserve attributes from CEM', () => {
   assertEquals(declarations[0].attributes![0].type, 'string');
 });
 
-// 鈹€鈹€鈹€ Find Module Path Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('Find module path for tag name', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -319,7 +319,7 @@ Deno.test('Find module path: return undefined for unknown tag', () => {
   assertEquals(modulePath, undefined);
 });
 
-// 鈹€鈹€鈹€ Validate Module Paths Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('Validate module paths: accept valid relative paths', () => {
   const json = JSON.stringify({
@@ -364,7 +364,7 @@ Deno.test('Validate module paths: reject absolute paths', () => {
   assert(errors.some((e) => e.code === 'CEM_INVALID_MODULE_PATH'));
 });
 
-// 鈹€鈹€鈹€ Integration Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('Integration: full parse -> classify -> extract flow', () => {
   // 1. Parse
@@ -394,8 +394,8 @@ Deno.test('Integration: client-only package gets conservative treatment', () => 
   assertEquals(classifications[0].tier, 'client-only');
 
   // Should have conservative defaults
-  const less = classifications[0];
-  assertEquals(less.ssr, false);
-  assertEquals(less.dsd, false);
-  assertEquals(less.hydrate, 'idle');
+  const classification = classifications[0];
+  assertEquals(classification.ssr, false);
+  assertEquals(classification.dsd, false);
+  assertEquals(classification.hydrate, 'idle');
 });

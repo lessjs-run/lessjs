@@ -58,7 +58,7 @@ const withSpecialRoutes: RouteEntry[] = [
   },
 ];
 
-// 鈹€鈹€鈹€ CSP Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('renderEntry: CSP without nonce generates header middleware', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -128,7 +128,7 @@ Deno.test('buildEntryDescriptor: CSP config is serialized into descriptor', () =
   assertEquals(cspMw.config?.csp?.nonce, true);
 });
 
-// 鈹€鈹€鈹€ Renderer / Middleware Special Routes 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('renderEntry: _renderer.ts generates wrap call', () => {
   const desc = buildEntryDescriptor(withSpecialRoutes);
@@ -207,14 +207,14 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
         version: '0.17.0',
         declarations: [
           {
-            tagName: 'less-layout',
-            className: 'LessLayout',
-            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
+            tagName: 'open-layout',
+            className: 'OpenLayout',
+            openElement: { module: '@openelement/ui/open-layout', hydrate: 'load' },
           },
           {
-            tagName: 'less-button',
-            className: 'LessButton',
-            less: { module: '@openelement/ui/less-button', hydrate: 'idle' },
+            tagName: 'open-button',
+            className: 'OpenButton',
+            openElement: { module: '@openelement/ui/open-button', hydrate: 'idle' },
           },
         ],
       },
@@ -222,8 +222,8 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
   });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, 'less-layout');
-  assertStringIncludes(code, 'less-button');
+  assertStringIncludes(code, 'open-layout');
+  assertStringIncludes(code, 'open-button');
   assertStringIncludes(code, '@openelement/ui');
 });
 
@@ -236,14 +236,14 @@ Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
         version: '0.17.0',
         declarations: [
           {
-            tagName: 'less-layout',
-            className: 'LessLayout',
-            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
+            tagName: 'open-layout',
+            className: 'OpenLayout',
+            openElement: { module: '@openelement/ui/open-layout', hydrate: 'load' },
           },
           {
-            tagName: 'less-button',
-            className: 'LessButton',
-            less: { module: '@openelement/ui/less-button', hydrate: 'idle' },
+            tagName: 'open-button',
+            className: 'OpenButton',
+            openElement: { module: '@openelement/ui/open-button', hydrate: 'idle' },
           },
         ],
       },
@@ -251,10 +251,10 @@ Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
   });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, '"less-layout":"@openelement/ui/less-layout"');
-  assertFalse(code.includes("import * as __island_kiss_layout from '@openelement/ui/less-layout'"));
+  assertStringIncludes(code, '"open-layout":"@openelement/ui/open-layout"');
+  assertFalse(code.includes("import * as __island_kiss_layout from '@openelement/ui/open-layout'"));
   assertFalse(code.includes('__kiss_get_default_export'));
-  assertFalse(code.includes("customElements.define('less-layout'"));
+  assertFalse(code.includes("customElements.define('open-layout'"));
   assertFalse(code.includes('__island_kiss_layout.default'));
   assertFalse(code.includes('__island_kiss_button.default'));
 });
@@ -309,8 +309,8 @@ Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', (
   const code = renderEntry(desc);
 
   assertStringIncludes(code, 'async function __renderAppShell(routeNode, routePath');
-  assertStringIncludes(code, '"tagName": "less-layout"');
-  assertStringIncludes(code, "import '@openelement/ui/less-layout';");
+  assertStringIncludes(code, '"tagName": "open-layout"');
+  assertStringIncludes(code, "import '@openelement/ui/open-layout';");
   assertStringIncludes(code, 'renderDsd(shell.tagName, { props: layoutProps })');
   assertStringIncludes(code, 'layoutResult.html.slice(0, index) + pageHtml');
 });
@@ -319,7 +319,7 @@ Deno.test('renderEntry: appShell false renders route content without default lay
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true, appShell: false });
   const code = renderEntry(desc);
 
-  assertFalse(code.includes("import '@openelement/ui/less-layout';"));
+  assertFalse(code.includes("import '@openelement/ui/open-layout';"));
   assertStringIncludes(code, '"default": false');
   assertStringIncludes(code, 'if (!shell) return pageHtml;');
 });
@@ -387,7 +387,7 @@ Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 
-// 鈹€鈹€鈹€ Integration: Full Pipeline 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('generateHonoEntryCode: CSP flows through full pipeline', () => {
   const code = generateHonoEntryCode(basicRoutes, {
@@ -421,14 +421,14 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
         version: '0.17.0',
         declarations: [
           {
-            tagName: 'less-layout',
-            className: 'LessLayout',
-            less: { module: '@openelement/ui/less-layout', hydrate: 'load' },
+            tagName: 'open-layout',
+            className: 'OpenLayout',
+            openElement: { module: '@openelement/ui/open-layout', hydrate: 'load' },
           },
         ],
       },
     ],
-    html: { lang: 'zh-CN', title: 'LessJS 鏂囨。' },
+    html: { lang: 'zh-CN', title: 'openElement 鏂囨。' },
     headExtras: '<link rel="stylesheet" href="/styles.css" />',
     upgradeStrategy: 'idle',
   });
@@ -439,16 +439,16 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
   assertStringIncludes(code, '"https://example.com"');
   assertStringIncludes(code, '_renderer');
   assertStringIncludes(code, '_middleware');
-  assertStringIncludes(code, 'less-layout');
+  assertStringIncludes(code, 'open-layout');
   assertStringIncludes(code, 'lang: "zh-CN"');
-  assertStringIncludes(code, 'LessJS 鏂囨。');
+  assertStringIncludes(code, 'openElement 鏂囨。');
   assertStringIncludes(code, '/styles.css');
   // No process.env
   const codeLines = code.split('\n').filter((l) => !l.trimStart().startsWith('//'));
   assertFalse(codeLines.some((l) => l.includes('process.env')));
 });
 
-// 鈹€鈹€鈹€ Additional Branch Coverage 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('renderEntry: CSP nonce with existing script-src in policy', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -563,7 +563,7 @@ Deno.test('renderEntry: SSG mode disabled by default', () => {
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 
-// 鈹€鈹€鈹€ SSR Filtering (v0.17.2) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// Section
 
 Deno.test('renderEntry: local island with ssr===true is registered in SSR', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -607,14 +607,14 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
         version: '0.17.0',
         declarations: [
           {
-            tagName: 'less-layout',
-            className: 'LessLayout',
-            less: { module: '@openelement/ui/less-layout', hydrate: 'load', ssr: true },
+            tagName: 'open-layout',
+            className: 'OpenLayout',
+            openElement: { module: '@openelement/ui/open-layout', hydrate: 'load', ssr: true },
           },
           {
-            tagName: 'less-widget',
-            className: 'LessWidget',
-            less: { module: '@openelement/ui/less-widget', hydrate: 'idle', ssr: false },
+            tagName: 'open-widget',
+            className: 'OpenWidget',
+            openElement: { module: '@openelement/ui/open-widget', hydrate: 'idle', ssr: false },
           },
         ],
       },
@@ -623,12 +623,12 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
   const code = renderEntry(desc);
 
   // v0.17.4: Package islands with ssr:true are now SSR-registered
-  assertStringIncludes(code, "customElements.define('less-layout'");
+  assertStringIncludes(code, "customElements.define('open-layout'");
   // Package islands with ssr:false remain client-only
-  assertFalse(code.includes("customElements.define('less-widget'"));
+  assertFalse(code.includes("customElements.define('open-widget'"));
   // But both should be in the island map
-  assertStringIncludes(code, '"less-layout":"@openelement/ui/less-layout"');
-  assertStringIncludes(code, '"less-widget":"@openelement/ui/less-widget"');
+  assertStringIncludes(code, '"open-layout":"@openelement/ui/open-layout"');
+  assertStringIncludes(code, '"open-widget":"@openelement/ui/open-widget"');
 });
 
 Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declarations', () => {
@@ -642,17 +642,17 @@ Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declaratio
           {
             tagName: 'ssr-component',
             className: 'SsrComponent',
-            less: { module: '@openelement/ui/ssr-component', ssr: true },
+            openElement: { module: '@openelement/ui/ssr-component', ssr: true },
           },
           {
             tagName: 'client-only-component',
             className: 'ClientOnlyComponent',
-            less: { module: '@openelement/ui/client-only-component', ssr: false },
+            openElement: { module: '@openelement/ui/client-only-component', ssr: false },
           },
           {
             tagName: 'default-component',
             className: 'DefaultComponent',
-            less: { module: '@openelement/ui/default-component' },
+            openElement: { module: '@openelement/ui/default-component' },
           },
         ],
       },

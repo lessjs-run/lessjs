@@ -101,7 +101,7 @@ function parseArgs(args: string[]): CliFlags {
 
 function printHelp() {
   console.info(`
-less hub submit - Submit a package to the LessJS Registry Hub
+less hub submit - Submit a package to the openElement Registry Hub
 
 USAGE:
   less hub submit [options]
@@ -258,7 +258,7 @@ async function main() {
       if (cemTags.length > 0) {
         compatibility = 'client-only';
         compatibilityJustification =
-          `${cemTags.length} tag(s) found in CEM. No LessJS SSR metadata; default client-only.`;
+          `${cemTags.length} tag(s) found in CEM. No openElement SSR metadata; default client-only.`;
       }
 
       if (flags.verbose) {

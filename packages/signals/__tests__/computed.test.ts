@@ -29,8 +29,8 @@ Deno.test('computed() - basic', async (t) => {
     const name = signal('world');
     const greeting = computed(() => `hello ${name.value}`);
     assertEquals(greeting.value, 'hello world');
-    name.value = 'LessJS';
-    assertEquals(greeting.value, 'hello LessJS');
+    name.value = 'openElement';
+    assertEquals(greeting.value, 'hello openElement');
   });
 
   await t.step('computed value is read-only', () => {
