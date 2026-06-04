@@ -6,11 +6,17 @@
  * are imported from @lessjs/core where they are canonically defined.
  */
 
-import type { CompatibilityTier, ComponentLayer, HydrationStrategy } from '@lessjs/core';
+import type {
+  CompatibilityClassification,
+  CompatibilityTier,
+  ComponentLayer,
+  HydrationStrategy,
+} from '@lessjs/core';
 
 // ─── Re-exports from @lessjs/core ────────────────────────────────────
 
 export type {
+  CompatibilityClassification,
   CompatibilityTier,
   ComponentLayer,
   HydrationStrategy,
@@ -25,27 +31,7 @@ export type {
   ValidationWarning,
 } from '@lessjs/core';
 
-// ─── Compatibility Tiers ─────────────────────────────────────────────
-
-/** Compatibility classification result */
-export interface CompatibilityClassification {
-  /** Tag name */
-  tagName: string;
-  /** Assigned tier */
-  tier: CompatibilityTier;
-  /** Reason for the classification */
-  reason: string;
-  /** Source of the declaration */
-  source: 'local' | 'package' | 'nested';
-  /** Module path */
-  modulePath?: string;
-  /** Whether SSR is supported */
-  ssr?: boolean;
-  /** Whether DSD is supported */
-  dsd?: boolean;
-  /** Hydration strategy */
-  hydrate?: string;
-}
+// ─── CEM compatibility report ──────────────────────────────────────────
 
 /**
  * CEM compatibility report section in dsd-report.json.

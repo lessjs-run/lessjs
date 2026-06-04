@@ -24,10 +24,11 @@ export {
   getClassificationSummary,
   isKnownSsrAdapter,
   isKnownSsrSuperclass,
-  isValidTagName,
   mergeClassifications,
   validateModulePath,
 } from './compatibility.js';
+
+export { isValidTagName } from '@lessjs/core';
 
 // v0.23.0: Canonical type owner for compatibility types.
 export type {

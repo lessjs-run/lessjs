@@ -10,10 +10,10 @@ import {
   getClassificationSummary,
   isKnownSsrAdapter,
   isKnownSsrSuperclass,
-  isValidTagName,
   mergeClassifications,
   validateModulePath,
 } from '../src/compatibility.js';
+import { isValidTagName } from '@lessjs/core';
 
 import {
   assert,

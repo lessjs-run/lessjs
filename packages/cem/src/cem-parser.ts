@@ -25,18 +25,7 @@ import type {
   LessElementExtensions,
 } from './types.js';
 import { isValidTagName } from '@lessjs/core';
-import type { CompatibilityTier } from '@lessjs/core';
-
-interface CompatibilityClassification {
-  tagName: string;
-  tier: CompatibilityTier;
-  reason: string;
-  source: 'package';
-  modulePath?: string;
-  ssr?: boolean;
-  dsd?: boolean;
-  hydrate?: string;
-}
+import type { CompatibilityClassification, CompatibilityTier } from '@lessjs/core';
 
 // ─── Validators ─────────────────────────────────────────────────────────
 
