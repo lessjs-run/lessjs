@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.29.5",
+  "version": "0.29.6",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -34,3 +34,4 @@
     "test:ci": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run --coverage --junit-path=test-results.xml __tests__/"
   }
 }
+
