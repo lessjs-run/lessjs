@@ -6,8 +6,8 @@
  * Produces clean DSD HTML without Lit SSR marker comments.
  *
  * Architecture:
- *   @lessjs/core        renderDsd() only accepts render(): string
- *   @lessjs/adapter-lit converts TemplateResult to string at build time
+ *   @lessjs/core        renderDsd() accepts the VNode/null component contract
+ *   @lessjs/adapter-lit converts TemplateResult values at the adapter boundary
  *   @lessjs/ui          LitElement components (Lit + OpenProps)
  *
  * Usage (in vite.config.ts or build config):

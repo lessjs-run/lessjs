@@ -603,7 +603,7 @@ async function networkFirst(req) {
       writeFileSync(htmlPath, html);
     }
     log.info(`PWA manifest injected into ${htmlFiles.length} HTML files`);
-    // SW registration intentionally omitted �?see theme-init.js SW cache nuke.
+    // SW registration intentionally omitted; see theme-init.js SW cache nuke.
     // Re-registering would re-introduce blank-screen risk from stale cached SW.
   }
 

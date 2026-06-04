@@ -507,7 +507,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                   <div
                     class='preview-full-width'
                     innerHTML={sanitizeSnapshot(tag.ssrSnapshot)}
-                    rawHtml={true}
+                    trustedHtml={true}
                   >
                   </div>
                 )

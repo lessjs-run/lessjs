@@ -27,7 +27,7 @@
  * @module @lessjs/adapter-react/dsd-hydration
  */
 
-import type { HydrateEventDescriptor } from '@lessjs/core';
+import { bindHydrateEvents, type HydrateEventDescriptor } from '@lessjs/core';
 
 /** Constructor type for Mixin pattern */
 // deno-lint-ignore no-explicit-any
@@ -179,16 +179,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
       this._hydrateAbortController = new AbortController();
       const { signal } = this._hydrateAbortController;
 
-      for (const desc of events) {
-        if (desc.method.startsWith('__')) continue;
-        const elements = this.shadowRoot.querySelectorAll(desc.selector);
-        for (const el of elements) {
-          const handler = (this as unknown as Record<string, unknown>)[desc.method];
-          if (typeof handler === 'function') {
-            el.addEventListener(desc.event, (handler as EventListener).bind(this), { signal });
-          }
-        }
-      }
+      bindHydrateEvents(this.shadowRoot, this, events, signal);
     }
   }
 

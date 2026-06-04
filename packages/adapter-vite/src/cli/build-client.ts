@@ -28,6 +28,14 @@ const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
 const FALLBACK_LESSJS_VERSION = '0.23.0';
 
+type ViteBuildOptionsWithManifest = NonNullable<InlineConfig['build']> & {
+  manifest?: boolean;
+};
+
+type ViteInlineConfigWithManifest = Omit<InlineConfig, 'build'> & {
+  build?: ViteBuildOptionsWithManifest;
+};
+
 /** Workspace root derived from this module's location (packages/adapter-vite/src/cli/).
  * Only valid in local workspace (file:// import.meta.url). In JSR consumers, returns null. */
 const WORKSPACE_ROOT: string | null = (() => {
@@ -220,7 +228,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
 
   const clientOutDir = resolve(root, outDir, 'client');
   const clientBase = ctx.phase3.base || '/';
-  const clientConfig: InlineConfig = {
+  const clientConfig: ViteInlineConfigWithManifest = {
     configFile: false,
     root,
     base: `${clientBase}client/`,
@@ -239,7 +247,6 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
       emptyOutDir: true,
       chunkSizeWarningLimit: 1500,
       minify: 'oxc',
-      // @ts-ignore - Vite's own manifest option (not Rollup's)
       manifest: true,
       rollupOptions: {
         input: { client: VIRTUAL_CLIENT_ENTRY_ID },

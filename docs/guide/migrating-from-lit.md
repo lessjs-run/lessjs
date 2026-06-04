@@ -1,69 +1,88 @@
-# 从 Lit 迁移到 DsdElement + Signals (v0.24.1)
+# Migrating From Lit To DsdElement
 
-## 快速对照
+> Current for v0.30.0.
 
-| Lit                          | DsdElement + Signals (v0.24.1+)        |
-| ---------------------------- | -------------------------------------- |
-| `LitElement`                 | `DsdElement`                           |
-| `@state() count = 0`         | `count = signal(0)`                    |
-| `@property() name`           | `static props = { name: String }`      |
-| `render()` → TemplateResult  | `render()` → JSX (VNode)               |
-| `@click=${handler}`          | `onClick={handler}`                    |
-| `static styles = css\`...\`` | `static styles = new StyleSheet()`     |
-| `firstUpdated()`             | `connectedCallback()`                  |
-| `updated()`                  | `effect()` auto-tracking               |
-| `requestUpdate()`            | `this.update()` or signal auto-trigger |
+LessJS native components use the `DsdElement` + JSX/VNode contract. Lit remains
+supported at the adapter boundary, but LessJS core no longer accepts
+string-returning or TemplateResult-returning components as its native public
+contract.
 
-## 示例对照
+## Quick Comparison
 
-### Lit Counter
+| Lit                          | LessJS native component            |
+| ---------------------------- | ---------------------------------- |
+| `LitElement`                 | `DsdElement`                       |
+| `@state() count = 0`         | `count = signal(0)`                |
+| `@property() name`           | `static props = { name: String }`  |
+| `render() -> TemplateResult` | `render() -> VNode \| null`        |
+| `@click=${handler}`          | `onClick={handler}`                |
+| `static styles = css\`...\`` | `static styles = new StyleSheet()` |
+| `requestUpdate()`            | signal update or `this.update()`   |
+
+## Lit Counter
 
 ```ts
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 @customElement('my-counter')
 class MyCounter extends LitElement {
-  @state() count = 0;
-  static styles = css\`button { font-size: 1.5rem; }\`;
+  @state()
+  count = 0;
+
+  static styles = css`
+    button {
+      font-size: 1.5rem;
+    }
+  `;
+
   render() {
-    return html\`<button @click=\${() => this.count++}>Count: \${this.count}</button>\`;
+    return html`
+      <button @click="${() => this.count++}">Count: ${this.count}</button>
+    `;
   }
 }
 ```
 
-### DsdElement Counter
+## LessJS Native Counter
 
-```ts
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
+```tsx
+import { DsdElement, type VNode } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 
 class MyCounter extends DsdElement {
   #count = signal(0);
+
   static styles = new StyleSheet();
-  static { this.styles.replaceSync('button { font-size: 1.5rem; }'); }
-  render() {
-    return html\`<button @click=\${() => this.#count.value++}>Count: \${this.#count}</button>\`;
+
+  static {
+    this.styles.replaceSync(`
+      button {
+        font-size: 1.5rem;
+      }
+    `);
+  }
+
+  render(): VNode {
+    return (
+      <button onClick={() => this.#count.value++}>
+        Count: {this.#count.value}
+      </button>
+    );
   }
 }
+
 customElements.define('my-counter', MyCounter);
 ```
 
-## 关键差异
+## Migration Checklist
 
-1. **static props 替代装饰器**：`static props = { name: String }` 替代 `@property()`
-2. **JSX 替代 html 模板**：`render()` 返回 JSX（VNode），不再使用 `html\`...\``
-3. **CSS 用 StyleSheet**：`new StyleSheet()` + `replaceSync()` 替代 Lit `css\`...\``
-4. **effect() 自动追踪**：信号变化通过 `effect()` 自动触发 VNode re-render（替代 _patchBindings）
-5. **事件绑定**：`onClick={handler}` 替代 `@click=${handler}`，底层原生 addEventListener
-6. **render() 返回类型**：`string | VNode`
-
-## 迁移检查清单
-
-- [ ] 基类：`LitElement` → `DsdElement`
-- [ ] 状态：`@state()` → `field = signal(init)`
-- [ ] 属性：`@property()` → `static props = { name: Type }`
-- [ ] 模板：Lit `html` → LessJS JSX (`<div>...</div>`)
-- [ ] 事件：`@click=${fn}` → `onClick={fn}`
-- [ ] 样式：`css\`...\``→`new StyleSheet()`+`replaceSync()`
-- [ ] 生命周期：`firstUpdated()` → `connectedCallback()`
-- [ ] 刷新：`requestUpdate()` → 信号变化自动触发或 `this.update()`
+- Replace `LitElement` inheritance with `DsdElement`.
+- Replace decorators with `static props` and plain class fields.
+- Replace `html` templates with JSX.
+- Replace Lit event expressions with JSX event props such as `onClick`.
+- Replace Lit `css` templates with `StyleSheet`.
+- Return `VNode | null` from native LessJS `render()`.
+- Keep Lit TemplateResult values inside `@lessjs/adapter-lit`; do not pass them
+  into core as native LessJS component output.

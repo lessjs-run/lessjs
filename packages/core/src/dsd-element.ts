@@ -12,7 +12,7 @@
  *   - ReactiveHost protocol for explicit Signal integration
  *
  * DsdElement extends HTMLElement directly - ZERO Lit dependency.
- * Components return `render(): string | TemplateResult`.
+ * Components return `render(): VNode | null`.
  *
  * Lifecycle:
  *   SSR: instantiate -> set props -> render() -> wrap in DSD template
@@ -23,8 +23,8 @@
  * ```ts
  * class MyCard extends DsdElement {
  *   static styles = myStyleSheet;
- *   render(): string {
- *     return `<div class="card"><slot></slot></div>`;
+ *   render(): VNode {
+ *     return <div class="card"><slot /></div>;
  *   }
  * }
  * customElements.define('my-card', MyCard);
@@ -35,11 +35,11 @@
  * class MyToggle extends DsdElement {
  *   #active = signal(false);
  *   render() {
- *     return html`
- *       <button @click=${() => this.#active.value = !this.#active.value}>
- *         ${this.#active.value ? 'ON' : 'OFF'}
+ *     return (
+ *       <button onClick={() => this.#active.value = !this.#active.value}>
+ *         {this.#active.value ? 'ON' : 'OFF'}
  *       </button>
- *     `;
+ *     );
  *   }
  * }
  * ```
@@ -97,7 +97,7 @@ if (typeof HTMLElement === 'undefined') {
  * Provides DSD detection, CSR fallback, event hydration, and style management
  * without any framework dependency (no Lit, no reactive-element).
  *
- * Subclasses MUST override `render(): string | TemplateResult`.
+ * Subclasses MUST override `render(): VNode | null`.
  */
 export class DsdElement extends _Base implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
@@ -233,7 +233,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    *
    * CSR path (_dsdHydrated = false):
    *   - Calls createRenderRoot() if no shadow root exists.
-   *   - Populates shadowRoot.innerHTML with this.render(), then binds events.
+   *   - Renders this.render() through the VNode DOM renderer.
    *
    * If formAssociated is true, ElementInternals are attached.
    */
@@ -306,12 +306,12 @@ export class DsdElement extends _Base implements ReactiveHost {
   /**
    * v0.28 (ADR-0067): Signal-native hydration.
    *
-   * Replaces _walkAndBind() — reads data-signal and data-on markers
+   * Replaces _walkAndBind() — reads data-signal markers
    * from DSD shadow root and creates direct signal→DOM effect bindings.
    * No position matching, no childNodes filtering, no VNode traversal.
    *
    * Effects are tracked in #effectDisposers for batch cleanup.
-   * Events are tracked in #eventCleanups for removeEventListener.
+   * VNode event marker listeners are tracked in #eventCleanups.
    */
   private _hydrateSignals(): void {
     if (!this.shadowRoot) return;
@@ -357,7 +357,6 @@ export class DsdElement extends _Base implements ReactiveHost {
     }
 
     // --- Signal → innerHTML: data-signal-html="signalName" (v0.28) ---
-    // v0.28.1: After setting innerHTML, scan subtree for data-on-* and bind events.
     const htmlEls = this.shadowRoot.querySelectorAll('[data-signal-html]');
     for (const el of htmlEls) {
       const name = el.getAttribute('data-signal-html');
@@ -367,8 +366,6 @@ export class DsdElement extends _Base implements ReactiveHost {
 
       const applyHtml = () => {
         (el as HTMLElement).innerHTML = trustRenderHtml(String(sig.value));
-        // Scan new dynamic HTML for data-on-* and bind events.
-        this._bindEvents(el);
       };
       applyHtml();
       const dispose = effect(() => applyHtml());
@@ -412,45 +409,10 @@ export class DsdElement extends _Base implements ReactiveHost {
     if (isVNode(vnode)) {
       hydrateEventMarkers(this.shadowRoot, collectEventBindings(vnode), this.#eventCleanups, this);
     }
-
-    // --- Deprecated fallback: data-on-<event>="methodName" ---
-    this._bindEvents(this.shadowRoot, { skipSignalHtmlDescendants: true });
-
     // Chromium DSD layout fix: force reflow without DOM rebuild
     requestAnimationFrame(() => {
       void (this as HTMLElement).offsetHeight;
     });
-  }
-
-  /**
-   * v0.28.1: Bind data-on-* event handlers in a container subtree.
-   * Extracted from _hydrateSignals for reuse in CSR re-render path
-   * and data-signal-html innerHTML scanning.
-   */
-  private _bindEvents(
-    container: Element | ShadowRoot,
-    options: { skipSignalHtmlDescendants?: boolean } = {},
-  ): void {
-    const EVENT_TYPES = ['click', 'input', 'change', 'submit', 'keydown'] as const;
-    for (const eventType of EVENT_TYPES) {
-      const attr = `data-on-${eventType}`;
-      for (const el of container.querySelectorAll(`[${attr}]`)) {
-        if (
-          options.skipSignalHtmlDescendants &&
-          typeof Element !== 'undefined' &&
-          el instanceof Element &&
-          el.closest('[data-signal-html]')
-        ) continue;
-        const methodName = el.getAttribute(attr);
-        if (!methodName) continue;
-        const handler = (this as Record<string, unknown>)[methodName];
-        if (typeof handler === 'function') {
-          const bound = (handler as (...args: unknown[]) => unknown).bind(this);
-          el.addEventListener(eventType, bound as EventListener);
-          this.#eventCleanups.push(() => el.removeEventListener(eventType, bound as EventListener));
-        }
-      }
-    }
   }
 
   /**
@@ -497,7 +459,7 @@ export class DsdElement extends _Base implements ReactiveHost {
 
   /**
    * Hook called when the unified client render/hydrate path throws.
-   * Subclasses may return a string or VNode fallback.
+   * Subclasses may return a VNode fallback.
    */
   protected onRenderError(error: unknown): VNode | null {
     console.error(
@@ -532,7 +494,6 @@ export class DsdElement extends _Base implements ReactiveHost {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
       this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
-      this._bindEvents(this.shadowRoot);
     }
   }
 
@@ -585,7 +546,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    *
    * DsdElement intentionally does not include a reactive scheduler. Components
    * with local state can call this method after state changes instead of
-   * duplicating `shadowRoot.innerHTML = this.render()` and event hydration.
+   * duplicating renderToDom() and event hydration.
    */
   update(): void {
     this._renderIntoShadowRoot();
@@ -647,7 +608,6 @@ export class DsdElement extends _Base implements ReactiveHost {
         this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
       }
       this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
-      this._bindEvents(this.shadowRoot!);
     }
   }
 
@@ -668,14 +628,13 @@ export class DsdElement extends _Base implements ReactiveHost {
   }
 
   /**
-   * Return Shadow DOM inner HTML as a string or VNode.
+   * Return Shadow DOM content as a VNode.
    *
    * Subclasses MUST override this method. During SSR, rendered content is
-   * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
-   * assigned to `shadowRoot.innerHTML`; VNode values are rendered via
-   * renderToDom() with event binding and signal tracking.
+   * wrapped in a <template shadowrootmode="open"> tag. During CSR, VNode values
+   * are rendered via renderToDom() with event binding and signal tracking.
    *
-   * @returns HTML string or VNode for the shadow DOM content.
+   * @returns VNode for the shadow DOM content, or null for empty content.
    */
   render(): VNode | null {
     return null;

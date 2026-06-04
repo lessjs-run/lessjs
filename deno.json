@@ -120,6 +120,7 @@
     "dsd:check-report": "deno run --allow-read --allow-env packages/hub/src/cli/dsd-report-gate.ts",
     "docs:check-strategy": "deno run --allow-read tools/check-strategic-docs.ts",
     "docs:check-current": "deno run --allow-read tools/check-current-docs-no-legacy.ts",
+    "arch:check": "deno run --allow-read --allow-run tools/check-architecture-contract.ts",
     "dist:check-object-object": "deno run --allow-read tools/check-dist-no-object-object.ts",
     "graph:check": "deno run --allow-read tools/check-package-graph.ts",
     "graph:check-imports": "deno run --allow-read --allow-write --allow-run tools/check-import-map.ts",

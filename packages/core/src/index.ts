@@ -58,6 +58,7 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
+export { bindHydrateEvents } from './dsd-hydration-events.js';
 export { createRenderDsdStreamMetrics, renderDsd, renderDsdStream } from './render-dsd.js';
 export type { RenderDsdOptions } from './render-dsd.js';
 export type {

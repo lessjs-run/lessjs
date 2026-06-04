@@ -84,7 +84,14 @@ export function camelToKebab(str: string): string {
 
 // ─── Unified Attribute Serialization ────────────────────────────
 
-const SKIP_ATTR_KEYS = new Set(['children', 'ref', 'key', 'rawHtml', 'innerHTML', 'textContent']);
+const SKIP_ATTR_KEYS = new Set([
+  'children',
+  'ref',
+  'key',
+  'trustedHtml',
+  'innerHTML',
+  'textContent',
+]);
 
 export function serializeAttrs(tag: string, props: Record<string, unknown>): string {
   const isCustomElement = tag.includes('-');
@@ -231,7 +238,7 @@ export async function renderToNode(
 
   if (props?.innerHTML !== undefined) {
     const value = unwrapSignalLike(props.innerHTML);
-    childNodes.push(props.rawHtml === true ? trustedHtmlNode(value) : textNode(value));
+    childNodes.push(props.trustedHtml === true ? trustedHtmlNode(value) : textNode(value));
   } else if (props?.textContent !== undefined) {
     childNodes.push(textNode(unwrapSignalLike(props.textContent)));
   } else {

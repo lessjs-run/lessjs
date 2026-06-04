@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - DSD Renderer.
  *
- * Pure string-based Declarative Shadow DOM SSR renderer.
+ * Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
  *
  * v0.29.1: Inlined render-errors, render-instantiate, and render-serialize helpers.
@@ -28,7 +28,13 @@ import { createLogger } from './logger.js';
 import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
 import { renderDsdTree } from './render-ir.js';
-import { dsdHostNode, serializeAttrs, serializeRenderNode, trustedHtmlNode } from './render-ir.js';
+import {
+  dsdHostNode,
+  type RenderNode,
+  serializeAttrs,
+  serializeRenderNode,
+  trustedHtmlNode,
+} from './render-ir.js';
 import { DANGEROUS_KEYS } from './security.js';
 import type { DsdComponent } from './types.js';
 
@@ -69,7 +75,7 @@ function codeForRenderError(phase: RenderPhase, message: string): RenderErrorCod
   if (phase === 'nested') return 'LESS_RENDER_NESTED_FAILED';
   if (phase === 'style') return 'LESS_RENDER_STYLE_FAILED';
   if (phase === 'serialize') return 'LESS_RENDER_SERIALIZE_FAILED';
-  if (message.includes('Components must return a string') || message.includes('TemplateResult')) {
+  if (message.includes('Components must return a VNode')) {
     return 'LESS_RENDER_INVALID_OUTPUT';
   }
   return 'LESS_RENDER_RENDER_FAILED';
@@ -85,17 +91,6 @@ function instantiationErrorHtml(
   return `<${tagName}></${tagName}>`;
 }
 
-function wrongTypeErrorHtml(
-  tagName: string,
-  resultType: string,
-  errDetail: string,
-): string {
-  log.error(
-    `<${tagName}> render() returned ${resultType} instead of string. ${errDetail}`,
-  );
-  return `<!-- Render Error: <${tagName}> render() returned ${resultType}, expected string. ${errDetail} -->`;
-}
-
 // ─── Component Instantiation ───────────────────────────────────
 
 function instantiateComponent(
@@ -103,12 +98,23 @@ function instantiateComponent(
   componentClass: CustomElementConstructor,
 ): DsdComponent | null {
   try {
-    return new componentClass() as unknown as DsdComponent;
+    const instance = new componentClass();
+    if (!isDsdComponent(instance)) {
+      log.error(`<${tagName}> does not implement render(): VNode | null.`);
+      return null;
+    }
+    return instance;
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
     log.error(`Failed to instantiate <${tagName}>:`, errMsg);
     return null;
   }
+}
+
+function isDsdComponent(value: unknown): value is DsdComponent {
+  return typeof value === 'object' &&
+    value !== null &&
+    typeof Reflect.get(value, 'render') === 'function';
 }
 
 function injectProps(
@@ -162,7 +168,7 @@ function wrapDsdOutput(params: {
   layer: string;
   sourceStr: string;
   dsdOptions?: DsdOptions;
-  lightDom?: import('../src/render-ir.ts').RenderNode[];
+  lightDom?: RenderNode[];
 }): string {
   const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions, lightDom } = params;
   const ssrPropsAttr = Object.keys(props).length > 0
@@ -194,7 +200,7 @@ export interface RenderDsdOptions {
   collector?: DsdRenderCollector;
   nestingDepth?: number;
   hooks?: RenderHooks;
-  lightDom?: import('../src/render-ir.ts').RenderNode[];
+  lightDom?: RenderNode[];
 }
 
 export async function renderDsd(
@@ -307,31 +313,19 @@ export async function renderDsd(
 
   let content = '';
   try {
-    const result = instance.render();
+    const result: unknown = instance.render();
     if (result == null) {
       content = '';
     } else if (isVNode(result)) {
       content = await renderDsdTree(result);
-    } else if (typeof result === 'string') {
-      log.warn(`<${tagName}> render() returned string — deprecated. Use VNode instead.`);
-      content = result;
     } else {
-      let rendered = false;
-      for (const adapter of getDefaultRegistry().getAll()) {
-        if (adapter.isTemplate && adapter.render && adapter.isTemplate(result)) {
-          content = await adapter.render(result, tagName);
-          rendered = true;
-          break;
-        }
-      }
-      if (!rendered) {
-        log.debug(`Unsupported render() return for <${tagName}>: ${describeRenderValue(result)}`);
-        const errDetail = `Components must return a VNode from render(), got ${typeof result}.`;
-        const err = classifyError('render', tagName, errDetail, true);
-        collectedErrors.push(err);
-        hooks?.onError?.(err);
-        content = wrongTypeErrorHtml(tagName, typeof result, errDetail);
-      }
+      log.debug(`Unsupported render() return for <${tagName}>: ${describeRenderValue(result)}`);
+      const errDetail = `Components must return a VNode from render(), got ${typeof result}.`;
+      const err = classifyError('render', tagName, errDetail, false);
+      collectedErrors.push(err);
+      hasError = true;
+      hooks?.onError?.(err);
+      content = '';
     }
   } catch (err) {
     const classifiedErr = classifyError('render', tagName, err, true);

@@ -32,6 +32,14 @@ jobs:
       - name: Check package graph
         run: deno task graph:check
 
+  architecture-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Check architecture contract
+        run: deno task arch:check
+
   test-core:
     runs-on: ubuntu-latest
     steps:

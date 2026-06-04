@@ -346,8 +346,8 @@ export function buildEntryDescriptor(
 
   // Always needed
   imports.push({ from: 'hono', names: ['Hono'] });
-  // v0.5.0: DSD renderer replaces the old Lit SSR pipeline.
-  // Components use render(): string - no TemplateResult, no <!--lit-part--> markers.
+  // v0.30.0: DSD renderer accepts the VNode/null component contract.
+  // Adapter-specific values are converted before they reach core.
   // ADR 0021: Always import from @lessjs/core main entry.
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
   imports.push({

@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - Streaming Dsd Tests
  *
- * Tests for renderDsdStream() — progressive Dsd delivery via Web Streams.
+ * Tests for renderDsdStream() progressive Dsd delivery via Web Streams.
  */
 
 import { assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@1';
@@ -10,11 +10,13 @@ import {
   renderDsdStream,
   type RenderDsdStreamComponent,
 } from '../src/render-dsd.ts';
+import { jsx } from '../src/jsx-runtime.ts';
+import type { VNode } from '../src/vnode.ts';
 
-/** Helper: create a simple component class that renders a string. */
-function makeComponent(body: () => string): CustomElementConstructor {
+/** Helper: create a simple component class that renders a VNode. */
+function makeComponent(body: () => VNode | null): CustomElementConstructor {
   return class {
-    render(): string {
+    render(): VNode | null {
       return body();
     }
   } as unknown as CustomElementConstructor;
@@ -53,7 +55,7 @@ Deno.test('renderDsdStream: returns ReadableStream<Uint8Array>', () => {
 Deno.test('renderDsdStream: shell chunk is output first', async () => {
   const comp: RenderDsdStreamComponent = {
     tagName: 'shell-first-el',
-    componentClass: makeComponent(() => '<div>body</div>'),
+    componentClass: makeComponent(() => jsx('div', { children: 'body' })),
   };
 
   const stream = renderDsdStream([comp], { shell: '<!doctype html><html>' });
@@ -66,7 +68,7 @@ Deno.test('renderDsdStream: shell chunk is output first', async () => {
 Deno.test('renderDsdStream: footer chunk is output last', async () => {
   const comp: RenderDsdStreamComponent = {
     tagName: 'footer-last-el',
-    componentClass: makeComponent(() => '<div>body</div>'),
+    componentClass: makeComponent(() => jsx('div', { children: 'body' })),
   };
 
   const stream = renderDsdStream([comp], { footer: '</html>' });
@@ -79,15 +81,15 @@ Deno.test('renderDsdStream: footer chunk is output last', async () => {
 Deno.test('renderDsdStream: component chunks preserve priority order', async () => {
   const compA: RenderDsdStreamComponent = {
     tagName: 'first-el',
-    componentClass: makeComponent(() => '<span>A</span>'),
+    componentClass: makeComponent(() => jsx('span', { children: 'A' })),
   };
   const compB: RenderDsdStreamComponent = {
     tagName: 'second-el',
-    componentClass: makeComponent(() => '<span>B</span>'),
+    componentClass: makeComponent(() => jsx('span', { children: 'B' })),
   };
   const compC: RenderDsdStreamComponent = {
     tagName: 'third-el',
-    componentClass: makeComponent(() => '<span>C</span>'),
+    componentClass: makeComponent(() => jsx('span', { children: 'C' })),
   };
 
   const stream = renderDsdStream([compA, compB, compC]);
@@ -103,7 +105,7 @@ Deno.test('renderDsdStream: component chunks preserve priority order', async () 
 
 Deno.test('renderDsdStream: failing component outputs fallback and stream continues', async () => {
   class FailComponent {
-    render(): string {
+    render(): VNode {
       throw new Error('simulated render failure');
     }
   }
@@ -114,23 +116,21 @@ Deno.test('renderDsdStream: failing component outputs fallback and stream contin
   };
   const ok: RenderDsdStreamComponent = {
     tagName: 'ok-el',
-    componentClass: makeComponent(() => '<div>still here</div>'),
+    componentClass: makeComponent(() => jsx('div', { children: 'still here' })),
   };
 
   const stream = renderDsdStream([fail, ok]);
   const body = await readStream(stream);
 
-  // Failing component outputs bare tag fallback (not Dsd wrapper)
   assertStringIncludes(body, '<fail-el>');
-  // Stream continues — second component renders normally
   assertStringIncludes(body, '<ok-el>');
   assertStringIncludes(body, 'still here');
 });
 
-Deno.test('renderDsdStream: string output is rendered', async () => {
+Deno.test('renderDsdStream: VNode text output is escaped', async () => {
   class TemplateComp {
-    render(): string {
-      return '<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>';
+    render(): VNode {
+      return jsx('p', { children: '<script>alert(1)</script>' });
     }
   }
 
@@ -142,9 +142,7 @@ Deno.test('renderDsdStream: string output is rendered', async () => {
   const stream = renderDsdStream([comp]);
   const body = await readStream(stream);
 
-  // Script tag should be escaped
   assertStringIncludes(body, '&lt;script&gt;');
-  // Raw script tag should not appear
   assertEquals(body.includes('<script>alert'), false);
 });
 

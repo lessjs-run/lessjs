@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - JSX renderDsdTree tests.
  *
- * v0.24.3: Direct tests for SSR renderer �?Signal unwrap, SVG attrs,
+ * v0.24.3: Direct tests for SSR renderer: Signal unwrap, SVG attrs,
  * boolean attrs, style serialisation, event exclusion.
  */
 
@@ -166,9 +166,9 @@ Deno.test('renderDsdTree escapes Signal innerHTML values by default', async () =
   assertEquals(await renderDsdTree(vnode), '<div>&lt;strong&gt;ready&lt;/strong&gt;</div>');
 });
 
-Deno.test('renderDsdTree treats rawHtml as a trusted HTML boundary', async () => {
+Deno.test('renderDsdTree treats trustedHtml as a trusted HTML boundary', async () => {
   const html = signal('<strong>ready</strong><img src="javascript:alert(1)" onerror="x()">');
-  const vnode = jsx('div', { innerHTML: html, rawHtml: true });
+  const vnode = jsx('div', { innerHTML: html, trustedHtml: true });
   const output = await renderDsdTree(vnode);
   assertStringIncludes(output, '<strong>ready</strong>');
   assertStringIncludes(output, '<img');
@@ -176,7 +176,7 @@ Deno.test('renderDsdTree treats rawHtml as a trusted HTML boundary', async () =>
   assertStringIncludes(output, 'onerror="x()"');
 });
 
-Deno.test('renderDsdTree does not sanitize trusted rawHtml parser edge cases', async () => {
+Deno.test('renderDsdTree does not sanitize trustedHtml parser edge cases', async () => {
   const html = [
     '<a href="&#x6a;avascript:alert(1)">bad</a>',
     '<svg><a xlink:href="javascript:alert(1)">bad</a></svg>',
@@ -184,7 +184,7 @@ Deno.test('renderDsdTree does not sanitize trusted rawHtml parser edge cases', a
     '<math href="javascript:alert(1)">bad</math>',
     '<p data-state="ok">safe</p>',
   ].join('');
-  const vnode = jsx('div', { innerHTML: html, rawHtml: true });
+  const vnode = jsx('div', { innerHTML: html, trustedHtml: true });
   const output = await renderDsdTree(vnode);
 
   assertStringIncludes(output, '<p data-state="ok">safe</p>');

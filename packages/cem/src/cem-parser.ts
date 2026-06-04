@@ -25,18 +25,7 @@ import type {
   LessElementExtensions,
 } from './types.js';
 import { isValidTagName } from '@lessjs/core';
-import type { CompatibilityTier } from '@lessjs/core';
-
-interface CompatibilityClassification {
-  tagName: string;
-  tier: CompatibilityTier;
-  reason: string;
-  source: 'package';
-  modulePath?: string;
-  ssr?: boolean;
-  dsd?: boolean;
-  hydrate?: string;
-}
+import type { CompatibilityClassification, CompatibilityTier } from '@lessjs/core';
 
 // ─── Validators ─────────────────────────────────────────────────────────
 
@@ -45,6 +34,10 @@ function isValidModulePath(path: string): boolean {
   if (!path || typeof path !== 'string') return false;
   // Must be a relative path starting with ./ or ../
   return path.startsWith('./') || path.startsWith('../');
+}
+
+function isCemCustomElement(decl: { kind?: string }): decl is CemCustomElement {
+  return decl.kind === 'custom-element';
 }
 
 // ─── CEM Parser ─────────────────────────────────────────────────────────
@@ -135,32 +128,30 @@ export function parseCem(json: string, _packageRoot?: string): CemParseResult {
         const decl = mod.declarations[j];
         const declPath = `${modPath}.declarations[${j}]`;
 
-        if (decl.kind === 'custom-element') {
-          // Type cast to CemCustomElement for tagName access
-          const ce = decl as unknown as CemCustomElement;
+        if (isCemCustomElement(decl)) {
           // Validate tag name
-          if (!ce.tagName) {
+          if (!decl.tagName) {
             errors.push({
               code: 'CEM_CE_NO_TAG_NAME',
               message: `Custom element at ${declPath} has no tagName`,
               path: declPath,
             });
-          } else if (!isValidTagName(ce.tagName)) {
+          } else if (!isValidTagName(decl.tagName)) {
             errors.push({
               code: 'CEM_CE_INVALID_TAG_NAME',
               message:
-                `Invalid tag name: ${ce.tagName} (must contain a hyphen and match HTML spec)`,
+                `Invalid tag name: ${decl.tagName} (must contain a hyphen and match HTML spec)`,
               path: declPath,
             });
-          } else if (seenTagNames.has(ce.tagName)) {
+          } else if (seenTagNames.has(decl.tagName)) {
             // Duplicate tag name detected
             errors.push({
               code: 'CEM_CE_DUPLICATE_TAG',
-              message: `Duplicate tag name: ${ce.tagName}`,
+              message: `Duplicate tag name: ${decl.tagName}`,
               path: declPath,
             });
           } else {
-            seenTagNames.add(ce.tagName);
+            seenTagNames.add(decl.tagName);
           }
         }
       }
@@ -238,10 +229,9 @@ export function classifyCemManifest(
     if (!mod.declarations) continue;
 
     for (const decl of mod.declarations) {
-      if (decl.kind !== 'custom-element') continue;
+      if (!isCemCustomElement(decl)) continue;
 
-      const ce = decl as CemCustomElement;
-      const tagName = ce.tagName;
+      const tagName = decl.tagName;
 
       if (!tagName) continue;
 
@@ -259,8 +249,8 @@ export function classifyCemManifest(
       seenTags.add(tagName);
 
       // Apply conservative defaults only if less field exists
-      const hasLessField = ce.less !== undefined;
-      const less: LessElementExtensions = ce.less ?? {};
+      const hasLessField = decl.less !== undefined;
+      const less: LessElementExtensions = decl.less ?? {};
       less.ssr ??= false;
       less.dsd ??= false;
       if (less.hydrate === undefined) {
@@ -275,7 +265,7 @@ export function classifyCemManifest(
 
       if (less.ssr === true) {
         // Check if a renderer/capability is declared
-        if (ce.superClass?.name === 'LitElement') {
+        if (decl.superClass?.name === 'LitElement') {
           tier = 'ssr-capable';
           reason = 'LitElement with less.ssr = true (Lit adapter required)';
         } else if (less.layer) {
@@ -324,13 +314,11 @@ export function extractLessDeclarations(
     if (!mod.declarations) continue;
 
     for (const decl of mod.declarations) {
-      if (decl.kind !== 'custom-element') continue;
-
-      const ce = decl as CemCustomElement;
-      if (!ce.tagName) continue;
+      if (!isCemCustomElement(decl)) continue;
+      if (!decl.tagName) continue;
 
       // Convert CEM attributes -> LessJS attributes
-      const attributes = ce.attributes?.map((attr) => ({
+      const attributes = decl.attributes?.map((attr) => ({
         name: attr.name,
         type: attr.type,
         default: attr.defaultValue,
@@ -340,20 +328,20 @@ export function extractLessDeclarations(
       }));
 
       // Convert CEM events -> LessJS events
-      const events = ce.events?.map((evt) => ({
+      const events = decl.events?.map((evt) => ({
         name: evt.name,
         type: evt.type,
         description: evt.description,
       }));
 
       // Convert CEM slots -> LessJS slots
-      const slots = ce.slots?.map((slot) => ({
+      const slots = decl.slots?.map((slot) => ({
         name: slot.name || '',
         description: slot.description,
       }));
 
       // Convert CEM CSS properties -> LessJS CSS properties
-      const cssProperties = ce.cssProperties?.map((prop) => ({
+      const cssProperties = decl.cssProperties?.map((prop) => ({
         name: prop.name,
         default: prop.defaultValue,
         description: prop.description,
@@ -361,23 +349,23 @@ export function extractLessDeclarations(
       }));
 
       // Convert CEM CSS parts -> LessJS CSS parts
-      const cssParts = ce.cssParts?.map((part) => ({
+      const cssParts = decl.cssParts?.map((part) => ({
         name: part.name,
         description: part.description,
       }));
 
       declarations.push({
-        tagName: ce.tagName,
-        className: ce.className,
-        superclassName: ce.superClass?.name,
+        tagName: decl.tagName,
+        className: decl.className,
+        superclassName: decl.superClass?.name,
         attributes,
         members: [], // CEM methods/properties can be mapped if needed
         events,
         slots,
         cssProperties,
         cssParts,
-        less: ce.less,
-        description: ce.description,
+        less: decl.less,
+        description: decl.description,
       });
     }
   }
@@ -402,7 +390,7 @@ export function findModulePathForTag(
     if (!mod.declarations) continue;
 
     for (const decl of mod.declarations) {
-      if (decl.kind === 'custom-element' && decl.tagName === tagName) {
+      if (isCemCustomElement(decl) && decl.tagName === tagName) {
         return mod.path;
       }
     }

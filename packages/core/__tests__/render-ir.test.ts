@@ -40,9 +40,9 @@ Deno.test('render-ir converts VNode trees into element IR before serialization',
   );
 });
 
-Deno.test('render-ir keeps rawHtml as explicit trusted-html node', async () => {
+Deno.test('render-ir keeps trustedHtml as explicit trusted-html node', async () => {
   const node = await renderToNode(
-    jsx('div', { innerHTML: '<span>trusted</span>', rawHtml: true }),
+    jsx('div', { innerHTML: '<span>trusted</span>', trustedHtml: true }),
   );
 
   assertEquals(serializeRenderNode(node), '<div><span>trusted</span></div>');

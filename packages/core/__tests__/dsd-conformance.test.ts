@@ -1,7 +1,9 @@
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { renderDsd, type RenderDsdOptions } from '../src/render-dsd.ts';
+import { jsx } from '../src/jsx-runtime.ts';
+import type { VNode } from '../src/vnode.ts';
 
-function asCtor(cls: new () => { render(): string }): CustomElementConstructor {
+function asCtor(cls: new () => { render(): VNode | null }): CustomElementConstructor {
   return cls as unknown as CustomElementConstructor;
 }
 
@@ -23,7 +25,7 @@ function renderDsdForTest(
 Deno.test('DSD conformance: emits WHATWG shadowrootmode and focus attributes', async () => {
   class FocusCard {
     render() {
-      return '<button>Focus</button>';
+      return jsx('button', { children: 'Focus' });
     }
   }
 
@@ -38,7 +40,10 @@ Deno.test('DSD conformance: emits WHATWG shadowrootmode and focus attributes', a
 Deno.test('DSD conformance: emits manual slot assignment attribute', async () => {
   class SlotCard {
     render() {
-      return '<slot name="title"></slot><slot></slot>';
+      return jsx('div', {
+        innerHTML: '<slot name="title"></slot><slot></slot>',
+        trustedHtml: true,
+      });
     }
   }
 
@@ -53,7 +58,10 @@ Deno.test('DSD conformance: emits manual slot assignment attribute', async () =>
 Deno.test('DSD conformance: host wraps inert template fallback', async () => {
   class ParseCard {
     render() {
-      return '<slot></slot><p>Shadow</p>';
+      return jsx('div', {
+        innerHTML: '<slot></slot><p>Shadow</p>',
+        trustedHtml: true,
+      });
     }
   }
 

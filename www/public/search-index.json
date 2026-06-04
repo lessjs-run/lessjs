@@ -66,6 +66,24 @@
     "text": "Blog History"
   },
   {
+    "path": "/roadmap",
+    "title": "Roadmap",
+    "section": "Roadmap",
+    "text": "Roadmap"
+  },
+  {
+    "path": "/changelog",
+    "title": "Changelog",
+    "section": "Changelog",
+    "text": "Changelog"
+  },
+  {
+    "path": "/contributing",
+    "title": "Contributing",
+    "section": "Contributing",
+    "text": "Contributing"
+  },
+  {
     "path": "/docs",
     "title": "Docs",
     "section": "Quick Start",

@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - SignalContext �?DOM-tree-based cross-component signal sharing.
+ * @lessjs/core - SignalContext DOM-tree-based cross-component signal sharing.
  *
  * v0.29.6: WeakMap replaces symbol-keyed DOM property stamping.
  * Consumer walks parentElement / shadowRoot.host upward to find signals.

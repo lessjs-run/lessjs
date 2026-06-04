@@ -32,7 +32,7 @@ export const DANGEROUS_KEYS: ReadonlySet<string> = new Set([
 /**
  * Mark caller-supplied HTML as trusted before injection into a DOM/string render path.
  *
- * `rawHtml` is an explicit trust boundary, not a sanitizer. Core escapes
+ * `trustedHtml` is an explicit trust boundary, not a sanitizer. Core escapes
  * untrusted text by default; callers that cross this boundary must sanitize or
  * otherwise trust the HTML before passing it to LessJS.
  */

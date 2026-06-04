@@ -83,7 +83,7 @@ class MyCounter extends DsdElement {
     return (
       <div>
         <span data-signal='count'>{this.#count.value}</span>
-        <button data-on-click='_increment'>+</button>
+        <button onClick={() => this._increment()}>+</button>
       </div>
     );
   }

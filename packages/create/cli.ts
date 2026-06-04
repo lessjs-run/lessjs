@@ -78,7 +78,7 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
   return version;
 }
 
-/** Resolve all package versions ??local from workspace, remote from JSR API. */
+/** Resolve all package versions: local from workspace, remote from JSR API. */
 async function resolveVersions(): Promise<Record<string, string>> {
   const metaUrl = import.meta.url;
   const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
@@ -192,7 +192,8 @@ export default defineConfig({
   })],
 });
 `,
-    'app/routes/index.ts': `import { DsdElement, StyleSheet } from '@lessjs/runtime';
+    'app/routes/index.tsx': `/** @jsxImportSource @lessjs/core */
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 
 export const tagName = 'home-page';
 
@@ -207,9 +208,16 @@ export default class HomePage extends DsdElement {
   static override styles = styles;
 
   override render() {
-    return \`<h1>Hello from LessJS!</h1>
-<p>Your LessJS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
-<my-counter></my-counter>\`;
+    return (
+      <>
+        <h1>Hello from LessJS!</h1>
+        <p>
+          Your LessJS app is running. Edit <code>app/routes/index.tsx</code> to
+          get started.
+        </p>
+        <my-counter></my-counter>
+      </>
+    );
   }
 }
 `,

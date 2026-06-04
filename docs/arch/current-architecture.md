@@ -1,179 +1,169 @@
-# Current Architecture — v0.24.3
+# Current Architecture - v0.30.0
 
-> Status: **CURRENT (HARDENED)**\
-> Version line: v0.24.3\
-> Governing decisions: ADR-0057 (JSX+Signal), ADR-0058 (TemplateResult removal)\
-> Last hardened: 2026-05-29
+> Status: **CURRENT (CONTRACT-FROZEN)**\
+> Version line: v0.30.0\
+> Governing decisions: ADR-0077, ADR-0078, ADR-0080\
+> Last hardened: 2026-06-04
 
 ## Architecture Center
 
-LessJS is a **DSD-first Web Components application framework**.
+LessJS is a DSD-first Web Components application framework.
 
 The architecture is designed around deterministic output:
 
 - static-first rendering;
 - Declarative Shadow DOM;
 - explicit island upgrade boundaries;
-- package metadata instead of runtime guessing;
+- structured metadata instead of runtime guessing;
 - generated projects as release artifacts;
 - package graph gates before publish.
 
-LessJS is not trying to become a generic server framework. Hono, Vite, Deno,
-JSR, and Web Platform APIs are the substrate. LessJS owns the Web Component and
-DSD application layer above that substrate.
+LessJS owns the Web Component and DSD application layer. Hono, Vite, Deno, JSR,
+and Web Platform APIs remain the substrate.
 
 ## Layer Model
 
 ```text
 tools and release gates
-  create, package graph checker, publish workflow, smoke tests,
-  docs:check-current, dist:check-object-object
+  arch:check, graph:check, docs gates, publish dry-run, consumer smoke
 
 product facades
-  app configuration facade, runtime authoring facade
+  @lessjs/app, @lessjs/runtime
 
 build adapters
-  adapter-vite, SSG phases, Vite integration, generated source
+  @lessjs/adapter-vite, SSG phases, generated entry wiring
 
 framework adapters
-  adapter-lit, adapter-react, adapter-vanilla
+  @lessjs/adapter-lit, @lessjs/adapter-react, @lessjs/adapter-vanilla
 
 feature packages
-  content, i18n, hub, ui, cem, compat-check
+  @lessjs/content, @lessjs/i18n, @lessjs/hub, @lessjs/ui,
+  @lessjs/cem, @lessjs/compat-check
 
 implementation packages
-  signals (facade over alien-signals), style-sheet (cross-env CSSStyleSheet)
+  @lessjs/signals, @lessjs/style-sheet, @lessjs/router, @lessjs/rpc
 
 runtime kernel
-  core: DsdElement, JSX runtime, renderDsd, islands, navigation, logger,
-  static props, error boundary, signal-like utilities, tag validation
+  @lessjs/core: DsdElement, JSX runtime, renderDsd, renderer IR,
+  islands, static props, error boundary, signal-like utilities
 
 protocols
-  shared build contracts, virtual ids, future diagnostics/schema primitives
+  @lessjs/protocols: build contracts and future schema primitives
 ```
 
 Dependencies must point downward or sideways through explicit protocols. A
-feature package must not depend on an adapter implementation just to share a
-type. The runtime kernel must not import a concrete reactive engine or build
-adapter.
+feature package must not import a build adapter just to share a type. The runtime
+kernel must not import a concrete build adapter.
 
-## Current Packages (18 total)
+## Current Packages (19 total)
 
 | Package                   | Role                                | Key fact                          |
 | ------------------------- | ----------------------------------- | --------------------------------- |
-| `@lessjs/core`            | runtime kernel                      | DSD+JSX+VNode; 0 npm dependencies |
-| `@lessjs/protocols`       | shared contracts                    | zero-dependency pure types        |
+| `@lessjs/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime       |
+| `@lessjs/protocols`       | shared build contracts              | zero-dependency pure types        |
 | `@lessjs/signals`         | signal facade over `alien-signals`  | owns public signal contract       |
-| `@lessjs/style-sheet`     | CSSStyleSheet cross-env abstraction | browser=zero-overhead, SSR=shim   |
-| `@lessjs/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline               |
-| `@lessjs/app`             | configuration facade                | single Vite config entry          |
-| `@lessjs/content`         | content feature                     | markdown, nav, blog, sitemap      |
-| `@lessjs/i18n`            | i18n feature                        | locale data + static path helpers |
-| `@lessjs/ui`              | DSD component library               | 10 components, all JSX            |
-| `@lessjs/cem`             | CEM parser                          | canonical CEM shape owner         |
-| `@lessjs/compat-check`    | compatibility classifier            | canonical compatibility owner     |
-| `@lessjs/hub`             | registry + trust evidence           | Playwright real-browser snapshots |
-| `@lessjs/create`          | project scaffolding                 | generated project contract        |
+| `@lessjs/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim   |
+| `@lessjs/router`          | client and route helpers            | URLPattern-based routing          |
 | `@lessjs/rpc`             | RPC primitives                      | zero-dependency utility           |
 | `@lessjs/runtime`         | authoring facade                    | single-import convenience         |
-| `@lessjs/adapter-lit`     | Lit interop                         | Lit TemplateResult → DSD          |
-| `@lessjs/adapter-react`   | React interop                       | React tree → DSD                  |
-| `@lessjs/adapter-vanilla` | vanilla WC interop                  | HTMLElement → DSD                 |
+| `@lessjs/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline               |
+| `@lessjs/app`             | configuration facade                | single Vite config entry          |
+| `@lessjs/content`         | content feature                     | markdown, MDX, nav, blog, sitemap |
+| `@lessjs/i18n`            | i18n feature                        | locale data + static path helpers |
+| `@lessjs/ui`              | DSD component library               | JSX components                    |
+| `@lessjs/cem`             | CEM parser                          | CEM shape extraction              |
+| `@lessjs/compat-check`    | compatibility classifier            | admission decisions               |
+| `@lessjs/hub`             | registry + trust evidence           | Playwright real-browser snapshots |
+| `@lessjs/create`          | project scaffolding                 | generated project contract        |
+| `@lessjs/adapter-lit`     | Lit interop                         | adapter-boundary conversion       |
+| `@lessjs/adapter-react`   | React interop                       | adapter-boundary conversion       |
+| `@lessjs/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction |
 
-## Component Model (v0.24.3)
+## Public Component Contract
 
-As of v0.24.3 (ADR-0058), **only two render paths exist**:
+The only LessJS component render contract is:
 
-```typescript
+```tsx
+import { DsdElement, type VNode } from '@lessjs/core';
+
 class MyComponent extends DsdElement {
-  render(): string | VNode {
-    // JSX — the primary authoring model
+  render(): VNode | null {
     return <div class='my-component'>Hello</div>;
-
-    // string — low-level DSD escape hatch
-    return '<div class="my-component">Hello</div>';
   }
 }
 ```
 
-**TemplateResult is removed.** The `html` tagged template DSL, `@prop()`
-decorator, and all TemplateResult-related types no longer exist.
+Core does not accept string-returning components. Adapter-specific render values
+must be converted before they enter the core renderer.
 
-Reactive updates use `effect()` for VNode signal tracking. The old
-`_patchBindings()` fine-grained patching system is removed.
+## Renderer Pipeline
 
-## DsdElement Render Pipeline
+Core rendering has one structural model:
 
-```
-render() → string | VNode
-              │
-    ┌─────────┴──────────┐
-    │                    │
-  string              VNode
-    │                    │
-  innerHTML          renderToDom()
-  (platform)         (JSX→DOM, events, SVG ns)
-                         │
-                    effect() for signal tracking
+```text
+VNode
+  -> RenderNode IR
+  -> serializer
+  -> DSD HTML or DOM boundary
 ```
 
-## Why `@lessjs/protocols` Exists
+Trusted HTML is explicit:
 
-`content` and `i18n` need to communicate with the build context, but must not
-import `@lessjs/adapter-vite` internals. `@lessjs/protocols` owns these
-dependency-light contracts: build context interfaces, virtual module ids,
-and future diagnostic shapes.
+```tsx
+<div innerHTML={trustedMarkup} trustedHtml />;
+```
 
-## Why `@lessjs/core` Must Stay Small
+Without `trustedHtml`, `innerHTML` is treated as text. Core is a trust boundary,
+not a sanitizer. Sanitization belongs at the content ingestion boundary.
 
-Core owns: DsdElement, JSX runtime, renderDsd, islands, navigation, logger,
-static props, error boundary, signal-like utilities.
+## Metadata Source Of Truth
 
-Core must NOT own: Vite build contracts, virtual module ids, signal engine
-implementation, CEM parser, compatibility classifier, single-import convenience.
+Framework behavior must come from structured declarations:
 
-## Why Signals Are A Facade
+- package graph and release order come from `packages/*/deno.json`;
+- internal JSR ranges are checked against the current release line;
+- route metadata is extracted with TypeScript AST or generated manifests;
+- Hub client-only data is imported/read as structured data;
+- generated SSR entries are declarative wiring only.
 
-LessJS wraps `alien-signals` — it does not own the low-level algorithm.
-The `@lessjs/signals` facade provides: `.value` R/W, `subscribe()`,
-`effect()` for VNode tracking, `signal()`, `computed()`.
+The build should never regex-parse generated TypeScript to recover business
+logic.
 
-## Type Canonicalization (SOP-002)
+## Canonical Shared Concepts
 
-12 types that were duplicated across 2-3 packages are now canonical at
-`@lessjs/core`:
-
-| Type                                                                                    | Previously duplicated in                              |
-| --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `SignalLike`, `isSignalLike`                                                            | `core/template.ts` (deleted)                          |
-| `ManifestDecision`, `SsrAdmissionDecision`                                              | `compat-check`, `adapter-vite`                        |
-| `ValidationResult/Error/Warning/Diagnostic`, `ValidatedTag`, `ManifestValidationReport` | `compat-check`                                        |
-| `ComponentLayer`, `HydrationStrategy`                                                   | `cem`, `compat-check`                                 |
-| `StrategySource`                                                                        | `compat-check`, `adapter-vite`                        |
-| `isValidTagName`                                                                        | `cem`, `compat-check` (two different impls → unified) |
+| Concept                             | Canonical owner                            |
+| ----------------------------------- | ------------------------------------------ |
+| component render contract           | `@lessjs/core`                             |
+| HTML and attribute escaping         | `@lessjs/core`                             |
+| compatibility classification shape  | `@lessjs/core/types`                       |
+| Hub package record loading          | `packages/hub/src/cli/shared.ts`           |
+| Hub snapshot placeholder rendering  | `packages/hub/src/snapshot-placeholder.ts` |
+| adapter DSD hydration event binding | `@lessjs/core`                             |
+| package graph task execution        | `tools/run-package-graph-task.ts`          |
 
 ## Release Gates
 
 ```bash
+deno task arch:check
+deno task graph:check
+deno task docs:check-current
+deno task docs:check-strategy
 deno task fmt:check
 deno task lint
 deno task typecheck
 deno task test
 deno task build
 deno task dsd:check-report
-deno task graph:check
-deno task docs:check-current
-deno task dist:check-object-object
+deno task publish:dry-run
 ```
 
 ## No Backward Compatibility
 
-v0.23-v0.24 is an architecture transformation phase. Breaking import moves and
-API removals are acceptable when they reduce architecture debt and are
-documented.
+v0.30.0 is the architecture contract freeze before later product-facing shell
+work. Removed pre-freeze APIs are not preserved with deprecation shims.
 
-## Next Architecture Work (v0.24.4)
+## Next Architecture Work
 
-1. Declarative build pipeline API
-2. Type-safe route parameters
-3. ssg-render.ts + entry-renderer.ts decomposition
+UI Shell, Ocean-Island, and `@lessjs/ui/css` remain deferred to the next product
+surface release. They must build on the v0.30.0 contract instead of reopening
+the renderer or metadata cleanup arc.

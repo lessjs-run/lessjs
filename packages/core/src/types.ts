@@ -775,8 +775,8 @@ export interface RenderOutput {
  * Interface that components must implement to be DSD-renderable.
  * Works with any Custom Element class that has render() and connectedCallback().
  *
- * v0.24.3 (ADR-0058): TemplateResult removed. Components return string or VNode.
- * Works with any Custom Element class that has render() and connectedCallback().
+ * v0.30.0 (ADR-0080): Components return VNode or null. Adapter-native
+ * template values must be converted before entering core.
  *
  * v0.6.2: Added `layer` property for three-layer component model.
  *   - 'dsd-static' (default): static content, no hydration needed
@@ -784,8 +784,8 @@ export interface RenderOutput {
  *   - 'pure-island': no DSD, framework fully owns shadow root
  */
 export interface DsdComponent {
-  /** Return Shadow DOM inner HTML as a string or VNode */
-  render(): string | VNode | unknown;
+  /** Return Shadow DOM content as a VNode tree, or null for an empty shadow root. */
+  render(): VNode | null;
 
   /** Optional: called after setting props, before render() */
   connectedCallback?(): void;

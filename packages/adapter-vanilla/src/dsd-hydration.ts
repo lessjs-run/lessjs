@@ -14,9 +14,9 @@
  *     { selector: 'button.toggle', event: 'click', method: '_handleToggle' },
  *   ];
  *
- *   render(): string {
- *     if (this._dsdHydrated) return '';
- *     return '<button class="toggle">Toggle</button>';
+ *   render() {
+ *     if (this._dsdHydrated) return null;
+ *     return <button class="toggle">Toggle</button>;
  *   }
  * }
  * ```
@@ -37,12 +37,12 @@
  *
  * What the component must provide:
  *   - `static hydrateEvents: HydrateEventDescriptor[]` (declarative event bindings)
- *   - `render()` override (must check `_dsdHydrated` and return empty string)
+ *   - `render()` override (must check `_dsdHydrated` and return VNode/null)
  *
  * @module @lessjs/adapter-vanilla/dsd-hydration
  */
 
-import type { HydrateEventDescriptor } from '@lessjs/core';
+import { bindHydrateEvents, type HydrateEventDescriptor, isVNode, renderToDom } from '@lessjs/core';
 
 /** Constructor type for Mixin pattern */
 // deno-lint-ignore no-explicit-any
@@ -75,7 +75,7 @@ export interface DsdHydrationMixin extends DsdHydration {
  *
  * When the browser upgrades a DSD-pre-rendered element, this Mixin:
  * 1. Detects existing shadow DOM content (via createRenderRoot)
- * 2. Marks itself as _dsdHydrated so render() can return empty string
+ * 2. Marks itself as _dsdHydrated so render() can return null
  * 3. Auto-binds events declared in `static hydrateEvents`
  * 4. Cleans up event listeners on disconnect via AbortController
  */
@@ -127,13 +127,14 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
         this._hydrateEvents();
       } else if (this.shadowRoot) {
         // Client-side render fallback for ssr:false islands.
-        // The subclass provides render(): string; we call it here because
-        // the vanilla adapter, unlike Lit, has no built-in lifecycle that
-        // auto-invokes render().
+        // The subclass provides the VNode/null render contract; the vanilla
+        // adapter has no built-in lifecycle that auto-invokes render().
         const renderFn = (this as Record<string, unknown>).render;
         if (typeof renderFn === 'function') {
-          const html = renderFn.call(this);
-          this.shadowRoot.innerHTML = String(html);
+          const rendered = renderFn.call(this);
+          if (isVNode(rendered)) {
+            this.shadowRoot.appendChild(renderToDom(rendered));
+          }
         }
       }
     }
@@ -166,16 +167,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
       this._hydrateAbortController = new AbortController();
       const { signal } = this._hydrateAbortController;
 
-      for (const desc of events) {
-        if (desc.method.startsWith('__')) continue;
-        const elements = this.shadowRoot.querySelectorAll(desc.selector);
-        for (const el of elements) {
-          const handler = (this as unknown as Record<string, unknown>)[desc.method];
-          if (typeof handler === 'function') {
-            el.addEventListener(desc.event, (handler as EventListener).bind(this), { signal });
-          }
-        }
-      }
+      bindHydrateEvents(this.shadowRoot, this, events, signal);
     }
   }
 

@@ -12,6 +12,7 @@
  */
 
 import { escapeHtml } from '@lessjs/core';
+import { renderSnapshotPlaceholderHtml } from './snapshot-placeholder.ts';
 
 // ─── Types ───────────────────────────────────────────────────────────────
 
@@ -47,7 +48,11 @@ export async function renderSnapshotLit(
   try {
     domShim = await import('@lit-labs/ssr-dom-shim');
   } catch {
-    return renderPlaceholder(tagName, '@lit-labs/ssr-dom-shim not available');
+    return {
+      html: renderSnapshotPlaceholderHtml(tagName),
+      success: true,
+      error: '@lit-labs/ssr-dom-shim not available',
+    };
   }
 
   const origHTMLElement = globalThis.HTMLElement;
@@ -134,7 +139,7 @@ export async function renderSnapshotLit(
     return { html, success: true };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    return renderPlaceholder(tagName, msg);
+    return { html: renderSnapshotPlaceholderHtml(tagName), success: true, error: msg };
   } finally {
     // Restore globals
     const g = globalThis as Record<string, unknown>;
@@ -213,15 +218,6 @@ function isLitTemplateResult(value: unknown): boolean {
 }
 
 // ─── Placeholder ─────────────────────────────────────────────────────────
-
-/**
- * Generate a placeholder snapshot for components that cannot be rendered.
- */
-function renderPlaceholder(tagName: string, reason?: string): SnapshotRenderResult {
-  const html =
-    `<div class="snapshot-preview"><span style="display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;">${tagName}</span></div>`;
-  return { html, success: true, error: reason };
-}
 
 // ─── Public helpers ──────────────────────────────────────────────────────
 

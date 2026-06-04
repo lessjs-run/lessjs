@@ -17,6 +17,7 @@
 // Import it directly where needed (e.g., scanner.ts imports DEMO_ATTRS, DEMO_SLOTS)
 
 import { toCdnUrl } from './cdn-url.ts';
+import { renderSnapshotPlaceholderHtml } from './snapshot-placeholder.ts';
 import { escapeAttr } from '@lessjs/core';
 import type { Browser, BrowserType } from 'npm:playwright@1.59.1';
 
@@ -384,7 +385,7 @@ export async function renderBatchWithPlaywright(
     // Playwright not available - return placeholders for all items
     for (const item of items) {
       results.set(item.tagName, {
-        html: renderPlaceholder(item.tagName, 'Playwright not available'),
+        html: renderSnapshotPlaceholderHtml(item.tagName),
         success: false,
         error: 'Playwright not available - snapshot is placeholder, not real render',
       });
@@ -412,7 +413,7 @@ export async function renderBatchWithPlaywright(
         }
       } else {
         // Fallback to placeholder
-        const placeholderHtml = renderPlaceholder(item.tagName, result.error);
+        const placeholderHtml = renderSnapshotPlaceholderHtml(item.tagName);
         results.set(item.tagName, {
           html: placeholderHtml,
           success: false,
@@ -481,10 +482,3 @@ function sanitizeSnapshot(html: string): string {
 }
 
 // ─── Placeholder ──────────────────────────────────────────────────────────
-
-/**
- * Generate a placeholder snapshot for components that cannot be rendered.
- */
-function renderPlaceholder(tagName: string, _reason?: string): string {
-  return `<div class="snapshot-preview"><span style="display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;">${tagName}</span></div>`;
-}

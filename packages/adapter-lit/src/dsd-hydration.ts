@@ -43,6 +43,7 @@
  */
 
 import { LitElement } from 'lit';
+import { bindHydrateEvents } from '@lessjs/core';
 import type { HydrateEventDescriptor } from '@lessjs/core';
 
 /** Constructor type for Mixin pattern - `any[]` is standard TS Mixin signature */
@@ -172,17 +173,7 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
       this._hydrateAbortController = new AbortController();
       const { signal } = this._hydrateAbortController;
 
-      for (const desc of events) {
-        // M-17 fix: Guard against prototype pollution - skip methods starting with __
-        if (desc.method.startsWith('__')) continue;
-        const elements = this.shadowRoot.querySelectorAll(desc.selector);
-        for (const el of elements) {
-          const handler = (this as unknown as Record<string, unknown>)[desc.method];
-          if (typeof handler === 'function') {
-            el.addEventListener(desc.event, (handler as EventListener).bind(this), { signal });
-          }
-        }
-      }
+      bindHydrateEvents(this.shadowRoot, this, events, signal);
     }
   }
 

@@ -98,6 +98,26 @@ export const navSections = [
     ]
   },
   {
+    "section": "",
+    "items": [
+      {
+        "path": "/roadmap",
+        "label": "Roadmap",
+        "order": 10
+      },
+      {
+        "path": "/changelog",
+        "label": "Changelog",
+        "order": 20
+      },
+      {
+        "path": "/contributing",
+        "label": "Contributing",
+        "order": 30
+      }
+    ]
+  },
+  {
     "section": "Quick Start",
     "items": [
       {

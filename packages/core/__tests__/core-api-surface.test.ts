@@ -32,7 +32,7 @@ Deno.test('core renderDsdTree escapes HTML in text content', async () => {
 });
 
 Deno.test('core JSX boolean attributes', async () => {
-  // Boolean true �?attribute present without value
+  // Boolean true: attribute present without value
   const vnode = jsx('input', { disabled: true, type: 'text' });
   const html = await renderDsdTree(vnode);
   assertEquals(html, '<input disabled type="text">');

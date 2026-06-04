@@ -716,7 +716,7 @@ export class LessLayout extends DsdElement {
                   className='mobile-menu-btn'
                   part='nav-toggle'
                   aria-label='Toggle navigation'
-                  data-on-click='_toggleMenu'
+                  onClick={(event: Event) => this._toggleMenu(event)}
                 >
                   <svg
                     width='18'
@@ -953,7 +953,7 @@ export class LessLayout extends DsdElement {
 
   // --- Mobile menu ---
 
-  // TODO(v0.28): Replace _replaceShadowRootFromLayout with signal-driven SPA nav.
+  // v0.31 UI-shell debt: replace _replaceShadowRootFromLayout with signal-driven SPA nav.
   // Currently SPA navigation destroys the entire shadow DOM and rebuilds it from
   // fetched HTML, then manually re-attaches events in _setupDetailsToggle. This is
   // incompatible with the signal architecture — we should make currentPath/navItems

@@ -9,6 +9,7 @@ import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import type { HeaderNavLink, NavItem, NavOptions, NavSection, RouteMeta } from '../types.ts';
 import { createLogger } from '@lessjs/core/logger';
+import * as ts from 'typescript';
 
 /** Aggregated navigation data ready for module generation */
 export interface NavData {
@@ -20,145 +21,85 @@ export interface NavData {
 
 const log = createLogger('content:nav');
 
-/**
- * G5 fix: Replace fragile regex-based JS->JSON conversion with a simple
- * key-value parser that handles JS object literals like:
- *   { section: "...", label: "...", order: 1 }
- *
- * This avoids breakage from hyphenated keys, nested quotes, trailing commas,
- * regex special characters in values, etc. We only parse the flat shape
- * that RouteMeta actually uses (section, label, order, type).
- */
 export function extractMeta(source: string): RouteMeta | null {
-  // Find the export: `export const meta = { ... }`
-  const exportMatch = source.match(
-    /export\s+const\s+meta\s*=\s*\{/,
+  const sourceFile = ts.createSourceFile(
+    'route.tsx',
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
   );
-  if (!exportMatch) return null;
 
-  // Extract the object body - find the matching closing brace
-  const startIdx = exportMatch.index! + exportMatch[0].length;
-  let depth = 1;
-  let endIdx = startIdx;
-  for (let i = startIdx; i < source.length && depth > 0; i++) {
-    const ch = source[i];
-    if (ch === '{') depth++;
-    else if (ch === '}') depth--;
-    else if (ch === "'" || ch === '"' || ch === '`') {
-      // Skip string contents
-      const quote = ch;
-      for (let j = i + 1; j < source.length; j++) {
-        if (source[j] === '\\' && j + 1 < source.length) {
-          j++;
-          continue;
-        }
-        if (source[j] === quote) {
-          i = j;
-          break;
-        }
-      }
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    const isExported = statement.modifiers?.some((mod) => mod.kind === ts.SyntaxKind.ExportKeyword);
+    if (!isExported) continue;
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== 'meta') continue;
+      if (!declaration.initializer) return null;
+
+      const initializer = unwrapStaticExpression(declaration.initializer);
+      if (!ts.isObjectLiteralExpression(initializer)) return null;
+
+      const result = readRouteMetaLiteral(initializer);
+      return toRouteMeta(result);
     }
-    endIdx = i;
   }
 
-  if (depth !== 0) return null;
+  return null;
+}
 
-  const body = source.slice(startIdx, endIdx);
-  const result: Record<string, unknown> = {};
-
-  // Parse key-value pairs: `key: value,` or `key: value}`
-  // Split on commas that are NOT inside strings
-  const pairs = splitOnCommas(body);
-  for (const pair of pairs) {
-    const colonIdx = pair.indexOf(':');
-    if (colonIdx === -1) continue;
-
-    const rawKey = pair.slice(0, colonIdx).trim();
-    const rawValue = pair.slice(colonIdx + 1).trim();
-
-    // Normalize key: strip quotes if present
-    const key = rawKey.replace(/^['"`]|['"`]$/g, '');
-    if (!key) continue;
-
-    // Parse value
-    result[key] = parseValue(rawValue);
-  }
-
-  if (
-    result &&
-    typeof result === 'object' &&
-    result.section &&
-    result.label
+function unwrapStaticExpression(expression: ts.Expression): ts.Expression {
+  let current = expression;
+  while (
+    ts.isAsExpression(current) ||
+    ts.isSatisfiesExpression(current) ||
+    ts.isParenthesizedExpression(current)
   ) {
-    return result as unknown as RouteMeta;
+    current = current.expression;
+  }
+  return current;
+}
+
+function readRouteMetaLiteral(object: ts.ObjectLiteralExpression): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const property of object.properties) {
+    if (!ts.isPropertyAssignment(property)) continue;
+    const key = propertyNameToString(property.name);
+    if (!key || !['section', 'label', 'order'].includes(key)) continue;
+    result[key] = readLiteralValue(unwrapStaticExpression(property.initializer));
+  }
+  return result;
+}
+
+function readLiteralValue(expression: ts.Expression): unknown {
+  if (ts.isStringLiteral(expression) || ts.isNoSubstitutionTemplateLiteral(expression)) {
+    return expression.text;
+  }
+  if (ts.isNumericLiteral(expression)) return Number(expression.text);
+  if (expression.kind === ts.SyntaxKind.TrueKeyword) return true;
+  if (expression.kind === ts.SyntaxKind.FalseKeyword) return false;
+  if (expression.kind === ts.SyntaxKind.NullKeyword) return null;
+  return undefined;
+}
+
+function propertyNameToString(name: ts.PropertyName): string | null {
+  if (ts.isIdentifier(name) || ts.isStringLiteral(name) || ts.isNumericLiteral(name)) {
+    return name.text;
   }
   return null;
 }
 
-/**
- * Split a string on commas, respecting quoted strings.
- */
-function splitOnCommas(s: string): string[] {
-  const parts: string[] = [];
-  let current = '';
-  let inString: string | null = null;
-
-  for (let i = 0; i < s.length; i++) {
-    const ch = s[i];
-    if (inString) {
-      current += ch;
-      if (ch === '\\' && i + 1 < s.length) {
-        current += s[++i];
-        continue;
-      }
-      if (ch === inString) inString = null;
-    } else if (ch === "'" || ch === '"' || ch === '`') {
-      current += ch;
-      inString = ch;
-    } else if (ch === ',') {
-      parts.push(current);
-      current = '';
-    } else {
-      current += ch;
-    }
-  }
-  if (current.trim()) parts.push(current);
-  return parts;
-}
-
-/**
- * Parse a JS literal value to a JS primitive.
- * Handles: strings, numbers, booleans, arrays of strings, null.
- */
-function parseValue(raw: string): unknown {
-  const s = raw.trim();
-  if (s === 'true') return true;
-  if (s === 'false') return false;
-  if (s === 'null' || s === 'undefined') return null;
-
-  // String (single, double, or backtick quotes)
-  if (
-    (s.startsWith("'") && s.endsWith("'")) ||
-    (s.startsWith('"') && s.endsWith('"')) ||
-    (s.startsWith('`') && s.endsWith('`'))
-  ) {
-    return s.slice(1, -1);
-  }
-
-  // Array of strings: ['a', 'b', 'c']
-  if (s.startsWith('[') && s.endsWith(']')) {
-    const inner = s.slice(1, -1);
-    return inner
-      .split(',')
-      .map((item) => parseValue(item.trim()))
-      .filter((v) => v !== null);
-  }
-
-  // Number
-  const num = Number(s);
-  if (!isNaN(num) && s !== '') return num;
-
-  return s; // fallback: return as string
+function toRouteMeta(value: Record<string, unknown>): RouteMeta | null {
+  if (typeof value.section !== 'string') return null;
+  if (typeof value.label !== 'string') return null;
+  if (value.order !== undefined && typeof value.order !== 'number') return null;
+  return {
+    section: value.section,
+    label: value.label,
+    ...(value.order !== undefined ? { order: value.order } : {}),
+  };
 }
 
 /**

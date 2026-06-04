@@ -43,15 +43,13 @@
  *
  * ─── v0.25: AST Upgrade ───────────────────────────────────
  *
- * Replaced regex-based source scanning with dynamic import():
- * - readRouteTagNameFromModule(): regex source scan (no module execution)
- * - readBooleanMeta() / readHydrateMeta(): eliminated; scanIslandMeta() uses import()
+ * Replaced source-text heuristics with structured extraction:
+ * - readRouteTagNameFromModule(): TypeScript AST static literal scan
+ * - readBooleanMeta() / readHydrateMeta(): eliminated; scanIslandMeta() uses AST
  * - All remaining regex patterns are path-utility only, annotated with v0.25: AST-verified
  *
- * Rationale: route modules and island modules are ESM .ts files that Deno can
- * import natively. Reading exported values directly is more reliable than
- * regex-matching source text and handles edge cases like comments, computed
- * properties, and destructured exports that regex cannot.
+ * Rationale: route modules and island modules are ESM .ts files. Static AST
+ * extraction avoids module execution and avoids source regex heuristics.
  */
 
 import type {
@@ -69,28 +67,63 @@ import * as ts from 'typescript';
 const log = createLogger('core');
 
 /**
- * Read `export const tagName = '...'` from source text via regex.
+ * Read `export const tagName = '...'` from source text via AST.
  * This avoids importing the module (which can fail for modules that
  * depend on Vite generated-entry modules).
  */
-function readRouteTagName(source: string): string | undefined {
-  const match = source.match(
-    /^export\s+const\s+tagName\s*=\s*(['"])([\w-]+)\1\s*;?\s*$/m,
-  );
-  return match ? match[2] : undefined;
+function readRouteTagName(source: string, fileName: string): string | undefined {
+  return readStaticStringExport(source, 'tagName', fileName);
 }
 
 /**
- * Read tagName from a route file. Uses regex-based source scanning
- * (no import() execution) to avoid dependency resolution failures.
+ * Read tagName from a route file using static AST scanning.
  */
 async function readRouteTagNameFromModule(filePath: string): Promise<string | undefined> {
+  let source: string;
   try {
-    const source = await readFile(filePath, 'utf-8');
-    return readRouteTagName(source);
+    source = await readFile(filePath, 'utf-8');
   } catch {
     return undefined;
   }
+  return readRouteTagName(source, filePath);
+}
+
+function readStaticStringExport(
+  source: string,
+  exportName: string,
+  fileName: string,
+): string | undefined {
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    const isExported = statement.modifiers?.some((mod) => mod.kind === ts.SyntaxKind.ExportKeyword);
+    if (!isExported) continue;
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName) continue;
+      if (!declaration.initializer) return undefined;
+
+      const value = unwrapStaticLessExpression(declaration.initializer);
+      if (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)) {
+        return value.text;
+      }
+      throw new LessError(
+        `Invalid static ${exportName} export: expected a string literal.`,
+        'STATIC_METADATA_ERROR',
+        500,
+        false,
+      );
+    }
+  }
+
+  return undefined;
 }
 
 /**
@@ -238,8 +271,7 @@ export async function scanRoutes(
         const params = paramMatches ? paramMatches.map((m) => m.slice(1, -1)) : undefined;
         let tagName: string | undefined;
         if (routeType === 'page') {
-          // v0.25.1: Regex-based source scanning — reads `export const tagName`
-          // without executing the module (avoids virtual module resolution failures)
+          // Static AST scanning reads `export const tagName` without executing the module.
           tagName = await readRouteTagNameFromModule(fullPath);
           if (tagName === undefined) {
             // tagName not found is normal — not all page routes define one

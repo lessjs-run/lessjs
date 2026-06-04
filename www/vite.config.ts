@@ -225,7 +225,7 @@ export default defineConfig({
         nav: {
           routesDir: 'app/routes',
           // Minimal headerNav; less-layout auto-filters sidebar.
-          // TODO: derive from route meta scanning.
+          // v0.31 UI-shell debt: derive this from route meta scanning.
           headerNav: [
             { href: '/guide/getting-started', label: 'Guide' },
             { href: '/apilist', label: 'API' },

@@ -45,12 +45,11 @@ Deno.test('vanilla adapter isTemplate returns false for strings', () => {
   uninstallVanillaAdapter();
 });
 
-Deno.test('vanilla adapter render converts to string', async () => {
+Deno.test('vanilla adapter does not provide string rendering', () => {
   installVanillaAdapter();
   const adapter = getDefaultRegistry().get('vanilla');
   assertExists(adapter);
-  const result = await adapter.render?.('hello world', 'test-element');
-  assertEquals(result, 'hello world');
+  assertEquals(adapter.render, undefined);
   uninstallVanillaAdapter();
 });
 

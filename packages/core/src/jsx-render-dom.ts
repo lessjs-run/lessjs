@@ -99,7 +99,7 @@ function createElementForTag(tag: string): Element {
  */
 function applyStaticProp(el: Element, key: string, resolved: unknown): void {
   if (resolved == null) return;
-  if (key === 'rawHtml') return;
+  if (key === 'trustedHtml') return;
 
   // style object — unwrap nested signal values
   if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
@@ -142,7 +142,7 @@ function applyStaticProp(el: Element, key: string, resolved: unknown): void {
  * - Signal values → create effect() binding (ADR-0058)
  * - `style` object → assign to element.style
  * - Boolean values → setAttribute / removeAttribute
- * - `innerHTML` → text by default; trusted HTML when rawHtml=true
+ * - `innerHTML` → text by default; trusted HTML when trustedHtml=true
  * - `className` → `class` attribute
  * - `htmlFor` → `for` attribute
  * - Other values → setAttribute
@@ -154,9 +154,9 @@ export function applyProps(
   /** Collect effect dispose fns for batch cleanup. */
   disposers?: Set<() => void>,
 ): void {
-  const rawHtml = props.rawHtml === true;
+  const trustedHtml = props.trustedHtml === true;
   for (const [key, value] of Object.entries(props)) {
-    if (key === 'children' || key === 'key' || key === 'rawHtml') continue;
+    if (key === 'children' || key === 'key' || key === 'trustedHtml') continue;
 
     // ref callback
     if (key === 'ref' && typeof value === 'function') {
@@ -175,10 +175,10 @@ export function applyProps(
 
     if (value == null) continue;
 
-    // innerHTML is text by default; explicit rawHtml opts into trusted HTML.
+    // innerHTML is text by default; explicit trustedHtml opts into trusted HTML.
     if (key === 'innerHTML') {
       const resolved = String(unwrapSignalLike(value));
-      if (rawHtml) {
+      if (trustedHtml) {
         (el as HTMLElement).innerHTML = trustRenderHtml(resolved);
       } else {
         (el as HTMLElement).textContent = resolved;

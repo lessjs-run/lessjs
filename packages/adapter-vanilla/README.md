@@ -30,17 +30,18 @@ installVanillaAdapter();
 
 ### Create a DSD-compatible component
 
-```ts
+```tsx
 import { DsdVanillaElement } from '@lessjs/adapter-vanilla';
+import type { VNode } from '@lessjs/core';
 
 class MyToggle extends DsdVanillaElement {
   static hydrateEvents = [
     { selector: 'button.toggle', event: 'click', method: '_handleToggle' },
   ];
 
-  override render(): string {
-    if (this._dsdHydrated) return '';
-    return '<button class="toggle">Toggle</button>';
+  override render(): VNode | null {
+    if (this._dsdHydrated) return null;
+    return <button class='toggle'>Toggle</button>;
   }
 
   _handleToggle() {

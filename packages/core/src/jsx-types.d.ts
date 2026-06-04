@@ -14,7 +14,7 @@ declare namespace JSX {
    *
    * children must match VNode.children: (VNode | string)[] to satisfy
    * TypeScript's structural assignability check when a JSX expression
-   * (this Element) is returned from DsdElement.render(): string | VNode.
+   * is returned from DsdElement.render(): VNode | null.
    */
   interface Element {
     tag: string | import('./vnode.ts').ComponentFn | import('./vnode.ts').ComponentCtor | symbol;

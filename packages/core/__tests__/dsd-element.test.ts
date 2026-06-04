@@ -1,5 +1,3 @@
-// @ts-nocheck — test mock classes return string values for render().
-// String returns handled by renderDsd compat path at runtime.
 /**
  * @lessjs/core - DsdElement Tests
  * Tests for the zero-dependency DsdElement base class.
@@ -16,6 +14,10 @@ import type { VNode } from '../src/vnode.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
 
 // Helper: create a minimal subclass for testing.
+
+function htmlFixture(markup: string): VNode {
+  return jsx('div', { innerHTML: markup, trustedHtml: true });
+}
 
 function defineTestElement(options?: {
   tagName?: string;
@@ -40,7 +42,7 @@ function defineTestElement(options?: {
     static override observedAttributes = options?.observedAttributes;
 
     override render(): VNode | null {
-      return options?.renderContent ?? '<div class="test-inner">rendered</div>';
+      return htmlFixture(options?.renderContent ?? '<div class="test-inner">rendered</div>');
     }
   }
 
@@ -51,15 +53,15 @@ function defineTestElement(options?: {
 // Skip all tests when no DOM (SSR/Deno without --dom flag)
 const hasDOM = typeof customElements !== 'undefined';
 
-// render() returns a string usable by SSR.
+// render() returns a VNode usable by SSR.
 
-Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
+Deno.test('DsdElement: render() returns VNode for SSR', async () => {
   if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<span>hello</span>' });
   const el = document.createElement(tagName) as DsdElement;
   const result = el.render();
-  assertEquals(typeof result, 'string');
-  assertEquals(result, '<span>hello</span>');
+  assertEquals(typeof result, 'object');
+  assertEquals(await renderDsdTree(result), '<div><span>hello</span></div>');
 });
 
 // DSD detection for a pre-populated shadow root.
@@ -122,7 +124,7 @@ Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => 
     value = 'before';
 
     override render(): VNode | null {
-      return `<span>${this.value}</span>`;
+      return jsx('span', { children: this.value });
     }
   }
   customElements.define(tagName, RequestUpdateElement);
@@ -142,7 +144,7 @@ Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => 
 // _scopeDispose deleted in v0.27 (ADR-0067: Set-based effect tracking).
 // Test verifies event listeners are removed on disconnect.
 
-Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
+Deno.test('DsdElement: disconnectedCallback disposes VNode event markers', async () => {
   if (!hasDOM) return;
   let callCount = 0;
 
@@ -153,7 +155,10 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
     }
 
     override render(): VNode | null {
-      return `<button data-on-click="_onClick">click</button>`;
+      return jsx('button', {
+        onClick: () => this._onClick(new Event('click')),
+        children: 'click',
+      });
     }
   }
   if (hasDOM) customElements.define(tagName, AbortElement);
@@ -161,7 +166,7 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   // Simulate DSD
   const el = document.createElement(tagName) as AbortElement;
   const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = `<button data-on-click="_onClick">click</button>`;
+  shadow.innerHTML = await renderDsdTree(el.render());
 
   document.body.appendChild(el);
 
@@ -173,7 +178,7 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
 
   document.body.removeChild(el);
 
-  // After disconnect, event listener is cleaned up �?click should not fire
+  // After disconnect, event listener is cleaned up; click should not fire.
   callCount = 0;
   btn.click();
   assertEquals(callCount, 0);
@@ -215,7 +220,7 @@ Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', async (
   assertEquals(callCount, 0);
 });
 
-// M-17 guard removed �?_hydrateEvents has been removed in v0.21.0.
+// M-17 guard removed; _hydrateEvents has been removed in v0.21.0.
 // Event binding via html template @click does not use method-name strings.
 
 Deno.test('DsdElement: html @click bindings use direct function references (no M-17 concern)', () => {
@@ -281,7 +286,7 @@ Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
     static override delegatesFocus = true;
 
     override render(): VNode | null {
-      return '<input type="text">';
+      return jsx('input', { type: 'text' });
     }
   }
   if (hasDOM) customElements.define(tagName, FocusElement);
@@ -321,7 +326,7 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">dsd original</div>';
 
-  // Connect �?should detect DSD and NOT overwrite
+  // Connect: should detect DSD and NOT overwrite.
   document.body.appendChild(el);
 
   // Content should still be the DSD content, not the CSR render() result
@@ -339,7 +344,7 @@ Deno.test('DsdElement: this.params is reactive', () => {
   class ParamsElement extends DsdElement {
     override render(): VNode | null {
       const p = this.params;
-      return `<span>slug=${p.slug || 'none'}</span>`;
+      return jsx('span', { children: `slug=${p.slug || 'none'}` });
     }
   }
   customElements.define(tagName, ParamsElement);
@@ -370,7 +375,7 @@ Deno.test('DsdElement: this.params default empty object', () => {
   class DefaultParamsElement extends DsdElement {
     override render(): VNode | null {
       const keys = Object.keys(this.params);
-      return `<span>keys=${keys.length}</span>`;
+      return jsx('span', { children: `keys=${keys.length}` });
     }
   }
   customElements.define(tagName, DefaultParamsElement);
@@ -401,12 +406,16 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
       this.registerSignal('theme', themeSig);
     }
     override render(): VNode | null {
-      return `<div data-signal="theme" data-signal-attr="data-theme,class">themed</div>`;
+      return jsx('div', {
+        'data-signal': 'theme',
+        'data-signal-attr': 'data-theme,class',
+        children: 'themed',
+      });
     }
   }
   customElements.define(tagName, ThemeAttrElement);
 
-  // Simulate DSD with child content �?verify textContent is NOT destroyed
+  // Simulate DSD with child content; verify textContent is NOT destroyed.
   const el = document.createElement(tagName) as DsdElement;
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML =
@@ -447,7 +456,7 @@ Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively'
       this.registerSignal('content', htmlSig);
     }
     override render(): VNode | null {
-      return `<div data-signal-html="content">fallback</div>`;
+      return jsx('div', { 'data-signal-html': 'content', children: 'fallback' });
     }
   }
   customElements.define(tagName, HtmlBindElement);
@@ -485,7 +494,11 @@ Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness'
       this.registerSignal('state', toggleSig);
     }
     override render(): VNode | null {
-      return `<div data-signal="state" data-signal-class="active">content</div>`;
+      return jsx('div', {
+        'data-signal': 'state',
+        'data-signal-class': 'active',
+        children: 'content',
+      });
     }
   }
   customElements.define(tagName, ClassToggleElement);
@@ -498,12 +511,12 @@ Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness'
   const div = shadow.querySelector('div')!;
   assertExists(div);
 
-  // Signal 'on' is truthy �?class present
+  // Signal 'on' is truthy; class present.
   assertEquals(div.classList.contains('active'), true);
 
   toggleSig.value = '';
   await new Promise((r) => setTimeout(r, 50));
-  // Signal '' is falsy �?class removed
+  // Signal '' is falsy; class removed.
   assertEquals(div.classList.contains('active'), false);
 
   toggleSig.value = 'on';
@@ -513,7 +526,7 @@ Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness'
   document.body.removeChild(el);
 });
 
-Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
+Deno.test('DsdElement: CSR re-render rebinds VNode event markers', () => {
   if (!hasDOM) return;
 
   const tagName = `test-csrevent-${Math.random().toString(36).slice(2, 7)}`;
@@ -524,7 +537,10 @@ Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
       callCount++;
     }
     override render(): VNode | null {
-      return `<button data-on-click="_testClick">click</button>`;
+      return jsx('button', {
+        onClick: () => this._testClick(),
+        children: 'click',
+      });
     }
   }
   customElements.define(tagName, CsrEventElement);

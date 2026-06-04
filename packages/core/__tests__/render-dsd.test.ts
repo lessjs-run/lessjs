@@ -11,6 +11,8 @@ import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert
 import { renderDsd, type RenderDsdOptions } from '../src/render-dsd.ts';
 import { escapeAttr, escapeAttrValue, escapeHtml } from '../src/html-escape.ts';
 import { getDefaultRegistry, type RendererProtocol } from '../src/adapter-registry.ts';
+import { jsx } from '../src/jsx-runtime.ts';
+import type { VNode } from '../src/vnode.ts';
 
 // ─── Mock Component Classes ──────────────────────────────────
 //
@@ -19,7 +21,7 @@ import { getDefaultRegistry, type RendererProtocol } from '../src/adapter-regist
 // needing browser HTMLElement (not available in Deno runtime).
 
 interface MockComponent {
-  render(): string | unknown;
+  render(): VNode | null | unknown;
   [key: string]: unknown;
   layer?: string;
 }
@@ -53,7 +55,9 @@ function createMockClass(
     render() {
       if (throwOnRender) throw new Error('Render exploded');
       if (renderValue !== undefined) return renderValue;
-      return renderContent;
+      return renderContent === ''
+        ? null
+        : jsx('div', { innerHTML: renderContent, trustedHtml: true });
     }
   };
 
@@ -301,12 +305,13 @@ Deno.test('renderDsd - error handling', async (t) => {
     assertStringIncludes(output.html, '</template>');
   });
 
-  await t.step('handles render() that returns non-string without adapter', async () => {
+  await t.step('handles render() that returns non-VNode without adapter', async () => {
     getDefaultRegistry().register(undefined);
     const cls = createMockClass('', { renderValue: { notAString: true } });
     const output = await renderDsdForTest('obj-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<obj-el-1>');
-    assertStringIncludes(output.html, 'Render Error');
+    assertFalse(output.html.includes('Render Error'));
+    assertEquals(output.errors[0]?.code, 'LESS_RENDER_INVALID_OUTPUT');
   });
 });
 
@@ -459,7 +464,7 @@ Deno.test('renderDsd - source info', async (t) => {
 // ─── Adapter protocol ────────────────────────────────────────
 
 Deno.test('renderDsd - adapter protocol', async (t) => {
-  await t.step('uses adapter to render non-string template results', async () => {
+  await t.step('rejects adapter-native template values at the core boundary', async () => {
     const fakeTemplate = { _$litType$: 1, __brand: 'TemplateResult' };
     let renderCalled = false;
 
@@ -478,8 +483,9 @@ Deno.test('renderDsd - adapter protocol', async (t) => {
 
     const cls = createMockClass('', { renderValue: fakeTemplate });
     const output = await renderDsdForTest('adapter-el-1', asCtor(cls), {});
-    assertStringIncludes(output.html, '<p>adapted</p>');
-    assertEquals(renderCalled, true);
+    assertFalse(output.html.includes('<p>adapted</p>'));
+    assertEquals(renderCalled, false);
+    assertEquals(output.errors[0]?.code, 'LESS_RENDER_INVALID_OUTPUT');
 
     getDefaultRegistry().register(undefined);
   });

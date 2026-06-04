@@ -104,11 +104,11 @@ function GettingStartedZh() {
         页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM，所以内容在 JavaScript
         运行前就已经可见。
       </p>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <less-code-block><pre><code>{`import { DsdElement, type VNode } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
-  override render(): string {
-    return '<main>Hello LessJS</main>';
+  override render(): VNode {
+    return <main>Hello LessJS</main>;
   }
 }
 
@@ -226,11 +226,11 @@ function GettingStartedEn() {
         A page is a Web Component. SSR renders it into Declarative Shadow DOM, so content
         is visible before JavaScript runs.
       </p>
-      <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
+      <less-code-block><pre><code>{`import { DsdElement, type VNode } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
-  override render(): string {
-    return '<main>Hello LessJS</main>';
+  override render(): VNode {
+    return <main>Hello LessJS</main>;
   }
 }
 

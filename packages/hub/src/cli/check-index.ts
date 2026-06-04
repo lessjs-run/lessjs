@@ -14,38 +14,7 @@
  */
 
 import { buildIndex } from '../indexer.ts';
-import type { HubPackageRecord } from '../schema.ts';
-
-function loadRecords(baseDir: string): HubPackageRecord[] {
-  const records: HubPackageRecord[] = [];
-  const packagesDir = `${baseDir}/packages`;
-
-  try {
-    const entries = Deno.readDirSync(packagesDir);
-    for (const entry of entries) {
-      const fullPath = `${packagesDir}/${entry.name}`;
-      if (entry.isDirectory) {
-        try {
-          const subEntries = Deno.readDirSync(fullPath);
-          for (const sub of subEntries) {
-            if (!sub.name.endsWith('.json')) continue;
-            records.push(
-              JSON.parse(Deno.readTextFileSync(`${fullPath}/${sub.name}`)),
-            );
-          }
-        } catch {
-          // skip
-        }
-      } else if (entry.name.endsWith('.json')) {
-        records.push(JSON.parse(Deno.readTextFileSync(fullPath)));
-      }
-    }
-  } catch {
-    // Directory doesn't exist
-  }
-
-  return records;
-}
+import { loadHubPackageRecords } from './shared.ts';
 
 function main() {
   const cwd = Deno.cwd();
@@ -56,7 +25,7 @@ function main() {
   console.info(`  Base: ${baseDir}\n`);
 
   // Load records
-  const records = loadRecords(baseDir);
+  const records = loadHubPackageRecords(baseDir);
   if (records.length === 0) {
     console.info(`  ⚠️  No package records found in ${baseDir}/packages/\n`);
     Deno.exit(0);
