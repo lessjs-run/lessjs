@@ -1,0 +1,33 @@
+name: Feature
+description: Propose product work tied to a version SOP.
+title: '[Feature]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Read `docs/governance/PROJECT_WORKFLOW.md` before filing.'
+  - type: input
+    id: version
+    attributes:
+      label: Target version
+      description: Example: v0.32.0
+    validations:
+      required: true
+  - type: input
+    id: sop
+    attributes:
+      label: SOP
+      description: Example: docs/sop/v0.32.0/README.md
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Describe the concrete behavior to implement.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+      description: List tests, docs, gates, fixtures, or CI proof.

@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.31, v0.32, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.32, v0.33, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -245,14 +245,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                line is v0.31.0: JSX-first Application API on top of the DSD-first renderer.
+                line is v0.32.0: App Lifecycle Contract on top of the JSX-first Application API.
                 The path to v1.0 is a stable application engine, not a generic backend platform.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.31.0 Application API</h2>
-              <p>19 packages aligned. App authors start from definePage and defineIsland.</p>
+              <h2>v0.32.0 App Lifecycle</h2>
+              <p>19 packages aligned. Pages have params, load context, route metadata, redirect, not-found, and error fallback.</p>
             </aside>
           </section>
 
@@ -265,31 +265,46 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.31.0</div>
               <div><h3>JSX-first Application API</h3><p>definePage, defineIsland, defineElement, defineLayout, and the @openelement/app/vite split.</p></div>
-              <span class="status current">Current</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.32.0</div>
-              <div><h3>Rendering Modes</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes.</p></div>
-              <span class="status planned">Planned</span>
+              <div><h3>App Lifecycle Contract</h3><p>Route params, load context, route metadata, redirect, not-found, error fallback, rendering intent, and streaming intent.</p></div>
+              <span class="status current">Current</span>
             </div>
             <div class="phase">
               <div class="version">v0.33.0</div>
-              <div><h3>Server/API Layer</h3><p>Typed Hono helpers, middleware lifecycle, response helpers, and runtime route contracts.</p></div>
+              <div><h3>Rendering Runtime and Deployment</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.34.0</div>
-              <div><h3>Data Integration Layer</h3><p>External ORM and database recipes without framework-owned ORM or auth platforms.</p></div>
+              <div><h3>Server Routes and Mutations</h3><p>Typed Hono helpers, middleware lifecycle, response helpers, forms, and mutations.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.35.0</div>
-              <div><h3>UI Shell and Design System</h3><p>AppShell polish, Ocean/Island UI split, @openelement/ui/css, and starter templates.</p></div>
+              <div><h3>Data Integration Recipes</h3><p>External ORM and database recipes without framework-owned ORM or auth platforms.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.0</div>
-              <div><h3>Hardening and Migration</h3><p>API audit, docs proof, fixture matrix, ecosystem smoke, and performance budget.</p></div>
+              <div><h3>UI Shell and Starter Productization</h3><p>AppShell polish, Ocean/Island UI split, @openelement/ui/css, and starter templates.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.0</div>
+              <div><h3>Production Hardening and Pruning</h3><p>API audit, docs proof, fixture matrix, Hub disposition, ecosystem smoke, and performance budget.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.38.0</div>
+              <div><h3>Public Surface Reset</h3><p>Final package/product surface reset before the v1 release candidate.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.39.0</div>
+              <div><h3>v1 Release Candidate</h3><p>Validate final APIs, docs, starters, deploy smoke, consumer smoke, and publish gates.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
@@ -313,9 +328,9 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Current</h2>
               <ul>
-                <li>v0.31.0 Application API rollout</li>
-                <li>Root app authoring + /vite config split</li>
-                <li>www docs and generated template DX</li>
+                <li>v0.32.0 App Lifecycle Contract</li>
+                <li>Route params, load, metadata, redirect, and not-found</li>
+                <li>AutoWorkflow execution and release package</li>
                 <li>19-package aligned monorepo</li>
               </ul>
             </div>

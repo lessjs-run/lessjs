@@ -1,3 +1,29 @@
+## v0.32.0 - App Lifecycle Contract (2026-06-05)
+
+### Application Lifecycle
+
+- Added `redirect()` and `notFound()` lifecycle helpers to `@openelement/app`.
+- Added typed `OpenElementRedirect` and `OpenElementNotFound` controls plus type
+  guards.
+- Extended `definePage()` render context with `route` and `meta`.
+- Added `definePage({ error })` fallback rendering through the existing VNode
+  contract.
+- Wired generated Hono and SSG entries to handle redirect/not-found controls.
+- Exposed route file path, revalidate, rendering intent, and streaming intent in
+  SSG `routeInfo`.
+
+### Workflow and Docs
+
+- Added mandatory AutoWorkflow governance in `docs/governance/PROJECT_WORKFLOW.md`.
+- Added `docs/next/v0.32.0/` execution package and ADR-0085.
+- Added GitHub issue templates, PR template, refreshed agent prompts, and
+  `deno task workflow:check`.
+- Updated Status, Roadmap, Architecture, SOP, www homepage, API reference, and
+  Getting Started docs for v0.32.0.
+- Bumped all 19 packages and internal JSR ranges to `0.32.0`.
+
+---
+
 ## v0.31.0 - JSX-first Application API (2026-06-05)
 
 ### Application API

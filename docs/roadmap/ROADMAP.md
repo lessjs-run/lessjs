@@ -1,8 +1,10 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current line: v0.31.0 Application API.\
+> Current line: v0.32.0 App Lifecycle Contract.\
 > Updated: 2026-06-05.
+
+Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 ## Product Position
 
@@ -32,14 +34,14 @@ Shadow DOM, not a framework-owned component runtime.
 
 ## Product Surface Direction
 
-The current v0.31 release line still publishes 19 packages. That graph is
+The current v0.32 release line still publishes 19 packages. That graph is
 technically healthy, but it is not the intended v1.0 public product surface.
 
-ADR-0083 defers the physical package reset until the v1.0 candidate stage. The
-v0.32-v0.36 line should validate product behavior first, while avoiding new
-top-level package sprawl.
+ADR-0083 defers the physical package reset. ADR-0084 sets the product-closure
+line: v0.32-v0.37 validate behavior, evidence, and pruning first; v0.38 performs
+the public surface reset; v0.39 validates the release candidate.
 
-The v0.37 review target is:
+The v0.38 review target is:
 
 | Surface                  | Purpose                                                  |
 | ------------------------ | -------------------------------------------------------- |
@@ -67,17 +69,19 @@ is necessary.
 
 ## Version Ladder
 
-| Version | Name                               | Goal                                                                          | Status  |
-| ------- | ---------------------------------- | ----------------------------------------------------------------------------- | ------- |
-| v0.30.x | Contract cleanup                   | One renderer model, one metadata boundary, openElement rename                 | Done    |
-| v0.31.0 | JSX-first Application API          | Make page/island authoring the default DX                                     | Current |
-| v0.32.0 | Rendering Modes                    | Productize SSR, ISR, streaming DSD, and cache/deploy semantics                | Planned |
-| v0.33.0 | Server/API Layer                   | Make Hono route handlers, middleware, errors, and typed responses first-class | Planned |
-| v0.34.0 | Data Integration Layer             | External ORM/database recipes and adapters without owning an ORM              | Planned |
-| v0.35.0 | UI Shell and Design System Surface | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters              | Planned |
-| v0.36.0 | Hardening and Migration            | API audit, docs proof, fixtures, ecosystem smoke, performance                 | Planned |
-| v0.37.0 | Public Surface Reset               | Package/product surface reset before v1.0                                     | Planned |
-| v1.0.0  | Stable Application Engine          | Freeze stable APIs after v0.31-v0.37 are gate-proven                          | Vision  |
+| Version | Name                                | Goal                                                                 | Status  |
+| ------- | ----------------------------------- | -------------------------------------------------------------------- | ------- |
+| v0.30.x | Contract cleanup                    | One renderer model, one metadata boundary, openElement rename        | Done    |
+| v0.31.0 | JSX-first Application API           | Make page/island authoring the default DX                            | Done    |
+| v0.32.0 | App Lifecycle Contract              | Define page, route, layout, load, error, redirect, and context flow  | Current |
+| v0.33.0 | Rendering Runtime and Deployment    | Productize SSG, SSR, ISR, streaming DSD, cache, and deploy semantics | Planned |
+| v0.34.0 | Server Routes and Mutations         | Make Hono routes, middleware, responses, and mutations first-class   | Planned |
+| v0.35.0 | Data Integration Recipes            | Prove external ORM/database recipes without owning an ORM            | Planned |
+| v0.36.0 | UI Shell and Starter Productization | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters     | Planned |
+| v0.37.0 | Production Hardening and Pruning    | API audit, docs proof, fixtures, Hub disposition, performance        | Planned |
+| v0.38.0 | Public Surface Reset                | Package/product surface reset before the v1 release candidate        | Planned |
+| v0.39.0 | v1 Release Candidate                | Validate final APIs, docs, starters, deploy smoke, and publish gates | Planned |
+| v1.0.0  | Stable Application Engine           | Freeze stable APIs after v0.31-v0.39 are gate-proven                 | Vision  |
 
 ## v0.31.0 - JSX-first Application API
 
@@ -95,36 +99,54 @@ Deliverables:
 
 SOP: `docs/sop/v0.31.0/`
 
-## v0.32.0 - Rendering Modes
+## v0.32.0 - App Lifecycle Contract
 
-Goal: make rendering mode selection explicit and deployable.
+Goal: define the stable page, layout, island, route, `load()`, context, error,
+not-found, and redirect lifecycle.
 
 Scope:
 
-- static, dynamic SSR, ISR, and streaming DSD mode declarations;
-- route-level revalidate semantics;
-- cache adapter boundary for memory, Deno KV, Cloudflare KV, and filesystem;
-- deploy recipes for static host, Deno Deploy, Cloudflare Workers, and Node-compatible hosts;
-- tests proving stale/fresh behavior and stream ordering.
+- route descriptor and metadata audit;
+- lifecycle order for match, params, context, load, render, layout, error, and
+  redirect;
+- structured route render intent without runtime/deploy semantics;
+- page function and object form alignment;
+- lifecycle fixtures and docs.
 
 SOP: `docs/sop/v0.32.0/`
 
-## v0.33.0 - Server/API Layer
+## v0.33.0 - Rendering Runtime and Deployment
 
-Goal: make backend routes feel intentional without turning openElement into a
-heavy backend framework.
+Goal: turn the v0.32 lifecycle into deployable rendering behavior.
+
+Scope:
+
+- static SSG, request-time SSR, ISR, and streaming DSD;
+- revalidate and freshness normalization;
+- memory, filesystem, Deno KV, and Cloudflare KV cache adapter boundaries;
+- deploy recipes for static hosts, Deno Deploy, Cloudflare Workers, and
+  Node-compatible hosts;
+- stale/fresh ISR tests, streaming tests, and deployment fixtures.
+
+SOP: `docs/sop/v0.33.0/`
+
+## v0.34.0 - Server Routes and Mutations
+
+Goal: make backend routes and mutations intentional without turning openElement
+into a heavy backend framework.
 
 Scope:
 
 - typed Hono route helpers;
 - request context, middleware order, cookies, headers, redirect helpers;
 - structured error responses;
+- form and mutation patterns;
 - route handler docs and generated types;
-- security defaults for API responses.
+- security defaults for API and mutation responses.
 
-SOP: `docs/sop/v0.33.0/`
+SOP: `docs/sop/v0.34.0/`
 
-## v0.34.0 - Data Integration Layer
+## v0.35.0 - Data Integration Recipes
 
 Goal: support real app data without owning an ORM.
 
@@ -132,16 +154,17 @@ Scope:
 
 - documented integration recipes for Drizzle, Kysely, Prisma, TypeORM, Deno KV,
   Cloudflare D1, Postgres, and SQLite;
+- loader and mutation examples;
 - connection lifecycle guidance for serverless and edge runtimes;
-- typed loader examples;
-- no built-in ORM, no auth provider, no proprietary database abstraction.
+- typed loader examples and fixture apps;
+- no built-in ORM, auth provider, or proprietary database abstraction.
 
-SOP: `docs/sop/v0.34.0/`
+SOP: `docs/sop/v0.35.0/`
 
-## v0.35.0 - UI Shell and Design System Surface
+## v0.36.0 - UI Shell and Starter Productization
 
-Goal: make the visible app shell and component surface good enough for real
-sites without reopening renderer architecture.
+Goal: make the visible app shell, UI surface, and starter templates good enough
+for real sites without reopening renderer architecture.
 
 Scope:
 
@@ -151,54 +174,67 @@ Scope:
 - starter templates for docs, blog, product, and dashboard;
 - visual docs and Playwright proof.
 
-SOP: `docs/sop/v0.35.0/`
+SOP: `docs/sop/v0.36.0/`
 
-## v0.36.0 - Hardening and Migration
+## v0.37.0 - Production Hardening and Product Pruning
 
-Goal: turn the v0.31-v0.35 features into a release-candidate engine without
-renaming the package graph yet.
+Goal: turn the v0.31-v0.36 product line into evidence for v0.38.
 
 Scope:
 
-- public API audit;
+- public API audit and stability classification;
 - docs/API consistency gate;
 - generated project matrix;
 - package publish dry-run and consumer smoke;
 - performance baseline;
-- migration guide from v0.30/v0.31 to v1.
-- public surface inventory for the v0.37 reset.
+- Hub disposition as public product, internal tooling, deferred, archived, or
+  removed;
+- package and subpath inventory for the v0.38 reset.
 
-SOP: `docs/sop/v0.36.0/`
+SOP: `docs/sop/v0.37.0/`
 
-## v0.37.0 - Public Surface Reset
+## v0.38.0 - Public Surface Reset
 
-Goal: reorganize the public product surface before v1.0, after v0.32-v0.36 have
-proven the real feature boundaries.
+Goal: reorganize the public product surface before the v1 release candidate.
 
 Scope:
 
-- decide the final v1 package map against ADR-0083;
+- decide the final v1 package map against ADR-0083 and ADR-0084;
 - classify all current packages as public product, public support, subpath,
   internal, archived, or removed;
 - move integration APIs toward subpaths instead of top-level packages;
 - make protocol contracts small, explicit, and runtime-free;
 - ensure `@openelement/ui` is framework/router independent;
-- write migration guide and codemod notes for import-path changes;
+- write migration guide, import table, and codemod notes;
 - prove the reset through generated starter builds, consumer smoke, publish
   dry-run, docs gates, and e2e.
 
-SOP: `docs/sop/v0.37.0/`
+SOP: `docs/sop/v0.38.0/`
+
+## v0.39.0 - v1 Release Candidate
+
+Goal: validate the v1 candidate after the public surface reset without adding
+new feature scope.
+
+Scope:
+
+- freeze v1 candidate public API list;
+- finalize migration guide;
+- run generated project matrix from a clean checkout;
+- run consumer smoke and deploy smoke;
+- fix release-candidate bugs only;
+- prepare v1.0 release checklist.
+
+SOP: `docs/sop/v0.39.0/`
 
 ## v1.0.0 - Stable Application Engine
 
 v1.0 can happen only when the following are true:
 
 - app authoring API is stable and documented;
-- rendering modes have deploy recipes and tests;
-- server/API layer has explicit boundaries;
-- data integrations are external and documented;
-- UI shell has proven templates;
-- v0.37 public surface reset is complete or explicitly rejected by ADR;
+- lifecycle, rendering, server, data, and UI starter contracts are tested;
+- v0.38 public surface reset is complete or explicitly rejected by ADR;
+- v0.39 release-candidate gates pass on `dev` and `main`;
 - package graph, docs, architecture, build, publish dry-run, and e2e gates pass.
 
 SOP: `docs/sop/v1.0.0/`

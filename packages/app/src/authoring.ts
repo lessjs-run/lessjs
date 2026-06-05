@@ -12,6 +12,62 @@ import { defineIsland as defineRuntimeIsland } from '@openelement/core';
 export type PageRenderingMode = 'auto' | 'static' | 'dynamic';
 export type PageStreamingMode = 'auto' | 'force' | false;
 export type PageRevalidate = false | number | `${number}s` | `${number}m` | `${number}h`;
+export type PageMeta = Record<string, unknown>;
+
+export interface PageRouteContext {
+  path?: string;
+  filePath?: string;
+}
+
+export class OpenElementRedirect extends Error {
+  readonly location: string;
+  readonly status: number;
+
+  constructor(location: string | URL, status = 302) {
+    super(`Redirect to ${String(location)}`);
+    this.name = 'OpenElementRedirect';
+    this.location = String(location);
+    this.status = status;
+  }
+}
+
+export class OpenElementNotFound extends Error {
+  readonly status = 404;
+
+  constructor(message = 'Not Found') {
+    super(message);
+    this.name = 'OpenElementNotFound';
+  }
+}
+
+export function redirect(location: string | URL, status = 302): never {
+  throw new OpenElementRedirect(location, status);
+}
+
+export function notFound(message = 'Not Found'): never {
+  throw new OpenElementNotFound(message);
+}
+
+export function isOpenElementRedirect(error: unknown): error is OpenElementRedirect {
+  return error instanceof OpenElementRedirect ||
+    (
+      typeof error === 'object' &&
+      error !== null &&
+      (error as { name?: unknown }).name === 'OpenElementRedirect' &&
+      typeof (error as { location?: unknown }).location === 'string' &&
+      typeof (error as { status?: unknown }).status === 'number'
+    );
+}
+
+export function isOpenElementNotFound(error: unknown): error is OpenElementNotFound {
+  return error instanceof OpenElementNotFound ||
+    (
+      typeof error === 'object' &&
+      error !== null &&
+      (error as { name?: unknown }).name === 'OpenElementNotFound' &&
+      (error as { status?: unknown }).status === 404
+    );
+}
 
 export interface PageHead {
   meta?: Array<Record<string, string | number | boolean>>;
@@ -24,10 +80,7 @@ export interface PageLoadContext<
   request?: Request;
   env?: Record<string, unknown>;
   platform?: unknown;
-  route: {
-    path?: string;
-    filePath?: string;
-  };
+  route: PageRouteContext;
 }
 
 export interface PageRenderContext<
@@ -37,7 +90,16 @@ export interface PageRenderContext<
   data: Data;
   params: Params;
   request?: Request;
+  route: PageRouteContext;
+  meta: PageMeta;
   props: Record<string, unknown>;
+}
+
+export interface PageErrorContext<
+  Data = unknown,
+  Params extends Record<string, string> = Record<string, string>,
+> extends PageRenderContext<Data, Params> {
+  error: unknown;
 }
 
 export type PageRenderFunction<
@@ -50,6 +112,11 @@ export type PageLoadFunction<
   Params extends Record<string, string> = Record<string, string>,
 > = (context: PageLoadContext<Params>) => Data | Promise<Data>;
 
+export type PageErrorFunction<
+  Data = unknown,
+  Params extends Record<string, string> = Record<string, string>,
+> = (context: PageErrorContext<Data, Params>) => VNode | null;
+
 export interface PageDefinition<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
@@ -57,6 +124,7 @@ export interface PageDefinition<
   title?: string;
   description?: string;
   head?: PageHead;
+  meta?: PageMeta;
   layout?: string | false;
   styles?: typeof DsdElement.styles;
   rendering?: PageRenderingMode;
@@ -64,6 +132,7 @@ export interface PageDefinition<
   revalidate?: PageRevalidate;
   load?: PageLoadFunction<Data, Params>;
   render: PageRenderFunction<Data, Params>;
+  error?: PageErrorFunction<Data, Params>;
 }
 
 export interface OpenElementPageDescriptor<
@@ -78,6 +147,9 @@ type PageHostProps = {
   __openElementParams?: Record<string, string>;
   __openElementData?: unknown;
   __openElementRequest?: Request;
+  __openElementRoute?: PageRouteContext;
+  __openElementMeta?: PageMeta;
+  __openElementError?: unknown;
 };
 
 abstract class ApplicationElement extends DsdElement {
@@ -88,6 +160,9 @@ abstract class ApplicationPageElement extends ApplicationElement implements Page
   __openElementParams?: Record<string, string>;
   __openElementData?: unknown;
   __openElementRequest?: Request;
+  __openElementRoute?: PageRouteContext;
+  __openElementMeta?: PageMeta;
+  __openElementError?: unknown;
 }
 
 type PageConstructor<
@@ -144,12 +219,20 @@ export function definePage<
     override render(): VNode | null {
       const params = (this.__openElementParams ?? this.params ?? {}) as Params;
       const data = this.__openElementData as Data;
-      return definition.render({
+      const context = {
         data,
         params,
         request: this.__openElementRequest,
+        route: this.__openElementRoute ?? {},
+        meta: this.__openElementMeta ?? pageDescriptor.meta ?? {},
         props: collectPublicProps(this),
-      });
+      };
+
+      if (this.__openElementError !== undefined && definition.error) {
+        return definition.error({ ...context, error: this.__openElementError });
+      }
+
+      return definition.render(context);
     }
   }
 

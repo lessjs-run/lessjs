@@ -1,49 +1,52 @@
-# v0.36.0 SOP: Hardening and Migration
+# v0.36.0 SOP: UI Shell and Starter Productization
 
 > Status: Planned\
-> Roadmap: Hardening and Migration
+> Roadmap: UI Shell and Starter Productization\
+> ADR: ADR-0084
 
 ## Goal
 
-Turn the v0.31-v0.35 feature line into a stable release candidate and prepare
-evidence for the v0.37 public surface reset.
+Make the visible app shell, UI package, and starter templates good enough for
+real docs, blogs, product pages, and dashboards.
 
 ## Entry Criteria
 
-- v0.31 through v0.35 scopes are complete or explicitly deferred.
-- No unresolved public API contradictions remain in docs.
-- CI gate coverage reflects the release claims.
+- v0.32.0 lifecycle semantics are stable.
+- v0.33.0 rendering modes are deployable.
+- v0.34.0 server context is stable.
+- v0.35.0 data recipes can feed starter examples.
+- ADR-0073, ADR-0074, ADR-0075, and ADR-0076 are re-read against current code.
 
 ## Tasks
 
-- [ ] Audit all public exports.
-- [ ] Classify APIs as stable, experimental, internal, or deprecated-for-removal.
-- [ ] Add docs/API consistency gate.
-- [ ] Add generated project matrix for common starter shapes.
-- [ ] Add consumer smoke for JSR package graph.
-- [ ] Add performance baseline for build, SSR render, and client island boot.
-- [ ] Add migration guide from v0.30/v0.31 to v1.0 candidates.
-- [ ] Produce public package and subpath inventory for v0.37.
-- [ ] Mark package surfaces that should remain public, move to subpaths, become
-      internal, or be archived.
-- [ ] Remove any stale SOP claims that cannot be proven by code or gates.
+- [ ] Audit AppShell and layout config against real www and starter needs.
+- [ ] Ensure AppShell is configurable without alias hacks.
+- [ ] Decide `@openelement/ui/css` export shape.
+- [ ] Separate Ocean components from browser-upgraded island components.
+- [ ] Finalize token strategy using Open Props and first-party CSS.
+- [ ] Add starter templates for docs, blog, product, and dashboard.
+- [ ] Ensure starter templates use v0.32 lifecycle, v0.33 rendering, v0.34
+      server, and v0.35 data patterns where relevant.
+- [ ] Add visual docs and Playwright screenshots for layout modes.
+- [ ] Ensure UI examples use `definePage()` and `defineIsland()`.
 
 ## Verification
 
-- full local gate ladder
-- generated project matrix
-- consumer smoke
-- publish dry-run
-- www build and e2e
+- UI package tests
+- starter template builds
+- www build
+- Playwright e2e and screenshot checks
+- publish dry-run for package metadata only if UI exports change
 
 ## Non-Goals
 
-- No new feature scope unless it is required to close a blocker.
-- No UI redesign.
-- No ORM/auth ownership.
-- No physical package reorganization; that belongs to v0.37.
+- No renderer rewrite.
+- No data layer expansion.
+- No package surface reset.
+- No marketing-only landing page work without functional starter proof.
 
 ## Exit Criteria
 
-- Release claims are proven by commands.
-- The v0.37 public surface reset has enough evidence to start.
+- AppShell is a first-class configuration surface.
+- UI docs and starter templates are coherent with the v0.32-v0.35 product path.
+- Visual behavior is browser-proven.

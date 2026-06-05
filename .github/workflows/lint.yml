@@ -16,6 +16,9 @@ jobs:
         with:
           deno-version: '2'
 
+      - name: Check project workflow
+        run: deno task workflow:check
+
       - name: Check formatting
         run: deno task fmt:check
 

@@ -1,0 +1,30 @@
+name: Bug
+description: Report a reproducible defect.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Read `docs/governance/PROJECT_WORKFLOW.md` before filing.'
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include commands, route, fixture, browser, or CI link.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence needed for closure

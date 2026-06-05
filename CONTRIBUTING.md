@@ -1,70 +1,70 @@
 # Contributing to openElement
 
-Thanks for your interest in contributing! Here's how to get started.
+Read first: `docs/governance/PROJECT_WORKFLOW.md`.
+
+openElement uses AutoWorkflow for project management. A change should identify
+the version SOP, ADR impact, NextVersion package, implementation evidence, and
+release-document impact before it is merged.
 
 ## Development Setup
 
 ```bash
 git clone https://github.com/open-element/openelement.git
-cd openElement
-deno task dev      # Start dev server at localhost:5173
-deno task build    # Production build (3-phase SSG)
-deno task test     # Run all tests
+cd openelement
+deno task dev
+deno task build
+deno task test
 ```
 
 ## Project Structure
 
-```
+```text
 packages/
-  core/           # Pure runtime - DSD rendering, Islands, Navigation
-  adapter-vite/   # Vite plugin + SSG build pipeline
-  adapter-lit/    # Lit -> DSD adapter
-  app/            # Umbrella package: openElement() = createOpenPlugin() + content + i18n
-  content/        # Blog + Navigation + Sitemap
-  i18n/           # Internationalization
-  ui/             # Web Components + design tokens
-  signals/        # TC39 Signals polyfill
-  rpc/            # Fetch-based RPC controller
-  create/         # Scaffolding CLI
+  app/            # JSX-first application authoring API
+  core/           # DSD renderer, DsdElement, JSX runtime
+  adapter-vite/   # Vite plugin, SSG pipeline, generated entries
+  runtime/        # runtime convenience facade
+  ui/             # DSD-first open-* UI components
+  content/        # Markdown, MDX, nav, blog, sitemap
+  i18n/           # locale data and static path helpers
+  router/         # route utilities
+  protocols/      # small structured contracts
 www/              # openelement.org website
+docs/             # ADR, SOP, NextVersion, status, roadmap, release docs
 ```
 
 ## Before Submitting a PR
 
-1. Run `deno task fmt` - format all code
-2. Run `deno task lint` - check for lint errors
-3. Run `deno task test` - ensure all tests pass
-4. Write tests for new functionality (we aim for ≥60% coverage per package)
-5. Update relevant README if changing public API
+Run the workflow and quality gates that match the change:
+
+```bash
+deno task workflow:check
+deno task arch:check
+deno task graph:check
+deno task docs:check-current
+deno task docs:check-strategy
+deno task fmt:check
+deno task lint
+deno task typecheck
+deno task test
+deno task build
+```
+
+For release work, also run the release gates listed in
+`docs/status/STATUS.md`.
 
 ## Code Style
 
-- TypeScript with Deno
-- Single quotes, semicolons, 2-space indent
-- Use `createLogger()` for logging (not console.log)
-- Use `OpenElementError` subclasses for errors (not generic Error)
-- Reference ADR numbers in comments for architectural decisions
+- TypeScript with Deno.
+- Single quotes, semicolons, 2-space indent.
+- Prefer structured APIs and AST/manifest boundaries over source regex.
+- Keep one renderer pipeline and one metadata source of truth.
+- Use `createLogger()` for logging where package code already has logger
+  access.
+- Reference ADR numbers when comments explain architectural decisions.
 
 ## Release Process
 
-See [RELEASE.md](./RELEASE.md) for the full release workflow.
-
-## Windows Tips
-
-### PowerShell `git commit` with multi-line messages
-
-PowerShell's `@'...'@` here-string syntax leaks a literal `@` into the first
-line of the commit message when used with `git commit -m`. Use a temp file
-instead:
-
-```powershell
-# BAD - leaks '@' prefix
-git commit -m @'
-fix: something
-detailed body
-'@
-
-# GOOD - write to temp file, commit from file
-"fix: something`n`ndetailed body" | Out-File -Encoding utf8 /tmp/msg
-git commit -F /tmp/msg
-```
+Release work must follow `docs/governance/PROJECT_WORKFLOW.md`. Do not bump
+packages until implementation gates pass. Do not merge `dev` to `main` until
+`dev` CI is green. Do not tag until `main` CI is green.

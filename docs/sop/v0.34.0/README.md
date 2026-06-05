@@ -1,44 +1,52 @@
-# v0.34.0 SOP: Data Integration Layer
+# v0.34.0 SOP: Server Routes and Mutations
 
 > Status: Planned\
-> Roadmap: Data Integration Layer
+> Roadmap: Server Routes and Mutations\
+> ADR: ADR-0084
 
 ## Goal
 
-Support real app data while keeping ORM choice outside the framework.
+Make server routes, request context, responses, and mutations first-class
+without turning openElement into a heavy backend platform.
 
 ## Entry Criteria
 
-- v0.31.0 page `load()` is stable.
-- v0.32.0 rendering modes define runtime/cache boundaries.
-- v0.33.0 server/API context is stable.
+- v0.32.0 lifecycle context is stable.
+- v0.33.0 rendering runtime and deploy boundaries are stable.
+- Hono remains the server substrate.
 
 ## Tasks
 
-- [ ] Write data integration matrix: Drizzle, Kysely, Prisma, TypeORM, Deno KV,
-      Cloudflare D1, Postgres, SQLite.
-- [ ] Add route loader examples for at least two SQL libraries and one KV store.
-- [ ] Document serverless connection lifecycle and pooling guidance.
-- [ ] Document edge runtime constraints.
-- [ ] Add fixture apps that use external data libraries through `load()`.
-- [ ] Add docs warning that openElement does not own an ORM.
-- [ ] Add migration notes for users moving from top-level fetch to `load()`.
+- [ ] Audit current `api/*.ts` route handling and generated Hono wiring.
+- [ ] Define typed helpers for JSON, redirect, HTML, empty, and structured error
+      responses.
+- [ ] Define request context shared by page `load()` and API routes where it is
+      genuinely common.
+- [ ] Document middleware order, route scoping, and handler precedence.
+- [ ] Add cookie and header helpers or examples at the openElement boundary.
+- [ ] Define mutation/action patterns for forms and server-side state changes.
+- [ ] Add security defaults for common API and mutation responses.
+- [ ] Add route handler docs and generated type examples.
 
 ## Verification
 
-- docs examples typecheck where possible
-- fixture builds
+- server route unit tests
+- mutation/action fixture tests
+- generated entry snapshot tests
 - `deno task test`
 - `deno task build`
 
 ## Non-Goals
 
-- No built-in ORM.
-- No schema migration tool.
-- No auth provider.
-- No proprietary database abstraction.
+- No full auth framework.
+- No database ownership.
+- No ORM recipes; those belong to v0.35.
+- No server runtime fork beyond Hono integration.
+- No package surface reset.
 
 ## Exit Criteria
 
-- Data docs are useful without pretending to be a backend platform.
-- External ORM examples do not leak into core dependencies.
+- Users can build typed server routes and form mutations without reading adapter
+  internals.
+- Middleware, context, response, and error behavior are documented and tested.
+- v0.35 data recipes can reuse the server context without redefining it.

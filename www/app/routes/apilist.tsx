@@ -1,7 +1,7 @@
 /**
  * @openelement/docs - API Reference
  *
- * Organized by category: components, rendering, islands, signals, build, and SSR props.
+ * Organized by category: application API, components, rendering, islands, signals, and build.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -30,7 +30,15 @@ export default class ApiCorePage extends DsdElement {
     return (
       <div class="container">
         <h1>API Reference</h1>
-        <p class="subtitle">Current openElement public APIs grouped by components, rendering, islands, signals, build, and SSR props.</p>
+        <p class="subtitle">Current openElement public APIs grouped by application authoring, components, rendering, islands, signals, and build.</p>
+
+        <div class="api-category">
+          <h2>Application API</h2>
+          <div class="api-entry"><div class="api-sig">definePage(render | definition)</div><div class="api-desc">Defines a file-route page. The object form supports title, description, meta, layout, load, render, error, revalidate, rendering, and streaming intent.</div></div>
+          <div class="api-entry"><div class="api-sig">redirect(location, status?): never</div><div class="api-desc">Throws a typed lifecycle redirect control consumed by request-time and SSG entry rendering.</div></div>
+          <div class="api-entry"><div class="api-sig">notFound(message?): never</div><div class="api-desc">Throws a typed lifecycle not-found control consumed by the framework boundary.</div></div>
+          <div class="api-entry"><div class="api-sig">defineIsland(tagName, render, options?)</div><div class="api-desc">Defines browser-upgraded UI with JSX event handlers and explicit hydration strategy.</div></div>
+        </div>
 
         <div class="api-category">
           <h2>Components</h2>

@@ -119,6 +119,7 @@
     "hub:check-index": "deno run --allow-read packages/hub/src/cli/check-index.ts",
     "hub:index:update": "deno run --allow-read --allow-write packages/hub/src/cli/update-index.ts",
     "dsd:check-report": "deno run --allow-read --allow-env packages/hub/src/cli/dsd-report-gate.ts",
+    "workflow:check": "deno run --allow-read tools/check-project-workflow.ts",
     "docs:check-strategy": "deno run --allow-read tools/check-strategic-docs.ts",
     "docs:check-current": "deno run --allow-read tools/check-current-docs-no-legacy.ts",
     "arch:check": "deno run --allow-read --allow-run tools/check-architecture-contract.ts",

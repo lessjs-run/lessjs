@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**JSX-first、DSD-first Web Components 应用框架 (v0.31.0)。** openElement 用
+**JSX-first、DSD-first Web Components 应用框架 (v0.32.0)。** openElement 用
 Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -45,7 +45,7 @@ export default defineIsland(
 );
 ```
 
-v0.31.0 的公开契约分层很明确：
+v0.32.0 的公开契约分层很明确：
 
 - 应用编写：`definePage()`、`defineIsland()`、`defineElement()`、`defineLayout()`
 - 构建配置：从 `@openelement/app/vite` 导入 `openElement()`
@@ -57,7 +57,7 @@ v0.31.0 的公开契约分层很明确：
 ## 包
 
 19 个包统一发布到 [`@openelement`](https://jsr.io/@openelement)，当前版本为
-**v0.31.0**。
+**v0.32.0**。
 
 | Package                     | Role                                    |
 | --------------------------- | --------------------------------------- |
@@ -81,12 +81,12 @@ v0.31.0 的公开契约分层很明确：
 
 ## 当前版本
 
-v0.31.0 把默认心智从“继承 runtime class”改成“编写 JSX 页面和 islands”。`DsdElement`
+v0.32.0 把默认心智从“继承 runtime class”改成“编写 JSX 页面和 islands”。`DsdElement`
 仍然是底层 runtime primitive，但应用作者从 `@openelement/app` 开始。
 
 后续 minor 会继续推进 streaming/ISR、server routes、数据集成和 UI Shell 产品面，同时不重新打开
 v0.30 已清理完成的 renderer contract。
-v1.0 的目标是在 v0.31-v0.36 这条线被实现和门禁证明后，冻结稳定应用引擎。
+v1.0 的目标是在 v0.31-v0.39 这条线被实现和门禁证明后，冻结稳定应用引擎。
 
 ## 贡献
 

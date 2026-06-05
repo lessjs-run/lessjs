@@ -30,15 +30,19 @@ Do not reorganize the physical package surface immediately after v0.31.0.
 
 Instead:
 
-1. Keep the existing v0.31 package graph while v0.32-v0.36 validate rendering,
-   server/data, UI, starter, and migration surfaces.
-2. Treat v0.37.0 as the planned **Public Surface Reset** before v1.0.
-3. Freeze v1.0 only after the v0.37 reset is complete and proven by local gates,
+1. Keep the existing v0.31 package graph while v0.32-v0.37 validate lifecycle,
+   rendering/deploy, server/mutation, data, UI, starter, hardening, and pruning
+   surfaces.
+2. Treat v0.38.0 as the planned **Public Surface Reset** before v1.0.
+3. Freeze v1.0 only after the v0.38 reset is complete and proven by local gates,
    CI, generated-project smoke, publish dry-run, and consumer smoke.
 4. Apply new package governance immediately so the current graph does not grow
-   in the wrong direction before v0.37.
+   in the wrong direction before v0.38.
 
-The target public surface for v0.37 review is:
+ADR-0084 updates the execution timeline from the earlier v0.37 reset target to
+v0.38, with v0.39 reserved as a release-candidate line after the reset.
+
+The target public surface for v0.38 review is:
 
 ```text
 @openelement/protocol    small public interop contracts
@@ -83,8 +87,8 @@ Effective immediately:
 
 Positive:
 
-- v0.32-v0.36 can validate product behavior before package churn.
-- v0.37 can be based on real usage evidence instead of speculative naming.
+- v0.32-v0.37 can validate product behavior before package churn.
+- v0.38 can be based on real usage evidence instead of speculative naming.
 - v1.0 has a cleaner freeze point.
 - Single-maintainer release overhead stops growing immediately.
 
@@ -92,7 +96,7 @@ Negative:
 
 - The 19-package graph remains visible until the reset.
 - Some docs must explain current packages and target packages separately.
-- v0.37 will be a deliberate breaking migration.
+- v0.38 will be a deliberate breaking migration.
 
 Neutral:
 

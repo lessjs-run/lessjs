@@ -1,0 +1,22 @@
+name: Documentation
+description: Track documentation work tied to a version or ADR.
+title: '[Docs]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Documentation must follow `docs/governance/PROJECT_WORKFLOW.md`.'
+  - type: input
+    id: version
+    attributes:
+      label: Version or ADR
+  - type: textarea
+    id: pages
+    attributes:
+      label: Pages to update
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Proof required
+      description: Docs check, website build, screenshots, or links.

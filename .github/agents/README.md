@@ -3,6 +3,9 @@
 This directory contains Copilot-style review prompts for openElement maintainers.
 They are documentation assets, not CI configuration and not runtime inputs.
 
+Every agent prompt in this directory must require reading
+`docs/governance/PROJECT_WORKFLOW.md` before giving review advice.
+
 ## Files
 
 - `adr-reviewer.agent.md` checks architecture boundaries against ADR and SOP decisions.

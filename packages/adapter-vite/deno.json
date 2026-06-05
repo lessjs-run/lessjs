@@ -1,6 +1,6 @@
 {
   "name": "@openelement/adapter-vite",
-  "version": "0.31.0",
+  "version": "0.32.0",
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
@@ -15,15 +15,15 @@
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.31.0",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.31.0/logger",
-    "@openelement/core/errors": "jsr:@openelement/core@^0.31.0/errors",
-    "@openelement/core/context": "jsr:@openelement/core@^0.31.0/context",
-    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.31.0/build-types",
-    "@openelement/cem": "jsr:@openelement/cem@^0.31.0",
-    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.31.0",
-    "@openelement/content/sitemap": "jsr:@openelement/content@^0.31.0/sitemap",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.31.0",
+    "@openelement/core": "jsr:@openelement/core@^0.32.0",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.32.0/logger",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.32.0/errors",
+    "@openelement/core/context": "jsr:@openelement/core@^0.32.0/context",
+    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.32.0/build-types",
+    "@openelement/cem": "jsr:@openelement/cem@^0.32.0",
+    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.32.0",
+    "@openelement/content/sitemap": "jsr:@openelement/content@^0.32.0/sitemap",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.32.0",
     "@mdx-js/rollup": "npm:@mdx-js/rollup@^3.1.1",
     "typescript": "npm:typescript@^5.9.0",
     "esbuild": "npm:esbuild@^0.25",

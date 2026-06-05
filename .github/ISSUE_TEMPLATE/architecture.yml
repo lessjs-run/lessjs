@@ -1,0 +1,24 @@
+name: Architecture
+description: Propose an ADR-level architecture decision.
+title: '[ADR]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Architecture changes must follow `docs/governance/PROJECT_WORKFLOW.md`.'
+  - type: input
+    id: adr
+    attributes:
+      label: ADR file
+      description: Proposed or existing ADR path.
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequences

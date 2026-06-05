@@ -366,26 +366,47 @@ Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalida
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, 'const __page = ($pageIndex.default?.openElementPage || {})');
+  assertStringIncludes(code, 'let __page = ($pageIndex.default?.openElementPage || {})');
   assertStringIncludes(
     code,
     'const __data = typeof __page.load === "function" ? await __page.load(__loadContext) : undefined',
   );
   assertStringIncludes(code, '__openElementParams: __params');
   assertStringIncludes(code, '__openElementData: __data');
+  assertStringIncludes(code, '__openElementRoute: __routeContext');
+  assertStringIncludes(code, '__openElementMeta: __routeMeta');
   assertStringIncludes(code, 'title: __page.title || "openElement"');
   assertStringIncludes(code, 'meta: { description: __page.description }');
   assertStringIncludes(code, 'function __pageDefinition(module) {');
+  assertStringIncludes(code, 'function __isOpenElementRedirect(error) {');
+  assertStringIncludes(code, 'function __isOpenElementNotFound(error) {');
   assertStringIncludes(
     code,
-    'const data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+    'data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
   );
   assertStringIncludes(code, '__openElementParams: params');
+  assertStringIncludes(code, '__openElementRoute: loadContext.route');
+  assertStringIncludes(code, 'filePath: "index.ts"');
+  assertStringIncludes(code, 'rendering: (__pageDefinition($pageIndex).rendering || "auto")');
   assertStringIncludes(code, 'title: title || page.title || "openElement"');
   assertStringIncludes(
     code,
     'revalidate: ($pageIndex.revalidate !== undefined ? $pageIndex.revalidate : ($pageIndex.default?.openElementPage || {}).revalidate)',
   );
+});
+
+Deno.test('renderEntry: lifecycle control produces redirect and not-found responses', () => {
+  const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, 'return c.redirect(err.location, err.status)');
+  assertStringIncludes(code, '__statusHtml("404 Not Found", err.message || "Not Found")');
+  assertStringIncludes(
+    code,
+    'redirect: { location: error.location, status: error.status }',
+  );
+  assertStringIncludes(code, 'notFound: true');
+  assertStringIncludes(code, '__openElementError: err');
 });
 
 Deno.test('renderEntry: uses descriptor SSR admission plan without recomputing it', () => {

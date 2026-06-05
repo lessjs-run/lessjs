@@ -1,5 +1,5 @@
 /**
- * Homepage - openElement v0.31.0.
+ * Homepage - openElement v0.32.0.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -63,14 +63,15 @@ export class DocsHome extends DsdElement {
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-left">
-              <p class="eyebrow">openElement v0.31.0</p>
+              <p class="eyebrow">openElement v0.32.0</p>
               <h1 class="giant-headline">THE OPEN<br /><span class="glow-line">ELEMENT.</span></h1>
-              <p class="hero-desc">A DSD-first Web Components framework with one VNode renderer pipeline, structured metadata, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
+              <p class="hero-desc">A DSD-first Web Components framework with JSX pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
               <div class="terminal">
                 <div class="terminal-head"><span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>openelement build</div>
                 <div class="terminal-body">
                   <div class="term-line"><span class="term-prefix">$ </span><span class="term-cmd">deno task build</span></div>
                   <div class="term-line"><span class="term-info">[scan]</span><span> routes, islands, app shell, package manifests</span></div>
+                  <div class="term-line"><span class="term-ok">[lifecycle]</span><span> params, load, route meta, redirect, not-found</span></div>
                   <div class="term-line"><span class="term-ok">[render]</span><span> VNode to DSD, VNode to DOM, one event model</span></div>
                   <div class="term-line"><span class="term-gate">[gate]</span><span> graph, architecture, DSD report, publish dry-run</span></div>
                 </div>
@@ -92,7 +93,7 @@ export class DocsHome extends DsdElement {
           <div class="feature-grid">
             <div class="ft-card"><span class="ft-icon">DSD</span><h3>DSD-first</h3><p>Server output is native Declarative Shadow DOM, not a framework-specific hydration shell.</p></div>
             <div class="ft-card"><span class="ft-icon">IR</span><h3>One renderer model</h3><p>JSX becomes VNode IR. SSR, CSR, signals, and events share the same structural model.</p></div>
-            <div class="ft-card"><span class="ft-icon">AST</span><h3>Structured metadata</h3><p>Routes, islands, and manifests cross build boundaries as structured data instead of source regex.</p></div>
+            <div class="ft-card"><span class="ft-icon">LIFE</span><h3>App lifecycle</h3><p>Route params, load context, route metadata, redirect, not-found, and error fallback are explicit app contracts.</p></div>
             <div class="ft-card"><span class="ft-icon">SEC</span><h3>Trusted boundary</h3><p>HTML injection is explicit and reserved for pre-sanitized non-interactive content.</p></div>
             <div class="ft-card"><span class="ft-icon">CI</span><h3>Gate-proven</h3><p>Architecture checks, DSD reports, package graph validation, and dry-run publishing prove the contract.</p></div>
             <div class="ft-card"><span class="ft-icon">WC</span><h3>Web standards</h3><p>Custom Elements, Shadow DOM, CSSStyleSheet, URL, fetch, and Web Streams stay at the center.</p></div>

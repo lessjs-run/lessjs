@@ -54,7 +54,7 @@ const _records: Record<string, HubPackageRecord> = {
     "schema": "hub-package-v1",
     "name": "ui",
     "scope": "@openelement",
-    "version": "0.31.0",
+    "version": "0.32.0",
     "source": "local",
     "repository": "https://github.com/open-element/openelement",
     "description": "openElement UI component library with DSD-native DsdElement components. All components are SSR-capable.",
@@ -72,7 +72,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-button",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-button",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-button",
           "demoAttrs": {
             "variant": "primary"
           },
@@ -89,7 +89,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-card",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-card",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-card",
           "demoAttrs": {
             "variant": "elevated"
           },
@@ -106,7 +106,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-callout",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-callout",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-callout",
           "demoAttrs": {},
           "demoSlots": "",
           "compatibility": "ssr-capable"
@@ -121,7 +121,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-code-block",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-code-block",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-code-block",
           "demoAttrs": {},
           "demoSlots": "<code>console.info(\"Hello openElement!\")</code>",
           "compatibility": "ssr-capable"
@@ -136,7 +136,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-dialog",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-dialog",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-dialog",
           "demoAttrs": {
             "open": "",
             "label": "Dialog"
@@ -154,7 +154,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-hero-ping",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-hero-ping",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-hero-ping",
           "demoAttrs": {},
           "demoSlots": "",
           "compatibility": "ssr-capable"
@@ -169,7 +169,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-input",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-input",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-input",
           "demoAttrs": {
             "placeholder": "Type here..."
           },
@@ -186,7 +186,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-layout",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-layout",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-layout",
           "demoAttrs": {},
           "demoSlots": "",
           "compatibility": "ssr-capable"
@@ -201,7 +201,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-step-card",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-step-card",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-step-card",
           "demoAttrs": {},
           "demoSlots": "",
           "compatibility": "ssr-capable"
@@ -216,7 +216,7 @@ const _records: Record<string, HubPackageRecord> = {
         "snapshotMeta": {
           "tagName": "open-theme-toggle",
           "importSpec": "@openelement/ui",
-          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.31.0/open-theme-toggle",
+          "importUrl": "https://esm.sh/jsr/@openelement/ui@0.32.0/open-theme-toggle",
           "demoAttrs": {},
           "demoSlots": "",
           "compatibility": "ssr-capable"
@@ -224,7 +224,7 @@ const _records: Record<string, HubPackageRecord> = {
       }
     ],
     "reports": {
-      "validation": "{\"packageName\":\"@openelement/ui\",\"version\":\"0.31.0\",\"valid\":true,\"compatibility\":\"ssr-capable\",\"tags\":10,\"errors\":[],\"warnings\":[]}"
+      "validation": "{\"packageName\":\"@openelement/ui\",\"version\":\"0.32.0\",\"valid\":true,\"compatibility\":\"ssr-capable\",\"tags\":10,\"errors\":[],\"warnings\":[]}"
     },
     "snapshotPaths": {},
     "installGuidance": {
@@ -238,7 +238,7 @@ const _records: Record<string, HubPackageRecord> = {
     },
     "submittedAt": "2026-06-04T16:16:47.647Z",
     "submittedBy": "hub-scanner",
-    "validatorVersion": "0.31.0"
+    "validatorVersion": "0.32.0"
   },
   "@shoelace-style/shoelace": {
     "schema": "hub-package-v1",
@@ -3633,7 +3633,7 @@ const _records: Record<string, HubPackageRecord> = {
     },
     "submittedAt": "2026-06-04T16:16:47.699Z",
     "submittedBy": "hub-scanner",
-    "validatorVersion": "0.31.0"
+    "validatorVersion": "0.32.0"
   }
 };
 

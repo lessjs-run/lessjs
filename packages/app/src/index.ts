@@ -1,15 +1,30 @@
-export { defineElement, defineIsland, defineLayout, definePage } from './authoring.ts';
+export {
+  defineElement,
+  defineIsland,
+  defineLayout,
+  definePage,
+  isOpenElementNotFound,
+  isOpenElementRedirect,
+  notFound,
+  OpenElementNotFound,
+  OpenElementRedirect,
+  redirect,
+} from './authoring.ts';
 export type {
   AppIslandOptions,
   ElementDefinition,
   OpenElementPageDescriptor,
   PageDefinition,
+  PageErrorContext,
+  PageErrorFunction,
   PageHead,
   PageLoadContext,
   PageLoadFunction,
+  PageMeta,
   PageRenderContext,
   PageRenderFunction,
   PageRenderingMode,
   PageRevalidate,
+  PageRouteContext,
   PageStreamingMode,
 } from './authoring.ts';

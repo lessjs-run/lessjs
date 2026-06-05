@@ -78,7 +78,7 @@ function pageDefinitionExpr(varName: string): string {
 
 function routeMetaExpr(varName: string): string {
   const pageDef = pageDefinitionExpr(varName);
-  return `({ ...(${varName}.meta || {}), ...(${pageDef}.layout !== undefined ? { layout: ${pageDef}.layout } : {}), ...(${pageDef}.title !== undefined ? { title: ${pageDef}.title } : {}), ...(${pageDef}.description !== undefined ? { description: ${pageDef}.description } : {}) })`;
+  return `({ ...(${varName}.meta || {}), ...(${pageDef}.meta || {}), ...(${pageDef}.layout !== undefined ? { layout: ${pageDef}.layout } : {}), ...(${pageDef}.title !== undefined ? { title: ${pageDef}.title } : {}), ...(${pageDef}.description !== undefined ? { description: ${pageDef}.description } : {}) })`;
 }
 
 function routeRevalidateExpr(varName: string): string {
@@ -250,16 +250,22 @@ function renderPageRoute(
   const tagNameExpr = routeTagNameExpr(route.varName, route.tagName);
   const pageDefExpr = pageDefinitionExpr(route.varName);
   const routeMeta = routeMetaExpr(route.varName);
+  const routeContext = `{ path: ${JSON.stringify(route.path)}, filePath: ${
+    JSON.stringify(route.filePath)
+  } }`;
   lines.push(`app.get('${pathStr}', async (c) => {`);
+  lines.push(`  let __tag = ${tagNameExpr}`);
+  lines.push(`  let __page = ${pageDefExpr}`);
+  lines.push(`  let __params = {}`);
+  lines.push(`  let __routeMeta = ${routeMeta}`);
+  lines.push(`  const __routeContext = ${routeContext}`);
   lines.push(`  try {`);
-  lines.push(`    const tag = ${tagNameExpr}`);
   // v0.5.0: DSD renderer - no <!--lit-part--> markers, no old upgrade marker.
   // __ssr() uses renderDsd() which outputs standard DSD HTML.
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
   // H-02 fix: Use JSON.stringify to escape route path and file path
-  lines.push(`    const __page = ${pageDefExpr}`);
-  lines.push(`    const __params = c.req.param() || {}`);
+  lines.push(`    __params = c.req.param() || {}`);
   lines.push(`    const __loadContext = {`);
   lines.push(`      params: __params,`);
   lines.push(`      request: c.req.raw,`);
@@ -267,17 +273,13 @@ function renderPageRoute(
   lines.push(
     `      platform: (() => { try { return c.executionCtx } catch { return undefined } })(),`,
   );
-  lines.push(
-    `      route: { path: ${JSON.stringify(route.path)}, filePath: ${
-      JSON.stringify(route.filePath)
-    } },`,
-  );
+  lines.push(`      route: __routeContext,`);
   lines.push(`    }`);
   lines.push(
     `    const __data = typeof __page.load === "function" ? await __page.load(__loadContext) : undefined`,
   );
   lines.push(
-    `    let node = jsx(tag, { ...__params, __openElementParams: __params, __openElementData: __data, __openElementRequest: c.req.raw })`,
+    `    let node = jsx(__tag, { ...__params, __openElementParams: __params, __openElementData: __data, __openElementRequest: c.req.raw, __openElementRoute: __routeContext, __openElementMeta: __routeMeta })`,
   );
   lines.push('');
 
@@ -296,7 +298,7 @@ function renderPageRoute(
   lines.push(
     `    const content = await __renderAppShell(node, c.req.path || ${
       JSON.stringify(route.path)
-    }, { routeMeta: ${routeMeta} })`,
+    }, { routeMeta: __routeMeta })`,
   );
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: __page.title || ${JSON.stringify(docConfig.title)},`);
@@ -310,6 +312,48 @@ function renderPageRoute(
   lines.push(`    }))`);
 
   lines.push(`  } catch (err) {`);
+  lines.push(`    if (__isOpenElementRedirect(err)) {`);
+  lines.push(`      return c.redirect(err.location, err.status)`);
+  lines.push(`    }`);
+  lines.push(`    if (__isOpenElementNotFound(err)) {`);
+  lines.push(
+    `      return c.html(wrapInDocument(__statusHtml("404 Not Found", err.message || "Not Found"), {`,
+  );
+  lines.push(`        title: "404 Not Found",`);
+  lines.push(`        lang: ${JSON.stringify(docConfig.lang)},`);
+  lines.push(`        headExtras: ${headExtrasExpr},`);
+  lines.push(
+    `        allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
+  );
+  lines.push(`        cspNonce: c.get('cspNonce'),`);
+  lines.push(`      }), 404)`);
+  lines.push(`    }`);
+  lines.push(`    if (typeof __page.error === "function") {`);
+  lines.push(`      try {`);
+  lines.push(
+    `        const errorNode = jsx(__tag, { ...__params, __openElementParams: __params, __openElementError: err, __openElementRequest: c.req.raw, __openElementRoute: __routeContext, __openElementMeta: __routeMeta })`,
+  );
+  lines.push(
+    `        const errorContent = await __renderAppShell(errorNode, c.req.path || ${
+      JSON.stringify(route.path)
+    }, { routeMeta: __routeMeta })`,
+  );
+  lines.push(`        return c.html(wrapInDocument(errorContent, {`);
+  lines.push(`          title: __page.title || ${JSON.stringify(docConfig.title)},`);
+  lines.push(`          lang: ${JSON.stringify(docConfig.lang)},`);
+  lines.push(`          meta: { description: __page.description },`);
+  lines.push(`          headExtras: ${headExtrasExpr},`);
+  lines.push(
+    `          allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
+  );
+  lines.push(`          cspNonce: c.get('cspNonce'),`);
+  lines.push(`        }), 500)`);
+  lines.push(`      } catch (errorRenderFailure) {`);
+  lines.push(
+    `        console.error('[openElement] Route error renderer failed for ${pathStr}:', errorRenderFailure)`,
+  );
+  lines.push(`      }`);
+  lines.push(`    }`);
   lines.push(
     `    console.error('[openElement] Route render failed for ${pathStr}:', err)`,
   );
@@ -584,6 +628,22 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  return __locales.includes(first) ? first : fallback;');
   lines.push('}');
   lines.push('');
+  lines.push('function __isOpenElementRedirect(error) {');
+  lines.push(
+    '  return error && error.name === "OpenElementRedirect" && typeof error.location === "string" && typeof error.status === "number";',
+  );
+  lines.push('}');
+  lines.push('');
+  lines.push('function __isOpenElementNotFound(error) {');
+  lines.push('  return error && error.name === "OpenElementNotFound" && error.status === 404;');
+  lines.push('}');
+  lines.push('');
+  lines.push('function __statusHtml(title, message) {');
+  lines.push(
+    '  return "<main><h1>" + escapeHtml(String(title)) + "</h1><p>" + escapeHtml(String(message)) + "</p></main>";',
+  );
+  lines.push('}');
+  lines.push('');
   lines.push(`const __appShellPlan = ${JSON.stringify(desc.appShell, null, 2)};`);
   lines.push('');
   lines.push('function __resolveAppShell(routeMeta = {}) {');
@@ -721,12 +781,16 @@ export function renderEntry(desc: EntryDescriptor): string {
     for (const r of desc.pageRoutes) {
       const tagNameExpr = routeTagNameExpr(r.varName, r.tagName);
       lines.push(
-        `  { path: '${r.path}', tagName: ${tagNameExpr}, module: ${r.varName}, isDynamic: ${!!r
+        `  { path: '${r.path}', filePath: ${
+          JSON.stringify(r.filePath)
+        }, tagName: ${tagNameExpr}, module: ${r.varName}, isDynamic: ${!!r
           .isDynamic}, paramNames: ${
           JSON.stringify(
             r.paramNames || [],
           )
-        }, revalidate: ${routeRevalidateExpr(r.varName)} },`,
+        }, revalidate: ${
+          routeRevalidateExpr(r.varName)
+        }, rendering: (__pageDefinition(${r.varName}).rendering || "auto"), streaming: (__pageDefinition(${r.varName}).streaming || "auto") },`,
       );
     }
     lines.push('];');
@@ -740,6 +804,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  const page = __pageDefinition(module);');
     lines.push('  return {');
     lines.push('    ...(module?.meta || {}),');
+    lines.push('    ...(page.meta || {}),');
     lines.push('    ...(page.layout !== undefined ? { layout: page.layout } : {}),');
     lines.push('    ...(page.title !== undefined ? { title: page.title } : {}),');
     lines.push('    ...(page.description !== undefined ? { description: page.description } : {}),');
@@ -799,13 +864,52 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('    request: options.request,');
     lines.push('    env: options.env || {},');
     lines.push('    platform: options.platform,');
-    lines.push('    route: { path: routePath },');
+    lines.push('    route: { path: routePath, filePath: info.filePath },');
     lines.push('  };');
+    lines.push('  let data;');
+    lines.push('  try {');
     lines.push(
-      '  const data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+      '    data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+    );
+    lines.push('  } catch (error) {');
+    lines.push('    if (__isOpenElementRedirect(error)) {');
+    lines.push(
+      '      const html = wrapInDocument(__statusHtml("Redirect", "Redirecting to " + error.location), {',
+    );
+    lines.push('        title: "Redirect",');
+    lines.push('        lang: lang || locale || "en",');
+    lines.push(
+      '        headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
     );
     lines.push(
-      '  const props = { ...params, __openElementParams: params, __openElementData: data, __openElementRequest: options.request };',
+      `        allowHeadExtrasScripts: ${JSON.stringify(desc.document.allowHeadExtrasScripts)},`,
+    );
+    lines.push('      });');
+    lines.push(
+      '      return { html, status: error.status, redirect: { location: error.location, status: error.status }, errors: [], hydrationHints: [], componentCount: 0, renderTimeMs: 0 };',
+    );
+    lines.push('    }');
+    lines.push('    if (__isOpenElementNotFound(error)) {');
+    lines.push(
+      '      const html = wrapInDocument(__statusHtml("404 Not Found", error.message || "Not Found"), {',
+    );
+    lines.push('        title: "404 Not Found",');
+    lines.push('        lang: lang || locale || "en",');
+    lines.push(
+      '        headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
+    );
+    lines.push(
+      `        allowHeadExtrasScripts: ${JSON.stringify(desc.document.allowHeadExtrasScripts)},`,
+    );
+    lines.push('      });');
+    lines.push(
+      '      return { html, status: 404, notFound: true, errors: [], hydrationHints: [], componentCount: 0, renderTimeMs: 0 };',
+    );
+    lines.push('    }');
+    lines.push('    throw error;');
+    lines.push('  }');
+    lines.push(
+      '  const props = { ...params, __openElementParams: params, __openElementData: data, __openElementRequest: options.request, __openElementRoute: loadContext.route, __openElementMeta: routeMeta };',
     );
     lines.push('  if (locale) props.locale = locale;');
     lines.push('  const startTime = typeof performance !== "undefined" ? performance.now() : 0;');

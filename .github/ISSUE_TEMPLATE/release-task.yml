@@ -1,0 +1,31 @@
+name: Release Task
+description: Track a version release to completion.
+title: '[Release]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Release work must follow `docs/governance/PROJECT_WORKFLOW.md`.'
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Example: v0.32.0
+    validations:
+      required: true
+  - type: input
+    id: sop
+    attributes:
+      label: SOP
+    validations:
+      required: true
+  - type: input
+    id: next
+    attributes:
+      label: NextVersion package
+    validations:
+      required: true
+  - type: textarea
+    id: gates
+    attributes:
+      label: Gates
+      description: Local and CI gates required before merge/tag.

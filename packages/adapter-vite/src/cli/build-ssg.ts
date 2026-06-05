@@ -40,7 +40,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:open-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_OPENELEMENT_VERSION = '0.31.0';
+const FALLBACK_OPENELEMENT_VERSION = '0.32.0';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);

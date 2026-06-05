@@ -1,10 +1,12 @@
-# Current Architecture - v0.31.0
+# Current Architecture - v0.32.0
 
-> Status: **CURRENT (APPLICATION API LINE)**\
-> Version line: v0.31.0\
+> Status: **CURRENT (APP LIFECYCLE LINE)**\
+> Version line: v0.32.0\
 > Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082,
-> ADR-0083\
+> ADR-0083, ADR-0084, ADR-0085\
 > Last hardened: 2026-06-05
+
+Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 ## Architecture Center
 
@@ -29,7 +31,8 @@ tools and release gates
   arch:check, graph:check, docs gates, publish dry-run, consumer smoke
 
 application authoring
-  @openelement/app: definePage, defineIsland, defineElement, defineLayout
+  @openelement/app: definePage, defineIsland, defineElement, defineLayout,
+  redirect, notFound
   @openelement/runtime: runtime convenience exports
 
 build configuration
@@ -61,8 +64,9 @@ kernel must not import a concrete build adapter.
 ## Public Surface Governance
 
 The current 19-package graph is intentionally not reorganized immediately after
-v0.31.0. ADR-0083 defers physical package migration until v0.37 so v0.32-v0.36
-can validate behavior first.
+v0.32.0. ADR-0083 defers physical package migration, and ADR-0084 schedules the
+reset for v0.38 after v0.32-v0.37 validate product behavior and pruning
+evidence.
 
 New work must still follow the target direction:
 
@@ -74,7 +78,7 @@ New work must still follow the target direction:
   choices;
 - adapters live at the edge, never in the renderer or Elements core.
 
-The v0.37 review target is a smaller public product surface centered on
+The v0.38 review target is a smaller public product surface centered on
 protocol, Elements authoring, UI, Framework, and create scaffolding. That is a
 future migration target, not the current import contract.
 
@@ -103,6 +107,10 @@ future migration target, not the current import contract.
 | `@openelement/adapter-react`   | React interop                       | adapter-boundary conversion        |
 | `@openelement/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction  |
 
+`@openelement/hub` remains in the current package graph, but ADR-0084 requires
+v0.37 to decide whether it remains public product, becomes internal tooling, is
+deferred, is archived, or is removed before the v0.38 public surface reset.
+
 ## Public Application Contract
 
 The recommended app authoring contract is:
@@ -120,7 +128,25 @@ The object form carries route data and page metadata:
 ```tsx
 export default definePage({
   title: 'Posts',
+  async load({ params, route }) {
+    if (!params.slug) notFound();
+    return { slug: params.slug };
+  },
+  render({ data, route, meta }) {
+    return <article data-path={route.path}>{data.slug}</article>;
+  },
+});
+```
+
+Lifecycle controls are exported from `@openelement/app`:
+
+```tsx
+import { definePage, notFound, redirect } from '@openelement/app';
+
+export default definePage({
   async load({ params }) {
+    if (!params.slug) notFound();
+    if (params.slug === 'old') redirect('/posts/new', 301);
     return { slug: params.slug };
   },
   render({ data }) {
@@ -198,12 +224,13 @@ deno task publish:dry-run
 
 ## No Backward Compatibility
 
-v0.31.0 is allowed to be breaking. The package root `@openelement/app` now owns
+v0.32.0 is allowed to be breaking. The package root `@openelement/app` now owns
 application authoring; Vite configuration moved to `@openelement/app/vite`.
 
 ## Next Architecture Work
 
-The next minors should productize streaming/ISR, server route semantics, data
-integration recipes, and UI Shell surfaces without reopening the cleaned v0.30
-renderer, metadata, package graph, or trust-boundary contracts. The v0.37 line
-then performs the public surface reset before v1.0 freezes stable APIs.
+The next minors should close the product path in order: lifecycle, rendering and
+deployment, server routes and mutations, data recipes, UI starters, production
+hardening and pruning, public surface reset, and release-candidate validation.
+They must not reopen the cleaned v0.30 renderer, metadata, package graph, or
+trust-boundary contracts.

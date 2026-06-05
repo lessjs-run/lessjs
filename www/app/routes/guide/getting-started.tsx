@@ -39,8 +39,8 @@ function GettingStartedEn() {
       <h1>Getting Started</h1>
       <p class='subtitle'>
         Create a minimal JSX-first, DSD-first openElement app, start the dev
-        server, build static output, and learn where the v0.31.0 application
-        API lives.
+        server, build static output, and learn where the v0.32.0 application
+        lifecycle lives.
       </p>
 
       <open-callout type='info' label='Recommended'>
@@ -103,6 +103,35 @@ export default definePage(() => {
   return <main>Hello openElement</main>;
 });`}</code></pre></open-code-block>
 
+      <h2>Loading Data and Controlling Lifecycle</h2>
+      <p>
+        The object form keeps app code in JSX while giving the framework a
+        structured lifecycle: params, route source, metadata, redirect,
+        not-found, and error fallback.
+      </p>
+      <open-code-block><pre><code>{`import { definePage, notFound, redirect } from '@openelement/app';
+
+export default definePage({
+  title: 'Post',
+  meta: { section: 'blog' },
+  async load({ params, route }) {
+    if (!params.slug) notFound();
+    if (params.slug === 'old-post') redirect('/posts/new-post', 301);
+    return { slug: params.slug, source: route.filePath };
+  },
+  render({ data, route, meta }) {
+    return (
+      <article data-section={String(meta.section)}>
+        <h1>{data.slug}</h1>
+        <p>Rendered from {route.filePath}</p>
+      </article>
+    );
+  },
+  error({ error }) {
+    return <main>{String(error)}</main>;
+  },
+});`}</code></pre></open-code-block>
+
       <h2>Adding Interactivity</h2>
       <p>
         Put browser-upgraded components under <span class='inline-code'>app/islands</span>.
@@ -132,8 +161,8 @@ export default defineConfig({
 
       <div class='note'>
         <p>
-          The v1.0 target is a stable application engine. v0.31.0 starts that
-          path by making the Application API the default authoring surface.
+          The v1.0 target is a stable application engine. v0.32.0 makes the
+          Application API lifecycle explicit before rendering runtime work.
         </p>
       </div>
 
@@ -150,7 +179,7 @@ function GettingStartedZh() {
       <h1>快速开始</h1>
       <p class='subtitle'>
         创建一个 JSX-first、DSD-first 的 openElement 应用，启动开发服务器，
-        构建静态输出，并理解 v0.31.0 的应用层 API。
+        构建静态输出，并理解 v0.32.0 的应用生命周期。
       </p>
 
       <open-callout type='info' label='推荐'>
@@ -213,8 +242,8 @@ export default defineIsland(
 
       <div class='note'>
         <p>
-          v1.0 的目标是稳定应用引擎。v0.31.0 先把 Application API
-          变成默认应用编写入口。
+          v1.0 的目标是稳定应用引擎。v0.32.0 让 Application API
+          拥有明确的应用生命周期。
         </p>
       </div>
 

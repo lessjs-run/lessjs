@@ -77,6 +77,8 @@ architectural decision, its context, and consequences.
 | 0081 | VNode-Only Dynamic UI and Trusted HTML Boundary          | Accepted                                 |
 | 0082 | JSX-first Application API                                | Accepted                                 |
 | 0083 | Deferred Public Surface Reset                            | Accepted                                 |
+| 0084 | Product Closure Version Line                             | Accepted                                 |
+| 0085 | App Lifecycle Contract                                   | Accepted                                 |
 
 ## Superseded / Historical
 

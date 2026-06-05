@@ -1,6 +1,6 @@
 {
   "name": "@openelement/hub",
-  "version": "0.31.0",
+  "version": "0.32.0",
   "exports": {
     ".": "./mod.ts",
     "./schema": "./src/schema.ts",
@@ -14,8 +14,8 @@
     "./cli/check-index": "./src/cli/check-index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.31.0",
-    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.31.0",
+    "@openelement/core": "jsr:@openelement/core@^0.32.0",
+    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.32.0",
     "typescript": "npm:typescript@^5.9.0"
   },
   "tasks": {
