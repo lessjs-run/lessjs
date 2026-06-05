@@ -7,7 +7,7 @@ package: `docs/next/v0.32.0/`.
 
 ## Current Version Line: v0.32.0 (App Lifecycle Contract)
 
-v0.32.0 Status: **IMPLEMENTED, PENDING REPOSITORY RELEASE CLOSURE.**
+v0.32.0 Status: **IMPLEMENTED AND RELEASED.**
 Governing docs:
 
 - `docs/adr/ADR-0082-jsx-first-application-api.md`
@@ -102,9 +102,9 @@ the v1 release candidate.
 
 ## Package Version State
 
-All 19 packages are locally aligned to **v0.32.0** under `@openelement/*` for
-this release. Release proof requires local gates, GitHub Actions on `dev`, merge
-to `main`, GitHub Actions on `main`, and the GitHub tag/release note.
+All 19 packages are aligned to **v0.32.0** under `@openelement/*` for this
+release. Release proof includes local gates, GitHub Actions on `dev`, merge to
+`main`, GitHub Actions on `main`, and the GitHub tag/release note.
 
 Package governance before v0.38:
 
