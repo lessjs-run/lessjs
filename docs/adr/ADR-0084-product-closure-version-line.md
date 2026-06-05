@@ -1,6 +1,6 @@
 # ADR-0084: Product Closure Version Line
 
-- Status: Accepted
+- Status: Accepted; sequencing superseded by ADR-0086
 - Date: 2026-06-05
 - Target: v0.32-v1.0
 
@@ -21,6 +21,10 @@ correct, but it made v0.32 too wide and left no release-candidate buffer after
 the package reset.
 
 ## Decision
+
+Update: ADR-0086 supersedes the sequence below after v0.32. The product
+concerns remain valid, but AI-readable API and AutoFlow2 work now precede the
+rendering/server/data/UI expansion.
 
 Adopt a product-closure release line:
 

@@ -14,6 +14,7 @@ Read first: `docs/governance/PROJECT_WORKFLOW.md`
 
 ## Evidence
 
+- [ ] AutoFlow status: not applicable before v0.35 / report attached / `deno task autoflow:check`
 - [ ] `deno task workflow:check`
 - [ ] `deno task arch:check`
 - [ ] `deno task graph:check`

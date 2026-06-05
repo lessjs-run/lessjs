@@ -2,7 +2,7 @@
 
 > Status: Planned\
 > Roadmap: v1 Release Candidate\
-> ADR: ADR-0084
+> ADR: ADR-0086
 
 ## Goal
 
@@ -14,6 +14,8 @@ feature scope.
 - v0.38 public surface reset is complete.
 - Current docs and create templates use the final import paths.
 - Full local release gates pass on the reset package graph.
+- AutoFlow evidence agrees with package graph, docs, templates, and release
+  claims.
 
 ## Tasks
 
@@ -29,6 +31,7 @@ feature scope.
 ## Verification
 
 - full local gate ladder
+- AutoFlow evidence report
 - generated project matrix
 - consumer smoke
 - deploy smoke
@@ -48,4 +51,5 @@ feature scope.
 - The v1 public API candidate is frozen.
 - All documented starters, runtime modes, server routes, data recipes, and UI
   shells pass their gates.
+- AutoFlow reports no hard workflow contradictions.
 - v1.0 can be published as a release decision, not as another feature release.

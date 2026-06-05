@@ -1,54 +1,63 @@
-# v0.35.0 SOP: Data Integration Recipes
+# v0.35.0 SOP: AutoFlow2 Harness Gate
 
 > Status: Planned\
-> Roadmap: Data Integration Recipes\
-> ADR: ADR-0084
+> Roadmap: AutoFlow2 Harness Gate\
+> ADR: ADR-0086
 
 ## Goal
 
-Prove real app data flows through openElement while keeping ORM, database, and
-hosting choices outside the framework core.
+Turn a narrow, low-noise subset of AutoFlow2 contradictions into local and CI
+blockers. The gate should prevent evidence drift, not replace product judgment.
 
 ## Entry Criteria
 
-- v0.32.0 page lifecycle is stable.
-- v0.33.0 rendering runtime defines cache and deploy boundaries.
-- v0.34.0 server context and mutation behavior are stable.
+- v0.34.0 AutoFlow2 sidecar report is implemented and tested.
+- Report JSON shape is stable enough for a gate.
+- Fixture states cover released, active, planned, drifted, and invalid
+  workflows.
 
 ## Tasks
 
-- [ ] Write a data integration matrix for Drizzle, Kysely, Prisma, TypeORM, Deno
-      KV, Cloudflare D1, Postgres, and SQLite.
-- [ ] Add route loader examples for at least two SQL libraries and one KV store.
-- [ ] Add mutation examples that reuse the v0.34 server route contract.
-- [ ] Document serverless connection lifecycle and pooling guidance.
-- [ ] Document edge runtime constraints and unsupported combinations.
-- [ ] Add fixture apps that use external data libraries through `load()` and
-      server mutations.
-- [ ] Add docs warning that openElement does not own an ORM, auth provider, or
-      migration tool.
-- [ ] Add migration notes for users moving from ad hoc fetch code to `load()`
-      and server routes.
+- [ ] Add `deno task autoflow:check`.
+- [ ] Fail active version mismatch.
+- [ ] Fail missing active NextVersion package.
+- [ ] Fail SOP claim without evidence.
+- [ ] Fail invalid release state.
+- [ ] Fail package/doc/version drift.
+- [ ] Fail public API/template mismatch for implemented API claims.
+- [ ] Fail illegal workflow state transitions.
+- [ ] Add state-machine path tests for legal and illegal transitions.
+- [ ] Add property/model-based command checks for allowed actions versus repo
+      state.
+- [ ] Add AutoFlow status to `.github/PULL_REQUEST_TEMPLATE.md`.
+- [ ] Add AutoFlow status to CI.
+- [ ] Document that AutoFlow cannot merge, tag, bump, publish, or remove human
+      review.
 
 ## Verification
 
-- docs examples typecheck where practical
-- fixture builds for selected integrations
-- route loader and mutation tests
+- AutoFlow state-machine path tests
+- AutoFlow property/model-based tests
+- AutoFlow fixture tests
+- `deno task autoflow:check`
+- `deno task workflow:check`
+- `deno task fmt:check`
+- `deno task lint`
+- `deno task typecheck`
 - `deno task test`
-- `deno task build`
 
 ## Non-Goals
 
-- No built-in ORM.
-- No schema migration tool.
-- No auth provider.
-- No proprietary database abstraction.
+- No subjective roadmap scoring as a hard gate.
+- No automatic code edits.
+- No release control.
 - No package surface reset.
+- No rendering/server/data/UI feature expansion beyond fixtures needed for the
+  gate.
 
 ## Exit Criteria
 
-- Data docs are useful for real applications without pretending to be a backend
-  platform.
-- External data examples do not leak new dependencies into core packages.
-- UI starters in v0.36 can use documented data patterns.
+- `autoflow:check` fails only predefined hard contradictions.
+- Legal workflow transitions pass through generated/model paths.
+- PR evidence includes AutoFlow state.
+- CI can require AutoFlow without creating noisy product-judgment failures.

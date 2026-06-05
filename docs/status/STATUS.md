@@ -3,7 +3,7 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.32.0/`.
+package: `docs/next/v0.33.0/`.
 
 ## Current Version Line: v0.32.0 (App Lifecycle Contract)
 
@@ -14,8 +14,9 @@ Governing docs:
 - `docs/adr/ADR-0083-deferred-public-surface-reset.md`
 - `docs/adr/ADR-0084-product-closure-version-line.md`
 - `docs/adr/ADR-0085-app-lifecycle-contract.md`
+- `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
 - `docs/sop/v0.32.0/README.md`
-- `docs/next/v0.32.0/`
+- `docs/next/v0.33.0/`
 - `docs/roadmap/ROADMAP.md`
 
 The line turns the v0.31 Application API into an explicit route lifecycle:
@@ -60,18 +61,18 @@ v0.22.x and earlier: **HISTORICAL.**
 
 ## Next Targets
 
-| Version | Theme                               | Status  | Purpose                                                          |
-| ------- | ----------------------------------- | ------- | ---------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API           | Done    | App authoring API, `/vite` config split, docs/template DX        |
-| v0.32.0 | App Lifecycle Contract              | Current | Route, load, context, layout, error, redirect lifecycle          |
-| v0.33.0 | Rendering Runtime and Deployment    | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes      |
-| v0.34.0 | Server Routes and Mutations         | Planned | Hono helpers, middleware, typed responses, forms, mutations      |
-| v0.35.0 | Data Integration Recipes            | Planned | External ORM/database recipes without framework-owned ORM        |
-| v0.36.0 | UI Shell and Starter Productization | Planned | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters |
-| v0.37.0 | Production Hardening and Pruning    | Planned | API audit, docs proof, fixtures, Hub disposition, performance    |
-| v0.38.0 | Public Surface Reset                | Planned | Final package/product surface reset before the v1 RC             |
-| v0.39.0 | v1 Release Candidate                | Planned | Final API, docs, starter, deploy, consumer, and publish gates    |
-| v1.0.0  | Stable Application Engine           | Vision  | API freeze after the v0.31-v0.39 line is implementation-proven   |
+| Version | Theme                            | Status  | Purpose                                                        |
+| ------- | -------------------------------- | ------- | -------------------------------------------------------------- |
+| v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX      |
+| v0.32.0 | App Lifecycle Contract           | Current | Route, load, context, layout, error, redirect lifecycle        |
+| v0.33.0 | AI-Readable API Foundation       | Next    | Explicit page, route, head, island, and render intent APIs     |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Planned | Workflow state, cells, evidence ledger, allowed-action report  |
+| v0.35.0 | AutoFlow2 Harness Gate           | Planned | Low-noise workflow contradictions become local and CI blockers |
+| v0.36.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes    |
+| v0.37.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence  |
+| v0.38.0 | Public Surface Reset             | Planned | Final package/product surface reset before the v1 RC           |
+| v0.39.0 | v1 Release Candidate             | Planned | Final API, docs, starter, deploy, consumer, and publish gates  |
+| v1.0.0  | Stable Engine + AutoFlow Default | Vision  | API freeze with workflow evidence as part of default gates     |
 
 ## Current Product Center
 
@@ -80,9 +81,9 @@ v0.22.x and earlier: **HISTORICAL.**
 > routes, build-time MDX, and a 19-package `@openelement/*` monorepo.
 
 ADR-0083 keeps the v0.32 physical package graph in place while the product line
-is proven. ADR-0084 defines v0.32-v0.37 as lifecycle, rendering, server, data,
-UI, hardening, and pruning work; v0.38 as the public surface reset; and v0.39 as
-the v1 release candidate.
+is proven. ADR-0086 supersedes the sequencing parts of ADR-0084: v0.33-v0.35 now
+build AI-readable APIs, AutoFlow2 sidecar reporting, and the AutoFlow2 harness
+gate before rendering, server, data, and UI product expansion resumes.
 
 ## Current Rendering Mode
 
@@ -141,9 +142,12 @@ Package governance before v0.38:
   and declared imports.
 - **MDX through DSD.** MDX is build-time content compilation into the
   openElement JSX runtime, not a runtime parser or React layer.
-- **Deferred public surface reset.** v0.32-v0.37 validate behavior and evidence
-  first; v0.38 is the planned v1 package/product surface reset; v0.39 is the v1
-  release candidate.
+- **Deferred public surface reset.** v0.33-v0.37 collect API, workflow, and
+  product evidence first; v0.38 is the planned v1 package/product surface reset;
+  v0.39 is the v1 release candidate.
+- **AutoFlow2 boundary.** AutoFlow2 may report state, evidence, blockers, and
+  allowed actions. It must not merge, tag, bump, publish, or replace human review
+  for ADRs, public API resets, package removal, release tags, or publishing.
 
 ## Release Gate Order
 
@@ -162,3 +166,7 @@ deno task dsd:check-report
 deno task publish:dry-run
 deno task test:e2e
 ```
+
+`deno task autoflow:check` is planned for v0.35.0 and must not be listed as a
+required release gate until the task exists and the low-noise blocker set is
+implemented.

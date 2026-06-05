@@ -39,8 +39,11 @@ Instead:
 4. Apply new package governance immediately so the current graph does not grow
    in the wrong direction before v0.38.
 
-ADR-0084 updates the execution timeline from the earlier v0.37 reset target to
+ADR-0084 updated the execution timeline from the earlier v0.37 reset target to
 v0.38, with v0.39 reserved as a release-candidate line after the reset.
+ADR-0086 later superseded the sequencing before v0.38 by moving AI-readable API
+and AutoFlow2 work ahead of rendering/server/data/UI expansion. The v0.38 public
+surface reset target in this ADR remains accepted.
 
 The target public surface for v0.38 review is:
 
@@ -87,7 +90,8 @@ Effective immediately:
 
 Positive:
 
-- v0.32-v0.37 can validate product behavior before package churn.
+- v0.33-v0.37 can validate API, workflow, and product behavior before package
+  churn.
 - v0.38 can be based on real usage evidence instead of speculative naming.
 - v1.0 has a cleaner freeze point.
 - Single-maintainer release overhead stops growing immediately.

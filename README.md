@@ -93,11 +93,11 @@ v0.32.0 makes the application lifecycle explicit on top of the v0.31
 JSX-first authoring model. `DsdElement` remains the runtime primitive, but app
 authors start from `@openelement/app`.
 
-The next minors focus on rendering runtime/deployment, server routes, data
-integration, UI Shell product surfaces, hardening, package surface reset, and
-release-candidate validation without reopening the cleaned v0.30 renderer
-contract. The v1.0 target is a stable application engine after this
-v0.31-v0.39 line is implementation-proven.
+The next minors now focus on AI-readable API structure, AutoFlow2 evidence, and
+then rendering/server/data/UI product closure without reopening the cleaned
+v0.30 renderer contract. The v1.0 target is a stable engine with workflow
+evidence as part of the default release gate after the v0.31-v0.39 line is
+implementation-proven.
 
 ## Contributing
 

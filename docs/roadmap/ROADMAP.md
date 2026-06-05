@@ -2,7 +2,8 @@
 
 > Source of truth for forward version planning.\
 > Current line: v0.32.0 App Lifecycle Contract.\
-> Updated: 2026-06-05.
+> Next line: v0.33.0 AI-Readable API Foundation.\
+> Updated: 2026-06-06.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -37,9 +38,10 @@ Shadow DOM, not a framework-owned component runtime.
 The current v0.32 release line still publishes 19 packages. That graph is
 technically healthy, but it is not the intended v1.0 public product surface.
 
-ADR-0083 defers the physical package reset. ADR-0084 sets the product-closure
-line: v0.32-v0.37 validate behavior, evidence, and pruning first; v0.38 performs
-the public surface reset; v0.39 validates the release candidate.
+ADR-0083 defers the physical package reset. ADR-0086 keeps ADR-0083's smaller v1
+surface target, but changes the sequencing from ADR-0084: v0.33-v0.35 now build
+AI-readable APIs, AutoFlow2's sidecar kernel, and the harness gate before
+rendering/server/data/UI expansion resumes.
 
 The v0.38 review target is:
 
@@ -69,19 +71,19 @@ is necessary.
 
 ## Version Ladder
 
-| Version | Name                                | Goal                                                                 | Status  |
-| ------- | ----------------------------------- | -------------------------------------------------------------------- | ------- |
-| v0.30.x | Contract cleanup                    | One renderer model, one metadata boundary, openElement rename        | Done    |
-| v0.31.0 | JSX-first Application API           | Make page/island authoring the default DX                            | Done    |
-| v0.32.0 | App Lifecycle Contract              | Define page, route, layout, load, error, redirect, and context flow  | Current |
-| v0.33.0 | Rendering Runtime and Deployment    | Productize SSG, SSR, ISR, streaming DSD, cache, and deploy semantics | Planned |
-| v0.34.0 | Server Routes and Mutations         | Make Hono routes, middleware, responses, and mutations first-class   | Planned |
-| v0.35.0 | Data Integration Recipes            | Prove external ORM/database recipes without owning an ORM            | Planned |
-| v0.36.0 | UI Shell and Starter Productization | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters     | Planned |
-| v0.37.0 | Production Hardening and Pruning    | API audit, docs proof, fixtures, Hub disposition, performance        | Planned |
-| v0.38.0 | Public Surface Reset                | Package/product surface reset before the v1 release candidate        | Planned |
-| v0.39.0 | v1 Release Candidate                | Validate final APIs, docs, starters, deploy smoke, and publish gates | Planned |
-| v1.0.0  | Stable Application Engine           | Freeze stable APIs after v0.31-v0.39 are gate-proven                 | Vision  |
+| Version | Name                             | Goal                                                                  | Status  |
+| ------- | -------------------------------- | --------------------------------------------------------------------- | ------- |
+| v0.30.x | Contract cleanup                 | One renderer model, one metadata boundary, openElement rename         | Done    |
+| v0.31.0 | JSX-first Application API        | Make page/island authoring the default DX                             | Done    |
+| v0.32.0 | App Lifecycle Contract           | Define page, route, layout, load, error, redirect, and context flow   | Current |
+| v0.33.0 | AI-Readable API Foundation       | Make app/page/island/build intent explicit and machine-readable       | Next    |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Add workflow state, cells, evidence ledger, and allowed-action report | Planned |
+| v0.35.0 | AutoFlow2 Harness Gate           | Turn low-noise AutoFlow checks into CI blockers                       | Planned |
+| v0.36.0 | Rendering Runtime and Deployment | Resume SSR, ISR, streaming, cache, and deploy work under evidence     | Planned |
+| v0.37.0 | Server/Data/UI Product Closure   | Complete server, data, UI, starter, Hub, and pruning decisions        | Planned |
+| v0.38.0 | Public Surface Reset             | Package/product surface reset before the v1 release candidate         | Planned |
+| v0.39.0 | v1 Release Candidate             | Validate final APIs, docs, starters, deploy smoke, and publish gates  | Planned |
+| v1.0.0  | Stable Engine + AutoFlow Default | Freeze stable APIs and make workflow evidence part of default gates   | Vision  |
 
 ## v0.31.0 - JSX-first Application API
 
@@ -115,9 +117,67 @@ Scope:
 
 SOP: `docs/sop/v0.32.0/`
 
-## v0.33.0 - Rendering Runtime and Deployment
+## v0.33.0 - AI-Readable API Foundation
 
-Goal: turn the v0.32 lifecycle into deployable rendering behavior.
+Goal: make the app/page/island/build API explicit, typed, and declarative enough
+for humans, AI assistants, and future AutoFlow2 checks to read without guessing.
+
+Scope:
+
+- make object-form `definePage({ ... })` the default docs and template path;
+- add structured page fields for `head`, `route`, and `renderIntent`;
+- add a named island metadata helper such as `defineIslandMetadata()` or
+  `defineIslandConfig()`;
+- keep old `export const openElement = ...` island metadata compatible;
+- add `ssr?: boolean` to app-level island options;
+- add explicitly named trusted/raw head APIs such as `trustedHeadHtml` or
+  `dangerouslyHeadFragments`;
+- prove old and new intent forms normalize into the same descriptor path.
+
+SOP: `docs/sop/v0.33.0/`\
+NextVersion: `docs/next/v0.33.0/`
+
+## v0.34.0 - AutoFlow2 Sidecar Kernel
+
+Goal: introduce an internal advisory workflow kernel that reads repository
+state and emits a machine-readable report without editing code or controlling
+releases.
+
+Scope:
+
+- introduce `tools/autoflow` or `packages/autoflow`;
+- read `PROJECT_WORKFLOW`, `STATUS`, `ROADMAP`, SOPs, `docs/next`, ADRs,
+  package graph, workflow files, and gate results where available;
+- emit JSON and a human summary with `version`, `workflowState`, `cells`,
+  `evidence`, `blockers`, and `allowedActions`;
+- add fixture states for released, active, planned, drifted, and invalid
+  workflow states;
+- keep the sidecar advisory in v0.34; no CI blocking except ordinary tests.
+
+SOP: `docs/sop/v0.34.0/`
+
+## v0.35.0 - AutoFlow2 Harness Gate
+
+Goal: turn a narrow set of hard, low-noise AutoFlow2 contradictions into local
+and CI blockers.
+
+Scope:
+
+- add `deno task autoflow:check`;
+- fail active version mismatch, missing active NextVersion package, SOP claim
+  without evidence, invalid release state, package/doc/version drift, public
+  API/template mismatch, and illegal workflow transitions;
+- add state-machine path tests for legal and illegal transitions;
+- add property/model-based checks for allowed actions versus repository state;
+- add AutoFlow status to PR evidence and CI;
+- keep subjective product judgment outside the hard gate.
+
+SOP: `docs/sop/v0.35.0/`
+
+## v0.36.0 - Rendering Runtime and Deployment
+
+Goal: turn the v0.32 lifecycle and v0.33 AI-readable render intent into
+deployable rendering behavior under AutoFlow2 evidence.
 
 Scope:
 
@@ -126,88 +186,47 @@ Scope:
 - memory, filesystem, Deno KV, and Cloudflare KV cache adapter boundaries;
 - deploy recipes for static hosts, Deno Deploy, Cloudflare Workers, and
   Node-compatible hosts;
-- stale/fresh ISR tests, streaming tests, and deployment fixtures.
-
-SOP: `docs/sop/v0.33.0/`
-
-## v0.34.0 - Server Routes and Mutations
-
-Goal: make backend routes and mutations intentional without turning openElement
-into a heavy backend framework.
-
-Scope:
-
-- typed Hono route helpers;
-- request context, middleware order, cookies, headers, redirect helpers;
-- structured error responses;
-- form and mutation patterns;
-- route handler docs and generated types;
-- security defaults for API and mutation responses.
-
-SOP: `docs/sop/v0.34.0/`
-
-## v0.35.0 - Data Integration Recipes
-
-Goal: support real app data without owning an ORM.
-
-Scope:
-
-- documented integration recipes for Drizzle, Kysely, Prisma, TypeORM, Deno KV,
-  Cloudflare D1, Postgres, and SQLite;
-- loader and mutation examples;
-- connection lifecycle guidance for serverless and edge runtimes;
-- typed loader examples and fixture apps;
-- no built-in ORM, auth provider, or proprietary database abstraction.
-
-SOP: `docs/sop/v0.35.0/`
-
-## v0.36.0 - UI Shell and Starter Productization
-
-Goal: make the visible app shell, UI surface, and starter templates good enough
-for real sites without reopening renderer architecture.
-
-Scope:
-
-- explicit AppShell/layout APIs refined from ADR-0073;
-- Ocean/Island UI split;
-- `@openelement/ui/css` and token strategy;
-- starter templates for docs, blog, product, and dashboard;
-- visual docs and Playwright proof.
+- stale/fresh ISR tests, streaming tests, and deployment fixtures;
+- cells, expected evidence, and allowed transitions declared before
+  implementation.
 
 SOP: `docs/sop/v0.36.0/`
 
-## v0.37.0 - Production Hardening and Product Pruning
+## v0.37.0 - Server/Data/UI Product Closure
 
-Goal: turn the v0.31-v0.36 product line into evidence for v0.38.
+Goal: close the remaining product surfaces under AutoFlow2 supervision without
+reopening the renderer, package graph, or v1 product boundary.
 
 Scope:
 
-- public API audit and stability classification;
-- docs/API consistency gate;
-- generated project matrix;
-- package publish dry-run and consumer smoke;
-- performance baseline;
+- typed Hono route helpers, middleware order, responses, forms, and mutations;
+- documented external data recipes for selected SQL, KV, and edge stores;
+- AppShell, Ocean/Island UI split, `@openelement/ui/css`, and starter
+  templates;
+- generated project matrix, consumer smoke, performance baseline, and docs/API
+  consistency gates;
 - Hub disposition as public product, internal tooling, deferred, archived, or
   removed;
-- package and subpath inventory for the v0.38 reset.
+- package and subpath inventory for v0.38.
 
 SOP: `docs/sop/v0.37.0/`
 
 ## v0.38.0 - Public Surface Reset
 
-Goal: reorganize the public product surface before the v1 release candidate.
+Goal: reorganize the public product surface before the v1 release candidate,
+using AutoFlow2 evidence gathered through v0.34-v0.37.
 
 Scope:
 
-- decide the final v1 package map against ADR-0083 and ADR-0084;
-- classify all current packages as public product, public support, subpath,
-  internal, archived, or removed;
+- decide the final v1 package map against ADR-0083 and ADR-0086;
+- classify all current packages as public product, subpath, internal, archived,
+  or removed;
 - move integration APIs toward subpaths instead of top-level packages;
 - make protocol contracts small, explicit, and runtime-free;
 - ensure `@openelement/ui` is framework/router independent;
 - write migration guide, import table, and codemod notes;
 - prove the reset through generated starter builds, consumer smoke, publish
-  dry-run, docs gates, and e2e.
+  dry-run, docs gates, AutoFlow evidence, and e2e.
 
 SOP: `docs/sop/v0.38.0/`
 
@@ -227,15 +246,18 @@ Scope:
 
 SOP: `docs/sop/v0.39.0/`
 
-## v1.0.0 - Stable Application Engine
+## v1.0.0 - Stable Engine + AutoFlow Default
 
 v1.0 can happen only when the following are true:
 
 - app authoring API is stable and documented;
 - lifecycle, rendering, server, data, and UI starter contracts are tested;
+- AutoFlow2 has one advisory release, one gated release, and at least one
+  product release of evidence;
 - v0.38 public surface reset is complete or explicitly rejected by ADR;
 - v0.39 release-candidate gates pass on `dev` and `main`;
-- package graph, docs, architecture, build, publish dry-run, and e2e gates pass.
+- package graph, docs, architecture, build, publish dry-run, AutoFlow evidence,
+  and e2e gates pass.
 
 SOP: `docs/sop/v1.0.0/`
 
@@ -248,6 +270,7 @@ SOP: `docs/sop/v1.0.0/`
 | React-like runtime ownership | openElement outputs Web Components and DSD; it does not own a React runtime. |
 | String renderer revival      | No. The renderer model remains JSX/VNode/RenderNode.                         |
 | Silent compatibility shims   | No. 0.x may break APIs when cleanup improves the contract.                   |
+| Autonomous release control   | No. AutoFlow2 cannot merge, tag, bump, publish, or remove human review.      |
 
 ## Document Cross-Reference
 

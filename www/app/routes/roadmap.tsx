@@ -246,7 +246,7 @@ export class RoadmapPage extends DsdElement {
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
                 line is v0.32.0: App Lifecycle Contract on top of the JSX-first Application API.
-                The path to v1.0 is a stable application engine, not a generic backend platform.
+                The next line is v0.33.0: AI-Readable API Foundation before AutoFlow2 and product expansion.
               </p>
             </div>
             <aside class="now">
@@ -274,27 +274,27 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v0.33.0</div>
-              <div><h3>Rendering Runtime and Deployment</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes.</p></div>
-              <span class="status planned">Planned</span>
+              <div><h3>AI-Readable API Foundation</h3><p>Object-form pages, structured head/route/render intent, explicit island metadata, and compatibility proof.</p></div>
+              <span class="status planned">Next</span>
             </div>
             <div class="phase">
               <div class="version">v0.34.0</div>
-              <div><h3>Server Routes and Mutations</h3><p>Typed Hono helpers, middleware lifecycle, response helpers, forms, and mutations.</p></div>
+              <div><h3>AutoFlow2 Sidecar Kernel</h3><p>Workflow state, cells, evidence ledger, blockers, and allowed-action report without automatic edits.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.35.0</div>
-              <div><h3>Data Integration Recipes</h3><p>External ORM and database recipes without framework-owned ORM or auth platforms.</p></div>
+              <div><h3>AutoFlow2 Harness Gate</h3><p>Low-noise workflow contradictions become local and CI blockers through model-backed checks.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.0</div>
-              <div><h3>UI Shell and Starter Productization</h3><p>AppShell polish, Ocean/Island UI split, @openelement/ui/css, and starter templates.</p></div>
+              <div><h3>Rendering Runtime and Deployment</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes under AutoFlow evidence.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.0</div>
-              <div><h3>Production Hardening and Pruning</h3><p>API audit, docs proof, fixture matrix, Hub disposition, ecosystem smoke, and performance budget.</p></div>
+              <div><h3>Server/Data/UI Product Closure</h3><p>Server routes, mutations, data recipes, UI starters, Hub disposition, package inventory, and pruning evidence.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
@@ -309,7 +309,7 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v1.0.0</div>
-              <div><h3>Stable Application Engine</h3><p>Freeze the proven authoring, rendering, metadata, release, and docs contracts.</p></div>
+              <div><h3>Stable Engine + AutoFlow Default</h3><p>Freeze the proven API surface with workflow evidence as part of the default release gate.</p></div>
               <span class="status planned">Planned</span>
             </div>
           </div>
@@ -330,13 +330,14 @@ export class RoadmapPage extends DsdElement {
               <ul>
                 <li>v0.32.0 App Lifecycle Contract</li>
                 <li>Route params, load, metadata, redirect, and not-found</li>
-                <li>AutoWorkflow execution and release package</li>
+                <li>AutoWorkflow execution and v0.33 package</li>
                 <li>19-package aligned monorepo</li>
               </ul>
             </div>
             <div class="truth">
               <h2>Deferred</h2>
               <ul>
+                <li>AutoFlow2 sidecar and harness gate</li>
                 <li>ISR / Edge SSR production handler</li>
                 <li>CF Workers KV and Deno KV adapters</li>
                 <li>generic auth or ORM systems</li>

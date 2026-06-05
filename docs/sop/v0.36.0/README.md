@@ -1,52 +1,64 @@
-# v0.36.0 SOP: UI Shell and Starter Productization
+# v0.36.0 SOP: Rendering Runtime and Deployment
 
 > Status: Planned\
-> Roadmap: UI Shell and Starter Productization\
-> ADR: ADR-0084
+> Roadmap: Rendering Runtime and Deployment\
+> ADR: ADR-0086
 
 ## Goal
 
-Make the visible app shell, UI package, and starter templates good enough for
-real docs, blogs, product pages, and dashboards.
+Turn the v0.32 lifecycle and v0.33 AI-readable render intent into explicit
+rendering, cache, streaming, and deployment behavior under AutoFlow2 evidence.
 
 ## Entry Criteria
 
 - v0.32.0 lifecycle semantics are stable.
-- v0.33.0 rendering modes are deployable.
-- v0.34.0 server context is stable.
-- v0.35.0 data recipes can feed starter examples.
-- ADR-0073, ADR-0074, ADR-0075, and ADR-0076 are re-read against current code.
+- v0.33.0 render intent and page metadata are explicit.
+- v0.35.0 AutoFlow2 harness gate is implemented and low-noise.
+- Existing ISR primitives and DSD streaming behavior are audited before
+  expansion.
+- The rendering work declares cells, expected evidence, and allowed transitions
+  before implementation.
 
 ## Tasks
 
-- [ ] Audit AppShell and layout config against real www and starter needs.
-- [ ] Ensure AppShell is configurable without alias hacks.
-- [ ] Decide `@openelement/ui/css` export shape.
-- [ ] Separate Ocean components from browser-upgraded island components.
-- [ ] Finalize token strategy using Open Props and first-party CSS.
-- [ ] Add starter templates for docs, blog, product, and dashboard.
-- [ ] Ensure starter templates use v0.32 lifecycle, v0.33 rendering, v0.34
-      server, and v0.35 data patterns where relevant.
-- [ ] Add visual docs and Playwright screenshots for layout modes.
-- [ ] Ensure UI examples use `definePage()` and `defineIsland()`.
+- [ ] Define runtime rendering modes for static SSG, request-time SSR, ISR, and
+      streaming DSD.
+- [ ] Normalize `revalidate` and freshness values into one internal cache
+      representation.
+- [ ] Audit current `IsrCache`, `MemoryIsrCache`, and manifest behavior.
+- [ ] Add cache adapter boundary for memory, filesystem, Deno KV, and
+      Cloudflare KV.
+- [ ] Prove stale/fresh ISR behavior with tests.
+- [ ] Prove streaming chunk order, shell timing, and error fallback.
+- [ ] Add deploy recipes for static hosts, Deno Deploy, Cloudflare Workers, and
+      Node-compatible hosts.
+- [ ] Update create templates only for rendering modes with production proof.
+- [ ] Update www rendering and deployment docs.
+- [ ] Include AutoFlow evidence report in release artifacts.
 
 ## Verification
 
-- UI package tests
-- starter template builds
-- www build
-- Playwright e2e and screenshot checks
-- publish dry-run for package metadata only if UI exports change
+- targeted ISR/cache tests
+- targeted streaming DSD tests
+- deployment recipe fixture builds
+- `deno task autoflow:check`
+- `deno task workflow:check`
+- `deno task test`
+- `deno task build`
+- `deno task test:e2e`
 
 ## Non-Goals
 
-- No renderer rewrite.
-- No data layer expansion.
+- No server mutation API.
+- No ORM or data recipe work.
+- No UI Shell redesign.
 - No package surface reset.
-- No marketing-only landing page work without functional starter proof.
+- No AutoFlow release control.
 
 ## Exit Criteria
 
-- AppShell is a first-class configuration surface.
-- UI docs and starter templates are coherent with the v0.32-v0.35 product path.
-- Visual behavior is browser-proven.
+- At least one static, one SSR, one ISR, and one streaming fixture pass.
+- Deployment docs match runtime support rather than aspirational targets.
+- AutoFlow evidence agrees with implementation, docs, tests, and release
+  claims.
+- Rendering runtime behavior is usable by v0.37 server/data/UI product closure.

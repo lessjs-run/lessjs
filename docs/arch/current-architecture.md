@@ -3,8 +3,8 @@
 > Status: **CURRENT (APP LIFECYCLE LINE)**\
 > Version line: v0.32.0\
 > Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082,
-> ADR-0083, ADR-0084, ADR-0085\
-> Last hardened: 2026-06-05
+> ADR-0083, ADR-0084, ADR-0085, ADR-0086\
+> Last hardened: 2026-06-06
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -64,9 +64,9 @@ kernel must not import a concrete build adapter.
 ## Public Surface Governance
 
 The current 19-package graph is intentionally not reorganized immediately after
-v0.32.0. ADR-0083 defers physical package migration, and ADR-0084 schedules the
-reset for v0.38 after v0.32-v0.37 validate product behavior and pruning
-evidence.
+v0.32.0. ADR-0083 defers physical package migration, and ADR-0086 keeps the
+reset at v0.38 after v0.33-v0.37 validate API readability, AutoFlow evidence,
+product behavior, and pruning evidence.
 
 New work must still follow the target direction:
 
@@ -110,6 +110,8 @@ future migration target, not the current import contract.
 `@openelement/hub` remains in the current package graph, but ADR-0084 requires
 v0.37 to decide whether it remains public product, becomes internal tooling, is
 deferred, is archived, or is removed before the v0.38 public surface reset.
+ADR-0086 keeps that disposition requirement and places it under AutoFlow2
+evidence.
 
 ## Public Application Contract
 
@@ -192,6 +194,30 @@ Framework behavior must come from structured declarations:
 The build should never regex-parse generated TypeScript to recover business
 logic.
 
+## AI-Readable Architecture Direction
+
+ADR-0086 makes AI-readable architecture an explicit precondition for AutoFlow2.
+New application API work should favor typed object forms, structured metadata,
+and named trust boundaries over hidden conventions.
+
+The v0.33 direction is:
+
+- object-form `definePage({ ... })` becomes the default docs and template path;
+- page descriptors expose structured `head`, `route`, and `renderIntent`;
+- island metadata has a named helper such as `defineIslandMetadata()` or
+  `defineIslandConfig()`;
+- app-level island options can declare `ssr?: boolean`;
+- raw or pre-trusted head fragments use explicit names such as
+  `trustedHeadHtml` or `dangerouslyHeadFragments`;
+- old v0.31-v0.32 APIs remain compatible until a later migration ADR removes
+  them.
+
+The v0.34-v0.35 AutoFlow2 direction is internal workflow evidence, not
+autonomous code evolution. AutoFlow2 may report workflow state, cells, evidence,
+blockers, and allowed actions. It must not merge, tag, bump, publish, or replace
+human review for ADRs, package removal, public API resets, release tags, or
+publishing.
+
 ## Canonical Shared Concepts
 
 | Concept                             | Canonical owner                            |
@@ -229,8 +255,8 @@ application authoring; Vite configuration moved to `@openelement/app/vite`.
 
 ## Next Architecture Work
 
-The next minors should close the product path in order: lifecycle, rendering and
-deployment, server routes and mutations, data recipes, UI starters, production
-hardening and pruning, public surface reset, and release-candidate validation.
-They must not reopen the cleaned v0.30 renderer, metadata, package graph, or
-trust-boundary contracts.
+The next minors should close the product path in order: AI-readable API
+foundation, AutoFlow2 sidecar, AutoFlow2 harness gate, rendering and deployment,
+server/data/UI product closure, public surface reset, and release-candidate
+validation. They must not reopen the cleaned v0.30 renderer, metadata, package
+graph, or trust-boundary contracts.
