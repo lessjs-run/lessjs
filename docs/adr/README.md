@@ -76,6 +76,7 @@ architectural decision, its context, and consequences.
 | 0080 | Architecture Contract Freeze                             | Accepted                                 |
 | 0081 | VNode-Only Dynamic UI and Trusted HTML Boundary          | Accepted                                 |
 | 0082 | JSX-first Application API                                | Accepted                                 |
+| 0083 | Deferred Public Surface Reset                            | Accepted                                 |
 
 ## Superseded / Historical
 

@@ -2,7 +2,8 @@
 
 > Status: **CURRENT (APPLICATION API LINE)**\
 > Version line: v0.31.0\
-> Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082\
+> Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082,
+> ADR-0083\
 > Last hardened: 2026-06-05
 
 ## Architecture Center
@@ -56,6 +57,26 @@ protocols
 Dependencies must point downward or sideways through explicit protocols. A
 feature package must not import a build adapter just to share a type. The runtime
 kernel must not import a concrete build adapter.
+
+## Public Surface Governance
+
+The current 19-package graph is intentionally not reorganized immediately after
+v0.31.0. ADR-0083 defers physical package migration until v0.37 so v0.32-v0.36
+can validate behavior first.
+
+New work must still follow the target direction:
+
+- no new top-level `@openelement/*` package without an ADR;
+- integration APIs prefer subpaths over new packages;
+- protocol contracts stay small, explicit, and runtime-free;
+- `@openelement/ui` must not depend on framework routing or app state;
+- framework code must not own database, ORM, auth, backend runtime, or builder
+  choices;
+- adapters live at the edge, never in the renderer or Elements core.
+
+The v0.37 review target is a smaller public product surface centered on
+protocol, Elements authoring, UI, Framework, and create scaffolding. That is a
+future migration target, not the current import contract.
 
 ## Current Packages (19 total)
 
@@ -184,4 +205,5 @@ application authoring; Vite configuration moved to `@openelement/app/vite`.
 
 The next minors should productize streaming/ISR, server route semantics, data
 integration recipes, and UI Shell surfaces without reopening the cleaned v0.30
-renderer, metadata, package graph, or trust-boundary contracts.
+renderer, metadata, package graph, or trust-boundary contracts. The v0.37 line
+then performs the public surface reset before v1.0 freezes stable APIs.

@@ -5,8 +5,8 @@
 
 ## Goal
 
-Freeze the stable openElement application engine after the v0.31-v0.36 line has
-real implementation and gate proof.
+Freeze the stable openElement application engine after the v0.31-v0.37 line has
+real implementation, public surface reset proof, and release gate proof.
 
 ## Entry Criteria
 
@@ -15,12 +15,16 @@ real implementation and gate proof.
 - Server/API and data integration boundaries are documented and tested.
 - UI Shell starters are browser-proven.
 - Package graph and publish dry-run pass without exceptions.
+- v0.37 public surface reset is complete or explicitly rejected by ADR.
 
 ## Tasks
 
 - [ ] Publish stable public API list.
 - [ ] Mark experimental APIs explicitly.
-- [ ] Remove or document every internal subpath.
+- [ ] Confirm every internal subpath is removed from user docs or explicitly
+      documented as internal/advanced.
+- [ ] Confirm the public package map has no unresolved product-boundary
+      contradictions.
 - [ ] Finalize migration guide.
 - [ ] Run full local gates.
 - [ ] Run CI on `dev` and `main`.

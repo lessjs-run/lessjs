@@ -30,6 +30,30 @@ The roadmap follows the broad shape used by mainstream frameworks:
 The openElement difference is the output model: Web Components plus Declarative
 Shadow DOM, not a framework-owned component runtime.
 
+## Product Surface Direction
+
+The current v0.31 release line still publishes 19 packages. That graph is
+technically healthy, but it is not the intended v1.0 public product surface.
+
+ADR-0083 defers the physical package reset until the v1.0 candidate stage. The
+v0.32-v0.36 line should validate product behavior first, while avoiding new
+top-level package sprawl.
+
+The v0.37 review target is:
+
+| Surface                  | Purpose                                                  |
+| ------------------------ | -------------------------------------------------------- |
+| `@openelement/protocol`  | Small Web Standards-shaped contracts for interop         |
+| `@openelement/elements`  | DSD-first Custom Element authoring surface               |
+| `@openelement/ui`        | DSD-first UI component library                           |
+| `@openelement/framework` | Application framework for routes, rendering, server data |
+| `@openelement/create`    | Project scaffolding                                      |
+
+Integrations should default to subpaths such as
+`@openelement/framework/vite`, `@openelement/framework/router`, and
+`@openelement/elements/compat/lit` unless an ADR proves that a top-level package
+is necessary.
+
 ## Current Public Contract
 
 | Layer                 | Current contract                                                    |
@@ -52,7 +76,8 @@ Shadow DOM, not a framework-owned component runtime.
 | v0.34.0 | Data Integration Layer             | External ORM/database recipes and adapters without owning an ORM              | Planned |
 | v0.35.0 | UI Shell and Design System Surface | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters              | Planned |
 | v0.36.0 | Hardening and Migration            | API audit, docs proof, fixtures, ecosystem smoke, performance                 | Planned |
-| v1.0.0  | Stable Application Engine          | Freeze stable APIs after v0.31-v0.36 are gate-proven                          | Vision  |
+| v0.37.0 | Public Surface Reset               | Package/product surface reset before v1.0                                     | Planned |
+| v1.0.0  | Stable Application Engine          | Freeze stable APIs after v0.31-v0.37 are gate-proven                          | Vision  |
 
 ## v0.31.0 - JSX-first Application API
 
@@ -130,7 +155,8 @@ SOP: `docs/sop/v0.35.0/`
 
 ## v0.36.0 - Hardening and Migration
 
-Goal: turn the v0.31-v0.35 features into a release-candidate engine.
+Goal: turn the v0.31-v0.35 features into a release-candidate engine without
+renaming the package graph yet.
 
 Scope:
 
@@ -140,8 +166,28 @@ Scope:
 - package publish dry-run and consumer smoke;
 - performance baseline;
 - migration guide from v0.30/v0.31 to v1.
+- public surface inventory for the v0.37 reset.
 
 SOP: `docs/sop/v0.36.0/`
+
+## v0.37.0 - Public Surface Reset
+
+Goal: reorganize the public product surface before v1.0, after v0.32-v0.36 have
+proven the real feature boundaries.
+
+Scope:
+
+- decide the final v1 package map against ADR-0083;
+- classify all current packages as public product, public support, subpath,
+  internal, archived, or removed;
+- move integration APIs toward subpaths instead of top-level packages;
+- make protocol contracts small, explicit, and runtime-free;
+- ensure `@openelement/ui` is framework/router independent;
+- write migration guide and codemod notes for import-path changes;
+- prove the reset through generated starter builds, consumer smoke, publish
+  dry-run, docs gates, and e2e.
+
+SOP: `docs/sop/v0.37.0/`
 
 ## v1.0.0 - Stable Application Engine
 
@@ -152,6 +198,7 @@ v1.0 can happen only when the following are true:
 - server/API layer has explicit boundaries;
 - data integrations are external and documented;
 - UI shell has proven templates;
+- v0.37 public surface reset is complete or explicitly rejected by ADR;
 - package graph, docs, architecture, build, publish dry-run, and e2e gates pass.
 
 SOP: `docs/sop/v1.0.0/`

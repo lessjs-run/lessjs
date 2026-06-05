@@ -58,6 +58,7 @@ have one SOP with:
 | v0.34.0 | [v0.34.0/](./v0.34.0/)                                                                       | Planned  | Data integration layer             |
 | v0.35.0 | [v0.35.0/](./v0.35.0/)                                                                       | Planned  | UI Shell and design system surface |
 | v0.36.0 | [v0.36.0/](./v0.36.0/)                                                                       | Planned  | Hardening and migration            |
+| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Planned  | Public surface reset               |
 | v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable application engine          |
 
 ## Operator Rules

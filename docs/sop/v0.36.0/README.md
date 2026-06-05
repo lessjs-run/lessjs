@@ -5,7 +5,8 @@
 
 ## Goal
 
-Turn the v0.31-v0.35 feature line into a stable release candidate.
+Turn the v0.31-v0.35 feature line into a stable release candidate and prepare
+evidence for the v0.37 public surface reset.
 
 ## Entry Criteria
 
@@ -22,6 +23,9 @@ Turn the v0.31-v0.35 feature line into a stable release candidate.
 - [ ] Add consumer smoke for JSR package graph.
 - [ ] Add performance baseline for build, SSR render, and client island boot.
 - [ ] Add migration guide from v0.30/v0.31 to v1.0 candidates.
+- [ ] Produce public package and subpath inventory for v0.37.
+- [ ] Mark package surfaces that should remain public, move to subpaths, become
+      internal, or be archived.
 - [ ] Remove any stale SOP claims that cannot be proven by code or gates.
 
 ## Verification
@@ -37,8 +41,9 @@ Turn the v0.31-v0.35 feature line into a stable release candidate.
 - No new feature scope unless it is required to close a blocker.
 - No UI redesign.
 - No ORM/auth ownership.
+- No physical package reorganization; that belongs to v0.37.
 
 ## Exit Criteria
 
 - Release claims are proven by commands.
-- The v1.0 API freeze list is ready for review.
+- The v0.37 public surface reset has enough evidence to start.

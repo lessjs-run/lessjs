@@ -8,6 +8,7 @@ v0.31.0 Status: **IMPLEMENTED AND RELEASED.**
 Governing docs:
 
 - `docs/adr/ADR-0082-jsx-first-application-api.md`
+- `docs/adr/ADR-0083-deferred-public-surface-reset.md`
 - `docs/sop/v0.31.0/README.md`
 - `docs/roadmap/ROADMAP.md`
 
@@ -54,13 +55,19 @@ v0.22.x and earlier: **HISTORICAL.**
 | v0.34.0 | Data Integration Layer             | Planned | External ORM/database recipes without framework-owned ORM        |
 | v0.35.0 | UI Shell and Design System Surface | Planned | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters |
 | v0.36.0 | Hardening and Migration            | Planned | API audit, docs proof, fixtures, consumer smoke, performance     |
-| v1.0.0  | Stable Application Engine          | Vision  | API freeze after the v0.31-v0.36 line is implementation-proven   |
+| v0.37.0 | Public Surface Reset               | Planned | Final package/product surface reset before v1.0                  |
+| v1.0.0  | Stable Application Engine          | Vision  | API freeze after the v0.31-v0.37 line is implementation-proven   |
 
 ## Current Product Center
 
 > JSX-first Web Components application framework with SSG, progressive islands,
 > Declarative Shadow DOM, `client:*` hydration strategies, Hono DSD-first API
 > routes, build-time MDX, and a 19-package `@openelement/*` monorepo.
+
+ADR-0083 keeps the v0.31 physical package graph in place while v0.32-v0.36
+validate product behavior. The planned v0.37 reset will decide whether the v1
+public surface converges toward `protocol`, `elements`, `ui`, `framework`, and
+`create`.
 
 ## Current Rendering Mode
 
@@ -82,6 +89,15 @@ v0.22.x and earlier: **HISTORICAL.**
 All 19 packages are aligned to **v0.31.0** under `@openelement/*` for this
 release. Release proof requires local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
+
+Package governance before v0.37:
+
+- do not add a new top-level package without an ADR;
+- prefer integration subpaths over package sprawl;
+- keep protocol contracts small and runtime-free;
+- keep UI independent from framework routing;
+- keep database, ORM, auth, backend, and builder choices at adapter or recipe
+  boundaries.
 
 ## Architecture Positioning
 
@@ -106,6 +122,8 @@ release. Release proof requires local gates, GitHub Actions on `dev`, merge to
   and declared imports.
 - **MDX through DSD.** MDX is build-time content compilation into the openElement
   JSX runtime, not a runtime parser or React layer.
+- **Deferred public surface reset.** v0.32-v0.36 validate behavior first; v0.37
+  is the planned v1 package/product surface reset.
 
 ## Release Gate Order
 
