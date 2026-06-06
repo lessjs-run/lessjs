@@ -159,7 +159,8 @@
     "fmt:check": "deno fmt --check --ignore=deliverables/,www/content/blog/,www/app/routes/,www/app/data/,docs/mockups/,docs/conversation/,custom-dist/,dist-test-ssg-render/,.deno_cache/",
     "clean": "rm -rf packages/*/dist www/dist",
     "hooks:install": "git config core.hooksPath .githooks",
-    "hooks:uninstall": "git config core.hooksPath"
+    "hooks:uninstall": "git config core.hooksPath",
+    "autoflow:report": "deno run --allow-read tools/autoflow/mod.ts"
   },
   "fmt": {
     "useTabs": false,
