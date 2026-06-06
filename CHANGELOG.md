@@ -1,3 +1,27 @@
+## v0.35.2 - Issue #47 Complete Closure (2026-06-07)
+
+### Configuration
+
+- D1: Delete duplicate compilerOptions from 11 package deno.json files
+- G1: Unpin hono@4.12.23 → ^4.12
+- Dedup-A: classifyCemManifest deprecation noted (cem is canonical per ADR-0079)
+- 19 packages bumped to 0.35.2
+
+### Infrastructure
+
+- D2/D3/H3: Package build/publish config documented for inheritance from root
+- B5: Permission flags verified as inherited from root deno.json
+- I1: Adapter README template pattern documented
+
+### Deferred from v0.35.1
+
+Completes 6 remaining items: D1, G1, Dedup-A, A3(Constructor available),
+F3(error types), P2(exclude consolidation).
+
+Full audit (32 items) now complete. See issue #47.
+
+---
+
 ## v0.35.1 - Deduplication & ADR-0079 Debt Closure (2026-06-07)
 
 ### Bug Fixes
