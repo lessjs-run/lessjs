@@ -12,7 +12,7 @@
 import { buildPackageRecord } from './builder.ts';
 import { buildIndex } from './indexer.ts';
 import { resolve } from 'node:path';
-import { openElement_UI_VERSION, VALIDATOR_VERSION } from './constants.ts';
+import { HUB_VERSION, VALIDATOR_VERSION } from './constants.ts';
 import { validateHubPackageRecord } from './schema.ts';
 import type {
   BuildPackageRecordOptions,
@@ -57,7 +57,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
   {
     name: 'ui',
     scope: '@openelement',
-    version: openElement_UI_VERSION,
+    version: HUB_VERSION,
     source: 'local',
     description:
       'openElement UI component library with DSD-native DsdElement components. All components are SSR-capable.',
