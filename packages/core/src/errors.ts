@@ -17,6 +17,9 @@ export const ErrorCode = {
   UNKNOWN: 'UNKNOWN',
 } as const;
 
+/** Error message prefix for all openElement errors. */
+export const ERROR_PREFIX = '[openElement]';
+
 // ─── Types ──────────────────────────────────────────────────────────
 
 export type ErrorSeverity = 'error' | 'warning';

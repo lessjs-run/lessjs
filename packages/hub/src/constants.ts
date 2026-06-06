@@ -5,6 +5,7 @@ export const VALIDATOR_VERSION = '0.33.0';
 
 /** Version of @shoelace-style/shoelace used in hub snapshots */
 export const SHOELACE_VERSION = '2.20.1';
+export const PLAYWRIGHT_VERSION = '1.59.1';
 
 /** Version of @openelement/ui recorded in hub scanner */
 export const HUB_VERSION = VALIDATOR_VERSION;
