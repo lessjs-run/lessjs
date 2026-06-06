@@ -1,13 +1,13 @@
 {
   "name": "@openelement/i18n",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "exports": {
     ".": "./src/index.ts",
     "./data": "./src/i18n-data.ts"
   },
   "imports": {
-    "@openelement/core/logger": "jsr:@openelement/core@^0.35.1/logger",
-    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.35.1/build-types",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.35.2/logger",
+    "@openelement/protocols/build-types": "jsr:@openelement/protocols@^0.35.2/build-types",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
@@ -17,9 +17,6 @@
       "README.md",
       "LICENSE"
     ]
-  },
-  "compilerOptions": {
-    "skipLibCheck": true
   },
   "include": [
     "src"

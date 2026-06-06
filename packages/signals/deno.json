@@ -1,6 +1,6 @@
 {
   "name": "@openelement/signals",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "exports": {
     ".": "./src/index.ts",
     "./framework": "./src/framework.ts",
@@ -16,9 +16,6 @@
       "README.md",
       "LICENSE"
     ]
-  },
-  "compilerOptions": {
-    "skipLibCheck": true
   },
   "lint": {
     "rules": {
