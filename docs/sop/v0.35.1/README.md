@@ -13,22 +13,22 @@
 ### P0 — ADR-0079 Closure (4 items)
 
 - [x] **B1** Fix `validatorVersion` drift: `packages/hub/src/cli/hub-submit.ts:296` `'0.19.0'` → `VALIDATOR_VERSION` from `packages/hub/src/constants.ts`
-- [ ] **E2** Delete `packages/ui/src/shared/escape.ts`. Replace all `_esc`/`_escAttr` imports in open-button, open-callout, open-dialog, open-input with `escapeHtml`/`escapeAttr` from `@openelement/core`
+- [x] **E2** Delete `packages/ui/src/shared/escape.ts`. Replace all `_esc`/`_escAttr` imports in open-button, open-callout, open-dialog, open-input with `escapeHtml`/`escapeAttr` from `@openelement/core`
 - [ ] **Dedup-A** Merge `classifyCemManifest`: delete `packages/compat-check/src/compatibility.ts:361` copy. All consumers use `@openelement/cem` export
 - [ ] **A1** Extract `DsdHydration` interface to `packages/core/src/dsd-hydration.ts`. adapter-lit/vanilla/react import from core. `DsdHydrationMixin` stays adapter-lit-specific
 
 ### P0 — High Severity (4 items)
 
-- [ ] **E1** Delete `packages/ui/src/docs-page-styles.ts`. `www/app/routes/guide/getting-started.tsx` imports `page-styles` instead. `@openelement/ui` re-exports from `page-styles` if public API needed
-- [ ] **F1** Centralize tag validation error messages: "must contain a hyphen" in 5 files → single `core/src/errors.ts` function
-- [ ] **F2** Centralize `[openElement]` error prefix: `app/authoring.ts` and `core/island.ts` → `core/src/errors.ts`
-- [ ] **C1** Move `client-only-cem.json` and `invalid-cem.json` from core+compat-check to shared `tools/test-fixtures/`
+- [x] **E1** Delete `packages/ui/src/docs-page-styles.ts`. `www/app/routes/guide/getting-started.tsx` imports `page-styles` instead. `@openelement/ui` re-exports from `page-styles` if public API needed
+- [x] **F1** Centralize tag validation error messages: "must contain a hyphen" in 5 files → single `core/src/errors.ts` function
+- [x] **F2** Centralize `[openElement]` error prefix: `app/authoring.ts` and `core/island.ts` → `core/src/errors.ts`
+- [x] **C1** Move `client-only-cem.json` and `invalid-cem.json` from core+compat-check to shared `tools/test-fixtures/`
 
 ### P1 — Medium Severity (12 items)
 
-- [ ] **B3** Merge `VALIDATOR_VERSION` and `openElement_UI_VERSION` in `hub/constants.ts` into single `HUB_VERSION = '0.35.1'`
-- [ ] **B2** Replace `FALLBACK_OPENELEMENT_VERSION = '0.33.0'` in `adapter-vite/src/cli/build-ssg.ts:43` → read from `packages/core/deno.json`
-- [ ] **B4** Fix `snapshot-playwright.ts` hardcoded Shoelace/Playwright versions → use `SHOELACE_VERSION` from constants
+- [x] **B3** Merge `VALIDATOR_VERSION` and `openElement_UI_VERSION` in `hub/constants.ts` into single `HUB_VERSION = '0.35.1'`
+- [x] **B2** Replace `FALLBACK_OPENELEMENT_VERSION = '0.33.0'` in `adapter-vite/src/cli/build-ssg.ts:43` → read from `packages/core/deno.json`
+- [x] **B4** Fix `snapshot-playwright.ts` hardcoded Shoelace/Playwright versions → use `SHOELACE_VERSION` from constants
 - [ ] **H1** Extract `PackageInfo` interface + `readPackage()` to `tools/lib/package-utils.ts`. Use in `check-package-graph.ts` and `run-package-graph-task.ts`
 - [ ] **D1** Remove duplicate `compilerOptions` from 11 package `deno.json` files. Inherit from root
 - [ ] **P1** Unified package list: `deno.json` workspace → read by `consumer-local.ts`, `publish-jsr.yml`, `check-package-graph.ts` via single source
@@ -49,7 +49,7 @@
 - [ ] **D3** Workspace-level `publish.include` config
 - [ ] **F3** Unified `OpenElementError` subtype for SSR adapter errors
 - [ ] **G3** `@playwright/test@1.59.1` → constant
-- [ ] **H2** Create `tools/lib/` with shared file I/O + JSON parsing utils
+- [x] **H2** Create `tools/lib/` with shared file I/O + JSON parsing utils
 - [ ] **H3** Deprecate 19 individual `publish:*` tasks (kept as aliases)
 - [ ] **H4** Merge autoflow CLI wrappers: `mod-check.ts` + `mod-evolve.ts` + `mod-health.ts` → single `mod.ts` with subcommands
 - [ ] **I1** Adapter READMEs use shared template

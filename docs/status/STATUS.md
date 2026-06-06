@@ -3,9 +3,9 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.35.0/`.
+package: `docs/next/v0.35.1/`.
 
-## Current Version Line: v0.35.0 (AutoFlow2 Mechanical Autonomy)
+## Current Version Line: v0.35.1 (Deduplication & ADR-0079 Debt Closure)
 
 v0.35.0 delivers all three layers of AutoFlow2 mechanical autonomy in one version:
 **Harness Gate** (CI-blocking invariant verification) + **Cell Execution**
@@ -161,7 +161,7 @@ papers (C1-C6, 01-09, A1) + 12 external papers (EMNLP, ICSE, TOSEM, IEEE).
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.36.0** under `@openelement/*` for this
+All 19 packages are aligned to **v0.35.1** under `@openelement/*` for this
 release. Release proof includes local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
 

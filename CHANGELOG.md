@@ -1,3 +1,33 @@
+## v0.35.1 - Deduplication & ADR-0079 Debt Closure (2026-06-07)
+
+### Bug Fixes
+
+- B1: Fix hub validatorVersion drift (0.19.0 → VALIDATOR_VERSION from constants.ts)
+- B2: Remove FALLBACK_OPENELEMENT_VERSION hardcode, read from deno.json
+- B3: Merge VALIDATOR_VERSION and openElement_UI_VERSION into HUB_VERSION
+- B4: Use SHOELACE_VERSION constant in snapshot-playwright.ts
+
+### Deduplication
+
+- E1: Delete packages/ui/src/docs-page-styles.ts (merged into page-styles.ts)
+- E2: Delete packages/ui/src/shared/escape.ts, 6 components import from @openelement/core
+- C1: Share test fixtures (client-only-cem.json, invalid-cem.json) in tools/test-fixtures/
+
+### Infrastructure
+
+- H2: Create tools/lib/ and tools/test-fixtures/ directories
+- F1: Add TAG_VALIDATION_ERROR to core/src/errors.ts ErrorCode
+- 19 packages bumped to 0.35.1
+
+### SOP
+
+- docs/sop/v0.35.1/README.md: 11 P0 items completed
+- docs/next/v0.35.1/README.md: NextVersion package
+
+See issue #47 for full 32-item audit.
+
+---
+
 ## v0.35.0 - AutoFlow2 Mechanical Autonomy (2026-06-06)
 
 Combines Harness Gate, Cell Execution, and Evolution Loop into one version.
