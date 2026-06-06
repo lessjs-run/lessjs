@@ -10,7 +10,11 @@ Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 ## Product Position
 
 openElement is a JSX-first Web Components application framework with
-Declarative Shadow DOM as the default server-rendered output.
+Declarative Shadow DOM as the default server-rendered output. Built on DSD-first
+HTML, progressive islands, and a 19-package monorepo under `@openelement/*`.
+
+v0.33.0 (AI-Readable API Foundation) defined the public application contract
+that all subsequent versions build upon.
 
 ## Version Ladder
 
