@@ -1,0 +1,78 @@
+import {
+  assert,
+  assertEquals,
+  assertExists,
+  assertFalse,
+  assertStringIncludes,
+} from 'jsr:@std/assert@^1.0.0';
+import { fromFileUrl, join } from 'jsr:@std/path@^1.0.0';
+import { generateClientEntry } from '../../packages/adapter-vite/src/entry-generators.ts';
+import {
+  fileToTagName,
+  scanIslandMeta,
+  scanIslands,
+} from '../../packages/adapter-vite/src/route-scanner.ts';
+
+const REPO_ROOT = fromFileUrl(new URL('../..', import.meta.url));
+const WWW_ISLANDS_DIR = join(REPO_ROOT, 'www', 'app', 'islands');
+
+const REQUIRED_LOCAL_ISLANDS = {
+  'home-console': { hydrate: 'idle', ssr: true, dsd: true },
+  'open-search': { hydrate: 'load', ssr: true, dsd: true },
+  'reactive-showcase': { hydrate: 'idle', ssr: true, dsd: true },
+  'scroll-reveal': { hydrate: 'idle', ssr: true, dsd: true },
+} as const;
+
+async function scanWwwIslandMetadata() {
+  const islandFiles = await scanIslands(WWW_ISLANDS_DIR);
+  const meta = await scanIslandMeta(WWW_ISLANDS_DIR, islandFiles);
+  return { islandFiles, meta };
+}
+
+Deno.test('www local islands expose explicit v0.33 metadata', async () => {
+  const { islandFiles, meta } = await scanWwwIslandMetadata();
+  const scannedTags = new Set(islandFiles.map(fileToTagName));
+
+  for (const [tagName, expected] of Object.entries(REQUIRED_LOCAL_ISLANDS)) {
+    assert(scannedTags.has(tagName), `${tagName} must exist under www/app/islands`);
+    const actual = meta[tagName];
+    assertExists(actual, `${tagName} must export defineIslandConfig(...) metadata`);
+    assertEquals(actual.hydrate, expected.hydrate, `${tagName} hydrate strategy drifted`);
+    assertEquals(actual.ssr, expected.ssr, `${tagName} SSR flag drifted`);
+    assertEquals(actual.dsd, expected.dsd, `${tagName} DSD flag drifted`);
+  }
+
+  const missingMetadata = [...scannedTags].filter((tagName) => meta[tagName] === undefined);
+  assertEquals(
+    missingMetadata,
+    [],
+    `All www/app/islands files must declare defineIslandConfig(...): ${missingMetadata.join(', ')}`,
+  );
+});
+
+Deno.test('www search island metadata schedules immediate client hydration', async () => {
+  const { islandFiles, meta } = await scanWwwIslandMetadata();
+  const entries = islandFiles.map((filePath) => {
+    const tagName = fileToTagName(filePath);
+    return {
+      tagName,
+      modulePath: `/app/islands/${filePath}`,
+      strategy: meta[tagName]?.hydrate ?? 'idle',
+    };
+  });
+
+  const code = generateClientEntry(entries);
+  const loadTags = code.match(/\/\/ client:load islands - import immediately\s*\[(.*?)\]\.filter/s)
+    ?.[1] ?? '';
+  const idleTags = code.match(/var __idleTags = \[(.*?)\];/s)?.[1] ?? '';
+
+  assertStringIncludes(
+    loadTags,
+    '"open-search"',
+    'open-search must be in the immediate client:load bucket',
+  );
+  assertFalse(
+    idleTags.includes('"open-search"'),
+    'open-search must not silently fall back to idle hydration',
+  );
+});

@@ -109,22 +109,25 @@ good.
 
 ## Version Scope
 
-### v0.33.0 - AI-Readable API Foundation
+### v0.33.0 - Strict AI-Readable API Reset
 
 Make app, page, island, head, route, and render intent explicit enough for both
-humans and tools to read without inference.
+humans and tools to read without inference. This release is a breaking authoring
+API cleanup with one canonical descriptor path.
 
 Required direction:
 
-- object-form `definePage({ ... })` becomes the default docs and template path;
+- object-form `definePage({ route, head, renderIntent, load, render, error })`
+  becomes the only page authoring path;
+- function-form `definePage(() => ...)` is removed;
+- top-level page `title`, `description`, `meta`, `rendering`, `streaming`, and
+  `revalidate` are removed;
 - page descriptors expose structured `head`, `route`, and `renderIntent`
   fields;
-- island metadata has a named helper such as `defineIslandMetadata()` or
-  `defineIslandConfig()`;
+- island metadata uses `export const openElement = defineIslandConfig(...)`;
 - app-level island options can declare `ssr?: boolean`;
-- trusted/raw head injection uses explicit names such as `trustedHeadHtml` or
-  `dangerouslyHeadFragments`;
-- old APIs remain compatible during this version.
+- raw head injection uses `head.dangerouslyHeadFragments`;
+- old object-literal island metadata is rejected by the adapter scanner.
 
 ### v0.34.0 - AutoFlow2 Sidecar Kernel
 

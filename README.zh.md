@@ -2,8 +2,8 @@
 
 [English](./README.md) | 简体中文
 
-**JSX-first、DSD-first Web Components 应用框架 (v0.32.0)。** openElement 用
-Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
+**JSX-first、DSD-first Web Components 应用框架 (v0.32.0 已发布，v0.33.0 开发中)。**
+openElement 用 Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
@@ -26,8 +26,12 @@ HTML 到达浏览器，需要交互的部分再作为 island 按策略升级。
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
@@ -45,19 +49,19 @@ export default defineIsland(
 );
 ```
 
-v0.32.0 的公开契约分层很明确：
+v0.33.0 开发中的公开契约分层很明确：
 
-- 应用编写：`definePage()`、`defineIsland()`、`defineElement()`、`defineLayout()`
+- 应用编写：`definePage({ route, head, renderIntent, load, render, error })`、`defineIslandConfig()`、`defineIsland()`、`defineElement()`、`defineLayout()`
 - 构建配置：从 `@openelement/app/vite` 导入 `openElement()`
 - 渲染模型：JSX -> VNode -> RenderNode -> DSD HTML 或 DOM
-- metadata 字段：`openElement`
+- island metadata 字段：`export const openElement = defineIslandConfig(...)`
 - UI 命名：`open-*`
-- 信任边界：`trustedHtml` 只用于已经清洗或可信的非交互 HTML
+- 信任边界：`trustedHtml` 用于已清洗或可信的非交互 HTML；页面 head 的原始片段必须显式放在 `head.dangerouslyHeadFragments`
 
 ## 包
 
-19 个包统一发布到 [`@openelement`](https://jsr.io/@openelement)，当前版本为
-**v0.32.0**。
+19 个包统一发布到 [`@openelement`](https://jsr.io/@openelement)，当前已发布版本为
+**v0.32.0**。本仓库的活动开发目标是 v0.33.0 strict AI-readable API reset。
 
 | Package                     | Role                                    |
 | --------------------------- | --------------------------------------- |
@@ -81,17 +85,18 @@ v0.32.0 的公开契约分层很明确：
 
 ## 当前版本
 
-v0.32.0 把默认心智从“继承 runtime class”改成“编写 JSX 页面和 islands”。`DsdElement`
-仍然是底层 runtime primitive，但应用作者从 `@openelement/app` 开始。
+v0.33.0 开发线把应用编写面收敛为唯一 canonical object descriptor。页面使用
+`definePage({ route, head, renderIntent, load, render, error })`，island 静态元数据使用
+`defineIslandConfig({ ssr, dsd, hydrate })`，v0.31-v0.32 的 function-form page 和旧 object-literal island metadata 捷径会被移除。
 
-后续 minor 会继续推进 streaming/ISR、server routes、数据集成和 UI Shell 产品面，同时不重新打开
-v0.30 已清理完成的 renderer contract。
-v1.0 的目标是在 v0.31-v0.39 这条线被实现和门禁证明后，冻结稳定应用引擎。
+后续 minor 会继续推进 AutoFlow2、rendering/deploy、server/data/UI 产品闭环，同时不重新打开
+v0.30 已清理完成的 renderer contract。v1.0 的目标是在 v0.31-v0.39 这条线被实现和门禁证明后，冻结稳定应用引擎。
 
 ## 贡献
 
 参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。架构决策在 [docs/adr/](./docs/adr/)，执行 SOP
-在 [docs/sop/](./docs/sop/)，当前状态在 [docs/status/STATUS.md](./docs/status/STATUS.md)。
+在 [docs/sop/](./docs/sop/)，活动执行包在 [docs/next/](./docs/next/)，当前状态在
+[docs/status/STATUS.md](./docs/status/STATUS.md)。
 
 ## 许可
 

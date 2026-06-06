@@ -1,3 +1,61 @@
+## v0.33.0 - AI-Readable API Foundation (2026-06-06)
+
+### Page API: Strict Canonical Descriptor
+
+- `definePage()` now requires object-form only. Function-form `definePage(() => ...)`
+  is rejected at runtime.
+- Added structured `head` intent with `title`, `description`, `meta`, and
+  `dangerouslyHeadFragments` trust boundary.
+- Added `route` intent (`PageRouteIntent`): path, id, params metadata.
+- Added `renderIntent` as the only public render intent field (`mode`,
+  `streaming`, `revalidate`).
+- Removed top-level page `title`, `description`, `meta`, `rendering`,
+  `streaming`, and `revalidate` shortcuts.
+
+### Head Trust Boundary
+
+- Raw head fragments now enter only through `head.dangerouslyHeadFragments`.
+- Ordinary `head` data is structured and serialized by the framework.
+- Tests verify raw fragments cannot leak through safe structured head paths.
+
+### Island API
+
+- Added `defineIslandConfig()` — the only island metadata helper.
+- Object-literal island metadata (`export const openElement = { ... }`) is
+  rejected by the adapter scanner.
+- App-level island options expose `ssr?: boolean` for readable SSR/client-only
+  intent.
+
+### Generated Entry and Templates
+
+- Generated SSR/SSG entries read `head`, `route`, and `renderIntent` from the
+  new canonical page descriptor.
+- Adapter island scanning accepts only `defineIslandConfig(...)`.
+- Create templates use object-form `definePage({ ... })` and
+  `defineIslandConfig()`.
+
+### Breaking Changes
+
+```diff
+- export default definePage(() => <Page />);
++ export default definePage({ render: () => <Page /> });
+
+- definePage({ title: '...', description: '...', meta: {...} });
++ definePage({ head: { title: '...', description: '...' } });
+
+- export const openElement = { ssr: true, hydrate: 'visible' };
++ export const openElement = defineIslandConfig({ ssr: true, hydrate: 'visible' });
+```
+
+### Workflow and Docs
+
+- Added ADR-0086: AI-Readable Architecture and AutoFlow2 Roadmap.
+- Added `docs/next/v0.33.0/` execution package.
+- Updated STATUS, Roadmap, Architecture, SOPs, www homepage, and Getting Started
+  for v0.33.0.
+- Bumped all 19 packages and internal JSR ranges to `0.33.0`.
+
+---
 ## v0.32.0 - App Lifecycle Contract (2026-06-05)
 
 ### Application Lifecycle

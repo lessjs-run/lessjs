@@ -12,7 +12,7 @@ import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
 import type { RouteEntry } from '@openelement/core';
 
-// ─── Test fixtures ─────────────────────────────────────────────
+// Test fixtures
 
 const sampleRoutes: RouteEntry[] = [
   { path: '/', filePath: 'index.ts', type: 'page', varName: 'pageIndex' },
@@ -24,7 +24,7 @@ const islandRoutes: RouteEntry[] = [
   { path: '/', filePath: 'index.ts', type: 'page', varName: 'pageIndex' },
 ];
 
-// ─── buildEntryDescriptor tests ────────────────────────────────
+// buildEntryDescriptor tests
 
 Deno.test('buildEntryDescriptor: default options produce correct structure', () => {
   const desc = buildEntryDescriptor(sampleRoutes);
@@ -94,12 +94,12 @@ Deno.test('buildEntryDescriptor: function CORS origin is serialized', () => {
 
 Deno.test('buildEntryDescriptor: custom html config is applied', () => {
   const desc = buildEntryDescriptor(sampleRoutes, {
-    html: { lang: 'zh-CN', title: '我的应用' },
+    html: { lang: 'zh-CN', title: 'My App' },
     headExtras: '<link rel="stylesheet" href="https://cdn.example.com/styles.css" />',
   });
 
   assertEquals(desc.document.lang, 'zh-CN');
-  assertEquals(desc.document.title, '我的应用');
+  assertEquals(desc.document.title, 'My App');
   assertStringIncludes(desc.document.headExtras, 'cdn.example.com');
 });
 
@@ -122,7 +122,7 @@ Deno.test('buildEntryDescriptor: route import paths include routesDir', () => {
   assertEquals(desc.pageRoutes[0].importPath, '/app/routes/index.ts');
 });
 
-// ─── renderEntry tests ─────────────────────────────────────────
+// renderEntry tests
 
 Deno.test('renderEntry: produces valid module code', () => {
   const desc = buildEntryDescriptor(sampleRoutes);
@@ -217,7 +217,7 @@ Deno.test('renderEntry: custom CORS origin renders correctly', () => {
 
 Deno.test('renderEntry: document config renders correctly', () => {
   const desc = buildEntryDescriptor(sampleRoutes, {
-    html: { lang: 'zh-CN', title: '测试' },
+    html: { lang: 'zh-CN', title: 'Test' },
     headExtras: '<link rel="stylesheet" href="https://cdn.example.com/styles.css" />',
   });
   const code = renderEntry(desc);
@@ -225,11 +225,11 @@ Deno.test('renderEntry: document config renders correctly', () => {
   // v0.3.0: wrapInDocument is called at runtime, not inlined HTML.
   // The generated code passes config as parameters.
   assertStringIncludes(code, 'lang: "zh-CN"');
-  assertStringIncludes(code, 'title: __page.title || "测试"');
+  assertStringIncludes(code, 'title: __page.head?.title || "Test"');
   assertStringIncludes(code, 'cdn.example.com');
 });
 
-// ─── Integration test: generateHonoEntryCode ───────────────────
+// Integration test: generateHonoEntryCode
 
 Deno.test('generateHonoEntryCode: end-to-end produces runnable code', () => {
   const code = generateHonoEntryCode(sampleRoutes, {
@@ -247,7 +247,7 @@ Deno.test('generateHonoEntryCode: end-to-end produces runnable code', () => {
   assertEquals(codeLines.some((l) => l.includes('process.env')), false);
 });
 
-// ─── v0.5 Trust Release regression tests ────────────────────
+// v0.5 Trust Release regression tests
 
 Deno.test('buildEntryDescriptor: root middleware scope uses /* not //*', () => {
   // Bug: scope '/' + '/*' = '//*' in Hono only matches '/', not sub-paths.

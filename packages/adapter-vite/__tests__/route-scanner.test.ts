@@ -102,17 +102,18 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   });
 
   await t.step(
-    'scanIslandMeta - v0.28.6 reads local less metadata via AST static scan',
+    'scanIslandMeta - reads defineIslandConfig metadata via AST static scan',
     async () => {
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'client-only.ts'),
         [
-          'export const openElement = {',
+          'import { defineIslandConfig } from "@openelement/app";',
+          'export const openElement = defineIslandConfig({',
           '  // comments and trailing commas are accepted by the AST path',
           '  ssr: false,',
           '  dsd: false,',
           '  hydrate: "idle",',
-          '} as const;',
+          '});',
           'export default class ClientOnly {}',
         ].join('\n'),
       );
@@ -132,15 +133,16 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   );
 
   await t.step(
-    'scanIslandMeta - v0.28.6 reads metadata from source file even if unexecutable',
+    'scanIslandMeta - reads defineIslandConfig metadata from source file even if unexecutable',
     async () => {
       // Static AST scanning does not execute the file, so top-level throws
       // do not prevent metadata extraction.
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'browser-only.ts'),
         [
+          'import { defineIslandConfig } from "@openelement/app";',
           'throw new Error("Browser-only: document is not defined");',
-          'export const openElement = { ssr: false };',
+          'export const openElement = defineIslandConfig({ ssr: false });',
         ].join('\n'),
       );
       const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
@@ -152,20 +154,58 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   );
 
   await t.step(
-    'scanIslandMeta - rejects dynamic openElement metadata instead of guessing',
+    'scanIslandMeta - rejects old object-literal openElement metadata',
+    async () => {
+      await Deno.writeTextFile(
+        join(FIXTURES_DIR, 'islands', 'legacy-meta.ts'),
+        [
+          'export const openElement = { ssr: false };',
+          'export default class LegacyMeta {}',
+        ].join('\n'),
+      );
+      await assertRejects(
+        () => scanIslandMeta(join(FIXTURES_DIR, 'islands'), ['legacy-meta.ts']),
+        Error,
+        'defineIslandConfig',
+      );
+    },
+  );
+
+  await t.step(
+    'scanIslandMeta - rejects dynamic defineIslandConfig metadata instead of guessing',
     async () => {
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'dynamic-meta.ts'),
         [
+          'import { defineIslandConfig } from "@openelement/app";',
           'const base = { ssr: false };',
-          'export const openElement = { ...base };',
+          'export const openElement = defineIslandConfig(base);',
           'export default class DynamicMeta {}',
         ].join('\n'),
       );
       await assertRejects(
         () => scanIslandMeta(join(FIXTURES_DIR, 'islands'), ['dynamic-meta.ts']),
         Error,
-        'unsupported openElement metadata syntax',
+        'static object literal',
+      );
+    },
+  );
+
+  await t.step(
+    'scanIslandMeta - rejects unknown defineIslandConfig metadata keys',
+    async () => {
+      await Deno.writeTextFile(
+        join(FIXTURES_DIR, 'islands', 'unknown-meta.ts'),
+        [
+          'import { defineIslandConfig } from "@openelement/app";',
+          'export const openElement = defineIslandConfig({ ssr: false, mode: "legacy" });',
+          'export default class UnknownMeta {}',
+        ].join('\n'),
+      );
+      await assertRejects(
+        () => scanIslandMeta(join(FIXTURES_DIR, 'islands'), ['unknown-meta.ts']),
+        Error,
+        'unsupported openElement metadata key "mode"',
       );
     },
   );

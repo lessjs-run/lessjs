@@ -2,14 +2,16 @@
  * Fixture: Local island with openElement.ssr = false
  *
  * This component explicitly opts out of SSR by exporting
- * `less = { ssr: false }`. The SSR admission plan should
+ * `defineIslandConfig({ ssr: false })`. The SSR admission plan should
  * place its tag into `clientOnlyTags`.
  *
  * Note: We don't extend HTMLElement here because Deno doesn't have
  * DOM globals. The class is just a placeholder for metadata export.
  */
 
-export const openElement = { ssr: false, dsd: false, hydrate: 'idle' };
+import { defineIslandConfig } from '@openelement/app';
+
+export const openElement = defineIslandConfig({ ssr: false, dsd: false, hydrate: 'idle' });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-class-definition
 export default class LocalSsrFalse {

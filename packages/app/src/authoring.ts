@@ -14,6 +14,24 @@ export type PageStreamingMode = 'auto' | 'force' | false;
 export type PageRevalidate = false | number | `${number}s` | `${number}m` | `${number}h`;
 export type PageMeta = Record<string, unknown>;
 
+export interface PageRouteIntent {
+  path?: string;
+  id?: string;
+  params?: readonly string[];
+}
+
+export interface PageRenderIntent {
+  mode?: PageRenderingMode;
+  streaming?: PageStreamingMode;
+  revalidate?: PageRevalidate;
+}
+
+export interface NormalizedPageRenderIntent {
+  mode: PageRenderingMode;
+  streaming: PageStreamingMode;
+  revalidate: PageRevalidate;
+}
+
 export interface PageRouteContext {
   path?: string;
   filePath?: string;
@@ -70,7 +88,10 @@ export function isOpenElementNotFound(error: unknown): error is OpenElementNotFo
 }
 
 export interface PageHead {
+  title?: string;
+  description?: string;
   meta?: Array<Record<string, string | number | boolean>>;
+  dangerouslyHeadFragments?: string[];
 }
 
 export interface PageLoadContext<
@@ -121,15 +142,9 @@ export interface PageDefinition<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
 > {
-  title?: string;
-  description?: string;
+  route?: PageRouteIntent;
   head?: PageHead;
-  meta?: PageMeta;
-  layout?: string | false;
-  styles?: typeof DsdElement.styles;
-  rendering?: PageRenderingMode;
-  streaming?: PageStreamingMode;
-  revalidate?: PageRevalidate;
+  renderIntent?: PageRenderIntent;
   load?: PageLoadFunction<Data, Params>;
   render: PageRenderFunction<Data, Params>;
   error?: PageErrorFunction<Data, Params>;
@@ -138,8 +153,9 @@ export interface PageDefinition<
 export interface OpenElementPageDescriptor<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
-> extends Omit<PageDefinition<Data, Params>, 'render'> {
+> extends Omit<PageDefinition<Data, Params>, 'render' | 'renderIntent'> {
   kind: 'page';
+  renderIntent: NormalizedPageRenderIntent;
   render: PageRenderFunction<Data, Params>;
 }
 
@@ -172,15 +188,6 @@ type PageConstructor<
   openElementPage: OpenElementPageDescriptor<Data, Params>;
 };
 
-function normalizePageDefinition<
-  Data,
-  Params extends Record<string, string>,
->(
-  input: PageRenderFunction<Data, Params> | PageDefinition<Data, Params>,
-): PageDefinition<Data, Params> {
-  return typeof input === 'function' ? { render: input } : input;
-}
-
 function collectPublicProps(host: Record<string, unknown>): Record<string, unknown> {
   const props: Record<string, unknown> = {};
   for (const key of Object.keys(host)) {
@@ -188,6 +195,40 @@ function collectPublicProps(host: Record<string, unknown>): Record<string, unkno
     props[key] = host[key];
   }
   return props;
+}
+
+const PAGE_DESCRIPTOR_FIELDS = new Set([
+  'route',
+  'head',
+  'renderIntent',
+  'load',
+  'render',
+  'error',
+]);
+
+const ISLAND_CONFIG_FIELDS = new Set(['ssr', 'dsd', 'hydrate']);
+const HYDRATION_STRATEGIES = new Set(['load', 'idle', 'visible', 'only']);
+
+function assertCanonicalPageDefinition(input: unknown): asserts input is PageDefinition {
+  if (typeof input === 'function') {
+    throw new Error(
+      '[openElement] definePage() requires a canonical object descriptor. ' +
+        'Use definePage({ route, head, renderIntent, load, render, error }).',
+    );
+  }
+  if (typeof input !== 'object' || input === null) {
+    throw new Error('[openElement] definePage() requires an object descriptor.');
+  }
+  for (const key of Object.keys(input)) {
+    if (PAGE_DESCRIPTOR_FIELDS.has(key)) continue;
+    throw new Error(
+      `[openElement] definePage() does not accept top-level "${key}". ` +
+        'Use only route, head, renderIntent, load, render, and error.',
+    );
+  }
+  if (typeof (input as { render?: unknown }).render !== 'function') {
+    throw new Error('[openElement] definePage() descriptor requires a render() function.');
+  }
 }
 
 /**
@@ -201,19 +242,21 @@ export function definePage<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
 >(
-  input: PageRenderFunction<Data, Params> | PageDefinition<Data, Params>,
+  input: PageDefinition<Data, Params>,
 ): PageConstructor<Data, Params> {
-  const definition = normalizePageDefinition(input);
+  assertCanonicalPageDefinition(input);
+  const definition = input;
   const pageDescriptor = {
     kind: 'page',
     ...definition,
-    rendering: definition.rendering ?? 'auto',
-    streaming: definition.streaming ?? 'auto',
-    revalidate: definition.revalidate ?? false,
+    renderIntent: {
+      mode: definition.renderIntent?.mode ?? 'auto',
+      streaming: definition.renderIntent?.streaming ?? 'auto',
+      revalidate: definition.renderIntent?.revalidate ?? false,
+    },
   } as OpenElementPageDescriptor<Data, Params>;
 
   class OpenElementPage extends ApplicationPageElement {
-    static override styles = definition.styles;
     static openElementPage = pageDescriptor;
 
     override render(): VNode | null {
@@ -224,7 +267,7 @@ export function definePage<
         params,
         request: this.__openElementRequest,
         route: this.__openElementRoute ?? {},
-        meta: this.__openElementMeta ?? pageDescriptor.meta ?? {},
+        meta: this.__openElementMeta ?? {},
         props: collectPublicProps(this),
       };
 
@@ -293,6 +336,34 @@ export function defineLayout<Props extends Record<string, unknown> = Record<stri
 export interface AppIslandOptions {
   hydrate?: HydrationStrategy;
   dsd?: boolean;
+  ssr?: boolean;
+}
+
+export interface IslandConfig {
+  hydrate?: HydrationStrategy;
+  dsd?: boolean;
+  ssr?: boolean;
+}
+
+export function defineIslandConfig(config: IslandConfig): IslandConfig {
+  if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+    throw new Error('[openElement] defineIslandConfig() requires an object descriptor.');
+  }
+  for (const key of Object.keys(config)) {
+    if (!ISLAND_CONFIG_FIELDS.has(key)) {
+      throw new Error(
+        `[openElement] defineIslandConfig() does not accept "${key}". ` +
+          'Use only ssr, dsd, and hydrate.',
+      );
+    }
+  }
+  if (config.hydrate !== undefined && !HYDRATION_STRATEGIES.has(config.hydrate)) {
+    throw new Error(
+      `[openElement] Invalid island hydrate strategy "${String(config.hydrate)}". ` +
+        'Use one of: load, idle, visible, only.',
+    );
+  }
+  return { ...config };
 }
 
 export function defineIsland<Props extends Record<string, unknown> = Record<string, unknown>>(
@@ -307,5 +378,6 @@ export function defineIsland<Props extends Record<string, unknown> = Record<stri
   return defineRuntimeIsland(tagName, componentClass, {
     strategy: options.hydrate,
     dsd: options.dsd,
+    ssr: options.ssr,
   });
 }

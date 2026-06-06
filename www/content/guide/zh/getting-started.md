@@ -7,8 +7,8 @@ order: 1
 
 # 快速开始
 
-openElement 是 JSX-first 的 Web Components 应用框架。页面用 JSX 编写，框架把它渲染为
-Declarative Shadow DOM，需要交互的部分再作为 islands 升级。
+openElement 是 JSX-first 的 Web Components 应用框架。页面用 JSX 编写，
+框架把它们渲染为 Declarative Shadow DOM，需要交互的部分再作为 islands 升级。
 
 ## 创建项目
 
@@ -23,24 +23,44 @@ deno task dev
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: {
+    title: 'Home',
+    description: 'My openElement app',
+  },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: false,
+  },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
-`definePage()` 是应用层 API。底层 `DsdElement` 仍然存在，但应用路由默认应该从这里开始。
+`definePage()` 只接受一个 canonical object descriptor。`route` 是意图元数据；
+真实路由匹配仍由文件扫描器负责。
 
 ## 添加 island
 
 ```tsx
-import { defineIsland } from '@openelement/app';
+import { defineIsland, defineIslandConfig } from '@openelement/app';
 import { signal } from '@openelement/runtime';
+
+export const openElement = defineIslandConfig({
+  hydrate: 'idle',
+  dsd: true,
+  ssr: true,
+});
 
 const count = signal(0);
 
 export default defineIsland(
   'my-counter',
   () => <button onClick={() => count.value++}>Count: {count.value}</button>,
+  { hydrate: openElement.hydrate, dsd: openElement.dsd, ssr: openElement.ssr },
 );
 ```
 

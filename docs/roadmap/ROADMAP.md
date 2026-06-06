@@ -94,7 +94,7 @@ Deliverables:
 
 - `@openelement/app` exports application authoring helpers.
 - `@openelement/app/vite` exports the Vite build facade.
-- `definePage()` supports function and object forms.
+- `definePage()` initially supports function and object forms.
 - `definePage({ load })` feeds SSR and SSG route rendering.
 - `defineIsland()` gives islands a concise app-level entry.
 - create template and docs teach Application API first.
@@ -119,20 +119,24 @@ SOP: `docs/sop/v0.32.0/`
 
 ## v0.33.0 - AI-Readable API Foundation
 
-Goal: make the app/page/island/build API explicit, typed, and declarative enough
-for humans, AI assistants, and future AutoFlow2 checks to read without guessing.
+Goal: make the app/page/island/build API explicit, typed, declarative, and
+single-path enough for humans, AI assistants, and future AutoFlow2 checks to
+read without guessing. v0.33 is a breaking authoring API cleanup.
 
 Scope:
 
-- make object-form `definePage({ ... })` the default docs and template path;
+- make object-form `definePage({ route, head, renderIntent, load, render, error })`
+  the only page authoring path;
+- remove function-form `definePage(() => ...)`;
+- remove top-level page `title`, `description`, `meta`, `rendering`,
+  `streaming`, and `revalidate`;
 - add structured page fields for `head`, `route`, and `renderIntent`;
-- add a named island metadata helper such as `defineIslandMetadata()` or
-  `defineIslandConfig()`;
-- keep old `export const openElement = ...` island metadata compatible;
+- add `defineIslandConfig()`;
+- require `export const openElement = defineIslandConfig(...)`;
+- reject old object-literal island metadata;
 - add `ssr?: boolean` to app-level island options;
-- add explicitly named trusted/raw head APIs such as `trustedHeadHtml` or
-  `dangerouslyHeadFragments`;
-- prove old and new intent forms normalize into the same descriptor path.
+- add `head.dangerouslyHeadFragments`;
+- update generated entry, create template, docs, and www to the canonical path.
 
 SOP: `docs/sop/v0.33.0/`\
 NextVersion: `docs/next/v0.33.0/`

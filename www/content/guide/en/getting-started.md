@@ -24,25 +24,44 @@ deno task dev
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: {
+    title: 'Home',
+    description: 'My openElement app',
+  },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: false,
+  },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
-`definePage()` is the application-level API. The lower-level `DsdElement` class
-still exists for library authors, but app routes should normally start here.
+`definePage()` uses one canonical object descriptor. `route` is intent metadata;
+the file scanner still owns route matching.
 
 ## Add an Island
 
 ```tsx
-import { defineIsland } from '@openelement/app';
+import { defineIsland, defineIslandConfig } from '@openelement/app';
 import { signal } from '@openelement/runtime';
+
+export const openElement = defineIslandConfig({
+  hydrate: 'idle',
+  dsd: true,
+  ssr: true,
+});
 
 const count = signal(0);
 
 export default defineIsland(
   'my-counter',
   () => <button onClick={() => count.value++}>Count: {count.value}</button>,
+  { hydrate: openElement.hydrate, dsd: openElement.dsd, ssr: openElement.ssr },
 );
 ```
 

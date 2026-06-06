@@ -1,9 +1,13 @@
+import { defineIslandConfig } from '@openelement/app';
 import { defineCustomElement, DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { signal } from '@openelement/signals';
 import { consumeContext } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { THEME_CTX } from '@openelement/ui/open-layout';
+
+export const tagName = 'home-console';
+export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -85,4 +89,4 @@ export default class HomeConsole extends DsdElement {
   }
 }
 
-defineCustomElement('home-console', HomeConsole);
+defineCustomElement(tagName, HomeConsole);

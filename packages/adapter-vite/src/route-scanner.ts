@@ -388,13 +388,13 @@ export interface LocalIslandMeta {
  * and reading the `less` export directly, instead of regex-scanning source text.
  *
  * Supported form:
- *   export const openElement = { ssr: false, dsd: false, hydrate: 'only' }
+ *   export const openElement = defineIslandConfig({ ssr: false, dsd: false, hydrate: 'only' })
  *
  * This is more reliable than regex because it handles:
  * - Comments inside the object literal
  * - Computed properties
  * - Destructured/re-exported values
- * - Any valid JS/TS syntax that produces the same runtime value
+ * - Canonical defineIslandConfig(...) calls
  *
  * If a module cannot be imported (e.g. browser-only code that throws at the
  * top level), its metadata is silently skipped.
@@ -448,11 +448,12 @@ export async function scanIslandMeta(
 }
 
 /**
- * v0.28.6: Static AST extraction of `export const openElement = { ... }`.
+ * v0.33.0: Static AST extraction of
+ * `export const openElement = defineIslandConfig({ ... })`.
  *
  * The scanner intentionally does not execute island modules. It accepts only a
- * static object literal with boolean `ssr`/`dsd` and string `hydrate` values.
- * Dynamic metadata is rejected instead of guessed.
+ * defineIslandConfig() call with boolean `ssr`/`dsd` and string `hydrate`
+ * literal values. Dynamic metadata is rejected instead of guessed.
  */
 function readStaticOpenElementExport(source: string): {
   ssr?: boolean;
@@ -479,15 +480,31 @@ function readStaticOpenElementExport(source: string): {
       }
 
       const initializer = unwrapStaticOpenElementExpression(declaration.initializer);
-      if (!ts.isObjectLiteralExpression(initializer)) {
+      if (!ts.isCallExpression(initializer)) {
         throw staticOpenElementError(
-          `openElement export must be a static object literal, got ${
+          `openElement export must call defineIslandConfig(...), got ${
             ts.SyntaxKind[initializer.kind]
           }`,
         );
       }
 
-      return readOpenElementObjectLiteral(initializer);
+      const callee = unwrapStaticOpenElementExpression(initializer.expression);
+      if (!ts.isIdentifier(callee) || callee.text !== 'defineIslandConfig') {
+        throw staticOpenElementError('openElement export must call defineIslandConfig(...)');
+      }
+      if (initializer.arguments.length !== 1) {
+        throw staticOpenElementError('defineIslandConfig() requires exactly one object argument');
+      }
+      const config = unwrapStaticOpenElementExpression(initializer.arguments[0]);
+      if (!ts.isObjectLiteralExpression(config)) {
+        throw staticOpenElementError(
+          `defineIslandConfig() argument must be a static object literal, got ${
+            ts.SyntaxKind[config.kind]
+          }`,
+        );
+      }
+
+      return readOpenElementObjectLiteral(config);
     }
   }
 
@@ -528,7 +545,9 @@ function readOpenElementObjectLiteral(object: ts.ObjectLiteralExpression): {
     }
 
     const key = propertyNameToString(property.name);
-    if (!key || !['ssr', 'dsd', 'hydrate'].includes(key)) continue;
+    if (!key || !['ssr', 'dsd', 'hydrate'].includes(key)) {
+      throw staticOpenElementError(`unsupported openElement metadata key "${String(key)}"`);
+    }
 
     const value = unwrapStaticOpenElementExpression(property.initializer);
     if (key === 'ssr' || key === 'dsd') {
@@ -560,7 +579,7 @@ function propertyNameToString(name: ts.PropertyName): string | null {
 
 function staticOpenElementError(message: string): OpenElementError {
   return new OpenElementError(
-    `Invalid static island metadata export "openElement": ${message}. Accepted shape: export const openElement = { ssr?: boolean, dsd?: boolean, hydrate?: "load" | "idle" | "visible" | "only" } as const.`,
+    `Invalid static island metadata export "openElement": ${message}. Accepted shape: export const openElement = defineIslandConfig({ ssr?: boolean, dsd?: boolean, hydrate?: "load" | "idle" | "visible" | "only" }).`,
     'ISLAND_METADATA_ERROR',
     500,
     false,

@@ -59,16 +59,11 @@ export default defineConfig({
 The SSG entry imports the configured module and renders `<site-layout>`. No alias
 override for `@openelement/ui/open-layout` is needed.
 
-## 3. Add Route-Level Layouts
+## 3. Add Named Shells
 
-```tsx
-// app/routes/blog/[slug].tsx
-export const meta = {
-  layout: 'post',
-};
-
-export const tagName = 'blog-post-page';
-```
+v0.33 keeps the page descriptor focused on `route`, `head`, `renderIntent`,
+`load`, `render`, and `error`. Route-specific wrapping should live in app shell
+or renderer configuration instead of page metadata.
 
 ```ts
 openElement({
@@ -86,5 +81,5 @@ openElement({
 });
 ```
 
-`meta.layout = 'post'` selects `<post-layout>`. `meta.layout = false` renders the
-route content directly.
+Use the default shell for ordinary routes. Use a custom `_renderer.ts` or a
+dedicated app shell configuration when a subtree needs a different wrapper.

@@ -34,21 +34,29 @@ function CoreConceptsEn() {
       </p>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>Pages With Data</h2>
       <p>
-        The object form keeps route data, document metadata, layout selection,
-        and rendering intent together.
+        The object form keeps route data, document metadata, and rendering
+        intent together. Layout composition stays in app shell and renderer
+        configuration.
       </p>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
 export default definePage({
-  title: 'Post',
-  description: 'A static post page',
-  layout: 'post',
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: {
+    title: 'Post',
+    description: 'A static post page',
+  },
+  renderIntent: { mode: 'static' },
   async load({ params }) {
     return { slug: params.slug };
   },
@@ -118,16 +126,20 @@ function CoreConceptsZh() {
       </p>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>带数据的页面</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
 export default definePage({
-  title: 'Post',
-  layout: 'post',
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: { title: 'Post' },
   async load({ params }) {
     return { slug: params.slug };
   },

@@ -78,12 +78,12 @@ function pageDefinitionExpr(varName: string): string {
 
 function routeMetaExpr(varName: string): string {
   const pageDef = pageDefinitionExpr(varName);
-  return `({ ...(${varName}.meta || {}), ...(${pageDef}.meta || {}), ...(${pageDef}.layout !== undefined ? { layout: ${pageDef}.layout } : {}), ...(${pageDef}.title !== undefined ? { title: ${pageDef}.title } : {}), ...(${pageDef}.description !== undefined ? { description: ${pageDef}.description } : {}) })`;
+  return `({ ...(${pageDef}.route !== undefined ? { route: ${pageDef}.route } : {}), ...(${pageDef}.head?.title !== undefined ? { title: ${pageDef}.head.title } : {}), ...(${pageDef}.head?.description !== undefined ? { description: ${pageDef}.head.description } : {}) })`;
 }
 
 function routeRevalidateExpr(varName: string): string {
   const pageDef = pageDefinitionExpr(varName);
-  return `(${varName}.revalidate !== undefined ? ${varName}.revalidate : ${pageDef}.revalidate)`;
+  return `(${pageDef}.renderIntent?.revalidate ?? false)`;
 }
 
 function renderCorsOrigin(origin: CorsOriginConfig): string {
@@ -301,10 +301,11 @@ function renderPageRoute(
     }, { routeMeta: __routeMeta })`,
   );
   lines.push(`    return c.html(wrapInDocument(content, {`);
-  lines.push(`      title: __page.title || ${JSON.stringify(docConfig.title)},`);
+  lines.push(`      title: __page.head?.title || ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
-  lines.push(`      meta: { description: __page.description },`);
+  lines.push(`      meta: { description: __page.head?.description, tags: __page.head?.meta },`);
   lines.push(`      headExtras: ${headExtrasExpr},`);
+  lines.push(`      dangerouslyHeadFragments: __page.head?.dangerouslyHeadFragments || [],`);
   lines.push(
     `      allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
   );
@@ -339,10 +340,11 @@ function renderPageRoute(
     }, { routeMeta: __routeMeta })`,
   );
   lines.push(`        return c.html(wrapInDocument(errorContent, {`);
-  lines.push(`          title: __page.title || ${JSON.stringify(docConfig.title)},`);
+  lines.push(`          title: __page.head?.title || ${JSON.stringify(docConfig.title)},`);
   lines.push(`          lang: ${JSON.stringify(docConfig.lang)},`);
-  lines.push(`          meta: { description: __page.description },`);
+  lines.push(`          meta: { description: __page.head?.description, tags: __page.head?.meta },`);
   lines.push(`          headExtras: ${headExtrasExpr},`);
+  lines.push(`          dangerouslyHeadFragments: __page.head?.dangerouslyHeadFragments || [],`);
   lines.push(
     `          allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
   );
@@ -790,7 +792,7 @@ export function renderEntry(desc: EntryDescriptor): string {
           )
         }, revalidate: ${
           routeRevalidateExpr(r.varName)
-        }, rendering: (__pageDefinition(${r.varName}).rendering || "auto"), streaming: (__pageDefinition(${r.varName}).streaming || "auto") },`,
+        }, rendering: (__pageDefinition(${r.varName}).renderIntent?.mode || "auto"), streaming: (__pageDefinition(${r.varName}).renderIntent?.streaming || "auto") },`,
       );
     }
     lines.push('];');
@@ -803,11 +805,11 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('function __routeMeta(module) {');
     lines.push('  const page = __pageDefinition(module);');
     lines.push('  return {');
-    lines.push('    ...(module?.meta || {}),');
-    lines.push('    ...(page.meta || {}),');
-    lines.push('    ...(page.layout !== undefined ? { layout: page.layout } : {}),');
-    lines.push('    ...(page.title !== undefined ? { title: page.title } : {}),');
-    lines.push('    ...(page.description !== undefined ? { description: page.description } : {}),');
+    lines.push('    ...(page.route !== undefined ? { route: page.route } : {}),');
+    lines.push('    ...(page.head?.title !== undefined ? { title: page.head.title } : {}),');
+    lines.push(
+      '    ...(page.head?.description !== undefined ? { description: page.head.description } : {}),',
+    );
     lines.push('  };');
     lines.push('}');
     lines.push('');
@@ -927,12 +929,13 @@ export function renderEntry(desc: EntryDescriptor): string {
       '  const componentCount = (content.match(/<template shadowrootmode="open"/g) || []).length;',
     );
     lines.push('  const fullHtml = wrapInDocument(content, {');
-    lines.push('    title: title || page.title || "openElement",');
+    lines.push('    title: title || page.head?.title || "openElement",');
     lines.push('    lang: lang || locale || "en",');
-    lines.push('    meta: { description: page.description },');
+    lines.push('    meta: { description: page.head?.description, tags: page.head?.meta },');
     lines.push(
       '    headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
     );
+    lines.push('    dangerouslyHeadFragments: page.head?.dangerouslyHeadFragments || [],');
     lines.push(
       `    allowHeadExtrasScripts: ${JSON.stringify(desc.document.allowHeadExtrasScripts)},`,
     );

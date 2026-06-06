@@ -2,7 +2,8 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.32.0).**
+**JSX-first, DSD-first Web Components application framework (v0.32.0 released,
+v0.33.0 in development).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
 prove the package graph before publishing.
@@ -32,8 +33,12 @@ only when their `client:*` strategy says they should.
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
@@ -51,12 +56,12 @@ export default defineIsland(
 );
 ```
 
-The v0.32.0 public contract is intentionally layered:
+The v0.33.0 development contract is intentionally layered:
 
-- application authoring: `definePage()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
+- application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
 - build configuration: `openElement()` from `@openelement/app/vite`;
 - renderer model: JSX -> VNode -> RenderNode -> DSD HTML or DOM;
-- metadata field: `openElement`;
+- island metadata field: `export const openElement = defineIslandConfig(...)`;
 - UI naming line: `open-*`;
 - trust boundary: `trustedHtml` for pre-sanitized, non-interactive content.
 - app lifecycle: `load(ctx)`, route/meta context, `redirect()`, `notFound()`,
@@ -64,8 +69,9 @@ The v0.32.0 public contract is intentionally layered:
 
 ## Packages
 
-All 19 packages are versioned together at **v0.32.0** under
-[`@openelement`](https://jsr.io/@openelement).
+All 19 packages are currently released together at **v0.32.0** under
+[`@openelement`](https://jsr.io/@openelement). The active development target is
+the v0.33.0 strict AI-readable API reset.
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -89,9 +95,10 @@ All 19 packages are versioned together at **v0.32.0** under
 
 ## Current Line
 
-v0.32.0 makes the application lifecycle explicit on top of the v0.31
-JSX-first authoring model. `DsdElement` remains the runtime primitive, but app
-authors start from `@openelement/app`.
+v0.33.0 development resets the application authoring surface to a strict canonical
+descriptor. Pages use `definePage({ route, head, renderIntent, load, render,
+error })`, islands use `defineIslandConfig({ ssr, dsd, hydrate })` for static
+metadata, and the old v0.31-v0.32 shortcuts are intentionally removed.
 
 The next minors now focus on AI-readable API structure, AutoFlow2 evidence, and
 then rendering/server/data/UI product closure without reopening the cleaned

@@ -42,7 +42,7 @@ const _visibilityTimeouts = new Set<ReturnType<typeof setTimeout>>();
 
 const _islandMeta = new WeakMap<
   CustomElementConstructor,
-  { tagName: string; layer: string; isIsland: boolean }
+  { tagName: string; layer: string; isIsland: boolean; ssr?: boolean; dsd: boolean }
 >();
 
 export function getIslandMeta(ctor: CustomElementConstructor) {
@@ -79,6 +79,13 @@ export interface IslandOptions {
    * @default true
    */
   dsd?: boolean;
+
+  /**
+   * Whether this island may be admitted into server rendering.
+   * Build-time metadata controls scanner admission; this runtime field records
+   * the same canonical descriptor for tests and direct registrations.
+   */
+  ssr?: boolean;
 }
 
 /**
@@ -307,6 +314,7 @@ export function defineIsland<T extends CustomElementConstructor>(
     );
   }
   const useDsd = strategy === 'only' ? false : options.dsd !== false; // default true
+  const useSsr = strategy === 'only' ? false : options.ssr !== false; // default true
 
   // Validate tag name per WHATWG Custom Element name rules
   // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
@@ -345,6 +353,8 @@ export function defineIsland<T extends CustomElementConstructor>(
     isIsland: true,
     tagName,
     layer: useDsd ? 'dsd-interactive' : 'pure-island',
+    ssr: useSsr,
+    dsd: useDsd,
   });
 
   // v0.6': Mixin pattern for connectedCallback - replaces monkey-patch.

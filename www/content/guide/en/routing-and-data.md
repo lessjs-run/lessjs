@@ -15,15 +15,23 @@ usually created with `definePage()`.
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => <main>Home</main>);
+export default definePage({
+  route: { path: '/' },
+  render() {
+    return <main>Home</main>;
+  },
+});
 ```
 
 ## Page Metadata
 
 ```tsx
 export default definePage({
-  title: 'Posts',
-  description: 'Latest posts',
+  route: { path: '/posts' },
+  head: {
+    title: 'Posts',
+    description: 'Latest posts',
+  },
   render() {
     return <main>Posts</main>;
   },
@@ -58,11 +66,15 @@ Page descriptors can declare future rendering intent:
 
 ```tsx
 export default definePage({
-  rendering: 'ssg',
-  revalidate: 300,
+  route: { path: '/cached' },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: 300,
+  },
   render: () => <main>Cached page</main>,
 });
 ```
 
-v0.31 introduces the application contract. v0.32 productizes SSR, ISR, streaming
-DSD, and cache adapters.
+v0.33 makes this descriptor the only page authoring path. Top-level `title`,
+`description`, `rendering`, `streaming`, and `revalidate` are no longer accepted.

@@ -40,7 +40,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:open-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_OPENELEMENT_VERSION = '0.32.0';
+const FALLBACK_OPENELEMENT_VERSION = '0.33.0';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
@@ -451,8 +451,9 @@ if (typeof globalThis.customElements === 'undefined') {
             // SSR outputs <tag-name data-client-only="true"></tag-name>
             // Client runtime imports the real module and upgrades the element.
             return [
+              `import { defineIslandConfig } from '@openelement/app';`,
               `export const tagName = ${JSON.stringify(tagName)};`,
-              'export const openElement = { ssr: false };',
+              'export const openElement = defineIslandConfig({ ssr: false });',
               `export default class OpenClientOnlyStub extends HTMLElement {
   connectedCallback() {
     if (!this.hasAttribute('data-client-only')) {

@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.32, v0.33, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.33, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -245,14 +245,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                line is v0.32.0: App Lifecycle Contract on top of the JSX-first Application API.
-                The next line is v0.33.0: AI-Readable API Foundation before AutoFlow2 and product expansion.
+                line is v0.33.0: AI-Readable API Foundation with structured page, island, and head intents.
+                The next line is v0.34.0: AutoFlow2 Sidecar Kernel for machine-readable workflow evidence.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.32.0 App Lifecycle</h2>
-              <p>19 packages aligned. Pages have params, load context, route metadata, redirect, not-found, and error fallback.</p>
+              <h2>v0.33.0 AI-Readable API</h2>
+              <p>Structured page, island, and head intents. One authoring path. Foundation for AutoFlow2.</p>
             </aside>
           </section>
 
@@ -274,7 +274,7 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v0.33.0</div>
-              <div><h3>AI-Readable API Foundation</h3><p>Object-form pages, structured head/route/render intent, explicit island metadata, and compatibility proof.</p></div>
+              <div><h3>AI-Readable API Foundation</h3><p>Object-form pages, structured head/route/render intent, explicit island metadata, and old API rejection proof.</p></div>
               <span class="status planned">Next</span>
             </div>
             <div class="phase">

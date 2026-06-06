@@ -9,7 +9,9 @@
  * DOM globals. The class is just a placeholder for metadata export.
  */
 
-export const openElement = { ssr: true, dsd: true, hydrate: 'load' };
+import { defineIslandConfig } from '@openelement/app';
+
+export const openElement = defineIslandConfig({ ssr: true, dsd: true, hydrate: 'load' });
 
 export default class ParentWithClientChild {
   // Placeholder - in browser this would extend HTMLElement

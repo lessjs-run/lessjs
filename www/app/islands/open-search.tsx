@@ -17,6 +17,7 @@
 
 import { defineCustomElement, DsdElement } from '@openelement/core';
 import type { VNode } from '@openelement/core';
+import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
@@ -33,6 +34,7 @@ interface FlexSearchDocumentConstructor {
 }
 
 export const tagName = 'open-search';
+export const openElement = defineIslandConfig({ hydrate: 'load', ssr: true, dsd: true });
 
 const sheet = new StyleSheet();
 sheet.replaceSync(`
@@ -222,7 +224,7 @@ export default class OpenSearch extends DsdElement {
   private _open(): void {
     this.#open.value = true;
     this._loadIndex();
-    requestAnimationFrame(() => this._inputRef?.focus());
+    requestAnimationFrame(() => this._focusInput());
   }
 
   private _close(): void {
@@ -244,6 +246,11 @@ export default class OpenSearch extends DsdElement {
     const target = e.target as HTMLInputElement;
     this.#query.value = target.value;
     this._runSearch();
+  }
+
+  private _focusInput(): void {
+    this._inputRef ??= this.shadowRoot?.querySelector<HTMLInputElement>('.search-input') ?? null;
+    this._inputRef?.focus();
   }
 
   private _runSearch(): void {

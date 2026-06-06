@@ -2,7 +2,7 @@
 
 | Risk                                                     | Mitigation                                                           |
 | -------------------------------------------------------- | -------------------------------------------------------------------- |
-| AI-readable API becomes noisy boilerplate                | Make object fields optional and keep function form compatible        |
+| AI-readable API becomes noisy boilerplate                | Keep object fields optional, but do not restore function-form pages  |
 | New metadata creates a second descriptor path            | Normalize old and new forms into one internal descriptor model       |
 | Head API hides a trust boundary                          | Use explicit trusted/dangerous names for raw head fragments          |
 | Island SSR flag conflicts with hydration strategies      | Define `ssr?: boolean` as render admission, not hydration timing     |

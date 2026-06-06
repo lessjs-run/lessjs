@@ -1,6 +1,7 @@
 export {
   defineElement,
   defineIsland,
+  defineIslandConfig,
   defineLayout,
   definePage,
   isOpenElementNotFound,
@@ -13,6 +14,8 @@ export {
 export type {
   AppIslandOptions,
   ElementDefinition,
+  IslandConfig,
+  NormalizedPageRenderIntent,
   OpenElementPageDescriptor,
   PageDefinition,
   PageErrorContext,
@@ -24,7 +27,9 @@ export type {
   PageRenderContext,
   PageRenderFunction,
   PageRenderingMode,
+  PageRenderIntent,
   PageRevalidate,
   PageRouteContext,
+  PageRouteIntent,
   PageStreamingMode,
 } from './authoring.ts';

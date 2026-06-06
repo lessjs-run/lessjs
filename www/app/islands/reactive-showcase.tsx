@@ -14,11 +14,13 @@
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
  */
 import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 
 export const tagName = 'reactive-showcase';
+export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
 
 const showcaseStyles = new StyleSheet();
 showcaseStyles.replaceSync(`

@@ -276,7 +276,7 @@ export interface AppShellDefinition {
 /** Application shell mode. `false` renders route content without a shell. */
 export type AppShellConfig = false | 'default' | AppShellDefinition;
 
-/** Named route layouts selected by `route.meta.layout`. */
+/** Named application shell layouts configured at the adapter layer. */
 export type LayoutsConfig = Record<string, AppShellConfig | undefined>;
 
 /** Framework configuration options */
@@ -304,8 +304,10 @@ export interface FrameworkOptions {
   appShell?: AppShellConfig;
 
   /**
-   * Named route layouts. A route module can export `meta = { layout: 'post' }`.
-   * `layouts.default` overrides `appShell` for the default route shell.
+   * Named application shell layouts. `layouts.default` overrides `appShell`
+   * for the default route shell. v0.33 page descriptors do not carry layout
+   * selection metadata; route-specific wrapping belongs in renderer/app-shell
+   * configuration.
    */
   layouts?: LayoutsConfig;
 

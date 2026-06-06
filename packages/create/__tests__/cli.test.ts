@@ -157,12 +157,25 @@ Deno.test('create-open: vite.config.ts includes virtual-passthrough resolve plug
 Deno.test('create-open: route index uses JSX-first definePage API', () => {
   const routeIndex = extractTemplate('app/routes/index.tsx');
   assert(routeIndex.includes('definePage'));
+  assert(routeIndex.includes('defineElement'));
   assert(routeIndex.includes("from '@openelement/app'"));
   assert(routeIndex.includes("from '@openelement/runtime'"));
   assert(routeIndex.includes('@jsxImportSource @openelement/core'));
   assert(routeIndex.includes('StyleSheet'));
+  assert(routeIndex.includes("route: { path: '/' }"));
+  assert(routeIndex.includes('head: {'));
+  assert(routeIndex.includes("title: 'My openElement App'"));
+  assert(routeIndex.includes('renderIntent: {'));
+  assert(routeIndex.includes("mode: 'static'"));
+  assert(routeIndex.includes('defineElement(tagName, {'));
   assert(routeIndex.includes('styles,'));
+  assertFalse(
+    routeIndex.includes(
+      "definePage({\n  route: { path: '/' },\n  head: {\n    title: 'My openElement App',\n    description: 'Generated openElement starter app',\n  },\n  renderIntent: {\n    mode: 'static',\n    streaming: 'auto',\n    revalidate: false,\n  },\n  styles,",
+    ),
+  );
   assert(routeIndex.includes('render()'));
+  assertFalse(routeIndex.includes('definePage(()'));
   assert(routeIndex.includes('<h1>Hello from openElement!</h1>'));
   assertEquals(routeIndex.includes('return `'), false);
   assert(routeIndex.includes('tagName'));
@@ -174,10 +187,14 @@ Deno.test('create-open: route index uses JSX-first definePage API', () => {
 Deno.test('create-open: island counter uses JSX-first defineIsland API', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.tsx');
   assert(islandCounter.includes('defineIsland'));
+  assert(islandCounter.includes('defineIslandConfig'));
   assert(islandCounter.includes("from '@openelement/app'"));
   assert(islandCounter.includes("from '@openelement/runtime'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
+  assert(islandCounter.includes('openElement = defineIslandConfig'));
   assert(islandCounter.includes("hydrate: 'idle'"));
+  assert(islandCounter.includes('ssr: openElement.ssr'));
+  assertFalse(islandCounter.includes('export const openElement = {'));
   assert(islandCounter.includes('@jsxImportSource @openelement/core'));
   assertFalse(islandCounter.includes('customElements.define'));
   // Verify no Lit dependency in template

@@ -39,7 +39,7 @@ function GettingStartedEn() {
       <h1>Getting Started</h1>
       <p class='subtitle'>
         Create a minimal JSX-first, DSD-first openElement app, start the dev
-        server, build static output, and learn where the v0.32.0 application
+        server, build static output, and learn where the v0.33.0 application
         lifecycle lives.
       </p>
 
@@ -93,14 +93,18 @@ function GettingStartedEn() {
 
       <h2>Writing a Page</h2>
       <p>
-        A page is a JSX function wrapped by <code>definePage()</code>. The
-        framework turns it into a Web Component and renders it as Declarative
-        Shadow DOM during SSR/SSG.
+        A page is a canonical object descriptor passed to <code>definePage()</code>.
+        The framework turns the descriptor into a Web Component and renders it as
+        Declarative Shadow DOM during SSR/SSG.
       </p>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>Loading Data and Controlling Lifecycle</h2>
@@ -112,16 +116,23 @@ export default definePage(() => {
       <open-code-block><pre><code>{`import { definePage, notFound, redirect } from '@openelement/app';
 
 export default definePage({
-  title: 'Post',
-  meta: { section: 'blog' },
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: {
+    title: 'Post',
+    description: 'Blog post page',
+  },
+  renderIntent: {
+    mode: 'static',
+    revalidate: 300,
+  },
   async load({ params, route }) {
     if (!params.slug) notFound();
     if (params.slug === 'old-post') redirect('/posts/new-post', 301);
     return { slug: params.slug, source: route.filePath };
   },
-  render({ data, route, meta }) {
+  render({ data, route }) {
     return (
-      <article data-section={String(meta.section)}>
+      <article>
         <h1>{data.slug}</h1>
         <p>Rendered from {route.filePath}</p>
       </article>
@@ -161,8 +172,8 @@ export default defineConfig({
 
       <div class='note'>
         <p>
-          The v1.0 target is a stable application engine. v0.32.0 makes the
-          Application API lifecycle explicit before rendering runtime work.
+          The v1.0 target is a stable application engine. v0.33.0 makes the
+          Application API structured and AI-readable.
         </p>
       </div>
 
@@ -179,7 +190,7 @@ function GettingStartedZh() {
       <h1>快速开始</h1>
       <p class='subtitle'>
         创建一个 JSX-first、DSD-first 的 openElement 应用，启动开发服务器，
-        构建静态输出，并理解 v0.32.0 的应用生命周期。
+        构建静态输出，并理解 v0.33.0 的应用 API。
       </p>
 
       <open-callout type='info' label='推荐'>
@@ -221,8 +232,12 @@ function GettingStartedZh() {
       <h2>页面写法</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>交互写法</h2>
@@ -242,8 +257,8 @@ export default defineIsland(
 
       <div class='note'>
         <p>
-          v1.0 的目标是稳定应用引擎。v0.32.0 让 Application API
-          拥有明确的应用生命周期。
+          v1.0 的目标是稳定应用引擎。v0.33.0 让 Application API
+          结构化且对 AI 可读。
         </p>
       </div>
 

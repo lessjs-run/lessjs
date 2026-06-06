@@ -68,10 +68,15 @@ export function wrapInDocument(
     lang?: string;
     /** Client-side module script injected after rendered HTML. */
     clientScript?: string;
-    meta?: { description?: string };
+    meta?: {
+      description?: string;
+      tags?: Array<Record<string, string | number | boolean>>;
+    };
     devMode?: boolean;
     routeModulePath?: string;
     headExtras?: string;
+    /** Raw route-local head fragments from explicit dangerous page metadata. */
+    dangerouslyHeadFragments?: string[];
     /** Trust script tags that were produced by structured framework injection APIs. */
     allowHeadExtrasScripts?: boolean;
     /** CSP nonce, if provided, added to all generated <script> tags. */
@@ -86,6 +91,7 @@ export function wrapInDocument(
     devMode = false,
     routeModulePath,
     headExtras = '',
+    dangerouslyHeadFragments = [],
     allowHeadExtrasScripts = false,
     cspNonce,
   } = options;
@@ -146,7 +152,18 @@ export function wrapInDocument(
       .replace(/>/g, '&gt;');
     metaTags.push(`  <meta name="description" content="${safeDesc}">`);
   }
+  if (Array.isArray(meta?.tags)) {
+    for (const tag of meta.tags) {
+      const attrs = Object.entries(tag)
+        .map(([key, value]) => `${escapeAttr(key)}="${escapeAttrValue(value)}"`)
+        .join(' ');
+      if (attrs) metaTags.push(`  <meta ${attrs}>`);
+    }
+  }
   const metaBlock = metaTags.length > 0 ? '\n' + metaTags.join('\n') + '\n' : '';
+  const dangerousHeadBlock = dangerouslyHeadFragments.length > 0
+    ? '\n  ' + dangerouslyHeadFragments.join('\n  ')
+    : '';
 
   const devScripts = devMode
     ? `
@@ -169,7 +186,7 @@ export function wrapInDocument(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${safeTitle}</title>${metaBlock}
-  ${safeHeadExtras}
+  ${safeHeadExtras}${dangerousHeadBlock}
 </head>
 <body>
   ${html}

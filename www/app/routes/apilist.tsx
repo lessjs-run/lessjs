@@ -34,10 +34,11 @@ export default class ApiCorePage extends DsdElement {
 
         <div class="api-category">
           <h2>Application API</h2>
-          <div class="api-entry"><div class="api-sig">definePage(render | definition)</div><div class="api-desc">Defines a file-route page. The object form supports title, description, meta, layout, load, render, error, revalidate, rendering, and streaming intent.</div></div>
+          <div class="api-entry"><div class="api-sig">definePage({`{ route, head, renderIntent, load, render, error }`})</div><div class="api-desc">Defines a file-route page through the canonical object descriptor. Head fields live under head; rendering intent lives under renderIntent.</div></div>
           <div class="api-entry"><div class="api-sig">redirect(location, status?): never</div><div class="api-desc">Throws a typed lifecycle redirect control consumed by request-time and SSG entry rendering.</div></div>
           <div class="api-entry"><div class="api-sig">notFound(message?): never</div><div class="api-desc">Throws a typed lifecycle not-found control consumed by the framework boundary.</div></div>
-          <div class="api-entry"><div class="api-sig">defineIsland(tagName, render, options?)</div><div class="api-desc">Defines browser-upgraded UI with JSX event handlers and explicit hydration strategy.</div></div>
+          <div class="api-entry"><div class="api-sig">defineIslandConfig({`{ ssr, dsd, hydrate }`})</div><div class="api-desc">Defines static island metadata for adapter scanning through the single canonical metadata API.</div></div>
+          <div class="api-entry"><div class="api-sig">defineIsland(tagName, render, {`{ hydrate, dsd, ssr }`})</div><div class="api-desc">Defines browser-upgraded UI with JSX event handlers, hydration strategy, DSD mode, and SSR admission intent.</div></div>
         </div>
 
         <div class="api-category">

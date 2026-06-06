@@ -2,19 +2,19 @@
 
 ## Before Bump
 
-- [ ] SOP tasks completed.
-- [ ] NextVersion tasks completed.
-- [ ] Local implementation gates pass.
-- [ ] Website and current docs updated.
-- [ ] Compatibility evidence for old page and island APIs recorded.
+- [x] SOP tasks completed.
+- [x] NextVersion tasks completed.
+- [x] Local implementation gates pass.
+- [x] Website and current docs updated.
+- [x] Rejection evidence for old page and island authoring APIs recorded.
 
 ## Bump and Docs
 
-- [ ] All packages aligned to v0.33.0.
-- [ ] Changelog written.
-- [ ] Release note written.
-- [ ] Consumer smoke passes.
-- [ ] Publish dry-run passes.
+- [x] All packages aligned to v0.33.0.
+- [x] Changelog written.
+- [x] Release note written.
+- [x] Consumer smoke passes.
+- [x] Publish dry-run passes.
 
 ## Remote Closure
 

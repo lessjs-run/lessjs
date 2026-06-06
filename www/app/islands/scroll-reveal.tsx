@@ -8,11 +8,13 @@
  *   classList.add replaced with registerSignal + data-signal-class marker.
  */
 import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineIslandConfig } from '@openelement/app';
 import { signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 
 export const tagName = 'scroll-reveal';
+export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
 
 const styles = new StyleSheet();
 styles.replaceSync(`

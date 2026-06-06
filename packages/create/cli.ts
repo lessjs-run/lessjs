@@ -194,7 +194,7 @@ export default defineConfig({
 });
 `,
     'app/routes/index.tsx': `/** @jsxImportSource @openelement/core */
-import { definePage } from '@openelement/app';
+import { defineElement, definePage } from '@openelement/app';
 import { StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'home-page';
@@ -206,8 +206,7 @@ styles.replaceSync(\`
   p { color: var(--text-secondary, #666); }
 \`);
 
-export default definePage({
-  title: 'My openElement App',
+defineElement(tagName, {
   styles,
   render() {
     return (
@@ -222,13 +221,29 @@ export default definePage({
     );
   },
 });
+
+export default definePage({
+  route: { path: '/' },
+  head: {
+    title: 'My openElement App',
+    description: 'Generated openElement starter app',
+  },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: false,
+  },
+  render() {
+    return <home-page />;
+  },
+});
 `,
     'app/islands/my-counter.tsx': `/** @jsxImportSource @openelement/core */
-import { defineIsland } from '@openelement/app';
+import { defineIsland, defineIslandConfig } from '@openelement/app';
 import { signal, StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'my-counter';
-export const openElement = { hydrate: 'idle', ssr: true, dsd: true } as const;
+export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
 
 const styles = new StyleSheet();
 styles.replaceSync(\`
@@ -249,7 +264,7 @@ export default defineIsland(tagName, {
       </>
     );
   },
-}, { hydrate: openElement.hydrate, dsd: openElement.dsd });
+}, { hydrate: openElement.hydrate, dsd: openElement.dsd, ssr: openElement.ssr });
 `,
   };
 }

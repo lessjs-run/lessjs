@@ -3,34 +3,34 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.33.0/`.
+package: `docs/next/v0.34.0/`.
 
-## Current Version Line: v0.32.0 (App Lifecycle Contract)
+## Current Version Line: v0.33.0 (AI-Readable API Foundation)
 
-v0.32.0 Status: **IMPLEMENTED AND RELEASED.**
+v0.33.0 Status: **IMPLEMENTED AND RELEASED.**
 Governing docs:
 
-- `docs/adr/ADR-0082-jsx-first-application-api.md`
-- `docs/adr/ADR-0083-deferred-public-surface-reset.md`
-- `docs/adr/ADR-0084-product-closure-version-line.md`
-- `docs/adr/ADR-0085-app-lifecycle-contract.md`
 - `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
-- `docs/sop/v0.32.0/README.md`
+- `docs/sop/v0.33.0/README.md`
 - `docs/next/v0.33.0/`
 - `docs/roadmap/ROADMAP.md`
 
-The line turns the v0.31 Application API into an explicit route lifecycle:
+The line makes page, island, head, route, and render intent machine-readable:
 
-- `definePage()`
-- `defineIsland()`
-- `defineElement()`
-- `defineLayout()`
-- `openElement()` from `@openelement/app/vite`
-- `redirect()`
-- `notFound()`
-- `load(ctx)` with params, request, env, platform, and route source
-- `render(ctx)` with data, params, route, metadata, request, and public props
-- optional page `error(ctx)` fallback through the same VNode renderer
+- `definePage()` requires canonical object-form with `route`, `head`,
+  `renderIntent`, `load`, `render`, and `error` fields.
+- `head` exposes `title`, `description`, `meta`, and
+  `dangerouslyHeadFragments` trust boundary.
+- `defineIslandConfig()` replaces object-literal island metadata.
+- App-level island options expose `ssr?: boolean`.
+- Old v0.31-v0.32 function-form pages and object-literal island metadata are
+  rejected.
+
+This is the foundation for AutoFlow2 (v0.34-v0.35).
+
+v0.32.0 Status: **IMPLEMENTED AND RELEASED.** The line turned the v0.31
+Application API into an explicit route lifecycle with `redirect()`, `notFound()`,
+load context, route metadata, and page error fallback.
 
 `DsdElement` remains a public runtime primitive in `@openelement/core`, but it is
 not the default page-authoring tutorial API.
@@ -64,9 +64,9 @@ v0.22.x and earlier: **HISTORICAL.**
 | Version | Theme                            | Status  | Purpose                                                        |
 | ------- | -------------------------------- | ------- | -------------------------------------------------------------- |
 | v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX      |
-| v0.32.0 | App Lifecycle Contract           | Current | Route, load, context, layout, error, redirect lifecycle        |
-| v0.33.0 | AI-Readable API Foundation       | Next    | Explicit page, route, head, island, and render intent APIs     |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Planned | Workflow state, cells, evidence ledger, allowed-action report  |
+| v0.32.0 | App Lifecycle Contract           | Done    | Route, load, context, layout, error, redirect lifecycle        |
+| v0.33.0 | AI-Readable API Foundation       | Current | Structured page, island, head, route, and render intent APIs   |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Next    | Workflow state, cells, evidence ledger, allowed-action report  |
 | v0.35.0 | AutoFlow2 Harness Gate           | Planned | Low-noise workflow contradictions become local and CI blockers |
 | v0.36.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes    |
 | v0.37.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence  |
@@ -100,10 +100,11 @@ gate before rendering, server, data, and UI product expansion resumes.
 | Architecture freeze  | v0.30.0 | one renderer contract, graph gate, architecture gate |
 | Application API      | v0.31.0 | `definePage`, `defineIsland`, `/vite` config split   |
 | App lifecycle        | v0.32.0 | load context, route meta, redirect, not-found, error |
+| AI-Readable API      | v0.33.0 | Object-form pages, island config, head trust boundary         |
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.32.0** under `@openelement/*` for this
+All 19 packages are aligned to **v0.33.0** under `@openelement/*` for this
 release. Release proof includes local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
 
@@ -142,7 +143,7 @@ Package governance before v0.38:
   and declared imports.
 - **MDX through DSD.** MDX is build-time content compilation into the
   openElement JSX runtime, not a runtime parser or React layer.
-- **Deferred public surface reset.** v0.33-v0.37 collect API, workflow, and
+- **Deferred public surface reset.** v0.34-v0.37 collect API, workflow, and
   product evidence first; v0.38 is the planned v1 package/product surface reset;
   v0.39 is the v1 release candidate.
 - **AutoFlow2 boundary.** AutoFlow2 may report state, evidence, blockers, and

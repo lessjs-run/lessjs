@@ -120,21 +120,31 @@ The recommended app authoring contract is:
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  renderIntent: { mode: 'static' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
-The object form carries route data and page metadata:
+The same descriptor carries route data, page metadata, and render intent:
 
 ```tsx
 export default definePage({
-  title: 'Posts',
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: {
+    title: 'Posts',
+    description: 'Posts page',
+  },
+  renderIntent: { mode: 'static', revalidate: 300 },
   async load({ params, route }) {
     if (!params.slug) notFound();
     return { slug: params.slug };
   },
-  render({ data, route, meta }) {
+  render({ data, route }) {
     return <article data-path={route.path}>{data.slug}</article>;
   },
 });
@@ -146,6 +156,8 @@ Lifecycle controls are exported from `@openelement/app`:
 import { definePage, notFound, redirect } from '@openelement/app';
 
 export default definePage({
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: { title: 'Post' },
   async load({ params }) {
     if (!params.slug) notFound();
     if (params.slug === 'old') redirect('/posts/new', 301);
@@ -200,17 +212,15 @@ ADR-0086 makes AI-readable architecture an explicit precondition for AutoFlow2.
 New application API work should favor typed object forms, structured metadata,
 and named trust boundaries over hidden conventions.
 
-The v0.33 direction is:
+The v0.33 direction is intentionally breaking:
 
-- object-form `definePage({ ... })` becomes the default docs and template path;
+- object-form `definePage({ ... })` is the only page authoring path;
 - page descriptors expose structured `head`, `route`, and `renderIntent`;
-- island metadata has a named helper such as `defineIslandMetadata()` or
-  `defineIslandConfig()`;
+- island metadata uses `defineIslandConfig()`;
 - app-level island options can declare `ssr?: boolean`;
-- raw or pre-trusted head fragments use explicit names such as
-  `trustedHeadHtml` or `dangerouslyHeadFragments`;
-- old v0.31-v0.32 APIs remain compatible until a later migration ADR removes
-  them.
+- route-local raw head fragments use the explicit
+  `head.dangerouslyHeadFragments` trust boundary;
+- old v0.31-v0.32 page shortcuts and object-literal island metadata are removed.
 
 The v0.34-v0.35 AutoFlow2 direction is internal workflow evidence, not
 autonomous code evolution. AutoFlow2 may report workflow state, cells, evidence,
@@ -250,8 +260,10 @@ deno task publish:dry-run
 
 ## No Backward Compatibility
 
-v0.32.0 is allowed to be breaking. The package root `@openelement/app` now owns
-application authoring; Vite configuration moved to `@openelement/app/vite`.
+v0.33.0 is allowed to be breaking. The package root `@openelement/app` owns
+application authoring, Vite configuration lives at `@openelement/app/vite`,
+pages must use the canonical object descriptor, and island metadata must use
+`defineIslandConfig()`.
 
 ## Next Architecture Work
 

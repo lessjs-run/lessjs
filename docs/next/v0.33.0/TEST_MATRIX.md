@@ -28,13 +28,13 @@ deno task test:e2e
 
 ## Focused Fixtures
 
-| Surface            | Required proof                                                    |
-| ------------------ | ----------------------------------------------------------------- |
-| `@openelement/app` | object-form page fields, old page compatibility, lifecycle output |
-| head metadata      | structured head, trusted/raw boundary, generated serialization    |
-| island metadata    | helper config, old metadata compatibility, `ssr?: boolean`        |
-| create template    | object-form page example, explicit island metadata, build proof   |
-| docs website       | examples match implemented public API                             |
+| Surface            | Required proof                                                  |
+| ------------------ | --------------------------------------------------------------- |
+| `@openelement/app` | object-form page fields, old page rejection, lifecycle output   |
+| head metadata      | structured head, trusted/raw boundary, generated serialization  |
+| island metadata    | helper config, old metadata rejection, `ssr?: boolean`          |
+| create template    | object-form page example, explicit island metadata, build proof |
+| docs website       | examples match implemented public API                           |
 
 ## CI
 

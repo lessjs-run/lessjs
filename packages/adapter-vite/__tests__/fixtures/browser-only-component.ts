@@ -10,7 +10,9 @@
  * DOM globals. The class is just a placeholder for metadata export.
  */
 
-export const openElement = { ssr: false, dsd: false, hydrate: 'idle' };
+import { defineIslandConfig } from '@openelement/app';
+
+export const openElement = defineIslandConfig({ ssr: false, dsd: false, hydrate: 'idle' });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-class-definition
 export default class BrowserOnlyComponent {

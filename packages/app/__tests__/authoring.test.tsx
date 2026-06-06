@@ -2,15 +2,22 @@ import { assertEquals, assertExists, assertThrows } from 'jsr:@std/assert@^1.0.0
 import { renderDsd } from '@openelement/core';
 import {
   defineElement,
+  defineIsland,
+  defineIslandConfig,
   definePage,
   isOpenElementNotFound,
   isOpenElementRedirect,
   notFound,
   redirect,
 } from '../src/index.ts';
+import { getIslandMeta } from '../../core/src/island.ts';
 
 Deno.test('definePage() returns a DsdElement-compatible constructor', async () => {
-  const Page = definePage(() => <main>Hello OpenElement</main>);
+  const Page = definePage({
+    render() {
+      return <main>Hello OpenElement</main>;
+    },
+  });
 
   const out = await renderDsd('test-page', { componentClass: Page });
 
@@ -18,14 +25,45 @@ Deno.test('definePage() returns a DsdElement-compatible constructor', async () =
   assertEquals(out.html.includes('<main>Hello OpenElement</main>'), true);
 });
 
-Deno.test('definePage() object form exposes metadata and load data to render()', async () => {
+Deno.test('definePage() rejects function-form pages', () => {
+  assertThrows(
+    () => {
+      definePage((() => <main>legacy</main>) as never);
+    },
+    Error,
+    'canonical object descriptor',
+  );
+});
+
+Deno.test('definePage() rejects legacy top-level metadata fields', () => {
+  assertThrows(
+    () => {
+      definePage({
+        title: 'Legacy',
+        render() {
+          return <main>legacy</main>;
+        },
+      } as never);
+    },
+    Error,
+    'top-level "title"',
+  );
+});
+
+Deno.test('definePage() canonical descriptor exposes metadata and load data to render()', async () => {
   const Page = definePage({
-    title: 'Home',
-    description: 'Application API',
-    layout: 'docs',
-    rendering: 'auto',
-    streaming: 'auto',
-    revalidate: 60,
+    route: { path: '/', id: 'home' },
+    head: {
+      title: 'Home',
+      description: 'Application API',
+      meta: [{ name: 'robots', content: 'index' }],
+      dangerouslyHeadFragments: ['<link rel="canonical" href="https://example.test/">'],
+    },
+    renderIntent: {
+      mode: 'static',
+      streaming: false,
+      revalidate: 60,
+    },
     load({ params }) {
       return { message: `Hello ${params.name}` };
     },
@@ -34,8 +72,14 @@ Deno.test('definePage() object form exposes metadata and load data to render()',
     },
   });
 
-  assertEquals(Page.openElementPage.title, 'Home');
-  assertEquals(Page.openElementPage.layout, 'docs');
+  assertEquals(Page.openElementPage.route?.path, '/');
+  assertEquals(Page.openElementPage.head?.title, 'Home');
+  assertEquals(Page.openElementPage.head?.description, 'Application API');
+  assertEquals(Page.openElementPage.head?.meta?.[0].name, 'robots');
+  assertEquals(Page.openElementPage.head?.dangerouslyHeadFragments?.length, 1);
+  assertEquals(Page.openElementPage.renderIntent.mode, 'static');
+  assertEquals(Page.openElementPage.renderIntent.streaming, false);
+  assertEquals(Page.openElementPage.renderIntent.revalidate, 60);
   const data = await Page.openElementPage.load?.({
     params: { name: 'DX' },
     route: { path: '/' },
@@ -54,8 +98,8 @@ Deno.test('definePage() object form exposes metadata and load data to render()',
 
 Deno.test('definePage() passes structured route and meta context to render()', async () => {
   const Page = definePage({
-    title: 'Article',
-    meta: { section: 'docs' },
+    route: { path: '/articles/[slug]', params: ['slug'] },
+    head: { title: 'Article' },
     render({ route, meta }) {
       return <main>{route.path}:{String(meta.section)}</main>;
     },
@@ -71,6 +115,33 @@ Deno.test('definePage() passes structured route and meta context to render()', a
 
   assertEquals(out.errors.length, 0);
   assertEquals(out.html.includes('/guide:guide'), true);
+});
+
+Deno.test('definePage() rejects non-canonical layout and styles fields', () => {
+  assertThrows(
+    () => {
+      definePage({
+        layout: 'docs',
+        render() {
+          return <main>legacy layout</main>;
+        },
+      } as never);
+    },
+    Error,
+    'top-level "layout"',
+  );
+  assertThrows(
+    () => {
+      definePage({
+        styles: [],
+        render() {
+          return <main>legacy styles</main>;
+        },
+      } as never);
+    },
+    Error,
+    'top-level "styles"',
+  );
 });
 
 Deno.test('definePage() renders page error fallback through the same VNode contract', async () => {
@@ -128,4 +199,49 @@ Deno.test('defineElement() validates custom element tag names', () => {
 Deno.test('@openelement/app root exports authoring helpers only', () => {
   assertExists(definePage);
   assertExists(defineElement);
+  assertExists(defineIsland);
+  assertExists(defineIslandConfig);
+});
+
+Deno.test('defineIslandConfig() returns canonical island metadata shape', () => {
+  const config = defineIslandConfig({ hydrate: 'visible', dsd: false, ssr: false });
+
+  assertEquals(config.hydrate, 'visible');
+  assertEquals(config.dsd, false);
+  assertEquals(config.ssr, false);
+});
+
+Deno.test('defineIslandConfig() rejects non-canonical island metadata', () => {
+  assertThrows(
+    () => {
+      defineIslandConfig({ mode: 'legacy' } as never);
+    },
+    Error,
+    'does not accept "mode"',
+  );
+  assertThrows(
+    () => {
+      defineIslandConfig({ hydrate: 'lazy' } as never);
+    },
+    Error,
+    'Invalid island hydrate strategy "lazy"',
+  );
+});
+
+Deno.test('defineIsland() writes ssr into runtime island metadata', () => {
+  const Island = defineIsland(
+    'strict-island',
+    {
+      render() {
+        return <button type='button'>Count</button>;
+      },
+    },
+    { hydrate: 'idle', dsd: true, ssr: false },
+  );
+
+  const meta = getIslandMeta(Island);
+  assertEquals(meta?.isIsland, true);
+  assertEquals(meta?.tagName, 'strict-island');
+  assertEquals(meta?.dsd, true);
+  assertEquals(meta?.ssr, false);
 });

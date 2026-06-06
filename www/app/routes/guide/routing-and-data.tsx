@@ -24,7 +24,8 @@ function RoutingDataEn() {
       <h1>Routing &amp; Data</h1>
       <p class='subtitle'>
         openElement uses filesystem routing. A route module exports a page
-        definition, and the framework wires params, data, metadata, and layout.
+        definition, and the framework wires params, data, metadata, and app
+        shell rendering.
       </p>
 
       <h2>Filesystem Routing</h2>
@@ -41,8 +42,12 @@ function RoutingDataEn() {
       <h2>Basic Page</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>About</main>;
+export default definePage({
+  route: { path: '/about' },
+  head: { title: 'About' },
+  render() {
+    return <main>About</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>Dynamic Params</h2>
@@ -52,8 +57,11 @@ export default definePage(() => {
       </p>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(({ params }) => {
-  return <article>Post: {params.slug}</article>;
+export default definePage({
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  render({ params }) {
+    return <article>Post: {params.slug}</article>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>Load Data</h2>
@@ -67,7 +75,8 @@ export default definePage(({ params }) => {
 type Post = { title: string; body: string };
 
 export default definePage<Post>({
-  title: 'Post',
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: { title: 'Post' },
   async load({ params }) {
     return fetch(\`https://api.example.com/posts/\${params.slug}\`)
       .then((r) => r.json());
@@ -84,14 +93,17 @@ export default definePage<Post>({
 
       <h2>Page Metadata</h2>
       <p>
-        The same descriptor can set document title, description, layout, and
-        revalidation intent. Build adapters read it as structured metadata.
+        The same descriptor can set document title, description, route intent,
+        and revalidation intent. Build adapters read it as structured metadata.
       </p>
       <open-code-block><pre><code>{`export default definePage({
-  title: 'Field Notes',
-  description: 'Posts about Web Components',
-  layout: 'post',
-  revalidate: 300,
+  route: { path: '/field-notes' },
+  head: {
+    title: 'Field Notes',
+    description: 'Posts about Web Components',
+    meta: [{ property: 'og:type', content: 'article' }],
+  },
+  renderIntent: { mode: 'static', revalidate: 300 },
   render() {
     return <main>...</main>;
   },
@@ -125,8 +137,8 @@ function RoutingDataZh() {
     <>
       <h1>路由与数据</h1>
       <p class='subtitle'>
-        openElement 使用文件系统路由。路由模块导出页面定义，框架负责接入 params、data、metadata
-        和 layout。
+        openElement 使用文件系统路由。路由模块导出页面定义，框架负责接入
+        params、data、metadata 和 app shell 渲染。
       </p>
 
       <h2>文件系统路由</h2>
@@ -142,22 +154,30 @@ function RoutingDataZh() {
       <h2>基础页面</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>About</main>;
+export default definePage({
+  route: { path: '/about' },
+  head: { title: 'About' },
+  render() {
+    return <main>About</main>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>动态参数</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export default definePage(({ params }) => {
-  return <article>Post: {params.slug}</article>;
+export default definePage({
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  render({ params }) {
+    return <article>Post: {params.slug}</article>;
+  },
 });`}</code></pre></open-code-block>
 
       <h2>加载数据</h2>
       <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
 export default definePage({
-  title: 'Post',
+  route: { path: '/posts/[slug]', params: ['slug'] },
+  head: { title: 'Post' },
   async load({ params }) {
     return fetch(\`https://api.example.com/posts/\${params.slug}\`)
       .then((r) => r.json());
@@ -169,10 +189,13 @@ export default definePage({
 
       <h2>页面 metadata</h2>
       <open-code-block><pre><code>{`export default definePage({
-  title: 'Field Notes',
-  description: 'Posts about Web Components',
-  layout: 'post',
-  revalidate: 300,
+  route: { path: '/field-notes' },
+  head: {
+    title: 'Field Notes',
+    description: 'Posts about Web Components',
+    meta: [{ property: 'og:type', content: 'article' }],
+  },
+  renderIntent: { mode: 'static', revalidate: 300 },
   render() {
     return <main>...</main>;
   },

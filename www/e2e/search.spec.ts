@@ -36,6 +36,27 @@ test.describe('Search', () => {
     expect(res.ok()).toBe(true);
   });
 
+  test('search trigger focuses input and accepts real keyboard typing', async ({ page }) => {
+    await page.goto('/guide/getting-started');
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForFunction(() => customElements.get('open-search'));
+
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    const search = page.locator('open-search');
+    const input = search.locator('input');
+    await expect(input).toBeFocused();
+
+    await page.keyboard.type('routing');
+    await expect(input).toHaveValue('routing');
+
+    const firstResult = search.locator('.result').first();
+    await expect(firstResult).toBeVisible();
+    const firstHref = await firstResult.getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(firstHref).not.toBe('/guide/routing');
+  });
+
   test('search overlay is anchored to viewport when opened from layout header', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');

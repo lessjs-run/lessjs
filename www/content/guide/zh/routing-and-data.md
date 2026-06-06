@@ -7,22 +7,31 @@ order: 3
 
 # 路由与数据
 
-`app/routes` 下的文件会成为路由。路由模块导出页面组件，通常由 `definePage()` 创建。
+`app/routes` 下的文件会成为路由。路由模块导出页面组件，通常由 `definePage()`
+创建。
 
 ## 静态页面
 
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => <main>Home</main>);
+export default definePage({
+  route: { path: '/' },
+  render() {
+    return <main>Home</main>;
+  },
+});
 ```
 
 ## 页面 metadata
 
 ```tsx
 export default definePage({
-  title: 'Posts',
-  description: 'Latest posts',
+  route: { path: '/posts' },
+  head: {
+    title: 'Posts',
+    description: 'Latest posts',
+  },
   render() {
     return <main>Posts</main>;
   },
@@ -48,7 +57,8 @@ export default definePage({
 });
 ```
 
-`load()` 会收到 route params、request 和运行时上下文。返回值会作为 `data` 传给页面。
+`load()` 会收到 route params、request 和运行时上下文。返回值会作为 `data`
+传给页面。
 
 ## 渲染意图
 
@@ -56,10 +66,15 @@ export default definePage({
 
 ```tsx
 export default definePage({
-  rendering: 'ssg',
-  revalidate: 300,
+  route: { path: '/cached' },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: 300,
+  },
   render: () => <main>Cached page</main>,
 });
 ```
 
-v0.31 建立应用契约。v0.32 会继续产品化 SSR、ISR、streaming DSD 和 cache adapters。
+v0.33 之后这是唯一页面编写路径。顶层 `title`、`description`、`rendering`、
+`streaming` 和 `revalidate` 不再被接受。

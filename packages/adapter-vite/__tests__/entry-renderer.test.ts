@@ -375,8 +375,17 @@ Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalida
   assertStringIncludes(code, '__openElementData: __data');
   assertStringIncludes(code, '__openElementRoute: __routeContext');
   assertStringIncludes(code, '__openElementMeta: __routeMeta');
-  assertStringIncludes(code, 'title: __page.title || "openElement"');
-  assertStringIncludes(code, 'meta: { description: __page.description }');
+  assertEquals(code.includes('module?.meta'), false);
+  assertEquals(code.includes('page.layout'), false);
+  assertStringIncludes(code, 'title: __page.head?.title || "openElement"');
+  assertStringIncludes(
+    code,
+    'meta: { description: __page.head?.description, tags: __page.head?.meta }',
+  );
+  assertStringIncludes(
+    code,
+    'dangerouslyHeadFragments: __page.head?.dangerouslyHeadFragments || []',
+  );
   assertStringIncludes(code, 'function __pageDefinition(module) {');
   assertStringIncludes(code, 'function __isOpenElementRedirect(error) {');
   assertStringIncludes(code, 'function __isOpenElementNotFound(error) {');
@@ -387,11 +396,14 @@ Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalida
   assertStringIncludes(code, '__openElementParams: params');
   assertStringIncludes(code, '__openElementRoute: loadContext.route');
   assertStringIncludes(code, 'filePath: "index.ts"');
-  assertStringIncludes(code, 'rendering: (__pageDefinition($pageIndex).rendering || "auto")');
-  assertStringIncludes(code, 'title: title || page.title || "openElement"');
   assertStringIncludes(
     code,
-    'revalidate: ($pageIndex.revalidate !== undefined ? $pageIndex.revalidate : ($pageIndex.default?.openElementPage || {}).revalidate)',
+    'rendering: (__pageDefinition($pageIndex).renderIntent?.mode || "auto")',
+  );
+  assertStringIncludes(code, 'title: title || page.head?.title || "openElement"');
+  assertStringIncludes(
+    code,
+    'revalidate: (($pageIndex.default?.openElementPage || {}).renderIntent?.revalidate ?? false)',
   );
 });
 

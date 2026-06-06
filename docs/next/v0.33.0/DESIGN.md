@@ -1,9 +1,10 @@
-# v0.33.0 Design: AI-Readable API Foundation
+# v0.33.0 Design: Strict AI-Readable API Reset
 
 ## Design Goal
 
-The public Application API should expose intent in structured declarations. A
-tool should be able to inspect a page, island, or app config and answer:
+The public Application API should expose intent in structured declarations and
+should have one authoring path. v0.33.0 is intentionally breaking: a tool should
+be able to inspect a page, island, or app config and answer:
 
 - what route shape the page expects;
 - what head data or trusted head fragments it contributes;
@@ -11,8 +12,8 @@ tool should be able to inspect a page, island, or app config and answer:
 - whether an island is SSR-capable or client-only;
 - which metadata is public, internal, trusted, or dangerous.
 
-The design is conservative: add explicit object fields and aliases while keeping
-the v0.31-v0.32 API compatible.
+The design is strict: remove v0.31-v0.32 shortcuts and keep only the canonical
+object descriptor.
 
 ## Page Descriptor Direction
 
@@ -30,7 +31,9 @@ export default definePage({
     description: 'A post page',
   },
   renderIntent: {
-    mode: 'ssg',
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: false,
   },
   async load({ params }) {
     return { slug: params.slug };
@@ -41,36 +44,37 @@ export default definePage({
 });
 ```
 
-The exact field shapes may be refined during implementation, but the contract
-must stay explicit and type-backed.
+The `route` field is AI-readable intent metadata only. File-system route
+scanning remains the source of real URL matching.
 
 ## Head Trust Boundary
 
-Head data should use structured fields by default. Raw or pre-trusted head HTML
-must use names that make risk visible, for example:
+Head data must use structured fields by default:
 
-- `trustedHeadHtml`;
-- `dangerouslyHeadFragments`;
-- a typed `trustedHead()` helper if implementation evidence proves it clearer.
+- `head.title`;
+- `head.description`;
+- `head.meta`;
+- `head.dangerouslyHeadFragments`.
 
-Generic `head` must not silently accept raw HTML unless the field name exposes
-the trust boundary.
+Raw route-local head fragments only enter through
+`head.dangerouslyHeadFragments` so the trust boundary is explicit at the call
+site.
 
 ## Island Metadata Direction
 
-Island metadata should have a named helper such as:
+Island metadata uses one named helper:
 
 ```tsx
-export const island = defineIslandConfig({
-  tagName: 'open-counter',
+export const openElement = defineIslandConfig({
   ssr: true,
+  dsd: true,
   hydrate: 'visible',
 });
 ```
 
-The legacy `export const openElement = ...` island metadata remains compatible.
-The new helper should feed the same descriptor path so generated entries do not
-grow a parallel metadata source.
+The export name remains `openElement`, but the value must be returned by
+`defineIslandConfig(...)`. The old object-literal metadata path is rejected by
+the adapter scanner.
 
 ## App-Level Island SSR
 
@@ -78,18 +82,19 @@ App-level island options should accept an explicit `ssr?: boolean` field. This
 keeps "server-rendered island" versus "client-only island" readable in source
 and generated metadata.
 
-## Compatibility
+## Breaking Changes
 
-Do not remove:
+Remove:
 
 - function-form `definePage(() => ...)`;
-- current object-form fields from v0.31-v0.32;
-- `export const openElement = ...` metadata;
-- existing hydration strategy names.
+- top-level page `title`, `description`, `meta`, `rendering`, `streaming`, and
+  `revalidate`;
+- non-canonical page descriptor fields such as `layout` and `styles`;
+- object-literal island metadata such as `export const openElement = { ... }`.
 
-New fields must normalize into the same internal descriptor model as old fields.
-Generated entry tests must prove equivalence where old and new forms express the
-same intent.
+Do not remove `load`, `render`, `error`, hydration strategy names, or
+file-system route scanning. Layout composition remains an app shell / renderer
+configuration concern, not a page descriptor field.
 
 ## Non-Goals
 

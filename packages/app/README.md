@@ -7,8 +7,12 @@ Use the package root in route, island, and component modules:
 ```tsx
 import { definePage } from '@openelement/app';
 
-export default definePage(() => {
-  return <main>Hello openElement</main>;
+export default definePage({
+  route: { path: '/' },
+  head: { title: 'Home' },
+  render() {
+    return <main>Hello openElement</main>;
+  },
 });
 ```
 
@@ -37,9 +41,9 @@ export default defineConfig({
 import { defineElement, defineIsland, defineLayout, definePage } from '@openelement/app';
 ```
 
-- `definePage(render)` creates a file-route page from a JSX function.
-- `definePage({ load, render, title, description, layout, revalidate })` creates a page with route data and metadata.
-- `defineIsland(tagName, render, options)` creates a browser-upgraded island.
+- `definePage({ route, head, renderIntent, load, render, error })` creates a file-route page from a canonical object descriptor.
+- `defineIslandConfig({ ssr, dsd, hydrate })` defines static island metadata for adapter scanning.
+- `defineIsland(tagName, render, { hydrate, dsd, ssr })` creates a browser-upgraded island.
 - `defineElement(tagName, render)` creates a DSD component.
 - `defineLayout(tagName, render)` is the layout-specific form of `defineElement()`.
 

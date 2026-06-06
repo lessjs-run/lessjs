@@ -1,38 +1,38 @@
-# v0.33.0 SOP: AI-Readable API Foundation
+# v0.33.0 SOP: Strict AI-Readable API Reset
 
 > Status: Next\
-> Roadmap: AI-Readable API Foundation\
+> Roadmap: Strict AI-Readable API Reset\
 > ADR: ADR-0086\
 > NextVersion: `docs/next/v0.33.0/`\
 > Workflow: `docs/governance/PROJECT_WORKFLOW.md`
 
 ## Goal
 
-Make app, page, island, head, route, and render intent explicit and
-machine-readable before AutoFlow2 starts judging workflow state.
+Make app, page, island, head, route, and render intent explicit,
+machine-readable, and single-path before AutoFlow2 starts judging workflow
+state.
 
 ## Entry Criteria
 
 - v0.32.0 lifecycle semantics are stable.
 - `docs/next/v0.33.0/` exists and matches this SOP.
 - Current page and island descriptors are understood from code, tests, and docs.
-- Existing v0.31-v0.32 APIs remain supported during this release.
+- v0.33 is allowed to remove v0.31-v0.32 authoring shortcuts.
 
 ## Tasks
 
-- [ ] Make object-form `definePage({ ... })` the default docs and create
-      template path.
-- [ ] Add structured page fields: `head`, `route`, and `renderIntent`.
-- [ ] Normalize old and new page fields into one descriptor path.
-- [ ] Add explicitly named trusted/raw head APIs such as `trustedHeadHtml` or
-      `dangerouslyHeadFragments`.
-- [ ] Add `defineIslandMetadata()` or `defineIslandConfig()`.
-- [ ] Keep old `export const openElement = ...` island metadata compatible.
-- [ ] Add `ssr?: boolean` to app-level island options.
-- [ ] Normalize old and new island metadata into one descriptor path.
-- [ ] Add generated-entry tests proving old and new page intent forms produce
-      equivalent lifecycle metadata where they express the same behavior.
-- [ ] Update create templates and docs examples only after the API exists.
+- [x] Make object-form `definePage({ route, head, renderIntent, load, render, error })`
+      the only page authoring path.
+- [x] Remove function-form `definePage(() => ...)`.
+- [x] Remove top-level page `title`, `description`, `meta`, `rendering`,
+      `streaming`, and `revalidate`.
+- [x] Add structured page fields: `head`, `route`, and `renderIntent`.
+- [x] Add explicit raw head boundary: `head.dangerouslyHeadFragments`.
+- [x] Add `defineIslandConfig({ ssr, dsd, hydrate })`.
+- [x] Reject old object-literal `export const openElement = { ... }` island metadata.
+- [x] Add `ssr?: boolean` to app-level island options and runtime island metadata.
+- [x] Update generated entry code to read only `head` and `renderIntent`.
+- [x] Update create templates, docs examples, and www examples to the canonical path.
 
 ## Verification
 
@@ -64,7 +64,7 @@ machine-readable before AutoFlow2 starts judging workflow state.
 
 - New page and island intent APIs are implemented, typed, documented, and
   tested.
-- Old v0.31-v0.32 page and island APIs remain compatible.
+- Old v0.31-v0.32 page and island authoring shortcuts are rejected.
 - Generated projects use the new object-form page path and still build.
 - v0.34 AutoFlow2 sidecar can read page/island/build intent without relying on
   ad hoc inference.
