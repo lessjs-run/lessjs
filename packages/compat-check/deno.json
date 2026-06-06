@@ -5,9 +5,9 @@
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.33.0",
-    "@openelement/core/types": "jsr:@openelement/core@^0.33.0/types",
-    "@openelement/cem": "jsr:@openelement/cem@^0.33.0"
+    "@openelement/core": "jsr:@openelement/core@^0.34.0",
+    "@openelement/core/types": "jsr:@openelement/core@^0.34.0/types",
+    "@openelement/cem": "jsr:@openelement/cem@^0.34.0"
   },
   "publish": {
     "include": [

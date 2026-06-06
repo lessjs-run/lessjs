@@ -7,8 +7,8 @@
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.33.0",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.33.0/logger",
+    "@openelement/core": "jsr:@openelement/core@^0.34.0",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.34.0/logger",
     "react": "npm:react@^19",
     "react-dom": "npm:react-dom@^19",
     "react-dom/server": "npm:react-dom@^19/server.node"

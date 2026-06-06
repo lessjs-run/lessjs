@@ -15,8 +15,8 @@
     "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
-    "@openelement/signals": "jsr:@openelement/signals@^0.33.0",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.33.0"
+    "@openelement/signals": "jsr:@openelement/signals@^0.34.0",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.34.0"
   },
   "publish": {
     "include": [

@@ -6,7 +6,7 @@
     "./types": "./src/types.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.33.0"
+    "@openelement/core": "jsr:@openelement/core@^0.34.0"
   },
   "publish": {
     "include": [
