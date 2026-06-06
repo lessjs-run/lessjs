@@ -29,6 +29,7 @@
 import { buildPackageRecord } from '../builder.ts';
 import { runSubmission } from '../submitter.ts';
 import { validateHubPackageRecord } from '../schema.ts';
+import { VALIDATOR_VERSION } from '../constants.ts';
 import type {
   BuildPackageRecordOptions,
   CompatibilityTier,
@@ -293,7 +294,7 @@ async function main() {
     }),
     repository: repository || undefined,
     description: description || undefined,
-    validatorVersion: '0.19.0',
+    validatorVersion: VALIDATOR_VERSION,
     manifestContent: cemContent || undefined,
   };
 

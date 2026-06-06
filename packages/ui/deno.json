@@ -13,7 +13,6 @@
     "./open-dialog": "./src/open-dialog.tsx",
     "./open-callout": "./src/open-callout.tsx",
     "./open-step-card": "./src/open-step-card.tsx",
-    "./docs-page-styles": "./src/docs-page-styles.ts",
     "./open-props-tokens": "./src/open-props-tokens.ts",
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },

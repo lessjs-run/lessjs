@@ -91,7 +91,6 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
   'style-sheet': { '.': 'src/index.ts' },
   ui: {
     '.': 'src/index.ts',
-    'docs-page-styles': 'src/docs-page-styles.ts',
     'open-button': 'src/open-button.tsx',
     'open-callout': 'src/open-callout.tsx',
     'open-card': 'src/open-card.tsx',

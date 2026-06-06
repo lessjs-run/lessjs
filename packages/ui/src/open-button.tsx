@@ -24,7 +24,7 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { _escAttr } from './shared/escape.js';
+import { escapeAttr } from '@openelement/core';
 
 export const tagName = 'open-button';
 
@@ -228,7 +228,7 @@ export class OpenButton extends DsdElement {
     this.dispatchEvent(new CustomEvent('open-click', { bubbles: true, composed: true }));
   }
 
-  private _escAttr = _escAttr;
+  private _escAttr = escapeAttr;
 }
 
 export default OpenButton;

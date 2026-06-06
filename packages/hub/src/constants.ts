@@ -7,7 +7,7 @@ export const VALIDATOR_VERSION = '0.33.0';
 export const SHOELACE_VERSION = '2.20.1';
 
 /** Version of @openelement/ui recorded in hub scanner */
-export const openElement_UI_VERSION = '0.33.0';
+export const HUB_VERSION = VALIDATOR_VERSION;
 
 /** Path to Shoelace theme CSS inside Deno cache */
 export const SHOELACE_THEME_PATH =

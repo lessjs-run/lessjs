@@ -40,11 +40,18 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:open-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_OPENELEMENT_VERSION = '0.33.0';
-
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
-  return match?.[1] ?? FALLBACK_OPENELEMENT_VERSION;
+  if (match) return match[1];
+  // Try to read from workspace deno.json
+  try {
+    const denoJson = JSON.parse(Deno.readTextFileSync(
+      new URL('../../../deno.json', import.meta.url),
+    ));
+    return denoJson.version || 'unknown';
+  } catch {
+    throw new Error('Unable to determine @openelement/adapter-vite version');
+  }
 }
 
 function getLocalOpenElementPackageRoot(metaUrl: string): string | null {

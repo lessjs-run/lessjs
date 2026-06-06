@@ -19,6 +19,7 @@
 import { toCdnUrl } from './cdn-url.ts';
 import { renderSnapshotPlaceholderHtml } from './snapshot-placeholder.ts';
 import { escapeAttr } from '@openelement/core';
+import { SHOELACE_VERSION } from './constants.ts';
 import type { Browser, BrowserType } from 'npm:playwright@1.59.1';
 
 // ─── Types ───────────────────────────────────────────────────────────────
@@ -68,9 +69,8 @@ export interface PlaywrightRenderResult {
  *   -> 'https://cdn.jsdelivr.net/npm/media-chrome@4.19.0/dist/media-controller.js'
  */
 function toModuleUrl(importSpec: string): string {
-  // Known package versions for consistent CDN resolution
   const VERSIONS: Record<string, string> = {
-    '@shoelace-style/shoelace': '2.20.1',
+    '@shoelace-style/shoelace': SHOELACE_VERSION,
     'media-chrome': '4.19.0',
   };
 

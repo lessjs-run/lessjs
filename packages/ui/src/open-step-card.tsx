@@ -25,7 +25,7 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { _esc } from './shared/escape.js';
+import { escapeHtml } from '@openelement/core';
 
 export const tagName = 'open-step-card';
 
@@ -119,7 +119,7 @@ export class OpenStepCard extends DsdElement {
     this.update();
   }
 
-  private _esc = _esc;
+  private _esc = escapeHtml;
 }
 
 export default OpenStepCard;

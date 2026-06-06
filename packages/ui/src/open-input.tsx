@@ -32,7 +32,7 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { _esc, _escAttr } from './shared/escape.js';
+import { escapeAttr, escapeHtml } from '@openelement/core';
 
 export const tagName = 'open-input';
 
@@ -258,8 +258,8 @@ export class OpenInput extends DsdElement {
     }
   }
 
-  private _esc = _esc;
-  private _escAttr = _escAttr;
+  private _esc = escapeHtml;
+  private _escAttr = escapeAttr;
 }
 
 export default OpenInput;

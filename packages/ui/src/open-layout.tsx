@@ -34,7 +34,7 @@ import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { type Context, createContext, provideContext } from '@openelement/core';
 import { Router } from '@openelement/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { _esc, _escAttr } from './shared/escape.js';
+import { escapeAttr, escapeHtml } from '@openelement/core';
 import '.\/open-theme-toggle.js';
 
 export const tagName = 'open-layout';
@@ -1220,8 +1220,8 @@ export class OpenLayout extends DsdElement {
 
   // --- Utilities ---
 
-  private _esc = _esc;
-  private _escAttr = _escAttr;
+  private _esc = escapeHtml;
+  private _escAttr = escapeAttr;
 }
 
 export default OpenLayout;
