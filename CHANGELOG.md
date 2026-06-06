@@ -86,8 +86,8 @@
 - Updated STATUS, Roadmap, Architecture, SOPs, www homepage, and Getting Started
   for v0.33.0.
 - Bumped all 19 packages and internal JSR ranges to `0.33.0`.
-
 ---
+
 ## v0.32.0 - App Lifecycle Contract (2026-06-05)
 
 ### Application Lifecycle
@@ -111,6 +111,7 @@
 - Updated Status, Roadmap, Architecture, SOP, www homepage, API reference, and
   Getting Started docs for v0.32.0.
 - Bumped all 19 packages and internal JSR ranges to `0.32.0`.
+
 ---
 
 ## v0.31.0 - JSX-first Application API (2026-06-05)
