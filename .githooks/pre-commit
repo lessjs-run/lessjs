@@ -2,20 +2,20 @@
 #
 # openElement pre-commit hook
 # Runs formatting, linting, type checking, architecture contract,
-# package graph, and autoflow invariant check before allowing a commit.
+# package graph, doc strategy, and autoflow invariant check.
 # Install: deno task hooks:install
 # Uninstall: deno task hooks:uninstall
 #
 
 set -e
 
-echo "[1/7] Running deno fmt --check (full repo)..."
+echo "[1/8] Running deno fmt --check (full repo)..."
 deno fmt --check . || { echo "❌ Format check failed."; exit 1; }
 
-echo "[2/7] Running deno lint..."
+echo "[2/8] Running deno lint..."
 deno lint . || { echo "❌ Lint check failed."; exit 1; }
 
-echo "[3/7] Running deno check (key entry points)..."
+echo "[3/8] Running deno check (key entry points)..."
 deno check packages/core/src/index.ts \
   packages/rpc/src/index.ts \
   packages/ui/src/index.ts \
@@ -24,13 +24,19 @@ deno check packages/core/src/index.ts \
   packages/signals/src/index.ts \
   packages/create/cli.ts || { echo "❌ Type check failed."; exit 1; }
 
-echo "[4/7] Running arch:check (architecture contracts)..."
+echo "[4/8] Running arch:check (architecture contracts)..."
 deno task arch:check || { echo "❌ Architecture contract check failed."; exit 1; }
 
-echo "[5/7] Running graph:check (package graph)..."
+echo "[5/8] Running graph:check (package graph)..."
 deno task graph:check || { echo "❌ Package graph check failed."; exit 1; }
 
-echo "[6/7] Running autoflow:check (governance invariants)..."
+echo "[6/8] Running docs:check-strategy (strategic docs)..."
+deno task docs:check-strategy || { echo "❌ Strategic docs check failed."; exit 1; }
+
+echo "[7/8] Running docs:check-current (current docs)..."
+deno task docs:check-current || { echo "❌ Current docs check failed."; exit 1; }
+
+echo "[8/8] Running autoflow:check (governance invariants)..."
 deno run --allow-read tools/autoflow/mod-check.ts || {
   echo "❌ autoflow:check failed. Fix the violations below before committing."
   echo "   Run 'deno task autoflow:report' to see current state."
