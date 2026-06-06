@@ -15,7 +15,6 @@
 
 import type { CompatibilityClassification, CompatibilityTier } from './types.js';
 import type {
-  // deno-lint-ignore no-unused-vars
   CustomElementsManifest,
   OpenElementExtensions,
   OpenElementPackageManifest,
@@ -359,7 +358,6 @@ export function classifyOpenElementManifest(
  * @param config - Classifier configuration
  * @returns Classification result
  */
-/** @deprecated Use `classifyCemManifest` from `@openelement/cem` instead. ADR-0079: cem is canonical.
 export function classifyCemManifest(
   manifest: CustomElementsManifest,
   config: ClassifierConfig = DEFAULT_CONFIG,
