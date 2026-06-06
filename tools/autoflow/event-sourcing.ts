@@ -50,11 +50,41 @@ export function replayEvents(
 ): CellState {
   let state = createCellState(
     cellId,
-    // deno-lint-ignore no-explicit-any -- cellType from ledger may be string
-    cellType as any,
+    (cellType as string) === 'version-bump'
+      ? 'version-bump'
+      : (cellType as string) === 'changelog'
+      ? 'changelog'
+      : (cellType as string) === 'sop-check'
+      ? 'sop-check'
+      : (cellType as string) === 'doc-align'
+      ? 'doc-align'
+      : (cellType as string) === 'fmt-fix'
+      ? 'fmt-fix'
+      : (cellType as string) === 'lint-fix'
+      ? 'lint-fix'
+      : (cellType as string) === 'typecheck-fix'
+      ? 'typecheck-fix'
+      : (cellType as string) === 'test-add'
+      ? 'test-add'
+      : (cellType as string) === 'readme-update'
+      ? 'readme-update'
+      : (cellType as string) === 'release-note'
+      ? 'release-note'
+      : (cellType as string) === 'dep-update'
+      ? 'dep-update'
+      : (cellType as string) === 'adr-write'
+      ? 'adr-write'
+      : 'version-bump',
     versionCycle,
-    // deno-lint-ignore no-explicit-any
-    risk as any,
+    (risk as string) === 'low'
+      ? 'low'
+      : (risk as string) === 'medium'
+      ? 'medium'
+      : (risk as string) === 'high'
+      ? 'high'
+      : (risk as string) === 'critical'
+      ? 'critical'
+      : 'low',
   );
 
   const history: CellEvent[] = [];

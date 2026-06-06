@@ -11,9 +11,11 @@
  *   4. Topological sort → execution waves
  */
 
+import type { CellType } from './cell-state-machine.ts';
+
 export interface DagNode {
   cellId: string;
-  cellType: string;
+  cellType: CellType;
   description: string;
   risk: 'low' | 'medium' | 'high' | 'critical';
   files: string[];

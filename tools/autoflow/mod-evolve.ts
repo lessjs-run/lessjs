@@ -144,8 +144,7 @@ async function main(): Promise<void> {
 
     for (const cellId of wave) {
       const node = dag.nodes.find((n) => n.cellId === cellId)!;
-      // deno-lint-ignore no-explicit-any
-      const state = createCellState(cellId, node.cellType as any, version, node.risk);
+      const state = createCellState(cellId, node.cellType, version, node.risk);
 
       console.log(`   [${cellId}] ${node.cellType} → executing...`);
 

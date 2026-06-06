@@ -1,33 +1,37 @@
 #!/bin/sh
 #
 # openElement pre-commit hook
-# Runs formatting, linting, type checking, and autoflow invariant check
-# before allowing a commit.
+# Runs formatting, linting, type checking, architecture contract,
+# package graph, and autoflow invariant check before allowing a commit.
 # Install: deno task hooks:install
 # Uninstall: deno task hooks:uninstall
 #
 
 set -e
 
-echo "Running deno fmt --check (packages/)..."
-deno fmt --check packages/
+echo "[1/7] Running deno fmt --check (full repo)..."
+deno fmt --check . || { echo "❌ Format check failed."; exit 1; }
 
-echo "Running deno lint (packages/)..."
-deno lint packages/
+echo "[2/7] Running deno lint..."
+deno lint . || { echo "❌ Lint check failed."; exit 1; }
 
-echo "Running deno check (key entry points)..."
+echo "[3/7] Running deno check (key entry points)..."
 deno check packages/core/src/index.ts \
   packages/rpc/src/index.ts \
   packages/ui/src/index.ts \
   packages/adapter-lit/src/index.ts \
   packages/adapter-lit/src/ssr.ts \
   packages/signals/src/index.ts \
-  packages/create/cli.ts
+  packages/create/cli.ts || { echo "❌ Type check failed."; exit 1; }
 
-echo ""
-echo "Running autoflow:check (governance invariants)..."
+echo "[4/7] Running arch:check (architecture contracts)..."
+deno task arch:check || { echo "❌ Architecture contract check failed."; exit 1; }
+
+echo "[5/7] Running graph:check (package graph)..."
+deno task graph:check || { echo "❌ Package graph check failed."; exit 1; }
+
+echo "[6/7] Running autoflow:check (governance invariants)..."
 deno run --allow-read tools/autoflow/mod-check.ts || {
-  echo ""
   echo "❌ autoflow:check failed. Fix the violations below before committing."
   echo "   Run 'deno task autoflow:report' to see current state."
   exit 1
