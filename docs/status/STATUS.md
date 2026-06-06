@@ -87,20 +87,20 @@ gate before rendering, server, data, and UI product expansion resumes.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                                |
-| -------------------- | ------- | ---------------------------------------------------- |
-| SSG                  | shipped | default production rendering                         |
-| DSD                  | shipped | `renderDsd()` outputs declarative shadow roots       |
-| JSX+Signal           | shipped | `render(): VNode \| null`, effect() signal tracking  |
-| Island upgrade       | shipped | binary SSR/client-only boundary                      |
-| Hydration strategies | shipped | `client:load/idle/visible/only`                      |
-| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest               |
-| API route (Hono)     | shipped | Hono primary engine, DSD-first response shape        |
-| AppShell protocol    | shipped | default, bare, custom, and route-selected shells     |
-| Architecture freeze  | v0.30.0 | one renderer contract, graph gate, architecture gate |
-| Application API      | v0.31.0 | `definePage`, `defineIsland`, `/vite` config split   |
-| App lifecycle        | v0.32.0 | load context, route meta, redirect, not-found, error |
-| AI-Readable API      | v0.33.0 | Object-form pages, island config, head trust boundary         |
+| Mode                 | State   | Notes                                                 |
+| -------------------- | ------- | ----------------------------------------------------- |
+| SSG                  | shipped | default production rendering                          |
+| DSD                  | shipped | `renderDsd()` outputs declarative shadow roots        |
+| JSX+Signal           | shipped | `render(): VNode \| null`, effect() signal tracking   |
+| Island upgrade       | shipped | binary SSR/client-only boundary                       |
+| Hydration strategies | shipped | `client:load/idle/visible/only`                       |
+| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest                |
+| API route (Hono)     | shipped | Hono primary engine, DSD-first response shape         |
+| AppShell protocol    | shipped | default, bare, custom, and route-selected shells      |
+| Architecture freeze  | v0.30.0 | one renderer contract, graph gate, architecture gate  |
+| Application API      | v0.31.0 | `definePage`, `defineIsland`, `/vite` config split    |
+| App lifecycle        | v0.32.0 | load context, route meta, redirect, not-found, error  |
+| AI-Readable API      | v0.33.0 | Object-form pages, island config, head trust boundary |
 
 ## Package Version State
 

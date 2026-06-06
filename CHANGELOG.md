@@ -79,7 +79,6 @@
 - Updated Status, Roadmap, Architecture, SOP, www homepage, API reference, and
   Getting Started docs for v0.32.0.
 - Bumped all 19 packages and internal JSR ranges to `0.32.0`.
-
 ---
 
 ## v0.31.0 - JSX-first Application API (2026-06-05)

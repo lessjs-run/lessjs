@@ -36,22 +36,23 @@ v0.33.0 is accepted only if all criteria below are satisfied.
 
 All acceptance criteria are satisfied. Implementation gates:
 
-| Gate | Result |
-|---|---|
-| `fmt` | 815 files ✅ |
-| `lint` | 288 files ✅ |
-| `typecheck` | all packages ✅ |
-| `test` | 1314 passed, 0 failed ✅ |
-| `graph:check` | 19 packages, 0 cycles ✅ |
-| `arch:check` | 1007 tracked files ✅ |
-| `workflow:check` | passed for v0.33.0 ✅ |
-| `docs:check-current` | no legacy API references ✅ |
-| `docs:check-strategy` | 5 checks, 31 files ✅ |
-| `dsd:check-report` | 0 errors ✅ |
-| `publish:dry-run` | 19 packages ✅ |
-| `consumer:local` | build passed ✅ |
+| Gate                  | Result                      |
+| --------------------- | --------------------------- |
+| `fmt`                 | 815 files ✅                |
+| `lint`                | 288 files ✅                |
+| `typecheck`           | all packages ✅             |
+| `test`                | 1314 passed, 0 failed ✅    |
+| `graph:check`         | 19 packages, 0 cycles ✅    |
+| `arch:check`          | 1007 tracked files ✅       |
+| `workflow:check`      | passed for v0.33.0 ✅       |
+| `docs:check-current`  | no legacy API references ✅ |
+| `docs:check-strategy` | 5 checks, 31 files ✅       |
+| `dsd:check-report`    | 0 errors ✅                 |
+| `publish:dry-run`     | 19 packages ✅              |
+| `consumer:local`      | build passed ✅             |
 
 Release artifacts:
+
 - CHANGELOG entry written
 - `docs/release/v0.33.0.md` written
 - STATUS.md updated to v0.33.0
