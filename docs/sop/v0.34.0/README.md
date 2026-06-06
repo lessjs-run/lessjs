@@ -2,7 +2,8 @@
 
 > Status: Implemented\
 > Roadmap: AutoFlow2 Sidecar Kernel\
-> ADR: ADR-0086
+> ADR: ADR-0086\
+> NextVersion: `docs/next/v0.34.0/`
 
 ## Goal
 
