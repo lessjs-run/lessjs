@@ -5,28 +5,30 @@
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
 package: `docs/next/v0.34.0/`.
 
-## Current Version Line: v0.33.0 (AI-Readable API Foundation)
+## Current Version Line: v0.34.0 (AutoFlow2 Sidecar Kernel)
 
-v0.33.0 Status: **IMPLEMENTED AND RELEASED.**
+v0.34.0 Status: **IMPLEMENTED AND RELEASED.**
 Governing docs:
 
 - `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
-- `docs/sop/v0.33.0/README.md`
-- `docs/next/v0.33.0/`
+- `docs/sop/v0.34.0/README.md`
+- `docs/next/v0.34.0/`
 - `docs/roadmap/ROADMAP.md`
 
-The line makes page, island, head, route, and render intent machine-readable:
+The line introduces an internal read-only workflow kernel that reads repository
+governance documents and emits structured reports:
 
-- `definePage()` requires canonical object-form with `route`, `head`,
-  `renderIntent`, `load`, `render`, and `error` fields.
-- `head` exposes `title`, `description`, `meta`, and
-  `dangerouslyHeadFragments` trust boundary.
-- `defineIslandConfig()` replaces object-literal island metadata.
-- App-level island options expose `ssr?: boolean`.
-- Old v0.31-v0.32 function-form pages and object-literal island metadata are
-  rejected.
+- `deno task autoflow:report` — JSON or Markdown summary.
+- 5-state workflow machine: `planned → next → active → implemented → released`.
+- 6 readers for STATUS, SOP, NextVersion, ROADMAP, package graph, and ADRs.
+- 9 evidence cells with `ok`/`warning`/`missing`/`drifted` status.
+- Advisory only — no CI gate, no code edits, zero network.
 
-This is the foundation for AutoFlow2 (v0.34-v0.35).
+This is the kernel that v0.35 will turn into `deno task autoflow:check`.
+
+v0.33.0 Status: **IMPLEMENTED AND RELEASED.** The line made page, island, head,
+route, and render intent machine-readable with object-form `definePage()`,
+`defineIslandConfig()`, and `dangerouslyHeadFragments` trust boundary.
 
 v0.32.0 Status: **IMPLEMENTED AND RELEASED.** The line turned the v0.31
 Application API into an explicit route lifecycle with `redirect()`, `notFound()`,
@@ -65,9 +67,9 @@ v0.22.x and earlier: **HISTORICAL.**
 | ------- | -------------------------------- | ------- | -------------------------------------------------------------- |
 | v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX      |
 | v0.32.0 | App Lifecycle Contract           | Done    | Route, load, context, layout, error, redirect lifecycle        |
-| v0.33.0 | AI-Readable API Foundation       | Current | Structured page, island, head, route, and render intent APIs   |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Next    | Workflow state, cells, evidence ledger, allowed-action report  |
-| v0.35.0 | AutoFlow2 Harness Gate           | Planned | Low-noise workflow contradictions become local and CI blockers |
+| v0.33.0 | AI-Readable API Foundation       | Done    | Structured page, island, head, route, and render intent APIs   |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Current | Workflow state, cells, evidence ledger, allowed-action report  |
+| v0.35.0 | AutoFlow2 Harness Gate           | Next    | Low-noise workflow contradictions become local and CI blockers |
 | v0.36.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes    |
 | v0.37.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence  |
 | v0.38.0 | Public Surface Reset             | Planned | Final package/product surface reset before the v1 RC           |
@@ -101,10 +103,11 @@ gate before rendering, server, data, and UI product expansion resumes.
 | Application API      | v0.31.0 | `definePage`, `defineIsland`, `/vite` config split    |
 | App lifecycle        | v0.32.0 | load context, route meta, redirect, not-found, error  |
 | AI-Readable API      | v0.33.0 | Object-form pages, island config, head trust boundary |
+| AutoFlow2 Sidecar    | v0.34.0 | Advisory workflow kernel: JSON + summary reports      |
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.33.0** under `@openelement/*` for this
+All 19 packages are aligned to **v0.34.0** under `@openelement/*` for this
 release. Release proof includes local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
 

@@ -75,10 +75,10 @@ is necessary.
 | ------- | -------------------------------- | --------------------------------------------------------------------- | ------- |
 | v0.30.x | Contract cleanup                 | One renderer model, one metadata boundary, openElement rename         | Done    |
 | v0.31.0 | JSX-first Application API        | Make page/island authoring the default DX                             | Done    |
-| v0.32.0 | App Lifecycle Contract           | Define page, route, layout, load, error, redirect, and context flow   | Current |
-| v0.33.0 | AI-Readable API Foundation       | Make app/page/island/build intent explicit and machine-readable       | Next    |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Add workflow state, cells, evidence ledger, and allowed-action report | Planned |
-| v0.35.0 | AutoFlow2 Harness Gate           | Turn low-noise AutoFlow checks into CI blockers                       | Planned |
+| v0.32.0 | App Lifecycle Contract           | Define page, route, layout, load, error, redirect, and context flow   | Done    |
+| v0.33.0 | AI-Readable API Foundation       | Make app/page/island/build intent explicit and machine-readable       | Done    |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Add workflow state, cells, evidence ledger, and allowed-action report | Current |
+| v0.35.0 | AutoFlow2 Harness Gate           | Turn low-noise AutoFlow checks into CI blockers                       | Next    |
 | v0.36.0 | Rendering Runtime and Deployment | Resume SSR, ISR, streaming, cache, and deploy work under evidence     | Planned |
 | v0.37.0 | Server/Data/UI Product Closure   | Complete server, data, UI, starter, Hub, and pruning decisions        | Planned |
 | v0.38.0 | Public Surface Reset             | Package/product surface reset before the v1 release candidate         | Planned |

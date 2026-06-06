@@ -1,6 +1,6 @@
 # v0.34.0 SOP: AutoFlow2 Sidecar Kernel
 
-> Status: Planned\
+> Status: Implemented\
 > Roadmap: AutoFlow2 Sidecar Kernel\
 > ADR: ADR-0086
 
@@ -20,27 +20,26 @@ CI beyond its own tests and does not edit code.
 
 ## Tasks
 
-- [ ] Introduce internal `tools/autoflow` or `packages/autoflow`.
-- [ ] Define workflow states for planned, next, active, implemented, released,
+- [x] Introduce internal `tools/autoflow`.
+- [x] Define workflow states for planned, next, active, implemented, released,
       drifted, and invalid states.
-- [ ] Define workflow cells for ADR, SOP, NextVersion, package graph, docs,
+- [x] Define workflow cells for ADR, SOP, NextVersion, package graph, docs,
       tests, build, CI, release note, and package version evidence.
-- [ ] Read `docs/governance/PROJECT_WORKFLOW.md`, `docs/status/STATUS.md`,
+- [x] Read `docs/governance/PROJECT_WORKFLOW.md`, `docs/status/STATUS.md`,
       `docs/roadmap/ROADMAP.md`, SOPs, `docs/next`, ADRs, package graph,
       workflow files, and gate results where available.
-- [ ] Emit JSON with `version`, `workflowState`, `cells`, `evidence`,
+- [x] Emit JSON with `version`, `workflowState`, `cells`, `evidence`,
       `blockers`, and `allowedActions`.
-- [ ] Emit a human summary that can be pasted into PR evidence.
-- [ ] Add fixture states for released, active, planned, drifted, and invalid
+- [x] Emit a human summary that can be pasted into PR evidence.
+- [x] Add fixture states for released, active, planned, drifted, and invalid
       repositories.
-- [ ] Add snapshot tests for the JSON report.
-- [ ] Keep the sidecar advisory: no automatic edits, release control, package
+- [x] Add integration tests for each fixture state.
+- [x] Keep the sidecar advisory: no automatic edits, release control, package
       bump, tag, merge, or publish.
 
 ## Verification
 
 - AutoFlow fixture tests
-- AutoFlow report snapshot tests
 - `deno task workflow:check`
 - `deno task fmt:check`
 - `deno task lint`

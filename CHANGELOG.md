@@ -1,3 +1,35 @@
+## v0.34.0 - AutoFlow2 Sidecar Kernel (2026-06-06)
+
+### AutoFlow2 Sidecar
+
+- Added `tools/autoflow/` — an internal read-only workflow kernel.
+- State machine with 5 workflow states: `planned`, `next`, `active`,
+  `implemented`, `released`, plus `drifted` and `invalid`.
+- 6 readers parse `STATUS.md`, SOP, NextVersion, ROADMAP, package graph, and ADRs
+  into structured evidence.
+- Reporter outputs JSON (`--json`) or Markdown summary for PR evidence.
+- 9 evidence cells report on ADR, SOP, NextVersion, package graph, status,
+  roadmap, workflow, docs, and release status.
+
+### CLI
+
+- `deno task autoflow:report` — runs the sidecar against the current repository.
+- Advisory only: does not block CI, does not edit code, does not access network.
+- Zero dependency on `packages/` — pure Deno stdlib with `--allow-read` only.
+
+### Testing
+
+- 35 unit + integration tests covering state machine, all 5 readers, reporter,
+  and 5 fixture repositories (released, active, planned, drifted, invalid).
+
+### Workflow and Docs
+
+- Added `docs/next/v0.34.0/` execution package.
+- Updated STATUS, SOP, Roadmap for v0.34.0.
+- Bumped all 19 packages and internal JSR ranges to `0.34.0`.
+- Updated `workflow:check` active version to v0.34.0.
+
+---
 ## v0.33.0 - AI-Readable API Foundation (2026-06-06)
 
 ### Page API: Strict Canonical Descriptor
