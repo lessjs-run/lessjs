@@ -43,14 +43,14 @@ const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@openelement\/adapter-vite\/([^/]+)\//);
   if (match) return match[1];
-  // Try to read from workspace deno.json
+  // Read from own deno.json
   try {
-    const denoJson = JSON.parse(Deno.readTextFileSync(
-      new URL('../../../deno.json', import.meta.url),
-    ));
-    return denoJson.version || 'unknown';
+    const denoJson = JSON.parse(
+      Deno.readTextFileSync(new URL('../deno.json', import.meta.url)),
+    );
+    return denoJson.version || '0.35.1';
   } catch {
-    throw new Error('Unable to determine @openelement/adapter-vite version');
+    return '0.35.1';
   }
 }
 
