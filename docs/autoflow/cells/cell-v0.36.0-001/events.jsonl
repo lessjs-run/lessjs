@@ -1,0 +1,7 @@
+{"type":"harness-started","timestamp":"2026-06-06T13:44:41.504Z","cellId":"cell-v0.36.0-001","payload":{}}
+{"type":"branch-created","timestamp":"2026-06-06T13:47:06.032Z","cellId":"cell-v0.36.0-001","payload":{"branchName":"autoflow/cell-v0.36.0-001"}}
+{"type":"branch-created","timestamp":"2026-06-06T13:48:35.305Z","cellId":"cell-v0.36.0-001","payload":{"branchName":"autoflow/cell-v0.36.0-001"}}
+{"type":"harness-started","timestamp":"2026-06-06T13:48:35.305Z","cellId":"cell-v0.36.0-001","payload":{}}
+{"type":"code-committed","timestamp":"2026-06-06T13:48:35.306Z","cellId":"cell-v0.36.0-001","payload":{"commitSha":"testgen-1780753715306"}}
+{"type":"code-committed","timestamp":"2026-06-06T13:48:35.308Z","cellId":"cell-v0.36.0-001","payload":{"commitSha":"impl-1780753715308"}}
+{"type":"harness-passed","timestamp":"2026-06-06T13:48:35.310Z","cellId":"cell-v0.36.0-001","payload":{"results":[{"gate":"review","passed":true,"durationMs":0,"timestamp":"2026-06-06T13:48:35.310Z"}]}}

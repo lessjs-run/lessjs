@@ -1,7 +1,8 @@
 #!/bin/sh
 #
 # openElement pre-commit hook
-# Runs formatting, linting, and type checking before allowing a commit.
+# Runs formatting, linting, type checking, and autoflow invariant check
+# before allowing a commit.
 # Install: deno task hooks:install
 # Uninstall: deno task hooks:uninstall
 #
@@ -23,4 +24,14 @@ deno check packages/core/src/index.ts \
   packages/signals/src/index.ts \
   packages/create/cli.ts
 
+echo ""
+echo "Running autoflow:check (governance invariants)..."
+deno run --allow-read tools/autoflow/mod-check.ts || {
+  echo ""
+  echo "❌ autoflow:check failed. Fix the violations below before committing."
+  echo "   Run 'deno task autoflow:report' to see current state."
+  exit 1
+}
+
+echo ""
 echo "All pre-commit checks passed."

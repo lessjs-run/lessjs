@@ -1,6 +1,6 @@
 {
   "name": "@openelement/content",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "exports": {
     ".": "./src/index.ts",
     "./blog-data": "./src/blog/blog-data.ts",

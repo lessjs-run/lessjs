@@ -160,7 +160,15 @@
     "clean": "rm -rf packages/*/dist www/dist",
     "hooks:install": "git config core.hooksPath .githooks",
     "hooks:uninstall": "git config core.hooksPath",
-    "autoflow:report": "deno run --allow-read tools/autoflow/mod.ts"
+    "autoflow:report": "deno run --allow-read tools/autoflow/mod.ts",
+    "autoflow:report:json": "deno run --allow-read tools/autoflow/mod.ts --json",
+    "autoflow:check": "deno run --allow-read tools/autoflow/mod-check.ts",
+    "autoflow:check:strict": "deno run --allow-read tools/autoflow/mod-check.ts --strict",
+    "autoflow:health": "deno run --allow-read tools/autoflow/mod-health.ts",
+    "autoflow:health:json": "deno run --allow-read tools/autoflow/mod-health.ts --json",
+    "autoflow:evolve": "deno run --allow-read --allow-write --allow-run tools/autoflow/mod-evolve.ts",
+    "autoflow:evolve:dry": "deno run --allow-read tools/autoflow/mod-evolve.ts --dry-run",
+    "autoflow:test": "deno test --allow-read --allow-write --allow-run tools/autoflow/__tests__/"
   },
   "fmt": {
     "useTabs": false,

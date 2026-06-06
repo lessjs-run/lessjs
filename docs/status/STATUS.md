@@ -3,11 +3,60 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.34.0/`.
+package: `docs/next/v0.35.0/`.
 
-## Current Version Line: v0.34.0 (AutoFlow2 Sidecar Kernel)
+## Current Version Line: v0.35.0 (AutoFlow2 Mechanical Autonomy)
 
-v0.34.0 Status: **IMPLEMENTED AND RELEASED.**
+v0.35.0 delivers all three layers of AutoFlow2 mechanical autonomy in one version:
+**Harness Gate** (CI-blocking invariant verification) + **Cell Execution**
+(TDD-driven autonomous repair with AI cross-review) + **Evolution Loop**
+(multi-version metrics and continuous MAPE-K).
+
+v0.35.0 Status: **IMPLEMENTED.**
+Governing docs:
+
+- `docs/adr/ADR-0087-tdd-cross-review-cell-execution.md`
+- `docs/adr/ADR-0088-autoflow-first-strategy.md`
+- `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
+- `docs/sop/v0.35.0/README.md`
+- `docs/next/v0.35.0/`
+- `docs/roadmap/ROADMAP.md`
+- `docs/governance/BRANCHING.md`
+
+### Layer 1 — Harness Gate
+
+- `cell-state-machine.ts` — 12-state Harel hierarchical model, 3 orthogonal dimensions, broadcast events.
+- `invariant-checker.ts` — 8 Pnueli temporal invariants (5 error + 3 warning).
+- `evidence-ledger.ts` + `event-sourcing.ts` — Durable Execution event sourcing, Kahn communication channel.
+- `harness-runner.ts` — unified 12-gate runner.
+- `mod-check.ts` — `deno task autoflow:check` CLI (exit 0/1).
+- `.githooks/pre-commit` — autoflow:check enforced on every commit.
+- `.github/workflows/lint.yml` — autoflow:check in CI.
+
+### Layer 2 — Cell Execution
+
+- `executor.ts` — three-phase engine (testgen → implement → review) with pluggable CodeGenerator.
+- `git-ops.ts` — local git operations (Kahn isolation: one branch per cell).
+- `dag-builder.ts` — evidence → DAG with conflict detection.
+- `scheduler.ts` — wave-based parallel execution + cascade cancellation.
+- `mod-evolve.ts` — `deno task autoflow:evolve` CLI (--dry-run and full modes).
+
+### Layer 3 — Evolution Loop
+
+- `metrics.ts` — AlphaEvolve fitness + SWE-bench 12-dimensional quality metrics.
+- `evolution-tracker.ts` — multi-cycle trend tracking (Lehman complexity C3).
+- `mod-health.ts` — `deno task autoflow:health` agent diagnostic.
+- `.workbuddy/skills/autoflow/SKILL.md` — AI agent project driver.
+
+### Research Basis
+
+- 15 internal papers (C1-C6, 01-09, A1).
+- 12 external papers (EMNLP 2024, ICSE 2025, ACM TOSEM 2025, IEEE 2024).
+- Full research library at `docs/references/autoworkflow/`.
+
+v0.34.0 Status: **IMPLEMENTED AND RELEASED.** The line introduced an internal
+read-only workflow kernel that reads repository governance documents and emits
+structured reports. Now superseded by v0.35.0's CI-blocking gate.
 Governing docs:
 
 - `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
@@ -63,18 +112,20 @@ v0.22.x and earlier: **HISTORICAL.**
 
 ## Next Targets
 
-| Version | Theme                            | Status  | Purpose                                                        |
-| ------- | -------------------------------- | ------- | -------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX      |
-| v0.32.0 | App Lifecycle Contract           | Done    | Route, load, context, layout, error, redirect lifecycle        |
-| v0.33.0 | AI-Readable API Foundation       | Done    | Structured page, island, head, route, and render intent APIs   |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Current | Workflow state, cells, evidence ledger, allowed-action report  |
-| v0.35.0 | AutoFlow2 Harness Gate           | Next    | Low-noise workflow contradictions become local and CI blockers |
-| v0.36.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes    |
-| v0.37.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence  |
-| v0.38.0 | Public Surface Reset             | Planned | Final package/product surface reset before the v1 RC           |
-| v0.39.0 | v1 Release Candidate             | Planned | Final API, docs, starter, deploy, consumer, and publish gates  |
-| v1.0.0  | Stable Engine + AutoFlow Default | Vision  | API freeze with workflow evidence as part of default gates     |
+| Version | Theme                            | Status  | Purpose                                                                                        |
+| ------- | -------------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX                                      |
+| v0.32.0 | App Lifecycle Contract           | Done    | Route, load, context, layout, error, redirect lifecycle                                        |
+| v0.33.0 | AI-Readable API Foundation       | Done    | Structured page, island, head, route, and render intent APIs                                   |
+| v0.34.0 | AutoFlow2 Sidecar Kernel         | Current | Workflow state, cells, evidence ledger, allowed-action report                                  |
+| v0.35.0 | AutoFlow2 Harness Gate           | Next    | Low-noise workflow contradictions become local and CI blockers                                 |
+| v0.36.0 | AutoFlow2 Cell Execution + TDD   | Planned | Cell 执行引擎、TDD 三阶段 (testgen→implement→review)、DAG 调度、Git 自动修复、evolve --dry-run |
+| v0.37.0 | AutoFlow2 闭环 + 多版本演化      | Planned | 正式启用 autoflow:evolve、跨版本度量、演化追踪、版本自发推进                                   |
+| v0.38.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes                                    |
+| v0.39.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence                                  |
+| v0.40.0 | Public Surface Reset             | Planned | Final package/product surface reset before the v1 RC                                           |
+| v0.41.0 | v1 Release Candidate             | Planned | Final API, docs, starter, deploy, consumer, and publish gates                                  |
+| v1.0.0  | Stable Engine + AutoFlow Default | Vision  | API freeze with workflow evidence as part of default gates                                     |
 
 ## Current Product Center
 
@@ -83,9 +134,12 @@ v0.22.x and earlier: **HISTORICAL.**
 > routes, build-time MDX, and a 19-package `@openelement/*` monorepo.
 
 ADR-0083 keeps the v0.32 physical package graph in place while the product line
-is proven. ADR-0086 supersedes the sequencing parts of ADR-0084: v0.33-v0.35 now
-build AI-readable APIs, AutoFlow2 sidecar reporting, and the AutoFlow2 harness
-gate before rendering, server, data, and UI product expansion resumes.
+is proven. ADR-0086 supersedes the sequencing parts of ADR-0084. ADR-0088
+supersedes ADR-0086's sequencing: v0.35-v0.37 are dedicated to AutoFlow2
+(Harness Gate → Cell Execution → Evolution Loop) before rendering, server, data,
+and UI product expansion resumes at v0.38. Rationale: mechanical autonomy must
+be proven before it can govern product development. Research basis: 15 internal
+papers (C1-C6, 01-09, A1) + 12 external papers (EMNLP, ICSE, TOSEM, IEEE).
 
 ## Current Rendering Mode
 
@@ -107,7 +161,7 @@ gate before rendering, server, data, and UI product expansion resumes.
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.34.0** under `@openelement/*` for this
+All 19 packages are aligned to **v0.36.0** under `@openelement/*` for this
 release. Release proof includes local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
 

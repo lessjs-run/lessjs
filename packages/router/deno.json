@@ -1,6 +1,6 @@
 {
   "name": "@openelement/router",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "exports": {
     ".": "./src/mod.ts",
     "./define-routes": "./src/define-routes.ts",
