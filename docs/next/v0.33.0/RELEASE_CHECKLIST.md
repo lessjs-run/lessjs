@@ -18,9 +18,9 @@
 
 ## Remote Closure
 
-- [ ] Push `dev`.
-- [ ] Wait for all `dev` CI jobs.
-- [ ] Merge `dev` into `main`.
-- [ ] Wait for all `main` CI jobs.
-- [ ] Create and push `v0.33.0` tag.
-- [ ] Publish GitHub release note.
+- [x] Push `dev`.
+- [x] Wait for all `dev` CI jobs.
+- [x] Merge `dev` into `main`.
+- [x] Wait for all `main` CI jobs.
+- [x] Create and push `v0.33.0` tag.
+- [x] Publish GitHub release note.
