@@ -189,3 +189,32 @@ export function isConfigStandard(
     mismatches,
   };
 }
+
+/**
+ * Validate all workspace package configs against the standard template.
+ * Returns list of non-compliant packages with their mismatches.
+ */
+export async function validateAllPackageConfigs(
+  packagesDir: string,
+): Promise<{ packageName: string; mismatches: string[] }[]> {
+  const failures: { packageName: string; mismatches: string[] }[] = [];
+
+  for await (const entry of Deno.readDir(packagesDir)) {
+    if (!entry.isDirectory) continue;
+
+    const denoJsonPath = `${packagesDir}/${entry.name}/deno.json`;
+    try {
+      const text = await Deno.readTextFile(denoJsonPath);
+      const config = JSON.parse(text) as PackageConfig;
+      const result = isConfigStandard(config.name, config);
+      if (!result.valid) {
+        failures.push({ packageName: config.name, mismatches: result.mismatches });
+      }
+    } catch {
+      // Skip packages without deno.json or unreadable configs
+      continue;
+    }
+  }
+
+  return failures;
+}

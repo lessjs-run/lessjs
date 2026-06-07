@@ -137,6 +137,16 @@ jobs:
           deno-version: '2'
       - run: deno task docs:check-strategy
 
+  config-validate:
+    name: 'verify:configs'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - run: deno task verify:configs
+
   test-e2e:
     name: 'test:e2e'
     runs-on: ubuntu-latest
@@ -170,6 +180,7 @@ jobs:
         hub-validate,
         hub-check-index,
         docs-check,
+        config-validate,
         test-e2e,
       ]
     if: always()
@@ -201,6 +212,7 @@ jobs:
             check "${{ needs.hub-validate.result }}"     "hub:validate --strict"
             check "${{ needs.hub-check-index.result }}"  "hub:check-index"
             check "${{ needs.docs-check.result }}"       "docs:check-strategy"
+            check "${{ needs.config-validate.result }}"  "verify:configs"
             check "${{ needs.test-e2e.result }}"         "test:e2e"
             echo ""
             if [ "$ALL_PASS" = "true" ]; then
