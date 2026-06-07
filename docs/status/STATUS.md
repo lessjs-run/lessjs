@@ -3,15 +3,24 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.35.6/`.
+package: `docs/next/v0.36.0/`.
 
-## Current Version Line: v0.35.6 (AutoFlow2 Full-Auto Evolution)
+## Current Version Line: v0.36.0 (Rendering Runtime, Deployment & Deferred Refactors)
 
-v0.35.6 completes the AutoFlow2 mechanical autonomy stack by making L2 Cell
-Execution and L3 Evolution Loop production-ready, and executes 8 improvement
-cells through the AutoFlow pipeline (dog-fooding).
+v0.36.0 resumes product work under AutoFlow2 governance: error boundary
+enhancement, cache adapters, adapter-vite decomposition, SSG parallel
+rendering, cross-browser E2E, and AutoFlow autonomous execution proof.
 
-v0.35.6 Status: **IN PROGRESS.**
+v0.36.0 Status: **IN PROGRESS.**
+Governing docs:
+
+- `docs/sop/v0.36.0/README.md`
+- `docs/next/v0.36.0/`
+- `docs/roadmap/ROADMAP.md`
+- `docs/governance/BRANCHING.md`
+
+v0.35.6 Status: **IMPLEMENTED.** AutoFlow2 L2/L3 completion + 8 improvement
+cells. See `docs/sop/v0.35.6/` for details.
 Governing docs:
 
 - `docs/adr/ADR-0088-autoflow-first-strategy.md`

@@ -1,3 +1,41 @@
+## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors (2026-06-08)
+
+### New Package: @openelement/ssg
+
+- Extracted SSG rendering API from adapter-vite (ADR-0090)
+- `renderSequential()` — baseline sequential page rendering
+- `renderParallel()` — concurrency-limited parallel rendering
+- `SsgPageInput` / `SsgPageOutput` / `ParallelRenderResult` types
+
+### Error Boundary Enhancement
+
+- `ErrorBoundary.retry()` — configurable retry (default max 3)
+- `ErrorBoundary.reset()` — full reset including retry count
+- Default `onError()` renders degraded fallback UI with retry button
+- No longer abstract — provides sensible default error UI
+
+### Cache Adapters
+
+- `FileIsrCache` — file-system backed ISR cache (survives restarts)
+- Exported from `@openelement/core`
+
+### Documentation
+
+- `docs/guide/signals.md` — Signals system guide (signal/computed/effect/effectScope)
+- `docs/guide/deployment.md` — Deployment recipes (Netlify, Vercel, GitHub Pages, Deno Deploy, Cloudflare, Docker)
+- `docs/adr/ADR-0090-ssg-package-extraction.md` — SSG decomposition decision
+- www/ version sync → v0.36.0
+
+### Cross-browser E2E
+
+- Playwright config extended with Firefox + WebKit (Safari) projects
+
+### Version
+
+- 20 packages aligned to v0.36.0 (19 existing + new @openelement/ssg)
+
+---
+
 ## v0.35.6 - AutoFlow2 Full-Auto Evolution (2026-06-07)
 
 ### L2 Cell Execution — Completion

@@ -49,7 +49,7 @@ export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export type { OpenElementApiContext } from './types.js';
-export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
+export { createIsrCacheKey, FileIsrCache, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
 export type {
   IsrCache,
   IsrCacheEntry,

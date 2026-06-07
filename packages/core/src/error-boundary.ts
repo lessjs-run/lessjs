@@ -5,6 +5,8 @@
  * UI instead of a bare tag or broken DOM. Errors bubble up through
  * the parent tree if no boundary catches them.
  *
+ * v0.36.0: Added retry mechanism and degraded rendering fallback.
+ *
  * Usage:
  * ```ts
  * class MyBoundary extends ErrorBoundary {
@@ -24,6 +26,10 @@ import { ErrorCode, type ErrorSeverity, OpenElementError } from './errors.js';
 
 export abstract class ErrorBoundary extends DsdElement {
   private _error: OpenElementError | null = null;
+  private _retryCount = 0;
+
+  /** Maximum number of retry attempts before giving up. Default: 3. */
+  protected maxRetries = 3;
 
   get hasError(): boolean {
     return this._error !== null;
@@ -33,17 +39,72 @@ export abstract class ErrorBoundary extends DsdElement {
     return this._error;
   }
 
+  get retryCount(): number {
+    return this._retryCount;
+  }
+
   /**
    * Render fallback UI when a child component's render() throws.
-   * Subclasses MUST override this.
+   * Subclasses SHOULD override this for custom error UI.
+   *
+   * Default implementation renders a degraded static fallback.
    */
-  abstract onError(error: OpenElementError): VNode;
+  onError(error: OpenElementError): VNode {
+    return {
+      tag: 'div',
+      props: { class: 'error-boundary-fallback', role: 'alert' },
+      children: [
+        {
+          tag: 'p',
+          props: {},
+          children: [`Something went wrong: ${error.message}`],
+        },
+        this._retryCount < this.maxRetries
+          ? {
+            tag: 'button',
+            props: {
+              onclick: () => this.retry(),
+            },
+            children: [`Retry (${this._retryCount}/${this.maxRetries})`],
+          }
+          : {
+            tag: 'p',
+            props: { class: 'error-boundary-exhausted' },
+            children: ['Max retries reached. Please reload the page.'],
+          },
+      ],
+    };
+  }
+
+  /**
+   * Retry rendering after an error. Resets error state and increments
+   * retry counter. If maxRetries is exceeded, shows exhausted state.
+   */
+  retry(): void {
+    if (this._retryCount >= this.maxRetries) {
+      return; // exhausted
+    }
+    this._retryCount++;
+    this._error = null;
+    this.update(); // trigger re-render
+  }
+
+  /**
+   * Fully reset the error boundary, including retry count.
+   * Call this when the underlying issue has been resolved externally.
+   */
+  reset(): void {
+    this._error = null;
+    this._retryCount = 0;
+    this.update();
+  }
 
   /**
    * Capture and reset error state on re-render.
    */
   override connectedCallback(): void {
     this._error = null;
+    this._retryCount = 0;
     super.connectedCallback();
   }
 
@@ -52,8 +113,7 @@ export abstract class ErrorBoundary extends DsdElement {
    */
   override render(): VNode | null {
     if (this._error) {
-      const result = this.onError(this._error);
-      return result;
+      return this.onError(this._error);
     }
     return super.render();
   }
@@ -62,7 +122,7 @@ export abstract class ErrorBoundary extends DsdElement {
    * Call this from parent to catch a child's error.
    */
   catchError(error: Error): void {
-    const lessError = error instanceof OpenElementError ? error : new OpenElementError(
+    const openElementError = error instanceof OpenElementError ? error : new OpenElementError(
       error.message,
       ErrorCode.BOUNDARY_CAUGHT,
       'error' as ErrorSeverity,
@@ -70,7 +130,7 @@ export abstract class ErrorBoundary extends DsdElement {
       true,
       error,
     );
-    this._error = lessError;
+    this._error = openElementError;
     // Trigger re-render with error state
     this.update();
   }

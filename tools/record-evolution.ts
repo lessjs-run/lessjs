@@ -10,11 +10,11 @@ const ledger = new EvidenceLedger(`${root}/docs/autoflow/cells`);
 const tracker = new EvolutionTracker(root, ledger);
 
 // Start the cycle
-const start = tracker.startCycle('v0.35.6', root);
+const start = tracker.startCycle('v0.36.0', root);
 console.log(`Cycle started: ${start.version}`);
 
 // Complete the cycle (collects metrics from ledger)
-const complete = tracker.completeCycle('v0.35.6');
+const complete = tracker.completeCycle('v0.36.0');
 if (complete) {
   console.log(`Cycle completed: ${complete.version}`);
   console.log(`Metrics:`);

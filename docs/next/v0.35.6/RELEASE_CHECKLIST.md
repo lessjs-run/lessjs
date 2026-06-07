@@ -37,6 +37,7 @@ deno task test:e2e             # [ ] E2E tests pass
 - [ ] All 19 packages aligned to v0.35.6 (via `tools/bump-version.ts`).
 - [ ] Root `deno.json` imports updated to v0.35.6.
 - [ ] CHANGELOG.md entry written.
+- [ ] Root README.md version references updated.
 - [ ] Publish dry-run passes.
 
 ## Remote Closure

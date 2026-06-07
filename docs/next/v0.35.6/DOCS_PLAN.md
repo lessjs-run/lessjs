@@ -9,6 +9,8 @@
 | `docs/sop/v0.35.6/README.md` | Status → Active, tasks checked off                      |
 | `docs/next/v0.35.6/*`        | All 8 required files present, tasks tracked             |
 | `CHANGELOG.md`               | Add v0.35.6 entry                                       |
+| `README.md`                  | Version badge, Packages section, Current Line           |
+| `README.zh.md`               | Same changes (Chinese translation)                      |
 
 ## New Docs
 

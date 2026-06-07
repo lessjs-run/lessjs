@@ -1,64 +1,75 @@
-# v0.36.0 SOP: Rendering Runtime and Deployment
+# v0.36.0 SOP: Rendering Runtime, Deployment & Deferred Refactors
 
-> Status: Planned\
-> Roadmap: Rendering Runtime and Deployment\
-> ADR: ADR-0086
+> Status: Next\
+> Roadmap: Rendering Runtime, Deployment & Deferred Refactors\
+> ADR: ADR-0088, ADR-0089, ADR-0090\
+> NextVersion: `docs/next/v0.36.0/`
 
 ## Goal
 
-Turn the v0.32 lifecycle and v0.33 AI-readable render intent into explicit
-rendering, cache, streaming, and deployment behavior under AutoFlow2 evidence.
+Resume product work under AutoFlow2 governance. Deliver rendering runtime
+enhancements, deployment recipes, deferred refactors from v0.35.6, and prove
+AutoFlow autonomous cell execution with real firstPassRate metrics.
 
 ## Entry Criteria
 
-- v0.32.0 lifecycle semantics are stable.
-- v0.33.0 render intent and page metadata are explicit.
-- v0.35.0 AutoFlow2 harness gate is implemented and low-noise.
-- Existing ISR primitives and DSD streaming behavior are audited before
-  expansion.
-- The rendering work declares cells, expected evidence, and allowed transitions
-  before implementation.
+- v0.35.6 shipped and all 19 packages published to JSR.
+- AutoFlow L2/L3 framework production-ready (AgentCodeGenerator + MetricsCollector).
+- `deno task autoflow:check` passes.
+- All 12 release gates green on `dev`.
 
-## Tasks
+## Part A — Signals & Documentation (low risk)
 
-- [ ] Define runtime rendering modes for static SSG, request-time SSR, ISR, and
-      streaming DSD.
-- [ ] Normalize `revalidate` and freshness values into one internal cache
-      representation.
-- [ ] Audit current `IsrCache`, `MemoryIsrCache`, and manifest behavior.
-- [ ] Add cache adapter boundary for memory, filesystem, Deno KV, and
-      Cloudflare KV.
-- [ ] Prove stale/fresh ISR behavior with tests.
-- [ ] Prove streaming chunk order, shell timing, and error fallback.
-- [ ] Add deploy recipes for static hosts, Deno Deploy, Cloudflare Workers, and
-      Node-compatible hosts.
-- [ ] Update create templates only for rendering modes with production proof.
-- [ ] Update www rendering and deployment docs.
-- [ ] Include AutoFlow evidence report in release artifacts.
+- [ ] Cell 001: Signals system documentation (`docs/guide/signals.md`).
+- [ ] Cell 002: Deploy recipes (`docs/guide/deployment.md` update for Deno Deploy, Cloudflare, Docker).
+- [ ] Cell 003: www/ version sync — update `www/app/data/version.ts` and roadmap page.
+
+## Part B — Error Boundary Enhancement (medium risk)
+
+- [ ] Cell 004: ErrorBoundary retry mechanism — add `retry()` method with configurable max retries.
+- [ ] Cell 005: Degraded rendering fallback — `onRenderError()` returns static HTML when signals fail.
+
+## Part C — Cache Adapters (low risk)
+
+- [ ] Cell 006: File-system ISR cache adapter (`FileIsrCache` implementing `IsrCache` interface).
+
+## Part D — Adapter-vite Decomposition (high risk, ADR required)
+
+- [ ] Cell 007: Create `@openelement/ssg` package skeleton.
+- [ ] Cell 008: Move SSG files from adapter-vite to ssg package.
+- [ ] Cell 009: Update adapter-vite to depend on @openelement/ssg.
+
+## Part E — SSG Parallel Rendering (medium risk, depends on D)
+
+- [ ] Cell 010: Worker-based parallel SSG rendering in `@openelement/ssg`.
+
+## Part F — Cross-browser E2E (medium risk)
+
+- [ ] Cell 011: Add Firefox and Safari to Playwright E2E config.
+
+## Part G — AutoFlow Autonomous Execution Proof
+
+- [ ] Cell 012: Run `autoflow:evolve` to detect v0.36.0 drift and execute at least 1 cell autonomously.
+- [ ] Cell 013: Collect real firstPassRate and autonomyScore metrics.
 
 ## Verification
 
-- targeted ISR/cache tests
-- targeted streaming DSD tests
-- deployment recipe fixture builds
-- `deno task autoflow:check`
-- `deno task workflow:check`
-- `deno task test`
-- `deno task build`
-- `deno task test:e2e`
+- [ ] All cells pass harness gates.
+- [ ] `deno task autoflow:check` exits 0.
+- [ ] `deno task autoflow:health` reports non-zero metrics.
+- [ ] All 19 packages aligned to v0.36.0.
+- [ ] www/ version references updated.
+- [ ] Root README.md and README.zh.md updated.
 
 ## Non-Goals
 
-- No server mutation API.
-- No ORM or data recipe work.
-- No UI Shell redesign.
-- No package surface reset.
-- No AutoFlow release control.
+- No built-in ORM, auth, or database integration.
+- No React-like runtime.
+- No autonomous ADR writing or API design decisions.
 
 ## Exit Criteria
 
-- At least one static, one SSR, one ISR, and one streaming fixture pass.
-- Deployment docs match runtime support rather than aspirational targets.
-- AutoFlow evidence agrees with implementation, docs, tests, and release
-  claims.
-- Rendering runtime behavior is usable by v0.37 server/data/UI product closure.
+- `autoflow:evolve` successfully executes at least 1 cell through the full pipeline.
+- EvolutionMetrics has non-zero firstPassRate.
+- All 12 release gates pass.
+- www/ and root README reflect v0.36.0.

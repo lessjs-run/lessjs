@@ -2,8 +2,8 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.32.0 released,
-v0.33.0 in development).**
+**JSX-first, DSD-first Web Components application framework (v0.36.0 released,
+v0.37.0 in development).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
 prove the package graph before publishing.
@@ -56,7 +56,7 @@ export default defineIsland(
 );
 ```
 
-The v0.33.0 development contract is intentionally layered:
+The current application contract (v0.33.0+, stable through v0.35.6) is intentionally layered:
 
 - application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
 - build configuration: `openElement()` from `@openelement/app/vite`;
@@ -69,9 +69,9 @@ The v0.33.0 development contract is intentionally layered:
 
 ## Packages
 
-All 19 packages are currently released together at **v0.32.0** under
+All 20 packages are currently released together at **v0.36.0** under
 [`@openelement`](https://jsr.io/@openelement). The active development target is
-the v0.33.0 strict AI-readable API reset.
+v0.37.0 (Server/Data/UI Product Closure).
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -95,16 +95,18 @@ the v0.33.0 strict AI-readable API reset.
 
 ## Current Line
 
-v0.33.0 development resets the application authoring surface to a strict canonical
-descriptor. Pages use `definePage({ route, head, renderIntent, load, render,
-error })`, islands use `defineIslandConfig({ ssr, dsd, hydrate })` for static
-metadata, and the old v0.31-v0.32 shortcuts are intentionally removed.
+v0.36.0 delivers the `@openelement/ssg` package (ADR-0090), error boundary
+enhancement with retry/degraded rendering, `FileIsrCache` adapter, signals
+system documentation, deployment recipes, and cross-browser E2E testing
+(Chromium + Firefox + WebKit).
 
-The next minors now focus on AI-readable API structure, AutoFlow2 evidence, and
-then rendering/server/data/UI product closure without reopening the cleaned
-v0.30 renderer contract. The v1.0 target is a stable engine with workflow
-evidence as part of the default release gate after the v0.31-v0.39 line is
-implementation-proven.
+v0.37.0 focuses on Server/Data/UI product closure: server-side rendering
+enhancements, data layer recipes, UI component library maturation, and
+Hub disposition.
+
+The v1.0 target is a stable engine with workflow evidence as part of the
+default release gate, after 3+ autonomous version cycles prove mechanical
+autonomy.
 
 ## Contributing
 
