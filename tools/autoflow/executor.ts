@@ -1,5 +1,5 @@
 /**
- * Cell Execution Engine — v0.36.0
+ * Cell Execution Engine — v0.35.6
  *
  * Three-phase execution per ADR-0087:
  *   .testgen   → generate test cases first (TDD, R1/R7)
@@ -8,8 +8,9 @@
  *
  * Each phase transition broadcasts a Harel event → Evidence Ledger.
  *
- * AI strategy (v0.36): modular CodeGenerator interface.
- *   - default: pass-through (returns input as-is for dry-run)
+ * AI strategy: modular CodeGenerator interface.
+ *   - AgentCodeGenerator (v0.35.6): file-system protocol with real gates
+ *   - DryRunGenerator: pass-through for dry-run mode
  *   - future: plug LLM via CodeAct (OpenHands, R2/R11/R12)
  */
 
@@ -66,11 +67,17 @@ export class CellExecutor {
   }
 
   /** Execute a single cell through the full lifecycle. */
-  async execute(initialState: CellState): Promise<CellState> {
+  async execute(
+    initialState: CellState,
+    targetFiles: string[] = [],
+  ): Promise<CellState> {
     let state = initialState;
 
     // planned → branched (auto)
-    this.broadcast(state.cellId, 'branch-created', { branchName: `autoflow/${state.cellId}` });
+    this.broadcast(state.cellId, 'branch-created', {
+      branchName: `autoflow/${state.cellId}`,
+      targetFiles,
+    });
     state = {
       ...state,
       lifecycle: 'branched' as const,
@@ -82,29 +89,32 @@ export class CellExecutor {
     state = { ...state, lifecycle: 'executing' as const };
 
     // Phase 1: Test generation
-    state = await this.phaseTestgen(state);
+    state = await this.phaseTestgen(state, targetFiles);
     if (state.lifecycle === 'failed:non-retriable') return state;
 
     // Phase 2: TDD loop (implement)
-    state = await this.phaseImplement(state);
+    state = await this.phaseImplement(state, targetFiles);
     if (state.lifecycle === 'failed:non-retriable') return state;
 
     // Phase 3: Cross-review
-    state = await this.phaseReview(state);
+    state = await this.phaseReview(state, targetFiles);
     return state;
   }
 
   /** .testgen: generate tests, commit to branch. */
-  private async phaseTestgen(state: CellState): Promise<CellState> {
+  private async phaseTestgen(
+    state: CellState,
+    targetFiles: string[],
+  ): Promise<CellState> {
     // Advance to harness:running
     const s: CellState = { ...state, lifecycle: 'harness:running' };
-    this.broadcast(s.cellId, 'harness-started', {});
+    this.broadcast(s.cellId, 'harness-started', { phase: 'testgen' });
 
     const req: CodeGenRequest = {
       cellId: s.cellId,
       cellType: s.cellType,
       description: `Cell ${s.cellId}: ${s.cellType} for ${s.versionCycle}`,
-      files: [],
+      files: targetFiles,
     };
 
     const result = await this.ai.generateTests(req);
@@ -116,6 +126,7 @@ export class CellExecutor {
           passed: false,
           durationMs: 0,
           timestamp: new Date().toISOString(),
+          output: result.output,
         }],
         retriable: false,
       });
@@ -124,20 +135,25 @@ export class CellExecutor {
 
     this.broadcast(s.cellId, 'code-committed', {
       commitSha: 'testgen-' + Date.now(),
+      filesWritten: Object.keys(result.files),
+      output: result.output,
     });
 
     return s;
   }
 
   /** .implement: TDD red-green loop. */
-  private async phaseImplement(state: CellState): Promise<CellState> {
+  private async phaseImplement(
+    state: CellState,
+    targetFiles: string[],
+  ): Promise<CellState> {
     for (let iteration = 1; iteration <= this.maxTddIterations; iteration++) {
       const req: CodeGenRequest = {
         cellId: state.cellId,
         cellType: state.cellType,
         description:
           `Implement fix for ${state.cellType} (iteration ${iteration}/${this.maxTddIterations})`,
-        files: [],
+        files: targetFiles,
       };
 
       const result = await this.ai.implementCode(req);
@@ -145,6 +161,9 @@ export class CellExecutor {
       if (result.success) {
         this.broadcast(state.cellId, 'code-committed', {
           commitSha: 'impl-' + Date.now(),
+          iteration,
+          filesWritten: Object.keys(result.files),
+          output: result.output,
         });
         return state;
       }
@@ -156,6 +175,7 @@ export class CellExecutor {
           passed: false,
           durationMs: 0,
           timestamp: new Date().toISOString(),
+          output: result.output,
         }],
         retriable: true,
       });
@@ -167,13 +187,16 @@ export class CellExecutor {
   }
 
   /** .review: multi-agent cross-review. */
-  private async phaseReview(state: CellState): Promise<CellState> {
+  private async phaseReview(
+    state: CellState,
+    targetFiles: string[],
+  ): Promise<CellState> {
     const req: CodeGenRequest = {
       cellId: state.cellId,
       cellType: state.cellType,
       description: `Review implementation for ${state.cellType}`,
-      files: [],
-      diff: 'mock-diff',
+      files: targetFiles,
+      diff: 'review-diff',
     };
 
     const result = await this.ai.reviewCode(req);
@@ -185,6 +208,7 @@ export class CellExecutor {
           passed: true,
           durationMs: 0,
           timestamp: new Date().toISOString(),
+          output: result.output,
         }],
       });
       return state;
@@ -197,6 +221,7 @@ export class CellExecutor {
         passed: false,
         durationMs: 0,
         timestamp: new Date().toISOString(),
+        output: result.output,
       }],
       retriable: true,
     });

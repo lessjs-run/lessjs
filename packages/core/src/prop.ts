@@ -414,16 +414,15 @@ export function normalizePropDecl(decl: unknown): NormalizedPropDecl {
 }
 
 export function registerStaticObservedAttributes(
-  ctor: { props?: Record<string, unknown> },
+  ctor: { props?: Record<string, unknown>; observedAttributes?: string[] },
   propsDef: Record<string, unknown>,
 ): void {
-  const c = ctor as unknown as { observedAttributes?: string[] };
-  if (!c.observedAttributes) {
-    c.observedAttributes = [];
+  if (!ctor.observedAttributes) {
+    ctor.observedAttributes = [];
   }
   for (const name of Object.keys(propsDef)) {
-    if (!c.observedAttributes.includes(name.toLowerCase())) {
-      c.observedAttributes.push(name.toLowerCase());
+    if (!ctor.observedAttributes.includes(name.toLowerCase())) {
+      ctor.observedAttributes.push(name.toLowerCase());
     }
   }
 }

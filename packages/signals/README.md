@@ -1,36 +1,34 @@
 # @openelement/signals
 
-TC39 Signals polyfill - 信号、计算属性、副作用、Island 生命周期绑定。
+Reactive signals system for openElement, built on alien-signals.
 
-## 安装
+`@openelement/signals` provides the reactive primitive layer used by the
+openElement rendering pipeline and island hydration system. It wraps
+[alien-signals](https://github.com/nicolo-ribaudo/alien-signals) with
+openElement-specific framework integration.
+
+## Install
 
 ```bash
 deno add jsr:@openelement/signals
 ```
 
-## 功能
+## Exports
 
-- **`signal()`**：可写信号，TC39 Signal Proposal polyfill
-- **`computed()`**：自动依赖追踪的计算属性
-- **`effect()`**：依赖变化自动重跑的副作用
-- **`islandEffect()`**：Island 生命周期绑定的 effect，disconnectedCallback 自动清理
-- **原生回退**：优先使用 `globalThis.Signal`，不可用时回退 polyfill
+| Path             | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| `.`              | Public signals API (signal, computed, effect)    |
+| `./framework`    | Framework-level integration (batch, signal host) |
+| `./alien-engine` | Low-level alien-signals engine access            |
 
-## 使用
+## Features
 
-```ts
-import { computed, effect, islandEffect, signal } from '@openelement/signals';
+- Fine-grained reactivity with automatic dependency tracking.
+- Computed signals with lazy evaluation.
+- Effect system for side effects with cleanup.
+- Zero-overhead batching for render cycles.
+- No framework lock-in — works with any Web Component.
 
-const count = signal(0);
-const doubled = computed(() => count.value * 2);
+## License
 
-effect(() => {
-  console.log(`Count: ${count.value}, Doubled: ${doubled.value}`);
-});
-
-count.value = 1; // 自动触发 effect
-```
-
-## 许可
-
-MIT License
+MIT

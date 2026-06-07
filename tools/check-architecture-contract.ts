@@ -95,16 +95,6 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
   },
   {
     file: 'packages/core/src/island.ts',
-    fragment: 'globalThis as unknown as',
-    reason: 'Feature detection for optional browser globals.',
-  },
-  {
-    file: 'packages/core/src/island.ts',
-    fragment: 'this as unknown as { __ssrPropsBound?: boolean }',
-    reason: 'Private marker injected on wrapped custom element instances.',
-  },
-  {
-    file: 'packages/core/src/island.ts',
     fragment: '} as unknown as typeof componentClass.prototype.connectedCallback',
     reason: 'Preserve original connectedCallback signature after wrapping.',
   },
@@ -117,11 +107,6 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     file: 'packages/core/src/prop.ts',
     fragment: 'instance as unknown as {',
     reason: 'Static prop runtime writes element attributes and properties.',
-  },
-  {
-    file: 'packages/core/src/prop.ts',
-    fragment: 'ctor as unknown as { observedAttributes?: string[] }',
-    reason: 'Observed attributes are a static CustomElementConstructor member.',
   },
   {
     file: 'packages/router/src/client-router.ts',

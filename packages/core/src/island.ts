@@ -18,6 +18,9 @@ import { ERROR_PREFIX } from '@openelement/core';
 
 import { createLogger } from './logger.js';
 import type { HydrationStrategy } from './types.js';
+
+/** WeakSet to track elements that have already had SSR props bound (idempotent). */
+const ssrPropsBoundSet = new WeakSet<HTMLElement>();
 const log = createLogger('core');
 
 /**
@@ -254,7 +257,7 @@ function createVisibleStrategy(
  *   3. setTimeout(fn, 50) (final fallback, shorter than old 200ms)
  */
 function createIdleStrategy(registerFn: () => void): void {
-  const g = globalThis as unknown as {
+  const g = globalThis as {
     requestIdleCallback?: (fn: () => void) => void;
     requestAnimationFrame?: (fn: () => void) => number;
   };
@@ -380,9 +383,9 @@ export function defineIsland<T extends CustomElementConstructor>(
       // Auto-bind SSR props on upgrade (idempotent - only once per element)
       if (
         this.hasAttribute('data-ssr-props') &&
-        !(this as unknown as { __ssrPropsBound?: boolean }).__ssrPropsBound
+        !ssrPropsBoundSet.has(this)
       ) {
-        (this as unknown as { __ssrPropsBound?: boolean }).__ssrPropsBound = true;
+        ssrPropsBoundSet.add(this);
         Promise.resolve().then(() => bindSsrProps(this));
       }
     } as unknown as typeof componentClass.prototype.connectedCallback;

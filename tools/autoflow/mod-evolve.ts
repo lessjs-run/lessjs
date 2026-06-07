@@ -1,15 +1,17 @@
 /**
- * autoflow:evolve — v0.36.0 Cell Execution CLI
+ * autoflow:evolve — v0.35.6 Cell Execution CLI
  *
  * Executes the full autoflow evolution pipeline:
  *   1. Read governance docs → detect drift
  *   2. Build Cell DAG from evidence
  *   3. Execute cells in waves (testgen → implement → review)
- *   4. Report results
+ *   4. Collect metrics via Evolution Tracker
+ *   5. Report results
  *
  * Usage:
  *   deno run --allow-read tools/autoflow/mod-evolve.ts --dry-run
  *   deno run --allow-read --allow-write --allow-run tools/autoflow/mod-evolve.ts
+ *   deno run --allow-read --allow-write --allow-run tools/autoflow/mod-evolve.ts --cell <cellId>
  */
 
 import { readStatus } from './readers/status.ts';
@@ -22,6 +24,8 @@ import {
   type CodeGenRequest,
   type CodeGenResult,
 } from './executor.ts';
+import { AgentCodeGenerator, type RiskLevel } from './agent-code-generator.ts';
+import { EvolutionTracker } from './evolution-tracker.ts';
 import { createCellState } from './cell-state-machine.ts';
 
 /** Mock code generator for dry-run mode. Returns empty success. */
@@ -49,10 +53,12 @@ function detectDriftAndBuildCells(
   const cells: Omit<DagNode, 'dependencies' | 'dependents' | 'priority'>[] = [];
   let idx = 0;
 
+  const cellPrefix = `cell-${statusVersion}`;
+
   // Version alignment drift
   if (!packageGraph.allAligned && packageGraph.mismatched.length > 0) {
     cells.push({
-      cellId: `cell-v0.36.0-${String(++idx).padStart(3, '0')}`,
+      cellId: `${cellPrefix}-${String(++idx).padStart(3, '0')}`,
       cellType: 'version-bump',
       description: `Align ${packageGraph.mismatched.length} packages to ${statusVersion}`,
       risk: 'low',
@@ -67,7 +73,7 @@ function detectDriftAndBuildCells(
     Deno.readDirSync(`${rootDir}/${nextVersionPath}`);
   } catch {
     cells.push({
-      cellId: `cell-v0.36.0-${String(++idx).padStart(3, '0')}`,
+      cellId: `${cellPrefix}-${String(++idx).padStart(3, '0')}`,
       cellType: 'doc-align',
       description: `Create NextVersion package at ${nextVersionPath}`,
       risk: 'low',
@@ -84,12 +90,27 @@ function detectDriftAndBuildCells(
   return cells;
 }
 
+function getArgValue(flag: string): string | null {
+  const idx = Deno.args.indexOf(flag);
+  if (idx !== -1 && idx + 1 < Deno.args.length) {
+    return Deno.args[idx + 1];
+  }
+  return null;
+}
+
 async function main(): Promise<void> {
   const dryRun = Deno.args.includes('--dry-run');
+  const singleCell = getArgValue('--cell');
   const rootDir = Deno.cwd();
   const ledgerDir = `${rootDir}/docs/autoflow/cells`;
 
-  console.log(dryRun ? '🔍 autoflow:evolve --dry-run' : '🚀 autoflow:evolve');
+  console.log(
+    dryRun
+      ? '🔍 autoflow:evolve --dry-run'
+      : singleCell
+      ? `🚀 autoflow:evolve --cell ${singleCell}`
+      : '🚀 autoflow:evolve',
+  );
   console.log('');
 
   // 1. Monitor: read governance state
@@ -129,41 +150,115 @@ async function main(): Promise<void> {
   }
   console.log('');
 
-  // 4. Execute: run cells
+  // 4. L3: Start evolution cycle
   const ledger = new EvidenceLedger(ledgerDir);
-  const generator: CodeGenerator = new DryRunGenerator();
+  const tracker = new EvolutionTracker(rootDir, ledger);
+
+  if (!dryRun) {
+    tracker.startCycle(version, rootDir);
+    console.log(`   📊 Evolution cycle started: ${version}`);
+    console.log('');
+  }
+
+  // 5. Execute: run cells through waves
+  const generator: CodeGenerator = dryRun
+    ? new DryRunGenerator()
+    : new AgentCodeGenerator({ projectRoot: rootDir, risk: 'low' });
+
   const executor = new CellExecutor({
     projectRoot: rootDir,
     ledger,
     codeGenerator: generator,
   });
 
+  const executedCells: string[] = [];
+  const failedCells: string[] = [];
+
   for (let w = 0; w < dag.waves.length; w++) {
     const wave = dag.waves[w];
-    console.log(`⚡ Wave ${w + 1}/${dag.waves.length}: ${wave.length} cell(s)`);
 
-    for (const cellId of wave) {
+    // Filter to single cell if --cell flag is set
+    const cellsToRun = singleCell ? wave.filter((id) => id === singleCell) : wave;
+    if (cellsToRun.length === 0) continue;
+
+    console.log(`⚡ Wave ${w + 1}/${dag.waves.length}: ${cellsToRun.length} cell(s)`);
+
+    for (const cellId of cellsToRun) {
       const node = dag.nodes.find((n) => n.cellId === cellId)!;
-      const state = createCellState(cellId, node.cellType, version, node.risk);
 
-      console.log(`   [${cellId}] ${node.cellType} → executing...`);
+      // Create generator with matching risk level
+      if (!dryRun) {
+        const riskGenerator = new AgentCodeGenerator({
+          projectRoot: rootDir,
+          risk: node.risk as RiskLevel,
+        });
+        const riskExecutor = new CellExecutor({
+          projectRoot: rootDir,
+          ledger,
+          codeGenerator: riskGenerator,
+        });
 
-      const finalState = await executor.execute(state);
+        const state = createCellState(cellId, node.cellType, version, node.risk);
+        console.log(`   [${cellId}] ${node.cellType} → executing (${node.risk} risk)...`);
 
-      const emoji = finalState.lifecycle === 'merged'
-        ? '✅'
-        : finalState.lifecycle === 'failed:non-retriable'
-        ? '❌'
-        : finalState.lifecycle === 'failed:retriable'
-        ? '🔄'
-        : '⏳';
+        const finalState = await riskExecutor.execute(state, node.files);
+        const emoji = stateEmoji(finalState.lifecycle);
+        console.log(`   [${cellId}] ${emoji} ${finalState.lifecycle}`);
 
-      console.log(`   [${cellId}] ${emoji} ${finalState.lifecycle}`);
+        if (finalState.lifecycle === 'merged' || !finalState.lifecycle.startsWith('failed')) {
+          executedCells.push(cellId);
+        } else {
+          failedCells.push(cellId);
+        }
+      } else {
+        // Dry-run mode
+        const state = createCellState(cellId, node.cellType, version, node.risk);
+        console.log(`   [${cellId}] ${node.cellType} → dry-run...`);
+
+        const finalState = await executor.execute(state, node.files);
+        const emoji = stateEmoji(finalState.lifecycle);
+        console.log(`   [${cellId}] ${emoji} ${finalState.lifecycle}`);
+        executedCells.push(cellId);
+      }
     }
     console.log('');
   }
 
-  console.log(dryRun ? '🔍 Dry-run complete. No changes made.' : '🚀 Evolution complete.');
+  // 6. L3: Complete evolution cycle and collect metrics
+  if (!dryRun) {
+    const record = tracker.completeCycle(version);
+    if (record) {
+      console.log('📊 Evolution metrics:');
+      console.log(`   First pass rate: ${(record.metrics.firstPassRate * 100).toFixed(1)}%`);
+      console.log(`   Cells attempted: ${record.metrics.totalCellsAttempted}`);
+      console.log(`   Cells merged: ${record.metrics.totalCellsMerged}`);
+      console.log(`   Cells failed: ${record.metrics.totalCellsFailed}`);
+      console.log(
+        `   Autonomy score: ${(record.metrics.mechanicalAutonomyScore * 100).toFixed(1)}%`,
+      );
+      console.log('');
+    }
+  }
+
+  // 7. Summary
+  console.log(
+    dryRun
+      ? '🔍 Dry-run complete. No changes made.'
+      : `🚀 Evolution complete. ${executedCells.length} executed, ${failedCells.length} failed.`,
+  );
+}
+
+function stateEmoji(lifecycle: string): string {
+  switch (lifecycle) {
+    case 'merged':
+      return '✅';
+    case 'failed:non-retriable':
+      return '❌';
+    case 'failed:retriable':
+      return '🔄';
+    default:
+      return '⏳';
+  }
 }
 
 main();

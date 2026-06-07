@@ -1,6 +1,9 @@
 # @openelement/create
 
-Project scaffold for openElement.
+Project scaffolding CLI for openElement applications.
+
+`@openelement/create` generates a new openElement project with the recommended
+directory structure, Deno configuration, Vite setup, and starter pages.
 
 ## Usage
 
@@ -8,31 +11,14 @@ Project scaffold for openElement.
 deno run -A jsr:@openelement/create my-app
 cd my-app
 deno task dev
-deno task build
 ```
 
-## Generated Project
+## What It Creates
 
-```text
-my-app/
-  deno.json
-  vite.config.ts
-  app/
-    routes/
-      index.tsx
-    islands/
-      my-counter.ts
-```
-
-The scaffold uses `definePage()` and `defineIsland()` from `@openelement/app`,
-and imports the Vite facade from `@openelement/app/vite`.
-
-## Current Scope
-
-This CLI creates a working openElement project. It is not the future `open add`
-registry installer. Package install automation should come later and must first
-validate a package manifest, show a dry-run diff, and generate explicit
-registration code.
+- `deno.json` — workspace configuration with openElement imports
+- `vite.config.ts` — Vite build configuration with openElement plugin
+- `app/` — application directory with starter pages and islands
+- `www/` — website output directory
 
 ## License
 

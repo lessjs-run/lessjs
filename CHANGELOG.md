@@ -1,3 +1,39 @@
+## v0.35.6 - AutoFlow2 Full-Auto Evolution (2026-06-07)
+
+### L2 Cell Execution — Completion
+
+- `tools/autoflow/agent-code-generator.ts` — AgentCodeGenerator with file-system protocol (ADR-0089)
+- Safety boundaries: protected paths reject writes to `tools/autoflow/`, `.github/workflows/`, `docs/governance/`
+- Risk-based gate selection: low→fmt+lint, medium→+typecheck, high→+test, critical→all 12 gates
+- `executor.ts` updated with target file passthrough and richer evidence recording
+- `mod-evolve.ts` updated: DryRunGenerator replaced, scheduler integrated, evolution tracker wired
+- 17 unit tests for AgentCodeGenerator (safety, gates, file I/O, interface compliance)
+
+### L3 Evolution Loop — Real Data
+
+- `tools/autoflow/metrics-collector.ts` — collects cell metrics, gate metrics, full EvolutionMetrics
+- `evolution-tracker.ts` integration with `mod-evolve.ts` for real cycle start/complete
+- `docs/autoflow/metrics/` directory for per-cycle metrics persistence
+
+### 8 Improvement Cells
+
+1. `tools/bump-version.ts` — automated version bump across 19 packages + root imports
+2. 5 package READMEs created: compat-check, cem, style-sheet, create, signals
+3. Coverage CI gate: `tools/check-coverage.ts` + CI job in test.yml (threshold: 50%)
+4. Security usage guide: `docs/guide/security.md` (XSS, trustedHtml, CSP, DOMPurify)
+5. Type cleanup: reduced `as unknown as` casts from 21 to 17 (4 eliminated via WeakSet + type widening)
+6. Performance benchmarks: `bench/escape.bench.ts` + `bench/render.bench.ts`
+7. Post-publish smoke test: `tools/consumer-smoke.ts` (JSR install + type check + execute)
+8. CI fast/full gate separation: `fast-gate.yml` (PR, <2min) + `test.yml` (push, full)
+
+### Documentation
+
+- ADR-0089: Agent Code Generator file-system protocol
+- NextVersion v0.35.6: all 8 required files (README, DESIGN, TASKS, ACCEPTANCE, TEST_MATRIX, DOCS_PLAN, RISK_REGISTER, RELEASE_CHECKLIST)
+- SOP v0.35.6: complete SOP with Parts A-D
+
+---
+
 ## v0.35.5 - Configuration Deduplication & Standardization (2026-06-07)
 
 ### Completed

@@ -1,9 +1,9 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current line: v0.35.0 AutoFlow2 Mechanical Autonomy.\
-> Next line: v0.36.0 Rendering Runtime and Deployment.\
-> Updated: 2026-06-06.
+> Current line: v0.35.6 AutoFlow2 Full-Auto Evolution (L2 + L3 completion).\
+> Next line: v0.36.0 Rendering Runtime, Deployment & Deferred Refactors.\
+> Updated: 2026-06-07.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -18,19 +18,21 @@ that all subsequent versions build upon.
 
 ## Version Ladder
 
-| Version | Name                             | Goal                                                                                                           | Status |
-| ------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------ |
-| v0.30.x | Contract cleanup                 | Done                                                                                                           |        |
-| v0.31.0 | JSX-first Application API        | Done                                                                                                           |        |
-| v0.32.0 | App Lifecycle Contract           | Done                                                                                                           |        |
-| v0.33.0 | AI-Readable API Foundation       | Done                                                                                                           |        |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Done                                                                                                           |        |
-| v0.35.0 | AutoFlow2 Mechanical Autonomy    | Current — Harness Gate + Cell Execution + Evolution Loop (3 layers, 13 modules, 11 deno tasks). See STATUS.md. |        |
-| v0.36.0 | Rendering Runtime and Deployment | Planned — SSR, ISR, streaming DSD, cache. AutoFlow governed.                                                   |        |
-| v0.37.0 | Server/Data/UI Product Closure   | Planned                                                                                                        |        |
-| v0.38.0 | Public Surface Reset             | Planned                                                                                                        |        |
-| v0.39.0 | v1 Release Candidate             | Planned                                                                                                        |        |
-| v1.0.0  | Stable Engine + AutoFlow Default | Vision                                                                                                         |        |
+| Version | Name                                               | Goal                                                                                                                                                                | Status |
+| ------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| v0.30.x | Contract cleanup                                   | Done                                                                                                                                                                |        |
+| v0.31.0 | JSX-first Application API                          | Done                                                                                                                                                                |        |
+| v0.32.0 | App Lifecycle Contract                             | Done                                                                                                                                                                |        |
+| v0.33.0 | AI-Readable API Foundation                         | Done                                                                                                                                                                |        |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                                                                                                                                                                |        |
+| v0.35.0 | AutoFlow2 Mechanical Autonomy                      | Done — Harness Gate + Cell Execution framework + Evolution Loop framework                                                                                           |        |
+| v0.35.5 | Deduplication & Debt Closure                       | Done                                                                                                                                                                |        |
+| v0.35.6 | AutoFlow2 Full-Auto Evolution                      | Current — L2 Cell Execution completion + L3 Evolution Loop real data + 8 improvement cells. See STATUS.md.                                                          |        |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Planned — SSR, ISR, streaming DSD, cache, adapter-vite decomposition, SSG parallel, cross-browser E2E, error boundary enhancement, signals docs. AutoFlow governed. |        |
+| v0.37.0 | Server/Data/UI Product Closure                     | Planned                                                                                                                                                             |        |
+| v0.38.0 | Public Surface Reset                               | Planned                                                                                                                                                             |        |
+| v0.39.0 | v1 Release Candidate                               | Planned                                                                                                                                                             |        |
+| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision                                                                                                                                                              |        |
 
 ## v0.35.0 — AutoFlow2 Mechanical Autonomy
 
@@ -70,10 +72,50 @@ Execution), and v0.37 (Evolution Loop) into a single version.
 SOP: `docs/sop/v0.35.0/`\
 ADR: ADR-0087, ADR-0088
 
-## v0.36.0 — Rendering Runtime and Deployment
+## v0.35.6 — AutoFlow2 Full-Auto Evolution
 
-Resume product work under AutoFlow2 governance. SSR, ISR, streaming DSD,
-cache adapters, deploy recipes.
+Completes the mechanical autonomy stack by making L2 and L3 production-ready:
+
+### L2 Cell Execution — Completion
+
+- Replace `DryRunGenerator` with `AgentCodeGenerator` (file-system protocol).
+- `executor.ts` — real file write + gate execution (fmt/lint/typecheck/test).
+- `mod-evolve.ts` — end-to-end CLI: drift detect → DAG build → execute → merge.
+- `scheduler.ts` — integrate executor with wave-based parallel execution.
+
+### L3 Evolution Loop — Real Data
+
+- `metrics-collector.ts` — collect CI/test/coverage data from real executions.
+- `evolution-tracker.ts` — populate multi-cycle metrics from v0.35.6 cell data.
+- Closed-loop MAPE-K feedback: metrics inform next cell planning.
+
+### 8 Improvement Cells (executed via AutoFlow pipeline)
+
+| # | Cell                          | Type          | Risk   |
+| - | ----------------------------- | ------------- | ------ |
+| 1 | `tools/bump-version.ts`       | version-bump  | low    |
+| 2 | 5 package README completion   | readme-update | low    |
+| 3 | Coverage CI gate              | test-add      | low    |
+| 4 | Security usage guide          | doc-align     | low    |
+| 5 | SOP-011 type cleanup          | typecheck-fix | medium |
+| 6 | Render performance benchmarks | test-add      | low    |
+| 7 | Post-publish smoke test       | test-add      | medium |
+| 8 | CI fast/full gate separation  | doc-align     | low    |
+
+SOP: `docs/sop/v0.35.6/`\
+ADR: ADR-0088, ADR-0089
+
+## v0.36.0 — Rendering Runtime, Deployment & Deferred Refactors
+
+Resume product work under AutoFlow2 governance. Includes 5 items deferred
+from v0.35.6 audit:
+
+- SSR, ISR, streaming DSD, cache adapters, deploy recipes.
+- adapter-vite decomposition (`@openelement/ssg` separation).
+- SSG parallel rendering (worker threads).
+- Cross-browser E2E testing (Firefox, Safari).
+- Error boundary enhancement (retry, degraded rendering).
+- Signals system documentation.
 
 ## v0.37.0 — Server/Data/UI Product Closure
 

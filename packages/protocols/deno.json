@@ -1,6 +1,6 @@
 {
   "name": "@openelement/protocols",
-  "version": "0.35.4",
+  "version": "0.35.6",
   "exports": {
     ".": "./src/index.ts",
     "./build-types": "./src/build-types.ts",

@@ -3,25 +3,63 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.35.1/`.
+package: `docs/next/v0.35.6/`.
 
-## Current Version Line: v0.35.4 (Deduplication & ADR-0079 Debt Closure)
+## Current Version Line: v0.35.6 (AutoFlow2 Full-Auto Evolution)
 
-v0.35.0 delivers all three layers of AutoFlow2 mechanical autonomy in one version:
-**Harness Gate** (CI-blocking invariant verification) + **Cell Execution**
-(TDD-driven autonomous repair with AI cross-review) + **Evolution Loop**
-(multi-version metrics and continuous MAPE-K).
+v0.35.6 completes the AutoFlow2 mechanical autonomy stack by making L2 Cell
+Execution and L3 Evolution Loop production-ready, and executes 8 improvement
+cells through the AutoFlow pipeline (dog-fooding).
 
-v0.35.0 Status: **IMPLEMENTED.**
+v0.35.6 Status: **IN PROGRESS.**
 Governing docs:
 
-- `docs/adr/ADR-0087-tdd-cross-review-cell-execution.md`
 - `docs/adr/ADR-0088-autoflow-first-strategy.md`
-- `docs/adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md`
-- `docs/sop/v0.35.0/README.md`
-- `docs/next/v0.35.0/`
+- `docs/adr/ADR-0089-agent-code-generator.md`
+- `docs/sop/v0.35.6/README.md`
+- `docs/next/v0.35.6/`
 - `docs/roadmap/ROADMAP.md`
 - `docs/governance/BRANCHING.md`
+
+### L2 Cell Execution — Completion
+
+- `executor.ts` — three-phase engine with real `AgentCodeGenerator` (replaces DryRunGenerator).
+- `git-ops.ts` — git operations with Kahn isolation (production-ready).
+- `dag-builder.ts` — evidence → DAG with conflict detection (production-ready).
+- `scheduler.ts` — wave-based parallel execution + cascade cancellation (integrated with executor).
+- `mod-evolve.ts` — `deno task autoflow:evolve` CLI (end-to-end: drift → DAG → execute → merge).
+
+### L3 Evolution Loop — Real Data Collection
+
+- `metrics.ts` — AlphaEvolve fitness + SWE-bench 12-dimensional quality metrics.
+- `metrics-collector.ts` — real CI/test/coverage data collection from cell executions.
+- `evolution-tracker.ts` — multi-cycle trend tracking populated from v0.35.6 cell data.
+- `mod-health.ts` — `deno task autoflow:health` agent diagnostic.
+
+### 8 Improvement Cells
+
+| # | Cell                          | Type          | Risk   | Status  |
+| - | ----------------------------- | ------------- | ------ | ------- |
+| 1 | `tools/bump-version.ts`       | version-bump  | low    | Planned |
+| 2 | 5 package README completion   | readme-update | low    | Planned |
+| 3 | Coverage CI gate              | test-add      | low    | Planned |
+| 4 | Security usage guide          | doc-align     | low    | Planned |
+| 5 | SOP-011 type cleanup          | typecheck-fix | medium | Planned |
+| 6 | Render performance benchmarks | test-add      | low    | Planned |
+| 7 | Post-publish smoke test       | test-add      | medium | Planned |
+| 8 | CI fast/full gate separation  | doc-align     | low    | Planned |
+
+### Deferred to v0.36.0 (5 large-scale refactors)
+
+- adapter-vite decomposition → `@openelement/ssg`
+- SSG parallel rendering (worker threads)
+- Cross-browser E2E testing (Firefox, Safari)
+- Error boundary enhancement (retry, degraded rendering)
+- Signals system documentation
+
+v0.35.0-v0.35.5 Status: **IMPLEMENTED.** Delivered AutoFlow2 three-layer
+framework (Harness Gate + Cell Execution framework + Evolution Loop framework),
+deduplication, and ADR-0079 debt closure.
 
 ### Layer 1 — Harness Gate
 
@@ -112,20 +150,19 @@ v0.22.x and earlier: **HISTORICAL.**
 
 ## Next Targets
 
-| Version | Theme                            | Status  | Purpose                                                                                        |
-| ------- | -------------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API        | Done    | App authoring API, `/vite` config split, docs/template DX                                      |
-| v0.32.0 | App Lifecycle Contract           | Done    | Route, load, context, layout, error, redirect lifecycle                                        |
-| v0.33.0 | AI-Readable API Foundation       | Done    | Structured page, island, head, route, and render intent APIs                                   |
-| v0.34.0 | AutoFlow2 Sidecar Kernel         | Current | Workflow state, cells, evidence ledger, allowed-action report                                  |
-| v0.35.0 | AutoFlow2 Harness Gate           | Next    | Low-noise workflow contradictions become local and CI blockers                                 |
-| v0.36.0 | AutoFlow2 Cell Execution + TDD   | Planned | Cell 执行引擎、TDD 三阶段 (testgen→implement→review)、DAG 调度、Git 自动修复、evolve --dry-run |
-| v0.37.0 | AutoFlow2 闭环 + 多版本演化      | Planned | 正式启用 autoflow:evolve、跨版本度量、演化追踪、版本自发推进                                   |
-| v0.38.0 | Rendering Runtime and Deployment | Planned | SSR, ISR, streaming DSD, cache adapters, deployment recipes                                    |
-| v0.39.0 | Server/Data/UI Product Closure   | Planned | Server, data, UI, starters, Hub disposition, pruning evidence                                  |
-| v0.40.0 | Public Surface Reset             | Planned | Final package/product surface reset before the v1 RC                                           |
-| v0.41.0 | v1 Release Candidate             | Planned | Final API, docs, starter, deploy, consumer, and publish gates                                  |
-| v1.0.0  | Stable Engine + AutoFlow Default | Vision  | API freeze with workflow evidence as part of default gates                                     |
+| Version | Theme                             | Status  | Purpose                                                                                                            |
+| ------- | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| v0.31.0 | JSX-first Application API         | Done    | App authoring API, `/vite` config split, docs/template DX                                                          |
+| v0.32.0 | App Lifecycle Contract            | Done    | Route, load, context, layout, error, redirect lifecycle                                                            |
+| v0.33.0 | AI-Readable API Foundation        | Done    | Structured page, island, head, route, and render intent APIs                                                       |
+| v0.34.0 | AutoFlow2 Sidecar Kernel          | Done    | Workflow state, cells, evidence ledger, allowed-action report                                                      |
+| v0.35.0 | AutoFlow2 Mechanical Autonomy     | Done    | Harness Gate + Cell Execution framework + Evolution Loop framework                                                 |
+| v0.35.6 | AutoFlow2 Full-Auto Evolution     | Current | L2 completion + L3 real data + 8 improvement cells via AutoFlow pipeline                                           |
+| v0.36.0 | Rendering, Deployment & Refactors | Planned | SSR, ISR, streaming DSD, adapter-vite decomposition, SSG parallel, cross-browser E2E, error boundary, signals docs |
+| v0.37.0 | Server/Data/UI Product Closure    | Planned | Server, data, UI, starters, Hub disposition, pruning evidence                                                      |
+| v0.38.0 | Public Surface Reset              | Planned | Final package/product surface reset before the v1 RC                                                               |
+| v0.39.0 | v1 Release Candidate              | Planned | Final API, docs, starter, deploy, consumer, and publish gates                                                      |
+| v1.0.0  | Stable Engine + AutoFlow Default  | Vision  | API freeze with workflow evidence as part of default gates                                                         |
 
 ## Current Product Center
 
@@ -161,7 +198,7 @@ papers (C1-C6, 01-09, A1) + 12 external papers (EMNLP, ICSE, TOSEM, IEEE).
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.35.4** under `@openelement/*` for this
+All 19 packages are aligned to **v0.35.6** under `@openelement/*` for this
 release. Release proof includes local gates, GitHub Actions on `dev`, merge to
 `main`, GitHub Actions on `main`, and the GitHub tag/release note.
 
