@@ -44,20 +44,10 @@
 
 import { LitElement } from 'lit';
 import { bindHydrateEvents } from '@openelement/core';
-import type { HydrateEventDescriptor } from '@openelement/core';
+import type { Constructor, DsdHydration, HydrateEventDescriptor } from '@openelement/core';
 
-import type { Constructor } from '@openelement/core';
-
-/**
- * Instance interface for DSD-hydrated Lit components.
- * Exposed so that consumers can type-check against the DSD hydration contract.
- */
-export interface DsdHydration {
-  /** Whether DSD has already hydrated this component's shadow root */
-  _dsdHydrated: boolean;
-  /** Bind declared events to existing shadow DOM elements after DSD upgrade */
-  _hydrateEvents(): void;
-}
+// Re-export for public API compatibility
+export type { DsdHydration };
 
 /**
  * Instance interface added by the WithDsdHydration mixin beyond DsdHydration.
