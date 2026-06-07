@@ -1,0 +1,191 @@
+/**
+ * Configuration templates for standardizing deno.json across workspace packages.
+ * Provides default configurations and exception handling.
+ */
+
+export interface PackageConfig {
+  name: string;
+  version: string;
+  exports?: Record<string, string>;
+  imports?: Record<string, string>;
+  publish?: PublishConfig;
+  include?: string[];
+  exclude?: string[];
+  tasks?: Record<string, string>;
+  lint?: Record<string, unknown>;
+}
+
+export interface PublishConfig {
+  include: string[];
+  exclude?: string[];
+}
+
+// Standard configurations
+export const STANDARD_CONFIGS = {
+  publish: {
+    include: ['src/**', 'deno.json', 'README.md', 'LICENSE'],
+  },
+  include: ['src'],
+  exclude: ['node_modules', 'dist'],
+  tasks: {
+    build: 'deno check src/index.ts',
+  },
+};
+
+// Package-specific exceptions
+export const CONFIG_EXCEPTIONS: Record<string, Partial<PackageConfig>> = {
+  '@openelement/hub': {
+    publish: {
+      include: ['mod.ts', 'src/**', 'deno.json', 'README.md', 'LICENSE'],
+    },
+    tasks: {
+      build:
+        'deno check mod.ts src/schema.ts src/builder.ts src/indexer.ts src/submitter.ts src/snapshot.ts',
+      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
+    },
+  },
+  '@openelement/create': {
+    publish: {
+      include: ['cli.ts', 'deno.json', 'README.md', 'LICENSE'],
+    },
+    tasks: {
+      run: 'deno run -A cli.ts',
+    },
+  },
+  '@openelement/core': {
+    tasks: {
+      build: 'deno check src/index.ts',
+      lint: 'deno lint src/ __tests__/',
+      typecheck: 'deno check src/index.ts',
+      test: 'deno test --allow-read --allow-write --allow-env --allow-net --allow-run __tests__/',
+      'test:ci':
+        'deno test --allow-read --allow-write --allow-env --allow-net --allow-run --coverage --junit-path=test-results.xml __tests__/',
+    },
+  },
+  '@openelement/adapter-lit': {
+    tasks: {
+      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
+    },
+  },
+  '@openelement/adapter-vanilla': {
+    tasks: {
+      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
+      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
+    },
+  },
+  '@openelement/adapter-react': {
+    tasks: {
+      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
+      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
+    },
+  },
+  '@openelement/adapter-vite': {
+    tasks: {
+      build: 'deno check src/index.ts',
+      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
+    },
+  },
+  '@openelement/signals': {
+    lint: {
+      rules: {
+        exclude: ['no-explicit-any'],
+      },
+    },
+  },
+};
+
+/**
+ * Get the expected configuration for a package
+ */
+export function getExpectedConfig(packageName: string): Partial<PackageConfig> {
+  const exception = CONFIG_EXCEPTIONS[packageName];
+  if (exception) {
+    return {
+      publish: exception.publish || STANDARD_CONFIGS.publish,
+      include: exception.include || STANDARD_CONFIGS.include,
+      exclude: exception.exclude || STANDARD_CONFIGS.exclude,
+      tasks: exception.tasks || STANDARD_CONFIGS.tasks,
+      lint: exception.lint,
+    };
+  }
+
+  return {
+    publish: STANDARD_CONFIGS.publish,
+    include: STANDARD_CONFIGS.include,
+    exclude: STANDARD_CONFIGS.exclude,
+    tasks: STANDARD_CONFIGS.tasks,
+  };
+}
+
+/**
+ * Check if a configuration matches the expected standard
+ */
+export function isConfigStandard(
+  packageName: string,
+  config: PackageConfig,
+): { valid: boolean; mismatches: string[] } {
+  const expected = getExpectedConfig(packageName);
+  const mismatches: string[] = [];
+
+  // Check publish config
+  if (expected.publish) {
+    if (!config.publish) {
+      mismatches.push('missing publish config');
+    } else if (
+      JSON.stringify(config.publish.include) !==
+        JSON.stringify(expected.publish.include)
+    ) {
+      mismatches.push(
+        `publish.include mismatch: ${JSON.stringify(config.publish.include)} vs ${
+          JSON.stringify(expected.publish.include)
+        }`,
+      );
+    }
+  }
+
+  // Check include config
+  if (expected.include) {
+    if (!config.include) {
+      mismatches.push('missing include config');
+    } else if (JSON.stringify(config.include) !== JSON.stringify(expected.include)) {
+      mismatches.push(
+        `include mismatch: ${JSON.stringify(config.include)} vs ${
+          JSON.stringify(expected.include)
+        }`,
+      );
+    }
+  }
+
+  // Check exclude config
+  if (expected.exclude) {
+    if (!config.exclude) {
+      mismatches.push('missing exclude config');
+    } else if (JSON.stringify(config.exclude) !== JSON.stringify(expected.exclude)) {
+      mismatches.push(
+        `exclude mismatch: ${JSON.stringify(config.exclude)} vs ${
+          JSON.stringify(expected.exclude)
+        }`,
+      );
+    }
+  }
+
+  // Check tasks config
+  if (expected.tasks) {
+    if (!config.tasks) {
+      mismatches.push('missing tasks config');
+    } else {
+      for (const [key, value] of Object.entries(expected.tasks)) {
+        if (config.tasks[key] !== value) {
+          mismatches.push(
+            `tasks.${key} mismatch: ${config.tasks[key]} vs ${value}`,
+          );
+        }
+      }
+    }
+  }
+
+  return {
+    valid: mismatches.length === 0,
+    mismatches,
+  };
+}

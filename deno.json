@@ -128,7 +128,9 @@
     "autoflow:health:json": "deno run --allow-read tools/autoflow/mod-health.ts --json",
     "autoflow:evolve": "deno run --allow-read --allow-write --allow-run tools/autoflow/mod-evolve.ts",
     "autoflow:evolve:dry": "deno run --allow-read tools/autoflow/mod-evolve.ts --dry-run",
-    "autoflow:test": "deno test --allow-read --allow-write --allow-run tools/autoflow/__tests__/"
+    "autoflow:test": "deno test --allow-read --allow-write --allow-run tools/autoflow/__tests__/",
+    "verify:configs": "deno run --allow-read tools/verify-package-configs.ts",
+    "verify:configs:fix": "deno run --allow-read --allow-write tools/verify-package-configs.ts --fix"
   },
   "fmt": {
     "useTabs": false,
