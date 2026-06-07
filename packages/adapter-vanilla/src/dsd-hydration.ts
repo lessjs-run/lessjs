@@ -49,9 +49,7 @@ import {
   renderToDom,
 } from '@openelement/core';
 
-/** Constructor type for Mixin pattern */
-// deno-lint-ignore no-explicit-any
-type Constructor<T = HTMLElement> = new (...args: any[]) => T;
+import type { Constructor } from '@openelement/core';
 
 /**
  * Instance interface for DSD-hydrated vanilla components.

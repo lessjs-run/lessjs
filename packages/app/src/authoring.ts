@@ -1,3 +1,4 @@
+import { ERROR_PREFIX } from '@openelement/core';
 /**
  * @openelement/app - JSX-first application authoring API.
  *
@@ -212,22 +213,22 @@ const HYDRATION_STRATEGIES = new Set(['load', 'idle', 'visible', 'only']);
 function assertCanonicalPageDefinition(input: unknown): asserts input is PageDefinition {
   if (typeof input === 'function') {
     throw new Error(
-      '[openElement] definePage() requires a canonical object descriptor. ' +
+      '${ERROR_PREFIX} definePage() requires a canonical object descriptor. ' +
         'Use definePage({ route, head, renderIntent, load, render, error }).',
     );
   }
   if (typeof input !== 'object' || input === null) {
-    throw new Error('[openElement] definePage() requires an object descriptor.');
+    throw new Error('${ERROR_PREFIX} definePage() requires an object descriptor.');
   }
   for (const key of Object.keys(input)) {
     if (PAGE_DESCRIPTOR_FIELDS.has(key)) continue;
     throw new Error(
-      `[openElement] definePage() does not accept top-level "${key}". ` +
+      `${ERROR_PREFIX} definePage() does not accept top-level "${key}". ` +
         'Use only route, head, renderIntent, load, render, and error.',
     );
   }
   if (typeof (input as { render?: unknown }).render !== 'function') {
-    throw new Error('[openElement] definePage() descriptor requires a render() function.');
+    throw new Error('${ERROR_PREFIX} definePage() descriptor requires a render() function.');
   }
 }
 
@@ -298,7 +299,7 @@ function normalizeElementDefinition<Props extends Record<string, unknown>>(
 function assertCustomElementTag(tagName: string): void {
   if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(tagName)) {
     throw new Error(
-      `[openElement] "${tagName}" is not a valid custom element name. ` +
+      `${ERROR_PREFIX} "${tagName}" is not a valid custom element name. ` +
         'Use lowercase ASCII letters, digits, and at least one hyphen.',
     );
   }
@@ -347,19 +348,19 @@ export interface IslandConfig {
 
 export function defineIslandConfig(config: IslandConfig): IslandConfig {
   if (typeof config !== 'object' || config === null || Array.isArray(config)) {
-    throw new Error('[openElement] defineIslandConfig() requires an object descriptor.');
+    throw new Error('${ERROR_PREFIX} defineIslandConfig() requires an object descriptor.');
   }
   for (const key of Object.keys(config)) {
     if (!ISLAND_CONFIG_FIELDS.has(key)) {
       throw new Error(
-        `[openElement] defineIslandConfig() does not accept "${key}". ` +
+        `${ERROR_PREFIX} defineIslandConfig() does not accept "${key}". ` +
           'Use only ssr, dsd, and hydrate.',
       );
     }
   }
   if (config.hydrate !== undefined && !HYDRATION_STRATEGIES.has(config.hydrate)) {
     throw new Error(
-      `[openElement] Invalid island hydrate strategy "${String(config.hydrate)}". ` +
+      `${ERROR_PREFIX} Invalid island hydrate strategy "${String(config.hydrate)}". ` +
         'Use one of: load, idle, visible, only.',
     );
   }
