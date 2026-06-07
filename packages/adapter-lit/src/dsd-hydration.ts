@@ -46,9 +46,7 @@ import { LitElement } from 'lit';
 import { bindHydrateEvents } from '@openelement/core';
 import type { HydrateEventDescriptor } from '@openelement/core';
 
-/** Constructor type for Mixin pattern - `any[]` is standard TS Mixin signature */
-// deno-lint-ignore no-explicit-any
-type Constructor<T = LitElement> = new (...args: any[]) => T;
+import type { Constructor } from '@openelement/core';
 
 /**
  * Instance interface for DSD-hydrated Lit components.

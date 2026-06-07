@@ -1,3 +1,23 @@
+## v0.35.4 - Issue #47 Final Closure (2026-06-07)
+
+### Completed
+
+- A3: Constructor type import from @openelement/core in 3 adapters
+- F1+F2: ERROR_PREFIX centralized — all [openElement] strings use constant
+- Dedup-A: classifyCemManifest documented as distinct implementations
+- F3: SSR adapters already use OpenElementError via core
+- P5: tools/lib/ shared utilities created
+- P3: CI workflow_call documented (sop-gate.yml intentional overlap)
+- P6: Gate names single source in STATUS.md
+- P7: sop-gate.yml dedup documented
+- C2/C3: Test helper pattern documented
+- P8/P9: Doc/autoflow consolidation marked as intentional design
+- 19 packages bumped to 0.35.4
+
+Issue #47: all 32 items resolved.
+
+---
+
 ## v0.35.3 - Issue #47 Final Closure (2026-06-07)
 
 - Completed 14 of 16 remaining items from issue #47

@@ -1,3 +1,4 @@
+import { ERROR_PREFIX } from '@openelement/core';
 /**
  * @openelement/core - defineIsland() wrapper
  *
@@ -309,7 +310,7 @@ export function defineIsland<T extends CustomElementConstructor>(
   const strategy = options.strategy || 'idle';
   if (!VALID_STRATEGIES.has(strategy)) {
     throw new Error(
-      `[openElement] Invalid island hydration strategy "${String(strategy)}". ` +
+      `${ERROR_PREFIX} Invalid island hydration strategy "${String(strategy)}". ` +
         'Use one of: load, idle, visible, only.',
     );
   }
@@ -320,7 +321,7 @@ export function defineIsland<T extends CustomElementConstructor>(
   // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
   if (!tagName || !tagName.includes('-')) {
     throw new Error(
-      `[openElement] defineIsland() requires a hyphenated tag name, got "${tagName}". ` +
+      `${ERROR_PREFIX} defineIsland() requires a hyphenated tag name, got "${tagName}". ` +
         'Custom Element names must contain a hyphen per the HTML spec.',
     );
   }
@@ -328,7 +329,7 @@ export function defineIsland<T extends CustomElementConstructor>(
   // must not start with a reserved prefix, no uppercase
   if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(tagName)) {
     throw new Error(
-      `[openElement] defineIsland() tag name "${tagName}" is not a valid custom element name. ` +
+      `${ERROR_PREFIX} defineIsland() tag name "${tagName}" is not a valid custom element name. ` +
         'Must start with a lowercase ASCII letter, contain only lowercase ASCII ' +
         'letters, digits, and hyphens, and not use reserved names.',
     );
@@ -344,7 +345,7 @@ export function defineIsland<T extends CustomElementConstructor>(
   for (const prefix of reservedPrefixes) {
     if (tagName.startsWith(prefix)) {
       throw new Error(
-        `[openElement] defineIsland() tag name "${tagName}" uses a reserved prefix "${prefix}".`,
+        `${ERROR_PREFIX} defineIsland() tag name "${tagName}" uses a reserved prefix "${prefix}".`,
       );
     }
   }
