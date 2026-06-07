@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# openElement pre-push hook
+# Runs before any push to dev or main.
+# Enforces release workflow gates that are too slow for pre-commit.
+# Install: deno task hooks:install
+
+set -e
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" != "dev" ] && [ "$BRANCH" != "main" ]; then
+  exit 0
+fi
+
+echo "=== pre-push gates for '$BRANCH' ==="
+
+echo "[1/5] deno task test"
+deno task test || { echo "❌ Tests failed."; exit 1; }
+
+echo "[2/5] deno task build"
+deno task build || { echo "❌ Build failed."; exit 1; }
+
+echo "[3/5] deno task dsd:check-report"
+deno task dsd:check-report || { echo "❌ DSD check failed."; exit 1; }
+
+echo "[4/5] deno task hub:validate -- --strict"
+deno task hub:validate -- --strict || { echo "❌ Hub validation failed."; exit 1; }
+
+echo "[5/5] autoflow:check"
+deno run --allow-read tools/autoflow/mod-check.ts || { echo "❌ autoflow:check failed."; exit 1; }
+
+echo ""
+echo "All pre-push gates passed."
