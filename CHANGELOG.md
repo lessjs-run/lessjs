@@ -11,7 +11,7 @@
 
 ---
 
-## v0.35.4 - Issue #47 Final Closure (2026-06-07)
+## v0.35.4 - Issue #47 Items (Originally Identified) (2026-06-07)
 
 ### Completed
 
@@ -27,24 +27,29 @@
 - P8/P9: Doc/autoflow consolidation marked as intentional design
 - 19 packages bumped to 0.35.4
 
-Issue #47: all 32 items resolved.
+**Note**: At this point, 32 of 32 originally identified audit items were
+thought to be resolved. However, additional configuration deduplication
+(subpath declarations, publish/include/exclude/tasks standardization) was
+later identified and completed in v0.35.5.
 
 ---
 
-## v0.35.3 - Issue #47 Final Closure (2026-06-07)
+## v0.35.3 - Issue #47 Items (2026-06-07)
 
-- Completed 14 of 16 remaining items from issue #47
+- Completed 14 items from issue #47
 - P4: DsdHydration interface in core
 - P1: Package list unified to tools/lib/package-list.json
 - P2/P6/P7: Config dedup (exclude, gate names, sop-gate)
 - A3/D2/D3/H3/G3/I1/H4: Constructor, build, publish, playwright, README, autoflow
 - 19 packages bumped to 0.35.3
-- 2 items deferred to v0.36 (P3 CI workflow_call, C2/C3 test helpers)
-- 30/32 items complete across v0.35.1-0.35.3
+
+**Note**: At this point, 30 of 32 originally identified items were thought
+complete. Additional configuration deduplication was later identified and
+completed in v0.35.5.
 
 ---
 
-## v0.35.2 - Issue #47 Complete Closure (2026-06-07)
+## v0.35.2 - Issue #47 Items (2026-06-07)
 
 ### Configuration
 
@@ -61,10 +66,11 @@ Issue #47: all 32 items resolved.
 
 ### Deferred from v0.35.1
 
-Completes 6 remaining items: D1, G1, Dedup-A, A3(Constructor available),
+Completes 6 items: D1, G1, Dedup-A, A3(Constructor available),
 F3(error types), P2(exclude consolidation).
 
-Full audit (32 items) now complete. See issue #47.
+**Note**: At this time, 16 of 32 audit items were complete. Additional
+configuration deduplication was later identified and completed in v0.35.5.
 
 ---
 
