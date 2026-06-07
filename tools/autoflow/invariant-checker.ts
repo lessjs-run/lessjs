@@ -8,6 +8,7 @@
 import type { CellState } from './cell-state-machine.ts';
 import { isTerminal } from './cell-state-machine.ts';
 import type { EvidenceLedger } from './evidence-ledger.ts';
+import { validateAllPackageConfigs } from '../config-templates.ts';
 
 // ---- Types ----
 
@@ -72,6 +73,11 @@ export const INVARIANTS: Invariant[] = [
     id: 'I-NO-PARALLEL-CONFLICT',
     description: 'No two cells in the same wave can edit the same file',
     severity: 'warning',
+  },
+  {
+    id: 'I-PACKAGE-CONFIG-STANDARD',
+    description: 'All package deno.json configs must match the standard template',
+    severity: 'error',
   },
 ];
 
@@ -143,16 +149,34 @@ function checkVersionAlignment(
   return null;
 }
 
+async function checkPackageConfigStandard(
+  rootDir: string,
+): Promise<InvariantViolation | null> {
+  const packagesDir = `${rootDir}/packages`;
+  const failures = await validateAllPackageConfigs(packagesDir);
+  if (failures.length > 0) {
+    const details = failures.map((f) => `${f.packageName}: ${f.mismatches.join(', ')}`).join('; ');
+    return {
+      invariantId: 'I-PACKAGE-CONFIG-STANDARD',
+      severity: 'error',
+      description: `${failures.length} package(s) have non-standard deno.json configs`,
+      detail: details,
+    };
+  }
+  return null;
+}
+
 // ---- Main checker ----
 
-export function checkAllInvariants(
+export async function checkAllInvariants(
   ledger: EvidenceLedger | null,
   projectState: {
     statusVersion: string;
     packageVersions: string[];
+    rootDir?: string;
   },
   options: { maxRetries?: number; strict?: boolean } = {},
-): InvariantCheckReport {
+): Promise<InvariantCheckReport> {
   const violations: InvariantViolation[] = [];
   const maxRetries = options.maxRetries ?? 2;
 
@@ -184,6 +208,10 @@ export function checkAllInvariants(
     projectState.packageVersions,
   );
   if (v4) violations.push(v4);
+
+  // Check package config standardization
+  const v5 = await checkPackageConfigStandard(projectState.rootDir ?? Deno.cwd());
+  if (v5) violations.push(v5);
 
   // Determine pass/fail
   const hasErrors = violations.some((v) => v.severity === 'error');

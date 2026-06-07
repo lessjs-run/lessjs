@@ -44,22 +44,15 @@
 
 import {
   bindHydrateEvents,
+  type Constructor,
+  type DsdHydration,
   type HydrateEventDescriptor,
   isVNode,
   renderToDom,
 } from '@openelement/core';
 
-import type { Constructor } from '@openelement/core';
-
-/**
- * Instance interface for DSD-hydrated vanilla components.
- */
-export interface DsdHydration {
-  /** Whether DSD has already hydrated this component's shadow root */
-  _dsdHydrated: boolean;
-  /** Bind declared events to existing shadow DOM elements after DSD upgrade */
-  _hydrateEvents(): void;
-}
+// Re-export for public API compatibility
+export type { DsdHydration };
 
 /**
  * Instance interface added by the WithDsdHydration mixin beyond DsdHydration.

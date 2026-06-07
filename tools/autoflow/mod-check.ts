@@ -13,7 +13,7 @@ import { EvidenceLedger } from './evidence-ledger.ts';
 import { readStatus } from './readers/status.ts';
 import { readPackageGraph } from './readers/package-graph.ts';
 
-function main(): void {
+async function main(): Promise<void> {
   const strict = Deno.args.includes('--strict');
   const rootDir = Deno.cwd();
   const ledgerDir = `${rootDir}/docs/autoflow/cells`;
@@ -34,9 +34,10 @@ function main(): void {
     // Ledger may not exist yet — that's OK for project-level checks
   }
 
-  const report = checkAllInvariants(ledger, {
+  const report = await checkAllInvariants(ledger, {
     statusVersion: version,
     packageVersions,
+    rootDir,
   }, { strict });
 
   // Output
@@ -65,4 +66,4 @@ function main(): void {
   }
 }
 
-main();
+await main();

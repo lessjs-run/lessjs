@@ -27,7 +27,7 @@
     "@mdx-js/rollup": "npm:@mdx-js/rollup@^3.1.1",
     "typescript": "npm:typescript@^5.9.0",
     "esbuild": "npm:esbuild@^0.25",
-    "hono": "npm:hono@4.12.23",
+    "hono": "npm:hono@^4.12",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
     "vite": "npm:vite@8.0.10"
   },

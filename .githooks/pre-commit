@@ -6,13 +6,13 @@
 
 set -e
 
-echo "[1/7] deno task fmt:check"
+echo "[1/8] deno task fmt:check"
 deno task fmt:check || { echo "❌ Format check failed."; exit 1; }
 
-echo "[2/7] deno task lint"
+echo "[2/8] deno task lint"
 deno task lint || { echo "❌ Lint check failed."; exit 1; }
 
-echo "[3/7] deno check (all 19 packages)"
+echo "[3/8] deno check (all 19 packages)"
 deno check \
   packages/core/src/index.ts \
   packages/rpc/src/index.ts \
@@ -35,18 +35,24 @@ deno check \
   || { echo "❌ Type check failed."; exit 1; }
 echo "   ✅ All 19 packages typecheck"
 
-echo "[4/7] deno task graph:check"
+echo "[4/8] deno task graph:check"
 deno task graph:check || { echo "❌ Package graph check failed."; exit 1; }
 
-echo "[5/7] deno task docs:check-strategy"
+echo "[5/8] deno task docs:check-strategy"
 deno task docs:check-strategy || { echo "❌ Strategic docs check failed."; exit 1; }
 
-echo "[6/7] deno task docs:check-current"
+echo "[6/8] deno task docs:check-current"
 deno task docs:check-current || { echo "❌ Current docs check failed."; exit 1; }
 
-echo "[7/7] autoflow:check"
-deno run --allow-read tools/autoflow/mod-check.ts || {
+echo "[7/8] autoflow:check"
+deno run --allow-read --allow-write tools/autoflow/mod-check.ts || {
   echo "❌ autoflow:check failed."
+  exit 1
+}
+
+echo "[8/8] verify:configs"
+deno run --allow-read tools/verify-package-configs.ts || {
+  echo "❌ Package config verification failed."
   exit 1
 }
 

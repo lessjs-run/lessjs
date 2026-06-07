@@ -27,21 +27,24 @@
  * @module @openelement/adapter-react/dsd-hydration
  */
 
-import { bindHydrateEvents, type HydrateEventDescriptor } from '@openelement/core';
-
-import type { Constructor } from '@openelement/core';
+import {
+  bindHydrateEvents,
+  type Constructor,
+  type DsdHydration as BaseDsdHydration,
+  type HydrateEventDescriptor,
+} from '@openelement/core';
 
 /**
  * Instance interface for DSD-hydrated React-wrapped components.
+ * Extends the base DsdHydration with React-specific getReactElement() method.
  */
-export interface DsdHydration {
-  /** Whether DSD has already hydrated this component's shadow root */
-  _dsdHydrated: boolean;
-  /** Bind declared events to existing shadow DOM elements after DSD upgrade */
-  _hydrateEvents(): void;
+export interface DsdHydration extends BaseDsdHydration {
   /** Return the React element to render */
   getReactElement(): unknown;
 }
+
+// Re-export base for public API compatibility
+export type { BaseDsdHydration as BaseDsdHydration };
 
 /**
  * Instance interface added by the WithDsdHydration mixin.

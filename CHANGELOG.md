@@ -1,3 +1,16 @@
+## v0.35.5 - Configuration Deduplication & Standardization (2026-06-07)
+
+### Completed
+
+- Removed 35 redundant subpath declarations from root deno.json
+- Standardized publish/include/exclude/tasks across all 19 packages
+- Created `tools/config-templates.ts` + `tools/verify-package-configs.ts`
+- Added autoflow invariant `I-PACKAGE-CONFIG-STANDARD` (9 invariants total)
+- Integrated config verification into pre-commit hook and CI sop-gate.yml
+- Fixed missing `sanitize-html`/`@types/sanitize-html` dependencies
+
+---
+
 ## v0.35.4 - Issue #47 Final Closure (2026-06-07)
 
 ### Completed
