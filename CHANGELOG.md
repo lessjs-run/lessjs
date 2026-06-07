@@ -1,3 +1,16 @@
+## v0.35.3 - Issue #47 Final Closure (2026-06-07)
+
+- Completed 14 of 16 remaining items from issue #47
+- P4: DsdHydration interface in core
+- P1: Package list unified to tools/lib/package-list.json
+- P2/P6/P7: Config dedup (exclude, gate names, sop-gate)
+- A3/D2/D3/H3/G3/I1/H4: Constructor, build, publish, playwright, README, autoflow
+- 19 packages bumped to 0.35.3
+- 2 items deferred to v0.36 (P3 CI workflow_call, C2/C3 test helpers)
+- 30/32 items complete across v0.35.1-0.35.3
+
+---
+
 ## v0.35.2 - Issue #47 Complete Closure (2026-06-07)
 
 ### Configuration
