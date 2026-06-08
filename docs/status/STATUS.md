@@ -13,7 +13,7 @@ render engine and HTML post-processing helpers into `@openelement/ssg`, while
 entry generation, route scanning, generated data resolution, alias/noExternal
 configuration, and plugin orchestration.
 
-v0.36.2 Status: **IN PROGRESS.**
+v0.36.2 Status: **RELEASED.**
 Governing docs:
 
 - `docs/sop/v0.36.2/README.md`
@@ -33,20 +33,22 @@ Firefox/WebKit proof remain deferred.
 
 ## Next Targets
 
-| Version | Theme                                                   | Status              | Purpose                                                                                             |
-| ------- | ------------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API                               | Done                | App authoring API, `/vite` config split, docs/template DX                                           |
-| v0.32.0 | App Lifecycle Contract                                  | Done                | Route, load, context, layout, error, redirect lifecycle                                             |
-| v0.33.0 | AI-Readable API Foundation                              | Done                | Structured page, island, head, route, and render intent APIs                                        |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                                | Done                | Workflow state, cells, evidence ledger, allowed-action report                                       |
-| v0.35.x | AutoFlow2 Mechanical Autonomy                           | Done                | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                                |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors      | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                               |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth                  | Done                | AutoFlow proof and release truth alignment                                                          |
-| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure       | Current             | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence                   |
-| v0.37.0 | Complete SSG Migration + Server/Data/UI Product Closure | Planned             | Finish adapter-vite file ownership migration, browser expansion, server/data/UI/starter/Hub closure |
-| v0.38.0 | Public Surface Reset                                    | Planned             | Final package/product surface reset before the v1 RC                                                |
-| v0.39.0 | v1 Release Candidate                                    | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                       |
-| v1.0.0  | Stable Engine + AutoFlow Default                        | Vision              | API freeze with workflow evidence as part of default gates                                          |
+| Version | Theme                                              | Status              | Purpose                                                                                       |
+| ------- | -------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
+| v0.31.0 | JSX-first Application API                          | Done                | App authoring API, `/vite` config split, docs/template DX                                     |
+| v0.32.0 | App Lifecycle Contract                             | Done                | Route, load, context, layout, error, redirect lifecycle                                       |
+| v0.33.0 | AI-Readable API Foundation                         | Done                | Structured page, island, head, route, and render intent APIs                                  |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                | Workflow state, cells, evidence ledger, allowed-action report                                 |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Done                | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                          |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                         |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                | AutoFlow proof and release truth alignment                                                    |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence             |
+| v0.36.3 | Complete SSG File Ownership Migration              | Next                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Planned             | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
+| v0.37.0 | Server/Data/UI Product Closure                     | Planned             | Server, data, UI, starters, Hub disposition, pruning evidence                                 |
+| v0.38.0 | Public Surface Reset                               | Planned             | Final package/product surface reset before the v1 RC                                          |
+| v0.39.0 | v1 Release Candidate                               | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                 |
+| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision              | API freeze with workflow evidence as part of default gates                                    |
 
 ## Current Product Center
 

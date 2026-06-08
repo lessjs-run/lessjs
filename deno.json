@@ -139,7 +139,9 @@
     "autoflow:evolve:dry": "deno run --allow-read tools/autoflow/mod-evolve.ts --dry-run",
     "autoflow:test": "deno test --allow-read --allow-write --allow-run tools/autoflow/__tests__/",
     "verify:configs": "deno run --allow-read tools/verify-package-configs.ts",
-    "verify:configs:fix": "deno run --allow-read --allow-write tools/verify-package-configs.ts --fix"
+    "verify:configs:fix": "deno run --allow-read --allow-write tools/verify-package-configs.ts --fix",
+    "gate": "deno task workflow:check && deno task arch:check && deno task graph:check && deno task docs:check-current && deno task docs:check-strategy && deno task fmt:check && deno task lint && deno task typecheck && deno task autoflow:test && deno task autoflow:health && deno task autoflow:check && deno task test && deno task build && deno task dsd:check-report && deno task publish:dry-run && deno task hub:validate -- --strict && deno task verify:configs",
+    "gate:full": "deno task gate && deno task test:e2e"
   },
   "fmt": {
     "useTabs": false,
