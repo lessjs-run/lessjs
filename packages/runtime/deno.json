@@ -1,14 +1,14 @@
 {
   "name": "@openelement/runtime",
-  "version": "0.36.1",
+  "version": "0.36.2",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.1",
-    "@openelement/core/jsx-runtime": "jsr:@openelement/core@^0.36.1/jsx-runtime",
-    "@openelement/signals": "jsr:@openelement/signals@^0.36.1",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.1"
+    "@openelement/core": "jsr:@openelement/core@^0.36.2",
+    "@openelement/core/jsx-runtime": "jsr:@openelement/core@^0.36.2/jsx-runtime",
+    "@openelement/signals": "jsr:@openelement/signals@^0.36.2",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.2"
   },
   "publish": {
     "include": [

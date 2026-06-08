@@ -1,11 +1,11 @@
 export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import '@openelement/ui\/open-code-block';
 
-const baseStyle = pageStyles;
+const baseStyle = pageStylesSheet;
 
 export class PackageCompatibilityGuidePage extends DsdElement {
   declare locale?: string;

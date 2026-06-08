@@ -1,8 +1,8 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current line: v0.36.1 AutoFlow Closure & v0.36 Release Truth.
-> Next line: v0.37.0.
+> Current line: v0.36.2 SSG Bridge Migration + Rendering Evidence Closure.\
+> Next line: v0.37.0 Complete SSG Migration + Server/Data/UI Product Closure.\
 > Updated: 2026-06-08.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -10,157 +10,118 @@ Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 ## Product Position
 
 openElement is a JSX-first Web Components application framework with
-Declarative Shadow DOM as the default server-rendered output. Built on DSD-first
-HTML, progressive islands, and a 20-package monorepo under `@openelement/*`.
+Declarative Shadow DOM as the default server-rendered output. Built on
+DSD-first HTML, progressive islands, Hono routes, and a 20-package monorepo
+under `@openelement/*`.
 
 v0.33.0 (AI-Readable API Foundation) defined the public application contract
-that all subsequent versions build upon.
+that all subsequent versions build upon. v1.0 remains the stable engine target.
 
 ## Version Ladder
 
-| Version | Name                                               | Goal                                                                                                                                                          | Status |
-| ------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| v0.30.x | Contract cleanup                                   | Done                                                                                                                                                          |        |
-| v0.31.0 | JSX-first Application API                          | Done                                                                                                                                                          |        |
-| v0.32.0 | App Lifecycle Contract                             | Done                                                                                                                                                          |        |
-| v0.33.0 | AI-Readable API Foundation                         | Done                                                                                                                                                          |        |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                                                                                                                                                          |        |
-| v0.35.0 | AutoFlow2 Mechanical Autonomy                      | Done — Harness Gate + Cell Execution framework + Evolution Loop framework                                                                                     |        |
-| v0.35.5 | Deduplication & Debt Closure                       | Done                                                                                                                                                          |        |
-| v0.35.6 | AutoFlow2 Full-Auto Evolution                      | Done — L2 Cell Execution completion + L3 Evolution Loop real data + 8 improvement cells                                                                       |        |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferred items: docs, FileIsrCache, ErrorBoundary retry, SSG Phase 1, parallel SSG evidence; full adapter migration and browser expansion deferred. |        |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Current: AutoFlow Windows path fix, real merged cell metrics, release truth alignment, v0.36.0 deferred scope clarity.                                        |        |
-| v0.37.0 | Server/Data/UI Product Closure                     | Next: Server, data, UI, starters, Hub disposition, pruning evidence.                                                                                          |        |
-| v0.38.0 | Public Surface Reset                               | Planned                                                                                                                                                       |        |
-| v0.39.0 | v1 Release Candidate                               | Planned                                                                                                                                                       |        |
-| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision                                                                                                                                                        |        |
-
-## v0.35.0 — AutoFlow2 Mechanical Autonomy
-
-Combines what was originally planned as v0.35 (Harness Gate), v0.36 (Cell
-Execution), and v0.37 (Evolution Loop) into a single version.
-
-### Layer 1 — Harness Gate
-
-- `cell-state-machine.ts` — 12-state Harel hierarchical model, 3 orthogonal dimensions, broadcast events.
-- `invariant-checker.ts` — 8 Pnueli temporal invariants.
-- `evidence-ledger.ts` + `event-sourcing.ts` — Durable Execution event sourcing.
-- `harness-runner.ts` — 12-gate runner.
-- `mod-check.ts` — autoflow:check CLI (exit 0/1).
-- `.githooks/pre-commit` enhanced with autoflow:check.
-- `.github/workflows/lint.yml` enhanced with autoflow:check in CI.
-
-### Layer 2 — Cell Execution
-
-- `executor.ts` — three-phase (testgen → implement → review), pluggable CodeGenerator.
-- `git-ops.ts` — git operations with Kahn isolation.
-- `dag-builder.ts` — evidence → DAG with conflict detection.
-- `scheduler.ts` — wave-based parallel + cascade.
-- `mod-evolve.ts` — autoflow:evolve CLI.
-
-### Layer 3 — Evolution Loop
-
-- `metrics.ts` — AlphaEvolve fitness + SWE-bench 12-D metrics.
-- `evolution-tracker.ts` — multi-cycle trend (Lehman C3).
-- `mod-health.ts` — agent diagnostic.
-- `.workbuddy/skills/autoflow/SKILL.md` — agent project driver.
-
-### Research Basis
-
-- 15 internal papers + 12 external papers (EMNLP 2024, ICSE 2025, ACM TOSEM 2025).
-- Full library at `docs/references/autoworkflow/`.
-
-SOP: `docs/sop/v0.35.0/`\
-ADR: ADR-0087, ADR-0088
-
-## v0.35.6 — AutoFlow2 Full-Auto Evolution
-
-Completes the mechanical autonomy stack by making L2 and L3 production-ready:
-
-### L2 Cell Execution — Completion
-
-- Replace `DryRunGenerator` with `AgentCodeGenerator` (file-system protocol).
-- `executor.ts` — real file write + gate execution (fmt/lint/typecheck/test).
-- `mod-evolve.ts` — end-to-end CLI: drift detect → DAG build → execute → merge.
-- `scheduler.ts` — integrate executor with wave-based parallel execution.
-
-### L3 Evolution Loop — Real Data
-
-- `metrics-collector.ts` — collect CI/test/coverage data from real executions.
-- `evolution-tracker.ts` — populate multi-cycle metrics from v0.35.6 cell data.
-- Closed-loop MAPE-K feedback: metrics inform next cell planning.
-
-### 8 Improvement Cells (executed via AutoFlow pipeline)
-
-| # | Cell                          | Type          | Risk   |
-| - | ----------------------------- | ------------- | ------ |
-| 1 | `tools/bump-version.ts`       | version-bump  | low    |
-| 2 | 5 package README completion   | readme-update | low    |
-| 3 | Coverage CI gate              | test-add      | low    |
-| 4 | Security usage guide          | doc-align     | low    |
-| 5 | SOP-011 type cleanup          | typecheck-fix | medium |
-| 6 | Render performance benchmarks | test-add      | low    |
-| 7 | Post-publish smoke test       | test-add      | medium |
-| 8 | CI fast/full gate separation  | doc-align     | low    |
-
-SOP: `docs/sop/v0.35.6/`\
-ADR: ADR-0088, ADR-0089
+| Version | Name                                                    | Goal                                                                                                    | Status                   |
+| ------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------ |
+| v0.30.x | Contract cleanup                                        | Architecture and package contract cleanup                                                               | Done                     |
+| v0.31.0 | JSX-first Application API                               | App authoring API, `/vite` config split, docs/template DX                                               | Done                     |
+| v0.32.0 | App Lifecycle Contract                                  | Route, load, context, layout, error, redirect lifecycle                                                 | Done                     |
+| v0.33.0 | AI-Readable API Foundation                              | Structured page, island, head, route, and render intent APIs                                            | Done                     |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                                | Workflow state, cells, evidence ledger, allowed-action report                                           | Done                     |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                           | Harness Gate, Cell Execution, Evolution Loop, full-auto evidence                                        | Done                     |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors      | Rendering runtime evidence, docs, ISR, SSG Phase 1, parallel SSG, AutoFlow cell base                    | Done with deferred items |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth                  | Windows-safe AutoFlow tests, real merged cell metrics, release truth alignment                          | Done                     |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure       | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell     | Current                  |
+| v0.37.0 | Complete SSG Migration + Server/Data/UI Product Closure | Finish adapter-vite SSG ownership migration, browser expansion, server/data/UI/starters/Hub disposition | Next                     |
+| v0.38.0 | Public Surface Reset                                    | Final package/product surface reset before the v1 RC                                                    | Planned                  |
+| v0.39.0 | v1 Release Candidate                                    | Final API, docs, starter, deploy, consumer, and publish gates                                           | Planned                  |
+| v1.0.0  | Stable Engine + AutoFlow Default                        | API freeze with workflow evidence as part of default gates                                              | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
 
-Resume product work under AutoFlow2 governance. Delivered as v0.36.0 with
-explicit deferred items closed by v0.36.1 release truth work.
+Delivered product work under AutoFlow2 governance:
 
-- Delivered: signals documentation, deployment recipes, version sync, error
-  boundary retry/degraded fallback coverage, FileIsrCache, `@openelement/ssg`
-  Phase 1 package, parallel SSG concurrency-pool behavior and evidence, and
-  AutoFlow built-in cell generation.
-- Deferred to v0.37.0: full adapter-vite migration out of adapter-vite, expanded
-  Firefox/WebKit execution proof, and broader server/data/UI/starter/Hub product
-  closure.
+- signals documentation;
+- deployment recipes;
+- version sync;
+- error boundary retry/degraded fallback coverage;
+- FileIsrCache;
+- `@openelement/ssg` Phase 1 package;
+- parallel SSG concurrency-pool behavior and evidence;
+- AutoFlow built-in cell generation.
+
+Deferred after v0.36.0:
+
+- complete adapter-vite migration out of adapter-vite;
+- expanded Firefox/WebKit execution proof;
+- broader server/data/UI/starter/Hub product closure.
 
 ## v0.36.1 - AutoFlow Closure & v0.36 Release Truth
 
 Patch release for v0.36 release truth and AutoFlow evidence:
 
-- Fix generated AutoFlow tests on Windows by using path-safe APIs.
-- Treat `harness:passing` as an intermediate state, not release proof.
-- Count only `merged` cells as successful for evolution metrics.
-- Record real v0.36.1 metrics from `cell-v0.36.1-001`: attempted 1, merged 1,
-  firstPassRate 1.
-- Align `STATUS`, `ROADMAP`, SOP, NextVersion, changelog, release note, and
-  package count/version evidence.
-- Keep v0.37 server/data/UI/starter/Hub product scope deferred.
+- fixed generated AutoFlow tests on Windows by using path-safe APIs;
+- treated `harness:passing` as an intermediate state, not release proof;
+- counted only `merged` cells as successful for evolution metrics;
+- recorded real v0.36.1 metrics from `cell-v0.36.1-001`;
+- aligned `STATUS`, `ROADMAP`, SOP, NextVersion, changelog, release note, and
+  package count/version evidence;
+- kept v0.37 server/data/UI/starter/Hub product scope deferred.
 
-## v0.37.0 — Server/Data/UI Product Closure
+## v0.36.2 - SSG Bridge Migration + Rendering Evidence Closure
 
-Server, data, UI, starters, Hub disposition, pruning evidence.
+Patch release for bridge migration and rendering evidence:
 
-## v0.38.0 — Public Surface Reset
+- move Vite-free `ssgRender()` and SSG render types into `@openelement/ssg`;
+- move SSG postprocess helpers for client scripts, CSP, DSD polyfill, View
+  Transitions, and Speculation Rules into `@openelement/ssg`;
+- keep adapter-vite as the Vite orchestration shell for SSR bundle build,
+  virtual entry generation, route scanning, alias/noExternal, generated data
+  resolution, and plugin composition;
+- keep adapter-vite compatibility re-exports for migrated SSG APIs;
+- add direct SSG render/postprocess tests, adapter bridge tests, FileIsrCache
+  persistence coverage, ISR manifest cache-key proof, and Streaming DSD
+  Response coverage;
+- record real v0.36.2 metrics from `cell-v0.36.2-001`: attempted 1, merged 1,
+  firstPassRate 1;
+- keep complete migration and Server/Data/UI/starter/Hub product scope deferred
+  to v0.37.0.
 
-Package/product surface reset with AI-assisted evidence analysis.
-Human decision, AI-generated candidate analysis.
+## v0.37.0 - Complete SSG Migration + Server/Data/UI Product Closure
 
-## v0.39.0 — v1 Release Candidate
+v0.37.0 is intentionally broader because v0.36.2 removes the risky Vite-free
+SSG engine movement first. Remaining work:
 
-Validate final APIs, docs, starters, deploy smoke, publish gates.
+- finish adapter-vite SSG file ownership migration;
+- remove bridge-only compatibility exports when the new import paths are stable;
+- expand Firefox/WebKit proof or record browser-specific blockers;
+- close server, data, UI, starter, and Hub disposition decisions;
+- prune stale evidence and release truth docs after the product closure work.
 
-## v1.0.0 — Stable Engine + AutoFlow Default
+## v0.38.0 - Public Surface Reset
 
-API freeze. AutoFlow evidence as part of default release gates.
-Requires: 3+ autonomous version cycles of evidence, v0.38 reset complete,
-v0.39 RC gates pass.
+Package/product surface reset with AI-assisted evidence analysis. Human review
+remains required for public API resets and package removals.
+
+## v0.39.0 - v1 Release Candidate
+
+Validate final APIs, docs, starters, deploy smoke, publish gates, and consumer
+proof before v1.0.
+
+## v1.0.0 - Stable Engine + AutoFlow Default
+
+API freeze. AutoFlow evidence becomes part of default release gates. Requires
+multiple autonomous version cycles of evidence, v0.38 reset completion, and
+v0.39 RC gates passing.
 
 ## Explicit Non-Goals
 
-| Item                              | Decision                                                                                                    |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Built-in ORM                      | External recipes only.                                                                                      |
-| Generic auth platform             | External integrations only.                                                                                 |
-| React-like runtime                | openElement outputs Web Components + DSD.                                                                   |
-| String renderer                   | JSX/VNode/RenderNode only.                                                                                  |
-| Silent compatibility shims        | No. 0.x may break.                                                                                          |
-| Autonomous architecture decisions | No. ADR, API reset, package removal require human review (R5/R6: 85% of studies require human involvement). |
+| Item                              | Decision                                                  |
+| --------------------------------- | --------------------------------------------------------- |
+| Built-in ORM                      | External recipes only.                                    |
+| Generic auth platform             | External integrations only.                               |
+| React-like runtime                | openElement outputs Web Components + DSD.                 |
+| String renderer                   | JSX/VNode/RenderNode only.                                |
+| Silent compatibility shims        | No. 0.x may break.                                        |
+| Autonomous architecture decisions | No. ADR, API reset, package removal require human review. |
 
 ## Document Cross-Reference
 

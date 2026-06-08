@@ -1,6 +1,6 @@
 {
   "name": "@openelement/rpc",
-  "version": "0.36.1",
+  "version": "0.36.2",
   "exports": {
     ".": "./src/index.ts"
   },

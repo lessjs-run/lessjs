@@ -52,6 +52,29 @@ Deno.test('renderDsdStream: returns ReadableStream<Uint8Array>', () => {
   assertEquals(stream instanceof ReadableStream, true);
 });
 
+Deno.test('renderDsdStream: can be consumed by a Web Response', async () => {
+  const comp: RenderDsdStreamComponent = {
+    tagName: 'stream-response-card',
+    componentClass: makeComponent(() => jsx('p', { children: 'stream response body' })),
+  };
+
+  const response = new Response(
+    renderDsdStream([comp], {
+      shell: '<!doctype html><html><body>',
+      footer: '</body></html>',
+    }),
+    {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    },
+  );
+
+  assertEquals(response.headers.get('content-type'), 'text/html; charset=utf-8');
+  const body = await response.text();
+  assertEquals(body.includes('<!doctype html><html><body>'), true);
+  assertEquals(body.includes('stream response body'), true);
+  assertEquals(body.includes('</body></html>'), true);
+});
+
 Deno.test('renderDsdStream: shell chunk is output first', async () => {
   const comp: RenderDsdStreamComponent = {
     tagName: 'shell-first-el',

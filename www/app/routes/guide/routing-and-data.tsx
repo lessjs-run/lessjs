@@ -2,12 +2,12 @@ export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 
 import { DsdElement } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import '@openelement/ui/open-code-block';
 import '@openelement/ui/open-callout';
 
 export class RoutingDataPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStyles];
+  static override styles = [openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (

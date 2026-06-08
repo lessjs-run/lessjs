@@ -1,10 +1,10 @@
 /**
- * @openelement/adapter-vite - ssg-render.ts tests
+ * @openelement/ssg - ssg-render.ts tests
  */
 import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { Hono } from 'hono';
-import { resolveDynamicRoutePath, ssgRender } from '../src/cli/ssg-render.js';
-import type { SsgPageOutput, SsgRenderOptions, SsrBundle } from '../src/cli/ssg-render.js';
+import { resolveDynamicRoutePath, ssgRender } from '../src/index.ts';
+import type { SsgPageOutput, SsgRenderOptions, SsrBundle } from '../src/index.ts';
 
 function createMockBundle(overrides: Partial<SsrBundle> = {}): SsrBundle {
   const app = new Hono();
@@ -21,7 +21,7 @@ function createMockBundle(overrides: Partial<SsrBundle> = {}): SsrBundle {
 
 const defaultOptions: SsgRenderOptions = {
   root: Deno.cwd(),
-  outDir: './dist-test-ssg-render',
+  outDir: './dist-test-ssg-package-render',
 };
 
 Deno.test('resolveDynamicRoutePath encodes safe params', () => {
@@ -72,7 +72,7 @@ Deno.test('ssgRender - handles empty routeInfo gracefully', async () => {
 });
 
 Deno.test('ssgRender - writes ISR manifest for revalidate routes', async () => {
-  const outDir = './dist-test-ssg-render-isr';
+  const outDir = './dist-test-ssg-package-render-isr';
   await Deno.remove(outDir, { recursive: true }).catch(() => {});
   const bundle = createMockBundle({
     routeInfo: [
@@ -89,6 +89,56 @@ Deno.test('ssgRender - writes ISR manifest for revalidate routes', async () => {
       revalidate: 60,
       cacheKey: 'openelement:isr:/',
       params: {},
+    },
+  ]);
+  await Deno.remove(outDir, { recursive: true }).catch(() => {});
+});
+
+Deno.test('ssgRender - writes ISR manifest entries for dynamic static paths', async () => {
+  const outDir = './dist-test-ssg-package-render-isr-dynamic';
+  await Deno.remove(outDir, { recursive: true }).catch(() => {});
+  const bundle = createMockBundle({
+    routeInfo: [
+      {
+        path: '/blog/:slug',
+        tagName: 'blog-page',
+        isDynamic: true,
+        paramNames: ['slug'],
+        revalidate: 120,
+      },
+    ],
+    renderRoute: (() =>
+      Promise.resolve(
+        {
+          html: '<html><body>test</body></html>',
+          errors: [],
+          hydrationHints: [],
+          componentCount: 0,
+          renderTimeMs: 0,
+        } as SsgPageOutput,
+      )) as SsrBundle['renderRoute'],
+    getStaticPaths: (() =>
+      Promise.resolve([
+        { slug: 'hello world' },
+        { slug: 'second' },
+      ])) as SsrBundle['getStaticPaths'],
+  });
+
+  await ssgRender(bundle, { ...defaultOptions, outDir });
+
+  const manifest = JSON.parse(await Deno.readTextFile(`${outDir}/isr-manifest.json`));
+  assertEquals(manifest, [
+    {
+      path: '/blog/:slug',
+      revalidate: 120,
+      cacheKey: 'openelement:isr:/blog/:slug?slug=hello%20world',
+      params: { slug: 'hello world' },
+    },
+    {
+      path: '/blog/:slug',
+      revalidate: 120,
+      cacheKey: 'openelement:isr:/blog/:slug?slug=second',
+      params: { slug: 'second' },
     },
   ]);
   await Deno.remove(outDir, { recursive: true }).catch(() => {});
