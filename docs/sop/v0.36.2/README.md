@@ -72,3 +72,7 @@ deno test --allow-read --allow-write --allow-env --allow-net --allow-run package
 - Root build still emits static HTML, client bundle, DSD report, sitemap/PWA assets, and ISR manifest.
 - `autoflow:health` and `autoflow:check` agree with the current v0.36.2 status.
 - Full release gate status is recorded before tag or publish.
+
+## Related
+
+- [ADR-0086: AI-Readable Architecture and AutoFlow Roadmap](../../adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md)

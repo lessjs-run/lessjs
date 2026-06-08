@@ -24,3 +24,8 @@ Deferred to v0.37.0:
 - Complete adapter-vite SSG file ownership migration.
 - Server/data/UI/starter/Hub product closure.
 - Expanded Firefox/WebKit proof if it is not a simple local setup issue.
+
+## Related
+
+- [ADR-0086: AI-Readable Architecture and AutoFlow Roadmap](../../adr/ADR-0086-ai-readable-architecture-and-autoflow2-roadmap.md)
+- [SOP v0.36.2](../../sop/v0.36.2/README.md)
