@@ -57,8 +57,8 @@ export {
   writeIslandManifests,
 } from './island-manifest.js';
 
-// External resolver types
-export type { ExternalManifest } from './external-resolver.js';
+// External resolver types (moved to @openelement/ssg in v0.36.3)
+export type { ExternalManifest } from '@openelement/ssg';
 
 // Subpath resolver (public constants)
 export { CORE_SUBPATHS, VIRTUAL_CORE_PREFIX } from './subpath-resolver.js';

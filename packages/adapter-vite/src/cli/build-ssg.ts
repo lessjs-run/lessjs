@@ -31,8 +31,7 @@ import { createLogger } from '@openelement/core/logger';
 import { createSsgRenderEvidence } from './ssg-render.js';
 import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js';
 import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
-import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
-import { resolveExternalManifest } from '../external-resolver.js';
+import { generateSsrPolyfillBanner, resolveExternalManifest } from '@openelement/ssg';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
 import { loadHubClientOnlyTags } from '../hub-client-only-tags.js';
 

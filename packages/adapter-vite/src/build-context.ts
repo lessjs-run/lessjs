@@ -137,7 +137,7 @@ export class Phase3Meta {
   componentsDir: string = 'app/components';
 
   /** ADR-0047: Pre-resolved external dependency manifest (auto-generated from deno info). */
-  externalManifest?: import('./external-resolver.js').ExternalManifest;
+  externalManifest?: import('@openelement/ssg').ExternalManifest;
 
   /** Skip Deno pre-resolution, use regex fallback. */
   skipPreResolution?: boolean;

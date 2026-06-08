@@ -157,3 +157,14 @@ export {
   insertAfterHead,
 } from './postprocess.ts';
 export type { SpeculationRulesOptions } from './postprocess.ts';
+
+export { generateSsrPolyfillBanner } from './ssr-polyfills.ts';
+export {
+  buildFallbackManifest,
+  completeExternalSpecifiers,
+  extractExternalSpecifiers,
+  resolveExternalManifest,
+  resolvePackageExports,
+  walkExports,
+} from './external-resolver.ts';
+export type { ExternalManifest } from './external-resolver.ts';

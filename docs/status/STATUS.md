@@ -3,9 +3,9 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.36.2/`.
+package: `docs/next/v0.36.3/`.
 
-## Current Version Line: v0.36.2 (SSG Bridge Migration + Rendering Evidence Closure)
+## Current Version Line: v0.36.3 (Complete SSG File Ownership Migration)
 
 v0.36.2 is a patch release for SSG bridge migration. It moves the Vite-free SSG
 render engine and HTML post-processing helpers into `@openelement/ssg`, while
@@ -93,8 +93,7 @@ Package governance before v0.38:
    pipeline, Hono API routes.
 2. **DSD/WC element and UI engine** - `DsdElement`, `renderDsd()`, JSX runtime,
    adapters, UI components, compatibility.
-3. **SSG engine** - Vite-free render/postprocess code in `@openelement/ssg`,
-   with adapter-vite still orchestrating Vite build inputs in v0.36.2.
+3. **SSG engine** - All SSG code (render, postprocess, route scanning, entry generation, data resolution) lives in `@openelement/ssg`; adapter-vite provides only Vite build orchestration glue.
 4. **Registry Hub** - current package and tooling surface; v0.37 must decide
    whether it remains public product, becomes internal tooling, is deferred, is
    archived, or is removed.
