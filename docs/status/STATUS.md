@@ -76,7 +76,7 @@ Firefox/WebKit proof remain deferred.
 
 ## Package Version State
 
-All 20 packages are aligned to **v0.36.2** under `@openelement/*`.
+All 20 packages are aligned to **v0.36.3** under `@openelement/*`.
 
 Package governance before v0.38:
 

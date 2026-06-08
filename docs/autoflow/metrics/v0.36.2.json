@@ -1,7 +1,7 @@
 {
-  "version": "v0.36.2",
+  "version": "v0.36.3",
   "metrics": {
-    "versionCycle": "v0.36.2",
+    "versionCycle": "v0.36.3",
     "timestamp": "2026-06-08T12:00:00.000Z",
     "firstPassRate": 1,
     "avgRetriesPerCell": 0,

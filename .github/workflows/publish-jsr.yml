@@ -71,10 +71,10 @@ jobs:
           # v0.24.3: @openelement/signals is now a dependency of @openelement/core (effect() for VNode signal tracking)
           publish_if_missing "@openelement/signals" "packages/signals"
           publish_if_missing "@openelement/core" "packages/core"
-          publish_if_missing "@openelement/ssg" "packages/ssg"
           publish_if_missing "@openelement/runtime" "packages/runtime"
           publish_if_missing "@openelement/cem" "packages/cem"
           publish_if_missing "@openelement/compat-check" "packages/compat-check"
+          publish_if_missing "@openelement/ssg" "packages/ssg"
           publish_if_missing "@openelement/content" "packages/content"
           publish_if_missing "@openelement/i18n" "packages/i18n"
           publish_if_missing "@openelement/adapter-lit" "packages/adapter-lit"

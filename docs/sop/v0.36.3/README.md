@@ -1,6 +1,6 @@
 # v0.36.3 SOP: Complete SSG File Ownership Migration
 
-> Status: Planned\
+> Status: Implemented\
 > Roadmap: Complete SSG File Ownership Migration\
 > NextVersion: `docs/next/v0.36.3/`
 
@@ -13,16 +13,16 @@ internal types.
 
 ## Tasks
 
-- [ ] Move route scanner from `adapter-vite` to `@openelement/ssg`.
-- [ ] Move route type generation to `@openelement/ssg`.
-- [ ] Move virtual entry generator to `@openelement/ssg`.
-- [ ] Move SSG-specific Vite plugin orchestration to `@openelement/ssg`.
-- [ ] Move generated data resolver (blog, nav, search, i18n bridges) to `@openelement/ssg`.
-- [ ] Remove bridge-only compatibility exports from `adapter-vite`.
-- [ ] Ensure `@openelement/ssg` can be consumed without adapter-vite internal types.
-- [ ] Add tests proving SSG engine works independently of adapter-vite.
-- [ ] Update all internal imports to use new `@openelement/ssg` paths.
-- [ ] Bump all 20 packages to 0.36.3.
+- [x] Move route scanner from `adapter-vite` to `@openelement/ssg`.
+- [x] Move route type generation to `@openelement/ssg`.
+- [x] Move virtual entry generator to `@openelement/ssg`.
+- [x] Move SSG-specific Vite plugin orchestration to `@openelement/ssg`.
+- [x] Move generated data resolver (blog, nav, search, i18n bridges) to `@openelement/ssg`.
+- [x] Remove bridge-only compatibility exports from `adapter-vite`.
+- [x] Ensure `@openelement/ssg` can be consumed without adapter-vite internal types.
+- [x] Add tests proving SSG engine works independently of adapter-vite.
+- [x] Update all internal imports to use new `@openelement/ssg` paths.
+- [x] Bump all 20 packages to 0.36.3.
 
 ## Verification
 

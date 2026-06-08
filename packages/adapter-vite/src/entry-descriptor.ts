@@ -4,12 +4,12 @@
  */
 export { buildEntryDescriptor, fileToTagName } from '@openelement/ssg';
 export type {
+  ApiRouteDecl,
   EntryDescriptor,
   ImportDecl,
   IslandDecl,
-  PageRouteDecl,
-  ApiRouteDecl,
   MiddlewareDecl,
+  PageRouteDecl,
   RendererDecl,
   SsrAdmissionPlan,
 } from '@openelement/ssg';

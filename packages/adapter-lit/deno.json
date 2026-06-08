@@ -1,13 +1,13 @@
 {
   "name": "@openelement/adapter-lit",
-  "version": "0.36.2",
+  "version": "0.36.3",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.2",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.36.2/logger",
+    "@openelement/core": "jsr:@openelement/core@^0.36.3",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.36.3/logger",
     "lit": "npm:lit@^3.2.0"
   },
   "tasks": {

@@ -1,6 +1,6 @@
 {
   "name": "@openelement/core",
-  "version": "0.36.2",
+  "version": "0.36.3",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -15,8 +15,8 @@
     "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
-    "@openelement/signals": "jsr:@openelement/signals@^0.36.2",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.2"
+    "@openelement/signals": "jsr:@openelement/signals@^0.36.3",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.3"
   },
   "publish": {
     "include": [
