@@ -1,12 +1,12 @@
 ﻿export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 export class StandardsRegistryGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, pageStyles];
+  static override styles = [openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();

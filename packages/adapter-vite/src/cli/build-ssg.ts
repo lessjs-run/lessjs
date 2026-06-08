@@ -25,10 +25,10 @@ import type {
   OpenElementPackageManifest,
 } from '@openelement/core';
 import type { OpenElementBuildContext } from '../build-context.js';
-import type { SsgRenderOptions } from './ssg-render.js';
+import { ssgRender, type SsgRenderOptions } from '@openelement/ssg';
 import { SsrRenderError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
-import { ssgRender } from './ssg-render.js';
+import { createSsgRenderEvidence } from './ssg-render.js';
 import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js';
 import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
@@ -494,50 +494,24 @@ if (typeof globalThis.customElements === 'undefined') {
     }
 
     // Delegate to shared ssgRender() - zero Vite dependency from this point
-    await ssgRender(module as Parameters<typeof ssgRender>[0], {
-      root,
-      outDir,
-      base: options.base || '/',
-      headExtras: options.headExtras,
-      html: options.html,
-      middleware: options.middleware,
-      islandTagNames: ssgIslandTagNames,
-      viewTransition: options.viewTransition,
-      speculation: options.speculation as boolean | Record<string, unknown> | undefined,
-      pwa: (options as Record<string, unknown>).pwa as SsgRenderOptions['pwa'],
-    }, ctx);
+    await ssgRender(
+      module as Parameters<typeof ssgRender>[0],
+      {
+        root,
+        outDir,
+        base: options.base || '/',
+        headExtras: options.headExtras,
+        html: options.html,
+        middleware: options.middleware,
+        islandTagNames: ssgIslandTagNames,
+        viewTransition: options.viewTransition,
+        speculation: options.speculation as boolean | Record<string, unknown> | undefined,
+        pwa: (options as Record<string, unknown>).pwa as SsgRenderOptions['pwa'],
+      },
+      createSsgRenderEvidence(ctx),
+    );
 
     log.info('Static site generated -> ' + join(root, outDir));
-
-    // v0.21: Write ISR manifest for routes exporting revalidate > 0.
-    try {
-      const ssgModule = module as Record<string, unknown>;
-      const routes = (ssgModule.routes || ssgModule.__routes) as
-        | Array<Record<string, unknown>>
-        | undefined;
-      if (routes && routes.length > 0) {
-        const isrRoutes: Record<string, unknown>[] = [];
-        for (const r of routes) {
-          const revalidate = typeof r.revalidate === 'number' && r.revalidate > 0
-            ? r.revalidate
-            : undefined;
-          if (!revalidate) continue;
-          isrRoutes.push({
-            path: r.path,
-            revalidate,
-            cacheKey: `openelement:isr:${r.path}`,
-            params: r.params || {},
-          });
-        }
-        if (isrRoutes.length > 0) {
-          const manifestPath = join(root, outDir, 'isr-manifest.json');
-          writeFileSync(manifestPath, JSON.stringify(isrRoutes, null, 2), 'utf-8');
-          log.info(`ISR manifest written -> ${manifestPath} (${isrRoutes.length} routes)`);
-        }
-      }
-    } catch (e) {
-      log.warn('Failed to write isr-manifest.json; non-fatal:', e);
-    }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);

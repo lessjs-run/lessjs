@@ -1,5 +1,5 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import '@openelement/ui\/open-code-block';
@@ -7,7 +7,7 @@ import '@openelement/ui\/open-code-block';
 export class ConfigurationPage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, pageStyles];
+  static override styles = [openPropsTokenSheet, pageStylesSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }

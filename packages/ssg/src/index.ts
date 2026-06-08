@@ -22,8 +22,8 @@ export interface SsgPageInput {
   params?: Record<string, string>;
 }
 
-/** Result of rendering a single page. */
-export interface SsgPageOutput {
+/** Result of rendering a single page through the concurrency helper. */
+export interface ParallelRenderPageOutput {
   path: string;
   html: string;
   durationMs: number;
@@ -42,7 +42,7 @@ export interface ParallelRenderOptions {
 
 /** Summary of a parallel render run. */
 export interface ParallelRenderResult {
-  pages: SsgPageOutput[];
+  pages: ParallelRenderPageOutput[];
   totalDurationMs: number;
   successCount: number;
   errorCount: number;
@@ -58,7 +58,7 @@ export async function renderSequential(
   options: ParallelRenderOptions,
 ): Promise<ParallelRenderResult> {
   const start = performance.now();
-  const results: SsgPageOutput[] = [];
+  const results: ParallelRenderPageOutput[] = [];
 
   for (const page of options.pages) {
     const pageStart = performance.now();
@@ -100,7 +100,7 @@ export async function renderParallel(
 ): Promise<ParallelRenderResult> {
   const concurrency = options.concurrency ?? 4;
   const start = performance.now();
-  const results: SsgPageOutput[] = [];
+  const results: ParallelRenderPageOutput[] = [];
 
   // Split pages into batches of `concurrency` size
   for (let i = 0; i < options.pages.length; i += concurrency) {
@@ -115,14 +115,14 @@ export async function renderParallel(
             path: page.path,
             html,
             durationMs: Math.round(performance.now() - pageStart),
-          } as SsgPageOutput;
+          } as ParallelRenderPageOutput;
         } catch (err) {
           return {
             path: page.path,
             html: '',
             durationMs: Math.round(performance.now() - pageStart),
             error: err instanceof Error ? err.message : String(err),
-          } as SsgPageOutput;
+          } as ParallelRenderPageOutput;
         }
       }),
     );
@@ -137,3 +137,23 @@ export async function renderParallel(
     errorCount: results.filter((r) => !!r.error).length,
   };
 }
+
+export { resolveDynamicRoutePath, ssgRender } from './ssg-render.ts';
+export type {
+  SsgIslandDeclForReport,
+  SsgPageOutput,
+  SsgRenderEvidence,
+  SsgRenderOptions,
+  SsrBundle,
+} from './ssg-render.ts';
+export {
+  buildIslandChunkMap,
+  buildSpeculationRulesJson,
+  injectClientScript,
+  injectCspMeta,
+  injectDsdPolyfill,
+  injectSpeculationRules,
+  injectViewTransitionMeta,
+  insertAfterHead,
+} from './postprocess.ts';
+export type { SpeculationRulesOptions } from './postprocess.ts';

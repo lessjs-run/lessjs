@@ -56,12 +56,14 @@ also has an execution package under `docs/next/<version>/`.
 | v0.30.0 | [v0.30.0/](./v0.30.0/)                                                                       | Done     | Architecture contract freeze       |
 | v0.30.1 | [v0.30.1/](./v0.30.1/)                                                                       | Done     | Clean architecture sweep           |
 | v0.31.0 | [v0.31.0/](./v0.31.0/)                                                                       | Done     | JSX-first Application API          |
-| v0.32.0 | [v0.32.0/](./v0.32.0/)                                                                       | Current  | App lifecycle contract             |
-| v0.33.0 | [v0.33.0/](./v0.33.0/)                                                                       | Next     | AI-readable API foundation         |
-| v0.34.0 | [v0.34.0/](./v0.34.0/)                                                                       | Planned  | AutoFlow2 sidecar kernel           |
-| v0.35.0 | [v0.35.0/](./v0.35.0/)                                                                       | Planned  | AutoFlow2 harness gate             |
-| v0.36.0 | [v0.36.0/](./v0.36.0/)                                                                       | Planned  | Rendering runtime and deployment   |
-| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Planned  | Server/data/UI product closure     |
+| v0.32.0 | [v0.32.0/](./v0.32.0/)                                                                       | Done     | App lifecycle contract             |
+| v0.33.0 | [v0.33.0/](./v0.33.0/)                                                                       | Done     | AI-readable API foundation         |
+| v0.34.0 | [v0.34.0/](./v0.34.0/)                                                                       | Done     | AutoFlow2 sidecar kernel           |
+| v0.35.0 | [v0.35.0/](./v0.35.0/)                                                                       | Done     | AutoFlow2 harness gate             |
+| v0.36.0 | [v0.36.0/](./v0.36.0/)                                                                       | Done     | Rendering runtime and deployment   |
+| v0.36.1 | [v0.36.1/](./v0.36.1/)                                                                       | Done     | AutoFlow closure and release truth |
+| v0.36.2 | [v0.36.2/](./v0.36.2/)                                                                       | Current  | SSG bridge migration               |
+| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Next     | Complete SSG + product closure     |
 | v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Planned  | Public surface reset               |
 | v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | v1 release candidate               |
 | v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable engine + AutoFlow default   |

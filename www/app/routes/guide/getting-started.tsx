@@ -2,7 +2,7 @@ export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import '@openelement/ui/open-callout';
 import '@openelement/ui/open-code-block';
@@ -20,7 +20,7 @@ routeSheet.replaceSync(`
 `);
 
 export class GettingStartedPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStyles, routeSheet];
+  static override styles = [openPropsTokenSheet, pageStylesSheet, routeSheet];
 
   override render() {
     return (

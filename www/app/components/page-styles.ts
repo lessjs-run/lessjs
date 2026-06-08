@@ -15,6 +15,8 @@
  *   --underline-offset:  3px     (link underline distance)
  *   --border-hairline:   0.5px   (hairline border width)
  */
+import { StyleSheet } from '@openelement/style-sheet';
+
 export const pageStyles = `
   :host {
     display: block;
@@ -289,3 +291,6 @@ export const pageStyles = `
   :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { a, .nav-link { transition: none; } }
 `;
+
+export const pageStylesSheet = new StyleSheet();
+pageStylesSheet.replaceSync(pageStyles);

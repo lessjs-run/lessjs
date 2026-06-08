@@ -1,12 +1,12 @@
 export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import '@openelement/ui\/open-code-block';
 import '@openelement/ui\/open-callout';
 
 export class IslandsSsrPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStyles];
+  static override styles = [openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
