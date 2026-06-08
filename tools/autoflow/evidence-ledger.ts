@@ -81,13 +81,19 @@ export class EvidenceLedger {
     const vc = (firstPayload.versionCycle as string) ?? versionCycle;
     const rk = (firstPayload.risk as string) ?? risk;
 
-    const state = replayEvents(cellId, ct, vc, rk, events, maxRetries);
+    try {
+      const state = replayEvents(cellId, ct, vc, rk, events, maxRetries);
 
-    // Cache
-    const statePath = this.statePath(cellId);
-    Deno.writeTextFileSync(statePath, serializeState(state));
+      // Cache
+      const statePath = this.statePath(cellId);
+      Deno.writeTextFileSync(statePath, serializeState(state));
 
-    return state;
+      return state;
+    } catch (e) {
+      throw new Error(
+        `Failed to replay events for cell ${cellId}: ${(e as Error).message}`,
+      );
+    }
   }
 
   /** Get current cell state (cached or rebuilt). */
