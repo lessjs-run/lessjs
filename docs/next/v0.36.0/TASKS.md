@@ -44,5 +44,5 @@
 - [x] Update CHANGELOG.md
 - [x] Update root README.md
 - [x] Update www/ documentation
-- [ ] Run full release gate sequence
+- [x] Run full release gate sequence (commit + push + tag: all gates passed)
 - [x] Evolution Tracker completeCycle('v0.36.0') → docs/autoflow/metrics/v0.36.0.json

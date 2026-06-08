@@ -94,7 +94,9 @@ export class CellExecutor {
 
     // Phase 2: TDD loop (implement)
     state = await this.phaseImplement(state, targetFiles);
-    if (state.lifecycle === 'failed:non-retriable') return state;
+    if (state.lifecycle === 'failed:non-retriable' || state.lifecycle === 'failed:retriable') {
+      return state;
+    }
 
     // Phase 3: Cross-review
     state = await this.phaseReview(state, targetFiles);
@@ -106,21 +108,17 @@ export class CellExecutor {
     state: CellState,
     targetFiles: string[],
   ): Promise<CellState> {
-    // Advance to harness:running
-    const s: CellState = { ...state, lifecycle: 'harness:running' };
-    this.broadcast(s.cellId, 'harness-started', { phase: 'testgen' });
-
     const req: CodeGenRequest = {
-      cellId: s.cellId,
-      cellType: s.cellType,
-      description: `Cell ${s.cellId}: ${s.cellType} for ${s.versionCycle}`,
+      cellId: state.cellId,
+      cellType: state.cellType,
+      description: `Cell ${state.cellId}: ${state.cellType} for ${state.versionCycle}`,
       files: targetFiles,
     };
 
     const result = await this.ai.generateTests(req);
 
     if (!result.success) {
-      this.broadcast(s.cellId, 'harness-failed', {
+      this.broadcast(state.cellId, 'harness-failed', {
         failures: [{
           gate: 'testgen',
           passed: false,
@@ -130,16 +128,20 @@ export class CellExecutor {
         }],
         retriable: false,
       });
-      return { ...s, lifecycle: 'failed:non-retriable' };
+      return { ...state, lifecycle: 'failed:non-retriable' };
     }
 
-    this.broadcast(s.cellId, 'code-committed', {
+    // Broadcast code-committed FIRST (branched → harness:pending)
+    this.broadcast(state.cellId, 'code-committed', {
       commitSha: 'testgen-' + Date.now(),
       filesWritten: Object.keys(result.files),
       output: result.output,
     });
 
-    return s;
+    // Then broadcast harness-started (harness:pending → harness:running)
+    this.broadcast(state.cellId, 'harness-started', { phase: 'testgen' });
+
+    return { ...state, lifecycle: 'harness:running' };
   }
 
   /** .implement: TDD red-green loop. */
@@ -152,8 +154,9 @@ export class CellExecutor {
         cellId: state.cellId,
         cellType: state.cellType,
         description:
-          `Implement fix for ${state.cellType} (iteration ${iteration}/${this.maxTddIterations})`,
+          `Implement fix for ${state.cellType} (iteration ${iteration}/${this.maxTddIterations}). Target: ${state.versionCycle}`,
         files: targetFiles,
+        context: `versionCycle=${state.versionCycle}`,
       };
 
       const result = await this.ai.implementCode(req);

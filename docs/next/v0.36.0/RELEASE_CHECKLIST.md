@@ -7,6 +7,11 @@
 - [ ] EvolutionMetrics.firstPassRate > 0.
 - [ ] SOP tasks completed.
 - [ ] NextVersion tasks completed.
+- [ ] **ROADMAP cross-check**: every item in ROADMAP v0.36.0 section verified
+      against actual deliverables. Undelivered items explicitly marked as deferred
+      in ROADMAP and SOP.
+- [ ] CHANGELOG cell: `changelog` cell executed (auto-generated CHANGELOG entry).
+- [ ] Release note cell: `release-note` cell executed (auto-generated release note).
 - [ ] `deno task autoflow:test` passes.
 - [ ] `deno task test` passes (all existing tests).
 
@@ -30,7 +35,7 @@ deno task test:e2e
 
 ## Bump and Docs
 
-- [ ] All 19 packages aligned to v0.36.0.
+- [ ] All 20 packages aligned to v0.36.0.
 - [ ] Root `deno.json` imports updated.
 - [ ] Cross-package imports updated.
 - [ ] CHANGELOG.md entry written.

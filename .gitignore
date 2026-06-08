@@ -43,6 +43,8 @@ test-results/
 # Framework internals
 .workbuddy/
 .gstack/
+.qoder/
+docs/autoflow/cells/
 
 # Vite cache
 .vite/

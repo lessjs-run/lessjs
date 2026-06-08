@@ -43,7 +43,8 @@ async function run(
 
 async function main(): Promise<void> {
   const useLocal = Deno.args.includes('--local');
-  const version = getArg('--version') ?? '0.35.6';
+  const version = getArg('--version') ?? '0.36.0';
+  const projectRoot = Deno.cwd().replace(/\\/g, '/');
 
   console.log('🔍 Consumer Smoke Test');
   console.log(`   Mode: ${useLocal ? 'local workspace' : `JSR @openelement/core@${version}`}`);
@@ -58,12 +59,13 @@ async function main(): Promise<void> {
     const denoJson = useLocal
       ? {
         imports: {
-          '@openelement/core': `../../packages/core/src/index.ts`,
+          '@openelement/core': `file:///${projectRoot}/packages/core/src/index.ts`,
         },
         compilerOptions: {
           jsx: 'react-jsx',
           jsxImportSource: '@openelement/core',
         },
+        unstable: ['sloppy-imports'],
       }
       : {
         imports: {

@@ -227,7 +227,12 @@ export function applyCellEvent(
     }
 
     case 'code-committed': {
-      assertLifecycle(base, 'executing');
+      // Accept branched (auto-advance), executing, and harness:running (implement commit)
+      assertInStates(base, ['branched', 'executing', 'harness:running']);
+      if (base.lifecycle === 'harness:running') {
+        // Just record the commit, don't change lifecycle
+        return { ...base, lastCommitSha: event.payload.commitSha as string };
+      }
       return {
         ...base,
         lifecycle: 'harness:pending',

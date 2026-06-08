@@ -51,6 +51,8 @@ AutoFlow autonomous cell execution with real firstPassRate metrics.
 
 - [ ] Cell 012: Run `autoflow:evolve` to detect v0.36.0 drift and execute at least 1 cell autonomously.
 - [ ] Cell 013: Collect real firstPassRate and autonomyScore metrics.
+- [ ] Cell 014: `changelog` cell — auto-generate CHANGELOG entry from cell evidence.
+- [ ] Cell 015: `release-note` cell — auto-generate release note from cell evidence.
 
 ## Verification
 
