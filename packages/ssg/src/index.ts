@@ -212,3 +212,14 @@ export type {
   HubClientOnlyTagsOptions,
   HubClientOnlyTagsResult,
 } from './hub-client-only-tags.ts';
+
+export {
+  createGeneratedDataResolverPlugin,
+  GENERATED_BLOG_DATA_ID,
+  GENERATED_I18N_ID,
+  GENERATED_NAV_ID,
+  generatedDataPath,
+} from './generated-data-resolver.ts';
+export type { GeneratedDataResolverOptions } from './generated-data-resolver.ts';
+
+export { createOpenJsrPackageResolverPlugin } from './ssg-package-resolver.ts';

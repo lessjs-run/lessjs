@@ -31,7 +31,7 @@ import { generateHonoEntryCode } from '@openelement/ssg';
 import { buildHeadExtras } from './head-injection.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { optionalPackageStubsPlugin } from './optional-package-stubs.js';
-import { createGeneratedDataResolverPlugin } from './generated-data-resolver.js';
+import { createGeneratedDataResolverPlugin } from '@openelement/ssg';
 import { loadHubClientOnlyTags } from '@openelement/ssg';
 import {
   detectAndClassifyCemPackages,
