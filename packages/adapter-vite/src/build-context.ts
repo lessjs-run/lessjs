@@ -26,7 +26,7 @@ import type {
   RouteEntry,
 } from '@openelement/core';
 import type { OpenElementPluginMeta } from '@openelement/protocols/build-types';
-import type { IslandDecl, SsrAdmissionPlan } from './entry-descriptor.js';
+import type { IslandDecl, SsrAdmissionPlan } from '@openelement/ssg';
 
 // These branded types ensure Phase 2 can only run after Phase 1,
 // and Phase 3 can only run after Phase 2. The compiler catches

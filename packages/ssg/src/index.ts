@@ -168,3 +168,47 @@ export {
   walkExports,
 } from './external-resolver.ts';
 export type { ExternalManifest } from './external-resolver.ts';
+
+export {
+  detectAndClassifyCemPackages,
+  fileToTagName,
+  scanCemManifests,
+  scanIslandMeta,
+  scanIslands,
+  scanPackageManifests,
+  scanRoutes,
+} from './route-scanner.ts';
+export type { CemScanResult, LocalIslandMeta } from './route-scanner.ts';
+
+export { generateRouteTypes } from './route-type-generator.ts';
+
+export { buildEntryDescriptor, buildSsrAdmissionPlan } from './entry-descriptor.ts';
+export type {
+  ApiRouteDecl,
+  AppShellDecl,
+  AppShellPlan,
+  CorsOriginConfig,
+  CspConfig,
+  DocumentConfig,
+  EntryDescriptor,
+  ImportDecl,
+  IslandDecl,
+  MiddlewareDecl,
+  MiddlewareScopeDecl,
+  PageRouteDecl,
+  RendererDecl,
+  ResolvedAppShell,
+  RouteDecl,
+  SsrAdmissionPlan,
+} from './entry-descriptor.ts';
+
+export { generateHonoEntryCode, renderEntry } from './entry-renderer.ts';
+export type { HonoEntryOptions } from './entry-renderer.ts';
+
+export { extractHubClientOnlyTags, loadHubClientOnlyTags } from './hub-client-only-tags.ts';
+export type {
+  HubClientOnlyRecord,
+  HubClientOnlyTag,
+  HubClientOnlyTagsOptions,
+  HubClientOnlyTagsResult,
+} from './hub-client-only-tags.ts';

@@ -1,10 +1,8 @@
 /**
- * @openelement/core - Hono entry generator (re-export facade).
- *
- * All implementation has been merged into entry-renderer.ts.
- * This file re-exports for consumers that import from hono-entry.ts.
+ * @deprecated Moved to @openelement/ssg in v0.36.3.
+ * Compat re-export — will be removed in v0.37.0.
  */
-export { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from './entry-renderer.js';
+export { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '@openelement/ssg';
 
-export type { EntryDescriptor } from './entry-descriptor.js';
-export type { HonoEntryOptions } from './entry-renderer.js';
+export type { EntryDescriptor } from '@openelement/ssg';
+export type { HonoEntryOptions } from '@openelement/ssg';

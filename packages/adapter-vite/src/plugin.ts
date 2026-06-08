@@ -27,19 +27,19 @@ import { OpenElementBuildContext } from './build-context.js';
 import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
 import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
-import { generateHonoEntryCode } from './hono-entry.js';
+import { generateHonoEntryCode } from '@openelement/ssg';
 import { buildHeadExtras } from './head-injection.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { optionalPackageStubsPlugin } from './optional-package-stubs.js';
 import { createGeneratedDataResolverPlugin } from './generated-data-resolver.js';
-import { loadHubClientOnlyTags } from './hub-client-only-tags.js';
+import { loadHubClientOnlyTags } from '@openelement/ssg';
 import {
   detectAndClassifyCemPackages,
   fileToTagName,
   scanIslands,
   scanPackageManifests,
   scanRoutes,
-} from './route-scanner.js';
+} from '@openelement/ssg';
 import { createCoreResolvePlugin } from './subpath-resolver.js';
 import { mdxPlugin } from './plugin-mdx.js';
 
@@ -214,7 +214,7 @@ export function createOpenPlugin(
         const islandFiles = await scanIslands(islandsRoot);
         ctx.phase1.islandTagNames = islandFiles.map((f) => fileToTagName(f));
         ctx.phase1.islandFiles = islandFiles;
-        const { scanIslandMeta } = await import('./route-scanner.js');
+        const { scanIslandMeta } = await import('@openelement/ssg');
         ctx.phase1.islandMeta = await scanIslandMeta(islandsRoot, islandFiles);
 
         if (
@@ -254,7 +254,7 @@ export function createOpenPlugin(
           ctx.phase1.packageManifests,
           ctx.phase1.islandFiles,
         );
-        const { buildEntryDescriptor } = await import('./entry-descriptor.js');
+        const { buildEntryDescriptor } = await import('@openelement/ssg');
 
         // v0.18.0: CEM auto-detection - scan node_modules for custom-elements.json
         // without importing or executing any package code.

@@ -33,7 +33,7 @@ import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js
 import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner, resolveExternalManifest } from '@openelement/ssg';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
-import { loadHubClientOnlyTags } from '../hub-client-only-tags.js';
+import { loadHubClientOnlyTags } from '@openelement/ssg';
 
 const log = createLogger('ssg');
 
@@ -98,7 +98,7 @@ interface BuildSSGOptions {
   middleware?: FrameworkOptions['middleware'];
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
-  islandMeta?: Record<string, Partial<import('../entry-descriptor.js').IslandDecl>>;
+  islandMeta?: Record<string, Partial<import('@openelement/ssg').IslandDecl>>;
   packageManifests?: OpenElementPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
@@ -174,14 +174,14 @@ async function buildSSG(
 
   // Generate SSG entry code
   const { scanRoutes, scanIslands, scanIslandMeta, fileToTagName } = await import(
-    '../route-scanner.js'
+    '@openelement/ssg'
   );
-  const { generateHonoEntryCode } = await import('../hono-entry.js');
+  const { generateHonoEntryCode } = await import('@openelement/ssg');
 
   const routes = await scanRoutes(routesDir);
 
   // v0.25.0: Generate type-safe route parameter declarations for `virtual:open-routes`
-  const { generateRouteTypes } = await import('../route-type-generator.js');
+  const { generateRouteTypes } = await import('@openelement/ssg');
   const routeTypeDts = generateRouteTypes(routes);
   const dotOpenElementDir = join(root, '.openElement');
   mkdirSync(dotOpenElementDir, { recursive: true });
@@ -196,7 +196,7 @@ async function buildSSG(
   const ssgIslandMeta = Object.keys(islandMeta).length > 0
     ? islandMeta
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
-  const { buildEntryDescriptor } = await import('../entry-descriptor.js');
+  const { buildEntryDescriptor } = await import('@openelement/ssg');
 
   const { tags: hubClientOnlyTags } = await loadHubClientOnlyTags(root, {
     onError: 'throw',
