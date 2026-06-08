@@ -79,6 +79,11 @@ export const INVARIANTS: Invariant[] = [
     description: 'All package deno.json configs must match the standard template',
     severity: 'error',
   },
+  {
+    id: 'I-RELEASE-TRUTH-CONSISTENCY',
+    description: 'Release truth docs, SOP tasks, metrics, and package count must agree',
+    severity: 'error',
+  },
 ];
 
 // ---- Checker functions ----
@@ -166,6 +171,100 @@ async function checkPackageConfigStandard(
   return null;
 }
 
+function readTextIfExists(path: string): string | null {
+  try {
+    return Deno.readTextFileSync(path);
+  } catch {
+    return null;
+  }
+}
+
+function countSopTasks(content: string): { total: number; done: number } {
+  const tasks = content.match(/^- \[[ x]\]/gmi) ?? [];
+  const done = tasks.filter((line) => /^- \[x\]/i.test(line)).length;
+  return { total: tasks.length, done };
+}
+
+function checkReleaseTruthConsistency(
+  ledger: EvidenceLedger | null,
+  rootDir: string,
+  statusVersion: string,
+  packageCount: number,
+): InvariantViolation[] {
+  const violations: InvariantViolation[] = [];
+  const normalized = statusVersion.replace(/^v/, '');
+  const version = `v${normalized}`;
+  const sop = readTextIfExists(`${rootDir}/docs/sop/${version}/README.md`);
+  const roadmap = readTextIfExists(`${rootDir}/docs/roadmap/ROADMAP.md`) ?? '';
+  const nextTasks = readTextIfExists(`${rootDir}/docs/next/${version}/TASKS.md`) ?? '';
+  const metricsText = readTextIfExists(`${rootDir}/docs/autoflow/metrics/${version}.json`);
+
+  if (sop) {
+    const tasks = countSopTasks(sop);
+    const nextDone = /^- \[x\]/gmi.test(nextTasks);
+    const roadmapDone = new RegExp(`${version.replace('.', '\\.')}[^\\n]*(Done|✅)`, 'i')
+      .test(roadmap);
+    if (tasks.total > 0 && tasks.done === 0 && (nextDone || roadmapDone)) {
+      violations.push({
+        invariantId: 'I-RELEASE-TRUTH-CONSISTENCY',
+        severity: 'error',
+        description:
+          `${version} SOP has 0/${tasks.total} tasks complete while release docs claim completed work`,
+      });
+    }
+  }
+
+  if (metricsText) {
+    try {
+      const record = JSON.parse(metricsText);
+      const metrics = record.metrics ?? record;
+      if (record.status === 'completed' && metrics.totalCellsAttempted === 0) {
+        violations.push({
+          invariantId: 'I-RELEASE-TRUTH-CONSISTENCY',
+          severity: 'error',
+          description: `${version} metrics are completed but totalCellsAttempted is 0`,
+        });
+      }
+      if (
+        typeof metrics.packageCount === 'number' &&
+        metrics.packageCount !== packageCount
+      ) {
+        violations.push({
+          invariantId: 'I-RELEASE-TRUTH-CONSISTENCY',
+          severity: 'error',
+          description:
+            `${version} metrics packageCount ${metrics.packageCount} differs from package graph ${packageCount}`,
+        });
+      }
+    } catch {
+      violations.push({
+        invariantId: 'I-RELEASE-TRUTH-CONSISTENCY',
+        severity: 'error',
+        description: `${version} metrics file is not valid JSON`,
+      });
+    }
+  }
+
+  if (ledger && metricsText) {
+    const versionCells = ledger.listCells().filter((cellId) => {
+      try {
+        return ledger.getCellState(cellId).versionCycle === version;
+      } catch {
+        return false;
+      }
+    });
+    if (versionCells.length === 0) {
+      violations.push({
+        invariantId: 'I-RELEASE-TRUTH-CONSISTENCY',
+        severity: 'error',
+        description: `${version} metrics exist but evidence ledger has no cells for this version`,
+      });
+    }
+  }
+
+  return violations;
+}
+
 // ---- Main checker ----
 
 export async function checkAllInvariants(
@@ -212,6 +311,13 @@ export async function checkAllInvariants(
   // Check package config standardization
   const v5 = await checkPackageConfigStandard(projectState.rootDir ?? Deno.cwd());
   if (v5) violations.push(v5);
+
+  violations.push(...checkReleaseTruthConsistency(
+    ledger,
+    projectState.rootDir ?? Deno.cwd(),
+    projectState.statusVersion,
+    projectState.packageVersions.length,
+  ));
 
   // Determine pass/fail
   const hasErrors = violations.some((v) => v.severity === 'error');

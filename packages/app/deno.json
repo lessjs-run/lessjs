@@ -1,16 +1,16 @@
 {
   "name": "@openelement/app",
-  "version": "0.36.0",
+  "version": "0.36.1",
   "exports": {
     ".": "./src/index.ts",
     "./vite": "./src/vite.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.0",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.36.0/logger",
-    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.36.0",
-    "@openelement/content": "jsr:@openelement/content@^0.36.0",
-    "@openelement/i18n": "jsr:@openelement/i18n@^0.36.0",
+    "@openelement/core": "jsr:@openelement/core@^0.36.1",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.36.1/logger",
+    "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.36.1",
+    "@openelement/content": "jsr:@openelement/content@^0.36.1",
+    "@openelement/i18n": "jsr:@openelement/i18n@^0.36.1",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

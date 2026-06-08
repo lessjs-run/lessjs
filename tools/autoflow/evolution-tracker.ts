@@ -57,7 +57,20 @@ export class EvolutionTracker {
       ).length;
     } catch { /* ok */ }
 
-    const metrics = createBaselineMetrics(version, docLines, sopTasks, adrCount, 19);
+    let packageCount = 0;
+    try {
+      packageCount = [...Deno.readDirSync(`${projectRoot}/packages`)].filter((e) => {
+        if (!e.isDirectory) return false;
+        try {
+          Deno.statSync(`${projectRoot}/packages/${e.name}/deno.json`);
+          return true;
+        } catch {
+          return false;
+        }
+      }).length;
+    } catch { /* ok */ }
+
+    const metrics = createBaselineMetrics(version, docLines, sopTasks, adrCount, packageCount);
     const record: CycleRecord = {
       version,
       metrics,

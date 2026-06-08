@@ -1,9 +1,9 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current line: v0.37.0 Server/Data/UI Product Closure.
+> Current line: v0.36.1 AutoFlow Closure & v0.36 Release Truth.
 > Next line: v0.37.0.
-> Updated: 2026-06-07.
+> Updated: 2026-06-08.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -11,28 +11,29 @@ Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 openElement is a JSX-first Web Components application framework with
 Declarative Shadow DOM as the default server-rendered output. Built on DSD-first
-HTML, progressive islands, and a 19-package monorepo under `@openelement/*`.
+HTML, progressive islands, and a 20-package monorepo under `@openelement/*`.
 
 v0.33.0 (AI-Readable API Foundation) defined the public application contract
 that all subsequent versions build upon.
 
 ## Version Ladder
 
-| Version | Name                                               | Goal                                                                                                          | Status |
-| ------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------ |
-| v0.30.x | Contract cleanup                                   | Done                                                                                                          |        |
-| v0.31.0 | JSX-first Application API                          | Done                                                                                                          |        |
-| v0.32.0 | App Lifecycle Contract                             | Done                                                                                                          |        |
-| v0.33.0 | AI-Readable API Foundation                         | Done                                                                                                          |        |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                                                                                                          |        |
-| v0.35.0 | AutoFlow2 Mechanical Autonomy                      | Done — Harness Gate + Cell Execution framework + Evolution Loop framework                                     |        |
-| v0.35.5 | Deduplication & Debt Closure                       | Done                                                                                                          |        |
-| v0.35.6 | AutoFlow2 Full-Auto Evolution                      | Done — L2 Cell Execution completion + L3 Evolution Loop real data + 8 improvement cells                       |        |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done — @openelement/ssg, error boundary retry, FileIsrCache, signals docs, deploy recipes, cross-browser E2E. |        |
-| v0.37.0 | Server/Data/UI Product Closure                     | Current — Server, data, UI, starters, Hub disposition, pruning evidence.                                      |        |
-| v0.38.0 | Public Surface Reset                               | Planned                                                                                                       |        |
-| v0.39.0 | v1 Release Candidate                               | Planned                                                                                                       |        |
-| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision                                                                                                        |        |
+| Version | Name                                               | Goal                                                                                                                                                          | Status |
+| ------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| v0.30.x | Contract cleanup                                   | Done                                                                                                                                                          |        |
+| v0.31.0 | JSX-first Application API                          | Done                                                                                                                                                          |        |
+| v0.32.0 | App Lifecycle Contract                             | Done                                                                                                                                                          |        |
+| v0.33.0 | AI-Readable API Foundation                         | Done                                                                                                                                                          |        |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                                                                                                                                                          |        |
+| v0.35.0 | AutoFlow2 Mechanical Autonomy                      | Done — Harness Gate + Cell Execution framework + Evolution Loop framework                                                                                     |        |
+| v0.35.5 | Deduplication & Debt Closure                       | Done                                                                                                                                                          |        |
+| v0.35.6 | AutoFlow2 Full-Auto Evolution                      | Done — L2 Cell Execution completion + L3 Evolution Loop real data + 8 improvement cells                                                                       |        |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferred items: docs, FileIsrCache, ErrorBoundary retry, SSG Phase 1, parallel SSG evidence; full adapter migration and browser expansion deferred. |        |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Current: AutoFlow Windows path fix, real merged cell metrics, release truth alignment, v0.36.0 deferred scope clarity.                                        |        |
+| v0.37.0 | Server/Data/UI Product Closure                     | Next: Server, data, UI, starters, Hub disposition, pruning evidence.                                                                                          |        |
+| v0.38.0 | Public Surface Reset                               | Planned                                                                                                                                                       |        |
+| v0.39.0 | v1 Release Candidate                               | Planned                                                                                                                                                       |        |
+| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision                                                                                                                                                        |        |
 
 ## v0.35.0 — AutoFlow2 Mechanical Autonomy
 
@@ -105,17 +106,31 @@ Completes the mechanical autonomy stack by making L2 and L3 production-ready:
 SOP: `docs/sop/v0.35.6/`\
 ADR: ADR-0088, ADR-0089
 
-## v0.36.0 — Rendering Runtime, Deployment & Deferred Refactors
+## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
 
-Resume product work under AutoFlow2 governance. Includes 5 items deferred
-from v0.35.6 audit:
+Resume product work under AutoFlow2 governance. Delivered as v0.36.0 with
+explicit deferred items closed by v0.36.1 release truth work.
 
-- SSR, ISR, streaming DSD, cache adapters, deploy recipes.
-- adapter-vite decomposition (`@openelement/ssg` separation).
-- SSG parallel rendering (worker threads).
-- Cross-browser E2E testing (Firefox, Safari).
-- Error boundary enhancement (retry, degraded rendering).
-- Signals system documentation.
+- Delivered: signals documentation, deployment recipes, version sync, error
+  boundary retry/degraded fallback coverage, FileIsrCache, `@openelement/ssg`
+  Phase 1 package, parallel SSG concurrency-pool behavior and evidence, and
+  AutoFlow built-in cell generation.
+- Deferred to v0.37.0: full adapter-vite migration out of adapter-vite, expanded
+  Firefox/WebKit execution proof, and broader server/data/UI/starter/Hub product
+  closure.
+
+## v0.36.1 - AutoFlow Closure & v0.36 Release Truth
+
+Patch release for v0.36 release truth and AutoFlow evidence:
+
+- Fix generated AutoFlow tests on Windows by using path-safe APIs.
+- Treat `harness:passing` as an intermediate state, not release proof.
+- Count only `merged` cells as successful for evolution metrics.
+- Record real v0.36.1 metrics from `cell-v0.36.1-001`: attempted 1, merged 1,
+  firstPassRate 1.
+- Align `STATUS`, `ROADMAP`, SOP, NextVersion, changelog, release note, and
+  package count/version evidence.
+- Keep v0.37 server/data/UI/starter/Hub product scope deferred.
 
 ## v0.37.0 — Server/Data/UI Product Closure
 

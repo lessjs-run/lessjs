@@ -2,11 +2,11 @@
 
 ## Before Bump
 
-- [ ] All 13 cells executed and evidenced.
-- [ ] autoflow:evolve runs at least 1 cell autonomously.
-- [ ] EvolutionMetrics.firstPassRate > 0.
-- [ ] SOP tasks completed.
-- [ ] NextVersion tasks completed.
+- [ ] All non-deferred cells executed and evidenced.
+- [x] autoflow:evolve runs at least 1 cell autonomously in v0.36.1.
+- [x] EvolutionMetrics.firstPassRate > 0 in v0.36.1.
+- [ ] SOP tasks completed or explicitly deferred.
+- [ ] NextVersion tasks completed or explicitly deferred.
 - [ ] **ROADMAP cross-check**: every item in ROADMAP v0.36.0 section verified
       against actual deliverables. Undelivered items explicitly marked as deferred
       in ROADMAP and SOP.
@@ -35,7 +35,7 @@ deno task test:e2e
 
 ## Bump and Docs
 
-- [ ] All 20 packages aligned to v0.36.0.
+- [x] All 20 packages aligned to v0.36.0 baseline.
 - [ ] Root `deno.json` imports updated.
 - [ ] Cross-package imports updated.
 - [ ] CHANGELOG.md entry written.

@@ -3,21 +3,25 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.36.0/`.
+package: `docs/next/v0.36.1/`.
 
-## Current Version Line: v0.36.0 (Rendering Runtime, Deployment & Deferred Refactors)
+## Current Version Line: v0.36.1 (AutoFlow Closure & v0.36 Release Truth)
 
-v0.36.0 resumes product work under AutoFlow2 governance: error boundary
-enhancement, cache adapters, adapter-vite decomposition, SSG parallel
-rendering, cross-browser E2E, and AutoFlow autonomous execution proof.
+v0.36.1 is a stabilization patch for v0.36.0 release truth and AutoFlow
+closure. It does not start v0.37 product scope.
 
-v0.36.0 Status: **IN PROGRESS.**
+v0.36.1 Status: **IN PROGRESS.**
 Governing docs:
 
-- `docs/sop/v0.36.0/README.md`
-- `docs/next/v0.36.0/`
+- `docs/sop/v0.36.1/README.md`
+- `docs/next/v0.36.1/`
 - `docs/roadmap/ROADMAP.md`
 - `docs/governance/BRANCHING.md`
+
+v0.36.0 Status: **IMPLEMENTED WITH DEFERRED ITEMS.** Delivered the rendering
+runtime, deployment docs, cache adapter, SSG Phase 1, and AutoFlow2 built-in
+cell generation base. Cross-browser browser expansion and full adapter-vite
+migration remain deferred to v0.37.0.
 
 v0.35.6 Status: **IMPLEMENTED.** AutoFlow2 L2/L3 completion + 8 improvement
 cells. See `docs/sop/v0.35.6/` for details.

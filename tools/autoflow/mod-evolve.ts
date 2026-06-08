@@ -205,7 +205,7 @@ async function main(): Promise<void> {
         const emoji = stateEmoji(finalState.lifecycle);
         console.log(`   [${cellId}] ${emoji} ${finalState.lifecycle}`);
 
-        if (finalState.lifecycle === 'merged' || !finalState.lifecycle.startsWith('failed')) {
+        if (finalState.lifecycle === 'merged') {
           executedCells.push(cellId);
         } else {
           failedCells.push(cellId);

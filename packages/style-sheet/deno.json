@@ -1,6 +1,6 @@
 {
   "name": "@openelement/style-sheet",
-  "version": "0.36.0",
+  "version": "0.36.1",
   "exports": {
     ".": "./src/index.ts"
   },
