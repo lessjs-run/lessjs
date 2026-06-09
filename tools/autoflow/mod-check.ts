@@ -7,6 +7,7 @@
  * Usage:
  *   deno run --allow-read tools/autoflow/mod-check.ts
  *   deno run --allow-read tools/autoflow/mod-check.ts --strict
+ *   deno run --allow-read tools/autoflow/mod-check.ts --dev   (allow version drift during development)
  */
 import { checkAllInvariants, INVARIANTS } from './invariant-checker.ts';
 import { EvidenceLedger } from './evidence-ledger.ts';
@@ -15,6 +16,7 @@ import { readPackageGraph } from './readers/package-graph.ts';
 
 async function main(): Promise<void> {
   const strict = Deno.args.includes('--strict');
+  const devMode = Deno.args.includes('--dev');
   const rootDir = Deno.cwd();
   const ledgerDir = `${rootDir}/docs/autoflow/cells`;
 
@@ -38,7 +40,7 @@ async function main(): Promise<void> {
     statusVersion: version,
     packageVersions,
     rootDir,
-  }, { strict });
+  }, { strict, devMode });
 
   // Output
   const errors = report.violations.filter((v) => v.severity === 'error');

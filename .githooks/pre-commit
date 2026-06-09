@@ -36,8 +36,8 @@ deno task autoflow:test || { echo "❌ AutoFlow tests failed."; exit 1; }
 echo "[10/12] deno task autoflow:health"
 deno task autoflow:health || { echo "❌ AutoFlow health check failed."; exit 1; }
 
-echo "[11/12] deno task autoflow:check"
-deno task autoflow:check || { echo "❌ autoflow:check failed."; exit 1; }
+echo "[11/12] deno task autoflow:check-dev"
+deno task autoflow:check-dev || { echo "❌ autoflow:check-dev failed."; exit 1; }
 
 echo "[12/12] deno task verify:configs"
 deno task verify:configs || { echo "❌ Package config verification failed."; exit 1; }

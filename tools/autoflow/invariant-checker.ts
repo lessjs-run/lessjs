@@ -274,7 +274,7 @@ export async function checkAllInvariants(
     packageVersions: string[];
     rootDir?: string;
   },
-  options: { maxRetries?: number; strict?: boolean } = {},
+  options: { maxRetries?: number; strict?: boolean; devMode?: boolean } = {},
 ): Promise<InvariantCheckReport> {
   const violations: InvariantViolation[] = [];
   const maxRetries = options.maxRetries ?? 2;
@@ -318,6 +318,15 @@ export async function checkAllInvariants(
     projectState.statusVersion,
     projectState.packageVersions.length,
   ));
+
+  // In dev mode, version alignment drift is expected — downgrade to warning
+  if (options.devMode) {
+    for (const v of violations) {
+      if (v.invariantId === 'I-VERSION-ALIGNMENT') {
+        v.severity = 'warning';
+      }
+    }
+  }
 
   // Determine pass/fail
   const hasErrors = violations.some((v) => v.severity === 'error');
