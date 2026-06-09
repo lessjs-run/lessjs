@@ -1,16 +1,16 @@
 {
   "name": "@openelement/ssg",
-  "version": "0.36.3",
+  "version": "0.36.4",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.3",
-    "@openelement/core/errors": "jsr:@openelement/core@^0.36.3/errors",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.36.3/logger",
-    "@openelement/cem": "jsr:@openelement/cem@^0.36.3",
-    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.36.3",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.3",
+    "@openelement/core": "jsr:@openelement/core@^0.36.4",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.36.4/errors",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.36.4/logger",
+    "@openelement/cem": "jsr:@openelement/cem@^0.36.4",
+    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.36.4",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.36.4",
     "hono": "npm:hono@^4.12",
     "typescript": "npm:typescript@^5.9.0",
     "vite": "npm:vite@8.0.10"

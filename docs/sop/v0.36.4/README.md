@@ -1,6 +1,6 @@
 # v0.36.4 SOP: Firefox/WebKit Cross-Browser Proof
 
-> Status: Planned\
+> Status: Implemented\
 > Roadmap: Firefox/WebKit Cross-Browser Proof\
 > NextVersion: `docs/next/v0.36.4/`
 
@@ -11,15 +11,15 @@ Chromium-only release. Establish `test:e2e:browsers` as a stable release gate.
 
 ## Tasks
 
-- [ ] Investigate Firefox search/theme token wait timeout root cause.
-- [ ] Fix or document Firefox search panel theme token behavior.
-- [ ] Investigate WebKit console error count failures.
-- [ ] Investigate WebKit stability/timeout failures.
-- [ ] Fix or document WebKit-specific behavior differences.
-- [ ] Ensure `test:e2e:browsers` passes Chromium + Firefox + WebKit.
-- [ ] Update CI workflow to run `test:e2e:browsers` as a release gate.
-- [ ] Document any remaining browser-specific known limitations.
-- [ ] Bump all 20 packages to 0.36.4.
+- [x] Investigate Firefox search/theme token wait timeout root cause.
+- [x] Fix or document Firefox search panel theme token behavior.
+- [x] Investigate WebKit console error count failures.
+- [x] Investigate WebKit stability/timeout failures.
+- [x] Fix or document WebKit-specific behavior differences.
+- [x] Ensure `test:e2e:browsers` passes Chromium + Firefox + WebKit.
+- [x] Update CI workflow to run `test:e2e:browsers` as a release gate.
+- [x] Document any remaining browser-specific known limitations.
+- [x] Bump all 20 packages to 0.36.4.
 
 ## Verification
 

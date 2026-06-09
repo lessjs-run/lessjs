@@ -1,14 +1,14 @@
 {
   "name": "@openelement/adapter-react",
-  "version": "0.36.3",
+  "version": "0.36.4",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.3",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.36.3/logger",
+    "@openelement/core": "jsr:@openelement/core@^0.36.4",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.36.4/logger",
     "react": "npm:react@^19",
     "react-dom": "npm:react-dom@^19",
     "react-dom/server": "npm:react-dom@^19/server.node"

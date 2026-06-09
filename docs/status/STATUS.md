@@ -3,9 +3,9 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.36.3/`.
+package: `docs/next/v0.36.4/`.
 
-## Current Version Line: v0.36.3 (Complete SSG File Ownership Migration)
+## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
 
 v0.36.2 is a patch release for SSG bridge migration. It moves the Vite-free SSG
 render engine and HTML post-processing helpers into `@openelement/ssg`, while
@@ -76,7 +76,7 @@ Firefox/WebKit proof remain deferred.
 
 ## Package Version State
 
-All 20 packages are aligned to **v0.36.3** under `@openelement/*`.
+All 20 packages are aligned to **v0.36.4** under `@openelement/*`.
 
 Package governance before v0.38:
 
