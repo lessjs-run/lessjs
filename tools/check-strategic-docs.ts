@@ -1,3 +1,5 @@
+import { PACKAGE_VERSION_TAG } from './project-constants.ts';
+
 type Check = {
   name: string;
   files: string[];
@@ -62,9 +64,9 @@ const checks: Check[] = [
     required: ['DSD-first'],
   },
   {
-    name: 'v0.36.4 is the current public line',
+    name: `${PACKAGE_VERSION_TAG} is the current package line`,
     files: currentDocs,
-    required: ['v0.36.4'],
+    required: [PACKAGE_VERSION_TAG],
   },
   {
     name: 'v1.0 is the stable engine target',

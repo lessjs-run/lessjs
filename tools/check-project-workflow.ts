@@ -1,9 +1,9 @@
+import { ACTIVE_VERSION } from './project-constants.ts';
+
 type Failure = {
   file: string;
   message: string;
 };
-
-const activeVersion = 'v0.37.2';
 
 const requiredFiles = [
   'docs/governance/PROJECT_WORKFLOW.md',
@@ -18,23 +18,23 @@ const requiredFiles = [
   '.github/agents/adr-reviewer.agent.md',
   '.github/agents/sop-gate.agent.md',
   '.github/agents/test-quality.agent.md',
-  `docs/next/${activeVersion}/README.md`,
-  `docs/next/${activeVersion}/DESIGN.md`,
-  `docs/next/${activeVersion}/TASKS.md`,
-  `docs/next/${activeVersion}/ACCEPTANCE.md`,
-  `docs/next/${activeVersion}/TEST_MATRIX.md`,
-  `docs/next/${activeVersion}/DOCS_PLAN.md`,
-  `docs/next/${activeVersion}/RISK_REGISTER.md`,
-  `docs/next/${activeVersion}/RELEASE_CHECKLIST.md`,
+  `docs/next/${ACTIVE_VERSION}/README.md`,
+  `docs/next/${ACTIVE_VERSION}/DESIGN.md`,
+  `docs/next/${ACTIVE_VERSION}/TASKS.md`,
+  `docs/next/${ACTIVE_VERSION}/ACCEPTANCE.md`,
+  `docs/next/${ACTIVE_VERSION}/TEST_MATRIX.md`,
+  `docs/next/${ACTIVE_VERSION}/DOCS_PLAN.md`,
+  `docs/next/${ACTIVE_VERSION}/RISK_REGISTER.md`,
+  `docs/next/${ACTIVE_VERSION}/RELEASE_CHECKLIST.md`,
 ];
 
 const requiredAnchors: Record<string, string[]> = {
   'README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'CONTRIBUTING.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', `docs/next/${activeVersion}/`],
+  'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', `docs/next/${ACTIVE_VERSION}/`],
   'docs/roadmap/ROADMAP.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  'docs/sop/v0.37.2/README.md': [`docs/next/${activeVersion}/`, 'ADR-0093'],
+  [`docs/sop/${ACTIVE_VERSION}/README.md`]: [`docs/next/${ACTIVE_VERSION}/`, 'ADR-0093'],
   'docs/next/v0.37.2/README.md': [
     'docs/sop/v0.37.2/README.md',
     'ADR-0093',
@@ -76,4 +76,4 @@ if (failures.length > 0) {
   Deno.exit(1);
 }
 
-console.log(`Project workflow check passed for ${activeVersion}.`);
+console.log(`Project workflow check passed for ${ACTIVE_VERSION}.`);

@@ -1,13 +1,13 @@
 {
   "name": "@openelement/compat-check",
-  "version": "0.36.4",
+  "version": "0.37.2",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.36.4",
-    "@openelement/core/types": "jsr:@openelement/core@^0.36.4/types",
-    "@openelement/cem": "jsr:@openelement/cem@^0.36.4"
+    "@openelement/core": "jsr:@openelement/core@^0.37.2",
+    "@openelement/core/types": "jsr:@openelement/core@^0.37.2/types",
+    "@openelement/cem": "jsr:@openelement/cem@^0.37.2"
   },
   "publish": {
     "include": [

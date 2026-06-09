@@ -4,6 +4,7 @@ export const tagName = 'engine-architecture';
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { OPENELEMENT_VERSION } from '../../data/version.ts';
 import '@openelement/ui/open-code-block';
 
 const pageSheet = new StyleSheet();
@@ -302,7 +303,7 @@ export class ArchitecturePage extends DsdElement {
             <div>
               <div class="eyebrow">
                 <span class="chip current">ADR-0050</span>
-                <span class="chip current">v0.36.4</span>
+                <span class="chip current">{OPENELEMENT_VERSION}</span>
                 <span class="chip pass">graph gate passing</span>
               </div>
               <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
@@ -348,7 +349,7 @@ hub ───────────▶ compat-check, core`}</code></pre>
                 <h2>{isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'}</h2>
               </div>
               <p class="section-copy">
-                v0.36.4 keeps package responsibility inspectable. Feature
+                {OPENELEMENT_VERSION} keeps package responsibility inspectable. Feature
                 packages use protocols for shared build contracts instead of
                 adapter internals, and ordinary users write components from the
                 runtime facade.

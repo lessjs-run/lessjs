@@ -1,7 +1,7 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.36.4 Firefox/WebKit Cross-Browser Proof.\
+> Current package line: v0.37.2 SSR / ISR Server Runtime Contract.\
 > Active execution package: v0.37.2 SSR / ISR Server Runtime Contract.\
 > Updated: 2026-06-09.
 

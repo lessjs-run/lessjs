@@ -14,7 +14,7 @@ work only.
 ## Entry Criteria
 
 - v0.36.5 release-truth closure is merged.
-- v0.36.4 remains the current package line.
+- v0.36.4 package-line proof and v0.36.5 release-truth closure are complete.
 - ADR-0086 AutoFlow boundary remains accepted.
 - No product-code implementation is required to explain the new roadmap.
 

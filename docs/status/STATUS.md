@@ -5,10 +5,10 @@
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
 package: `docs/next/v0.37.2/`.
 
-## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
+## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract)
 
-v0.36.4 is the current implemented package line. All 20 `@openelement/*`
-packages are aligned to `0.36.4`.
+v0.37.2 is the current implemented package line. All 20 `@openelement/*`
+packages are aligned to `0.37.2`.
 
 v0.36.5 is implemented as a release-truth patch. It did not add product
 capability or bump the package line. It aligned workflow checks,
@@ -22,7 +22,8 @@ explicit light DOM opt-in through ADR-0092.
 
 v0.37.2 is the active execution package for the SSR / ISR server runtime
 contract. It adds ADR-0093 and a platform-neutral `@openelement/core/isr-runtime`
-subpath for request-time ISR semantics.
+subpath for request-time ISR semantics, and it carries the package line forward
+to `0.37.2`.
 
 Governing docs:
 
@@ -124,7 +125,7 @@ built-in cell generation.
 
 ## Package Version State
 
-All 20 packages are aligned to **v0.36.4** under `@openelement/*`.
+All 20 packages are aligned to **v0.37.2** under `@openelement/*`.
 
 Package governance before v0.38:
 

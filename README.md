@@ -2,8 +2,8 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.36.4 package
-line current, v0.37.0 doctrine reset active).**
+**JSX-first, DSD-first Web Components application framework (v0.37.2 package
+line current).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
 prove the package graph before publishing.
@@ -57,7 +57,7 @@ export default defineIsland(
 ```
 
 The current application contract (v0.33.0+ API foundation, current through
-v0.36.4 browser proof) is intentionally layered:
+v0.37.2 ISR runtime contract) is intentionally layered:
 
 - application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
 - build configuration: `openElement()` from `@openelement/app/vite`;
@@ -70,10 +70,9 @@ v0.36.4 browser proof) is intentionally layered:
 
 ## Packages
 
-All 20 packages are currently aligned together at **v0.36.4** under
+All 20 packages are currently aligned together at **v0.37.2** under
 [`@openelement`](https://jsr.io/@openelement). The active execution target is
-v0.37.0 (Product Doctrine and Rendering Contract Reset); v0.36.5 closed release
-truth and AutoFlow evidence without a package-line bump.
+v0.37.2 (SSR / ISR Server Runtime Contract).
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -98,11 +97,11 @@ truth and AutoFlow evidence without a package-line bump.
 
 ## Current Line
 
-v0.36.4 is the current package line. It builds on the v0.36 SSG extraction by
+v0.37.2 is the current package line. It builds on the v0.36 SSG extraction by
 moving route scanning, entry generation, generated data resolution, render, and
 postprocess ownership into `@openelement/ssg`, while adapter-vite stays focused
-on Vite orchestration. v0.36.4 also records Firefox/WebKit browser proof and
-known limitations.
+on Vite orchestration. v0.37.2 also records DsdElement light DOM opt-in and a
+platform-neutral ISR runtime contract after the Firefox/WebKit browser proof.
 
 v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
 v0.37.0 resets product doctrine and rendering contracts before implementation

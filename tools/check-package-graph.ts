@@ -10,6 +10,8 @@
  * - publish-jsr.yml publishes every package after its dependencies
  */
 
+import { PACKAGE_COUNT, PACKAGE_VERSION } from './project-constants.ts';
+
 interface PackageInfo {
   name: string;
   version: string;
@@ -362,9 +364,17 @@ async function main(): Promise<void> {
   for (const pkg of packages) {
     console.log(`  ${pkg.name}@${pkg.version} -> deps: [${pkg.deps.join(', ') || 'none'}]`);
   }
+  if (packages.length !== PACKAGE_COUNT) {
+    failures.push(`Expected ${PACKAGE_COUNT} packages, found ${packages.length}.`);
+  }
 
   console.log('\n--- Version Line Validation ---');
   const releaseVersion = validateVersionConsistency(packages, failures);
+  if (releaseVersion && releaseVersion !== PACKAGE_VERSION) {
+    failures.push(
+      `Package graph version ${releaseVersion} does not match PACKAGE_VERSION ${PACKAGE_VERSION}.`,
+    );
+  }
   validateInternalJsrRanges(packages, releaseVersion, failures);
   if (releaseVersion) {
     console.log(`  PASS: all packages and internal JSR ranges use ${releaseVersion}.`);

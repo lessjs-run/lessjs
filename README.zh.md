@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**JSX-first、DSD-first Web Components 应用框架 (v0.36.4 current，v0.36.5 release-truth patch active)。**
+**JSX-first、DSD-first Web Components 应用框架 (v0.37.2 current，SSR / ISR runtime contract active)。**
 openElement 用 Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -49,7 +49,7 @@ export default defineIsland(
 );
 ```
 
-v0.36.4 当前公开线的契约分层很明确：
+v0.37.2 当前公开线的契约分层很明确：
 
 - 应用编写：`definePage({ route, head, renderIntent, load, render, error })`、`defineIslandConfig()`、`defineIsland()`、`defineElement()`、`defineLayout()`
 - 构建配置：从 `@openelement/app/vite` 导入 `openElement()`
@@ -61,7 +61,7 @@ v0.36.4 当前公开线的契约分层很明确：
 ## 包
 
 20 个包统一对齐到 [`@openelement`](https://jsr.io/@openelement)，当前包线为
-**v0.36.4**。本仓库的活动补丁目标是 v0.36.5 release truth and AutoFlow closure。
+**v0.37.2**。本仓库的活动执行目标是 v0.37.2 SSR / ISR Server Runtime Contract。
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -86,7 +86,7 @@ v0.36.4 当前公开线的契约分层很明确：
 
 ## 当前版本
 
-v0.36.4 当前线把 SSG ownership 收敛到 `@openelement/ssg`，包括 route scanning、entry generation、generated data resolution、render 和 postprocess；adapter-vite 只保留 Vite orchestration。应用编写仍使用
+v0.37.2 当前线把 SSG ownership 收敛到 `@openelement/ssg`，包括 route scanning、entry generation、generated data resolution、render 和 postprocess；adapter-vite 只保留 Vite orchestration。应用编写仍使用
 `definePage({ route, head, renderIntent, load, render, error })`，island 静态元数据使用
 `defineIslandConfig({ ssr, dsd, hydrate })`。
 

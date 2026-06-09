@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.36.4, v0.37.6, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.37.2, v0.37.6, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -245,14 +245,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                package line is v0.36.4: Firefox/WebKit Cross-Browser Proof. The active
-                execution package is v0.37.0: Product Doctrine and Rendering Contract Reset.
+                package line is v0.37.2: SSR / ISR Server Runtime Contract. The active
+                execution package is v0.37.2.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.36.4 Browser Proof</h2>
-              <p>20 packages aligned, SSG ownership moved to @openelement/ssg, and cross-browser proof recorded.</p>
+              <h2>v0.37.2 ISR Runtime</h2>
+              <p>20 packages aligned, DsdElement light DOM opt-in proven, and ISR runtime contract recorded.</p>
             </aside>
           </section>
 
@@ -310,7 +310,7 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.36.4</div>
               <div><h3>Firefox/WebKit Cross-Browser Proof</h3><p>Record browser proof, known limitations, and 20-package v0.36.4 alignment.</p></div>
-              <span class="status current">Current</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.5</div>
@@ -320,17 +320,17 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.37.0</div>
               <div><h3>Product Doctrine + Rendering Contract Reset</h3><p>ADR-0091, static default 0JS, DSD/shadow default, light DOM opt-in terms, and the v0.37.x SOP split.</p></div>
-              <span class="status current">Active</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.1</div>
               <div><h3>DsdElement Shadow + Light Contract</h3><p>Audit DsdElement behavior and define explicit light DOM opt-in without weakening the DSD/shadow default.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.2</div>
               <div><h3>SSR / ISR Server Runtime Contract</h3><p>Define request-time SSR/ISR framework boundaries, cache behavior, server adapter evidence, and zero-JS defaults.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status current">Active</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.3</div>
@@ -383,8 +383,8 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Current</h2>
               <ul>
-                <li>v0.36.4 Firefox/WebKit browser proof</li>
-                <li>v0.37.0 product doctrine reset active</li>
+                <li>v0.37.2 SSR / ISR runtime contract</li>
+                <li>DsdElement shadow/light contract implemented</li>
                 <li>SSG ownership lives in @openelement/ssg</li>
                 <li>AutoFlow2 evidence and workflow gates</li>
                 <li>20-package aligned monorepo</li>
@@ -393,8 +393,6 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Deferred</h2>
               <ul>
-                <li>DsdElement explicit light DOM contract</li>
-                <li>SSR / ISR request-time framework runtime</li>
                 <li>database adapters and recipes</li>
                 <li>pure CSS UI product surface</li>
                 <li>protocol ports and full-stack preset smoke</li>
