@@ -3,33 +3,47 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.36.4/`.
+package: `docs/next/v0.36.5/`.
 
 ## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
 
-v0.36.2 is a patch release for SSG bridge migration. It moves the Vite-free SSG
-render engine and HTML post-processing helpers into `@openelement/ssg`, while
-`@openelement/adapter-vite` continues to own Vite SSR bundle build, virtual
-entry generation, route scanning, generated data resolution, alias/noExternal
-configuration, and plugin orchestration.
+v0.36.4 is the current implemented package line. All 20 `@openelement/*`
+packages are aligned to `0.36.4`.
 
-v0.36.2 Status: **RELEASED.**
+v0.36.5 is the active patch task for release truth and AutoFlow closure. It does
+not add product capability. It aligns workflow checks, v0.36.3/v0.36.4
+completion evidence, public website copy, release docs, and AutoFlow state.
+
 Governing docs:
 
-- `docs/sop/v0.36.2/README.md`
-- `docs/next/v0.36.2/`
+- `docs/sop/v0.36.5/README.md`
+- `docs/next/v0.36.5/`
+- `docs/sop/v0.36.4/README.md`
+- `docs/next/v0.36.4/`
 - `docs/roadmap/ROADMAP.md`
 - `docs/governance/BRANCHING.md`
 
-v0.36.1 Status: **IMPLEMENTED.** It closed the v0.36 release truth and
-AutoFlow evidence gap with `cell-v0.36.1-001`, non-zero metrics, Windows-safe
-generated test paths, and aligned v0.36.0 deferrals.
+v0.36.4 Status: **IMPLEMENTED.** It closed the Firefox/WebKit cross-browser
+proof line, documented remaining browser-specific limitations, added the
+cross-browser E2E gate, and bumped all 20 packages to 0.36.4.
+
+v0.36.3 Status: **IMPLEMENTED.** It completed SSG file ownership migration so
+`@openelement/ssg` owns route scanning, entry generation, generated data
+resolution, SSG Vite plugin logic, render, and postprocess code. `adapter-vite`
+is now Vite build orchestration glue.
+
+v0.36.2 Status: **IMPLEMENTED.** It moved Vite-free SSG render and HTML
+postprocess helpers into `@openelement/ssg`, while keeping adapter-vite as the
+Vite shell for the remaining bridge work.
+
+v0.36.1 Status: **IMPLEMENTED.** It closed the v0.36 release truth and AutoFlow
+evidence gap with `cell-v0.36.1-001`, non-zero metrics, Windows-safe generated
+test paths, and aligned v0.36.0 deferrals.
 
 v0.36.0 Status: **IMPLEMENTED WITH DEFERRED ITEMS.** Delivered signals docs,
 deployment docs, version sync, error-boundary retry/degraded fallback coverage,
 FileIsrCache, `@openelement/ssg` Phase 1, parallel SSG evidence, and AutoFlow
-built-in cell generation. Complete adapter-vite migration and expanded
-Firefox/WebKit proof remain deferred.
+built-in cell generation.
 
 ## Next Targets
 
@@ -43,8 +57,9 @@ Firefox/WebKit proof remain deferred.
 | v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                         |
 | v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                | AutoFlow proof and release truth alignment                                                    |
 | v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence             |
-| v0.36.3 | Complete SSG File Ownership Migration              | Next                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
-| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Planned             | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
+| v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Active              | Align workflow, release docs, AutoFlow evidence, and website truth                            |
 | v0.37.0 | Server/Data/UI Product Closure                     | Planned             | Server, data, UI, starters, Hub disposition, pruning evidence                                 |
 | v0.38.0 | Public Surface Reset                               | Planned             | Final package/product surface reset before the v1 RC                                          |
 | v0.39.0 | v1 Release Candidate                               | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                 |
@@ -93,10 +108,22 @@ Package governance before v0.38:
    pipeline, Hono API routes.
 2. **DSD/WC element and UI engine** - `DsdElement`, `renderDsd()`, JSX runtime,
    adapters, UI components, compatibility.
-3. **SSG engine** - All SSG code (render, postprocess, route scanning, entry generation, data resolution) lives in `@openelement/ssg`; adapter-vite provides only Vite build orchestration glue.
+3. **SSG engine** - all SSG code (render, postprocess, route scanning, entry
+   generation, data resolution) lives in `@openelement/ssg`; adapter-vite
+   provides only Vite build orchestration glue.
 4. **Registry Hub** - current package and tooling surface; v0.37 must decide
    whether it remains public product, becomes internal tooling, is deferred, is
    archived, or is removed.
+
+## Future Product Direction
+
+- `DsdElement` is feasible as a Lit-like base-class product surface.
+- A daisyUI-derived pure CSS layer is feasible after license review, token
+  extraction, and Tailwind decoupling.
+- A Spring-like protocol layer should grow gradually as ports/adapters, not as
+  a broad abstraction rewrite.
+- A full-stack framework preset should compose those surfaces after they
+  stabilize, likely during or after the v0.38 public surface reset.
 
 ## Key Decisions
 
@@ -112,8 +139,9 @@ Package governance before v0.38:
   subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions,
   and declared imports.
-- **SSG bridge boundary.** `@openelement/ssg` owns Vite-free SSG render and
-  postprocess code; adapter-vite owns Vite orchestration until v0.37.
+- **SSG ownership.** `@openelement/ssg` owns SSG render, postprocess, route
+  scanning, entry generation, generated data resolution, and SSG-specific Vite
+  plugin logic.
 - **AutoFlow2 boundary.** AutoFlow2 may report state, evidence, blockers, and
   allowed actions. It must not merge, tag, bump, publish, or replace human review
   for ADRs, public API resets, package removal, release tags, or publishing.

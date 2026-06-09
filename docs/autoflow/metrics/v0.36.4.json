@@ -1,8 +1,8 @@
 {
-  "version": "v0.36.2",
+  "version": "v0.36.4",
   "metrics": {
-    "versionCycle": "v0.36.2",
-    "timestamp": "2026-06-08T12:00:00.000Z",
+    "versionCycle": "v0.36.4",
+    "timestamp": "2026-06-09T00:00:00.000Z",
     "firstPassRate": 1,
     "avgRetriesPerCell": 0,
     "totalCellsAttempted": 1,
@@ -17,13 +17,13 @@
     "mergeConflictsEncountered": 0,
     "rollbacks": 0,
     "governanceDocLines": 0,
-    "sopTaskCount": 0,
+    "sopTaskCount": 9,
     "adrCount": 49,
     "packageCount": 20,
     "gateScore": 0,
     "mechanicalAutonomyScore": 1
   },
-  "startTimestamp": "2026-06-08T12:00:00.000Z",
-  "endTimestamp": "2026-06-08T12:00:01.000Z",
+  "startTimestamp": "2026-06-09T00:00:00.000Z",
+  "endTimestamp": "2026-06-09T00:00:01.000Z",
   "status": "completed"
 }

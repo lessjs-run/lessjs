@@ -1,11 +1,11 @@
-# SOP Gate - v0.21.x Hardening CI
+# SOP Gate - current release CI
 #
-# Runs the source-backed SOP pipeline defined in docs/sop/v0.21.x/README.md.
+# Runs the source-backed release pipeline defined by docs/status/STATUS.md.
 # Triggered on push to dev/main and on PRs. Also available via workflow_dispatch.
 #
-# If any gate fails, v0.22.0 Edge Full-Stack should NOT start.
+# If any gate fails, the current release line must not advance.
 
-name: SOP Gate (v0.21.x)
+name: SOP Gate
 
 on:
   push:
@@ -199,7 +199,7 @@ jobs:
           }
 
           {
-            echo "## SOP Gate v0.21.x Results"
+            echo "## SOP Gate Results"
             echo ""
             check "${{ needs.fmt-check.result }}"        "fmt:check"
             check "${{ needs.lint.result }}"             "lint"
@@ -216,9 +216,9 @@ jobs:
             check "${{ needs.test-e2e.result }}"         "test:e2e"
             echo ""
             if [ "$ALL_PASS" = "true" ]; then
-              echo "All source-backed SOP gates passed. v0.22.0 Edge Full-Stack may proceed."
+              echo "All source-backed SOP gates passed. The current release line may proceed."
             else
-              echo "Some gates failed. v0.22.0 must not start until all gates pass."
+              echo "Some gates failed. The current release line must not advance until all gates pass."
               exit 1
             fi
           } >> "$GITHUB_STEP_SUMMARY"

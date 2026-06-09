@@ -119,13 +119,19 @@ test.describe('Search', () => {
       overlay?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     });
 
+    const beforeTheme = await page.evaluate(() =>
+      document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+    );
+    const expectedTheme = beforeTheme === 'light' ? 'dark' : 'light';
+
     await page.locator('open-theme-toggle').evaluate((el) => {
       const button = el.shadowRoot?.querySelector('button');
       button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     });
 
-    await page.waitForFunction(() =>
-      document.documentElement.getAttribute('data-theme') === 'light'
+    await page.waitForFunction(
+      (theme) => document.documentElement.getAttribute('data-theme') === theme,
+      expectedTheme,
     );
     const lightBackground = await readPanelBackground();
 

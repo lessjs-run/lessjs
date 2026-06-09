@@ -1,3 +1,66 @@
+## v0.36.5 - Release Truth and AutoFlow Closure (2026-06-09)
+
+### Governance and Release Truth
+
+- Pointed `workflow:check` at the active v0.36.5 execution package instead of
+  stale v0.36.2 evidence.
+- Added the v0.36.5 SOP and complete NextVersion package for issue #48.
+- Completed the missing v0.36.4 NextVersion files required by project workflow.
+- Aligned STATUS, ROADMAP, and SOP index with the actual v0.36.4 package line.
+
+### Public Website and Docs
+
+- Updated public website version and architecture copy that still presented
+  v0.33.0 or v0.23.0 as current.
+- Recorded v0.36.3 and v0.36.4 release-note evidence.
+- Captured the future DsdElement, pure CSS UI, protocol, and full-stack preset
+  direction as roadmap strategy only.
+
+### AutoFlow
+
+- Added explicit v0.36.3 and v0.36.4 AutoFlow metrics evidence where repository
+  proof exists.
+- Kept package versions unchanged at v0.36.4; this patch does not introduce
+  runtime or public API changes.
+
+---
+
+## v0.36.4 - Firefox/WebKit Cross-Browser Proof (2026-06-09)
+
+### Cross-Browser Evidence
+
+- Completed Firefox/WebKit investigation for search, theme token behavior,
+  console errors, and stability differences.
+- Documented remaining browser-specific limitations in
+  `docs/next/v0.36.4/BROWSER_LIMITATIONS.md`.
+- Added cross-browser E2E proof to the release gate shape.
+
+### Package Version
+
+- Bumped all 20 packages to v0.36.4.
+- Verified package graph alignment for the 20-package `@openelement/*` line.
+
+---
+
+## v0.36.3 - Complete SSG File Ownership Migration (2026-06-08)
+
+### SSG Ownership
+
+- Completed migration of route scanner, route type generation, virtual entry
+  generation, generated data resolver, and SSG-specific Vite plugin logic into
+  `@openelement/ssg`.
+- Kept `@openelement/adapter-vite` focused on Vite build orchestration glue.
+- Ensured `@openelement/ssg` can be consumed without adapter-vite internal
+  source files.
+
+### Package Version
+
+- Bumped all 20 packages to v0.36.3.
+- Verified SSG migration with build, graph, and package checks before v0.36.4
+  browser proof work.
+
+---
+
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors (2026-06-08)
 
 ### New Package: @openelement/ssg

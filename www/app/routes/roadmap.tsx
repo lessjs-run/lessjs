@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.33, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.36.4, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -245,14 +245,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                line is v0.33.0: AI-Readable API Foundation with structured page, island, and head intents.
-                The next line is v0.34.0: AutoFlow2 Sidecar Kernel for machine-readable workflow evidence.
+                package line is v0.36.4: Firefox/WebKit Cross-Browser Proof. The active
+                patch is v0.36.5: Release Truth and AutoFlow Closure.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.33.0 AI-Readable API</h2>
-              <p>Structured page, island, and head intents. One authoring path. Foundation for AutoFlow2.</p>
+              <h2>v0.36.4 Browser Proof</h2>
+              <p>20 packages aligned, SSG ownership moved to @openelement/ssg, and cross-browser proof recorded.</p>
             </aside>
           </section>
 
@@ -270,27 +270,52 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.32.0</div>
               <div><h3>App Lifecycle Contract</h3><p>Route params, load context, route metadata, redirect, not-found, error fallback, rendering intent, and streaming intent.</p></div>
-              <span class="status current">Current</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.33.0</div>
               <div><h3>AI-Readable API Foundation</h3><p>Object-form pages, structured head/route/render intent, explicit island metadata, and old API rejection proof.</p></div>
-              <span class="status planned">Next</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.34.0</div>
               <div><h3>AutoFlow2 Sidecar Kernel</h3><p>Workflow state, cells, evidence ledger, blockers, and allowed-action report without automatic edits.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.35.0</div>
               <div><h3>AutoFlow2 Harness Gate</h3><p>Low-noise workflow contradictions become local and CI blockers through model-backed checks.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.0</div>
               <div><h3>Rendering Runtime and Deployment</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes under AutoFlow evidence.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.1</div>
+              <div><h3>AutoFlow Closure and Release Truth</h3><p>Windows-safe AutoFlow tests, merged-cell metrics, and v0.36 release evidence alignment.</p></div>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.2</div>
+              <div><h3>SSG Bridge Migration</h3><p>Move Vite-free SSG render and postprocess code into @openelement/ssg.</p></div>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.3</div>
+              <div><h3>Complete SSG File Ownership</h3><p>Move route scanning, entry generation, generated data, and SSG plugin logic into @openelement/ssg.</p></div>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.4</div>
+              <div><h3>Firefox/WebKit Cross-Browser Proof</h3><p>Record browser proof, known limitations, and 20-package v0.36.4 alignment.</p></div>
+              <span class="status current">Current</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.5</div>
+              <div><h3>Release Truth and AutoFlow Closure</h3><p>Align workflow, release docs, AutoFlow evidence, and website truth without product changes.</p></div>
+              <span class="status current">Active patch</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.0</div>
@@ -328,10 +353,10 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Current</h2>
               <ul>
-                <li>v0.32.0 App Lifecycle Contract</li>
-                <li>Route params, load, metadata, redirect, and not-found</li>
-                <li>AutoWorkflow execution and v0.33 package</li>
-                <li>19-package aligned monorepo</li>
+                <li>v0.36.4 Firefox/WebKit browser proof</li>
+                <li>SSG ownership lives in @openelement/ssg</li>
+                <li>AutoFlow2 evidence and workflow gates</li>
+                <li>20-package aligned monorepo</li>
               </ul>
             </div>
             <div class="truth">

@@ -39,7 +39,7 @@ function GettingStartedEn() {
       <h1>Getting Started</h1>
       <p class='subtitle'>
         Create a minimal JSX-first, DSD-first openElement app, start the dev
-        server, build static output, and learn where the v0.33.0 application
+        server, build static output, and learn where the v0.36.4 application
         lifecycle lives.
       </p>
 
@@ -172,8 +172,9 @@ export default defineConfig({
 
       <div class='note'>
         <p>
-          The v1.0 target is a stable application engine. v0.33.0 makes the
-          Application API structured and AI-readable.
+          The v1.0 target is a stable application engine. v0.36.4 keeps the
+          Application API structured and AI-readable while @openelement/ssg owns
+          the static-generation pipeline.
         </p>
       </div>
 
@@ -190,7 +191,7 @@ function GettingStartedZh() {
       <h1>快速开始</h1>
       <p class='subtitle'>
         创建一个 JSX-first、DSD-first 的 openElement 应用，启动开发服务器，
-        构建静态输出，并理解 v0.33.0 的应用 API。
+        构建静态输出，并理解 v0.36.4 的应用 API。
       </p>
 
       <open-callout type='info' label='推荐'>
@@ -257,7 +258,7 @@ export default defineIsland(
 
       <div class='note'>
         <p>
-          v1.0 的目标是稳定应用引擎。v0.33.0 让 Application API
+          v1.0 的目标是稳定应用引擎。v0.36.4 让 Application API
           结构化且对 AI 可读。
         </p>
       </div>

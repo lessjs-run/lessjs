@@ -302,15 +302,15 @@ export class ArchitecturePage extends DsdElement {
             <div>
               <div class="eyebrow">
                 <span class="chip current">ADR-0050</span>
-                <span class="chip current">v0.23.0</span>
+                <span class="chip current">v0.36.4</span>
                 <span class="chip pass">graph gate passing</span>
               </div>
               <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
               <p class="lede">
-                openElement is now organized around explicit package ownership:
+                openElement is organized around explicit package ownership:
                 protocols own shared contracts, core stays the runtime kernel,
-                runtime owns authoring imports, app owns configuration, and
-                adapter-vite owns Vite implementation.
+                runtime owns authoring imports, app owns configuration, ssg owns
+                static generation, and adapter-vite owns Vite orchestration.
               </p>
             </div>
             <div class="artifact">
@@ -348,7 +348,7 @@ hub ───────────▶ compat-check, core`}</code></pre>
                 <h2>{isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'}</h2>
               </div>
               <p class="section-copy">
-                v0.23.0 makes package responsibility inspectable. Feature
+                v0.36.4 keeps package responsibility inspectable. Feature
                 packages use protocols for shared build contracts instead of
                 adapter internals, and ordinary users write components from the
                 runtime facade.
@@ -357,7 +357,8 @@ hub ───────────▶ compat-check, core`}</code></pre>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
               <div class="layer"><strong>product facades</strong><span>@openelement/core, @openelement/app</span><p>Separate authoring imports from configuration assembly.</p></div>
-              <div class="layer"><strong>build adapters</strong><span>@openelement/adapter-vite</span><p>Own Vite plugin assembly, route scanning, SSG phases, and generated entries.</p></div>
+              <div class="layer"><strong>SSG engine</strong><span>@openelement/ssg</span><p>Own route scanning, generated entries, generated data resolution, render, and postprocess phases.</p></div>
+              <div class="layer"><strong>build adapters</strong><span>@openelement/adapter-vite</span><p>Own Vite plugin assembly and build orchestration glue.</p></div>
               <div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
               <div class="layer"><strong>runtime kernel</strong><span>@openelement/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
               <div class="layer"><strong>protocols</strong><span>@openelement/protocols</span><p>Own dependency-light shared build contracts and virtual ids.</p></div>
@@ -378,7 +379,7 @@ hub ───────────▶ compat-check, core`}</code></pre>
             <div class="cards">
               <div class="card">
                 <h3>{isZh ? '为什么需要 protocols？' : 'Why protocols?'}</h3>
-                <p>Content, i18n, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
+                <p>Content, i18n, ssg, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
               </div>
               <div class="card">
                 <h3>{isZh ? '为什么需要 runtime？' : 'Why runtime?'}</h3>
@@ -405,9 +406,9 @@ hub ───────────▶ compat-check, core`}</code></pre>
             </div>
             <div class="gate-grid">
               <div class="gate"><strong>0 cycles</strong><span>Internal openElement package dependencies must remain acyclic.</span></div>
-              <div class="gate"><strong>18 packages</strong><span>Every package in packages/ must be present in the publish workflow.</span></div>
+              <div class="gate"><strong>20 packages</strong><span>Every package in packages/ must be present in the publish workflow.</span></div>
               <div class="gate"><strong>direct imports</strong><span>Each source-level @openelement/* import must be declared in that package's deno.json.</span></div>
-              <div class="gate"><strong>0.23.0</strong><span>Unified version releases keep JSR packages resolvable as one set.</span></div>
+              <div class="gate"><strong>0.36.4</strong><span>Unified version releases keep JSR packages resolvable as one set.</span></div>
             </div>
           </section>
 

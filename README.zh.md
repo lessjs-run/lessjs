@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**JSX-first、DSD-first Web Components 应用框架 (v0.32.0 已发布，v0.33.0 开发中)。**
+**JSX-first、DSD-first Web Components 应用框架 (v0.36.4 current，v0.36.5 release-truth patch active)。**
 openElement 用 Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -49,7 +49,7 @@ export default defineIsland(
 );
 ```
 
-v0.33.0 开发中的公开契约分层很明确：
+v0.36.4 当前公开线的契约分层很明确：
 
 - 应用编写：`definePage({ route, head, renderIntent, load, render, error })`、`defineIslandConfig()`、`defineIsland()`、`defineElement()`、`defineLayout()`
 - 构建配置：从 `@openelement/app/vite` 导入 `openElement()`
@@ -60,20 +60,21 @@ v0.33.0 开发中的公开契约分层很明确：
 
 ## 包
 
-19 个包统一发布到 [`@openelement`](https://jsr.io/@openelement)，当前已发布版本为
-**v0.32.0**。本仓库的活动开发目标是 v0.33.0 strict AI-readable API reset。
+20 个包统一对齐到 [`@openelement`](https://jsr.io/@openelement)，当前包线为
+**v0.36.4**。本仓库的活动补丁目标是 v0.36.5 release truth and AutoFlow closure。
 
-| Package                     | Role                                    |
-| --------------------------- | --------------------------------------- |
-| `@openelement/app`          | JSX-first 应用编写 API                  |
-| `@openelement/app/vite`     | `openElement()` Vite 配置入口           |
-| `@openelement/core`         | DSD renderer、DsdElement、JSX runtime   |
-| `@openelement/adapter-vite` | Vite adapter、SSG pipeline、island 构建 |
-| `@openelement/runtime`      | runtime convenience facade              |
-| `@openelement/ui`           | `open-*` DSD 组件                       |
-| `@openelement/content`      | Markdown、MDX、nav、blog、sitemap       |
-| `@openelement/i18n`         | 多语言数据和静态路径助手                |
-| `@openelement/hub`          | registry metadata 和验证                |
+| Package                     | Role                                      |
+| --------------------------- | ----------------------------------------- |
+| `@openelement/app`          | JSX-first 应用编写 API                    |
+| `@openelement/app/vite`     | `openElement()` Vite 配置入口             |
+| `@openelement/core`         | DSD renderer、DsdElement、JSX runtime     |
+| `@openelement/adapter-vite` | Vite adapter 和构建编排                   |
+| `@openelement/ssg`          | SSG engine、route scanning、data resolver |
+| `@openelement/runtime`      | runtime convenience facade                |
+| `@openelement/ui`           | `open-*` DSD 组件                         |
+| `@openelement/content`      | Markdown、MDX、nav、blog、sitemap         |
+| `@openelement/i18n`         | 多语言数据和静态路径助手                  |
+| `@openelement/hub`          | registry metadata 和验证                  |
 
 ## 文档
 
@@ -85,9 +86,9 @@ v0.33.0 开发中的公开契约分层很明确：
 
 ## 当前版本
 
-v0.33.0 开发线把应用编写面收敛为唯一 canonical object descriptor。页面使用
+v0.36.4 当前线把 SSG ownership 收敛到 `@openelement/ssg`，包括 route scanning、entry generation、generated data resolution、render 和 postprocess；adapter-vite 只保留 Vite orchestration。应用编写仍使用
 `definePage({ route, head, renderIntent, load, render, error })`，island 静态元数据使用
-`defineIslandConfig({ ssr, dsd, hydrate })`，v0.31-v0.32 的 function-form page 和旧 object-literal island metadata 捷径会被移除。
+`defineIslandConfig({ ssr, dsd, hydrate })`。
 
 后续 minor 会继续推进 AutoFlow2、rendering/deploy、server/data/UI 产品闭环，同时不重新打开
 v0.30 已清理完成的 renderer contract。v1.0 的目标是在 v0.31-v0.39 这条线被实现和门禁证明后，冻结稳定应用引擎。
