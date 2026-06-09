@@ -3,7 +3,7 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.1/`.
+package: `docs/next/v0.37.2/`.
 
 ## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
 
@@ -17,12 +17,18 @@ AutoFlow state.
 
 v0.37.0 is implemented as the product doctrine and rendering contract reset.
 
-v0.37.1 is the active execution package for the DsdElement shadow/light
-contract. It keeps shadow/DSD as the default and adds explicit light DOM opt-in
-through ADR-0092.
+v0.37.1 is implemented. It keeps shadow/DSD as the DsdElement default and adds
+explicit light DOM opt-in through ADR-0092.
+
+v0.37.2 is the active execution package for the SSR / ISR server runtime
+contract. It adds ADR-0093 and a platform-neutral `@openelement/core/isr-runtime`
+subpath for request-time ISR semantics.
 
 Governing docs:
 
+- `docs/sop/v0.37.2/README.md`
+- `docs/next/v0.37.2/`
+- `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
 - `docs/sop/v0.37.1/README.md`
 - `docs/next/v0.37.1/`
 - `docs/adr/ADR-0092-dsdelement-render-mode.md`
@@ -81,8 +87,8 @@ built-in cell generation.
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                            |
 | v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Active              | Audit current behavior and define explicit light DOM opt-in                                   |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Planned             | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                          |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Active              | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
 | v0.37.3 | Data / Database Boundary                           | Planned             | Data/database adapter contracts and recipes without built-in ORM ownership                    |
 | v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                    |
 | v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Renderer, server, build, data, component-adapter, and cache/ISR ports                         |
@@ -108,7 +114,7 @@ built-in cell generation.
 | JSX+Signal           | shipped     | `render(): VNode \| null`, effect() signal tracking                                          |
 | Island upgrade       | shipped     | binary SSR/client-only boundary                                                              |
 | Hydration strategies | shipped     | `client:load/idle/visible/only`                                                              |
-| ISR contract         | shipped     | `IsrCache`, `MemoryIsrCache`, `FileIsrCache`, manifest entries with `createIsrCacheKey()`    |
+| ISR contract         | shipped     | `IsrCache`, caches, manifest entries, and `@openelement/core/isr-runtime` response flow      |
 | API route (Hono)     | shipped     | Hono primary engine, DSD-first response shape                                                |
 | AppShell protocol    | shipped     | default, bare, custom, and route-selected shells                                             |
 | Application API      | v0.31.0     | `definePage`, `defineIsland`, `/vite` config split                                           |

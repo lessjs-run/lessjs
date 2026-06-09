@@ -58,6 +58,14 @@ export type {
   IsrManifestEntry,
   IsrRouteConfig,
 } from './isr.js';
+export { findIsrManifestEntry, renderIsrResponse } from './isr-runtime.js';
+export type {
+  IsrRuntimeOptions,
+  IsrRuntimeRenderContext,
+  IsrRuntimeRenderResult,
+  IsrRuntimeResult,
+  IsrRuntimeState,
+} from './isr-runtime.js';
 export { DsdElement } from './dsd-element.js';
 export { bindHydrateEvents } from './dsd-hydration-events.js';
 export type { Constructor, DsdHydration } from './dsd-hydration.js';

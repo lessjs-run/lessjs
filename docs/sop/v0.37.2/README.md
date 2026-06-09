@@ -1,8 +1,9 @@
 # v0.37.2 SOP: SSR / ISR Server Runtime Contract
 
-> Status: Planned\
+> Status: Active\
 > Roadmap: Four-Product Validation Train\
-> Depends on: v0.37.0
+> Depends on: v0.37.0\
+> NextVersion: `docs/next/v0.37.2/`
 
 ## Goal
 
@@ -20,6 +21,7 @@ framework runtime contract.
 - ADR-0091: Four-Product Platform Roadmap.
 - ADR-0038: ISR + Edge KV Architecture.
 - ADR-0040: Streaming DSD.
+- ADR-0093: SSR / ISR Runtime Contract.
 
 ## Step-by-Step Tasks
 

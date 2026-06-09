@@ -1,6 +1,6 @@
 # v0.37.1 SOP: DsdElement Shadow and Light Contract
 
-> Status: Active\
+> Status: Implemented\
 > Roadmap: Four-Product Validation Train\
 > Depends on: v0.37.0\
 > NextVersion: `docs/next/v0.37.1/`\

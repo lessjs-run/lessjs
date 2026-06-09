@@ -82,6 +82,7 @@ architectural decision, its context, and consequences.
 | 0086 | AI-Readable Architecture and AutoFlow2 Roadmap           | Accepted; v0.37-v1 sequencing superseded by 0091 |
 | 0091 | Four-Product Platform Roadmap                            | Accepted                                         |
 | 0092 | DsdElement Render Mode Contract                          | Accepted                                         |
+| 0093 | SSR / ISR Runtime Contract                               | Accepted                                         |
 
 ## Superseded / Historical
 

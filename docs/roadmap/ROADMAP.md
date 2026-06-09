@@ -2,7 +2,7 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.36.4 Firefox/WebKit Cross-Browser Proof.\
-> Active execution package: v0.37.1 DsdElement Shadow + Light Contract.\
+> Active execution package: v0.37.2 SSR / ISR Server Runtime Contract.\
 > Updated: 2026-06-09.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -36,8 +36,8 @@ Stable Four-Product Platform target.
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate           | Done                     |
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Done                     |
 | v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Done                     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Audit current DsdElement/DSD/client-only behavior and define explicit light DOM opt-in              | Active                   |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Planned                  |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                             | Done                     |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Active                   |
 | v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Planned                  |
 | v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling         | Planned                  |
 | v0.37.5 | Protocol Ports + Adapter Map                       | Small ports for renderer, server, build, data, component adapter, and cache/ISR boundaries          | Planned                  |
@@ -160,6 +160,10 @@ Treat SSR and ISR as framework core capability.
 - validate ISR cache and manifest behavior in server contexts;
 - map Hono-first behavior while leaving room for future server adapters;
 - record zero-JS defaults for static routes and explicit client JS triggers.
+
+v0.37.2 accepts ADR-0093 and adds a small `@openelement/core/isr-runtime`
+contract for request-time ISR response flow. It does not choose a hosting
+provider, cache backend, database, auth system, or server framework default.
 
 ## v0.37.3 - Data / Database Boundary
 
