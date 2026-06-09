@@ -2,8 +2,7 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.36.4 Firefox/WebKit Cross-Browser Proof.\
-> Active execution package: v0.37.0 Product Doctrine and Rendering Contract
-> Reset.\
+> Active execution package: v0.37.1 DsdElement Shadow + Light Contract.\
 > Updated: 2026-06-09.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -36,8 +35,8 @@ Stable Four-Product Platform target.
 | v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite       | Done                     |
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate           | Done                     |
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Done                     |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Active                   |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Audit current DsdElement/DSD/client-only behavior and define explicit light DOM opt-in              | Planned                  |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Done                     |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Audit current DsdElement/DSD/client-only behavior and define explicit light DOM opt-in              | Active                   |
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Planned                  |
 | v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Planned                  |
 | v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling         | Planned                  |
@@ -143,6 +142,9 @@ The reset establishes:
 
 Define `DsdElement` as the elements product surface without prematurely
 claiming all current behavior as light DOM support.
+
+v0.37.1 accepts ADR-0092 and adds `static renderMode = 'light'` as the explicit
+light DOM opt-in. The default remains shadow/DSD.
 
 - audit lifecycle, property reflection, events, DSD output, hydration, and SSR
   assumptions;

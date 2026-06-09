@@ -1,8 +1,9 @@
 # v0.37.1 SOP: DsdElement Shadow and Light Contract
 
-> Status: Planned\
+> Status: Active\
 > Roadmap: Four-Product Validation Train\
 > Depends on: v0.37.0\
+> NextVersion: `docs/next/v0.37.1/`\
 > ADR: ADR-0091, plus a dedicated DsdElement rendering-mode ADR if API changes
 > are required.
 
@@ -22,6 +23,7 @@ DOM as the default and adding an explicit light DOM opt-in contract.
 ## ADR Links
 
 - ADR-0091: Four-Product Platform Roadmap.
+- ADR-0092: DsdElement Render Mode Contract.
 - ADR-0039: DsdElement + Signals Reactive Architecture.
 - ADR-0077: Structured Render IR and Single Renderer Pipeline.
 

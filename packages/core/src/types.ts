@@ -598,7 +598,7 @@ export interface RouteEntry {
 export type { SsrContext } from './context.js';
 
 /** Component layer in the three-layer model */
-export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
+export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island' | 'light-dom';
 
 /** v0.21 hydration strategies. Legacy eager/lazy names are intentionally not accepted. */
 export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
@@ -1501,5 +1501,6 @@ export interface DsdComponentConstructor extends CustomElementConstructor {
     | import('@openelement/style-sheet').StyleSheetLike
     | import('@openelement/style-sheet').StyleSheetLike[];
   tagName?: string;
+  renderMode?: 'shadow' | 'light';
   observedAttributes?: string[];
 }

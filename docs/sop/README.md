@@ -69,8 +69,8 @@ criteria.
 | v0.36.3 | [v0.36.3/](./v0.36.3/)                                                                       | Done     | Complete SSG file ownership        |
 | v0.36.4 | [v0.36.4/](./v0.36.4/)                                                                       | Done     | Firefox/WebKit cross-browser proof |
 | v0.36.5 | [v0.36.5/](./v0.36.5/)                                                                       | Done     | Release truth and AutoFlow closure |
-| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Active   | Product doctrine + rendering reset |
-| v0.37.1 | [v0.37.1/](./v0.37.1/)                                                                       | Planned  | DsdElement shadow/light contract   |
+| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Done     | Product doctrine + rendering reset |
+| v0.37.1 | [v0.37.1/](./v0.37.1/)                                                                       | Active   | DsdElement shadow/light contract   |
 | v0.37.2 | [v0.37.2/](./v0.37.2/)                                                                       | Planned  | SSR/ISR server runtime contract    |
 | v0.37.3 | [v0.37.3/](./v0.37.3/)                                                                       | Planned  | Data/database boundary             |
 | v0.37.4 | [v0.37.4/](./v0.37.4/)                                                                       | Planned  | Pure CSS UI foundation             |

@@ -224,6 +224,17 @@ Deno.test('renderDsd - basic rendering', async (t) => {
     assertStringIncludes(output.html, '</test-comp-1>');
   });
 
+  await t.step('explicit light render mode omits DSD template', async () => {
+    const LightElement = createMockClass('<p>light content</p>');
+    Object.assign(LightElement, { renderMode: 'light' as const });
+    const output = await renderDsdForTest('light-el-1', asCtor(LightElement), {});
+    assertStringIncludes(output.html, '<light-el-1>');
+    assertStringIncludes(output.html, '<p>light content</p>');
+    assertStringIncludes(output.html, '</light-el-1>');
+    assertFalse(output.html.includes('<template shadowrootmode'));
+    assertEquals(output.metrics.layer, 'light-dom');
+  });
+
   await t.step('renders component with props as attributes', async () => {
     const cls = createMockClass('<span>content</span>');
     const output = await renderDsdForTest('my-el-1', asCtor(cls), { variant: 'primary', count: 5 });

@@ -18,7 +18,7 @@ export interface IslandManifestEntry {
   /** Upgrade strategy */
   strategy: HydrationStrategy;
   /** Component layer */
-  layer: 'dsd-static' | 'dsd-interactive' | 'pure-island';
+  layer: ComponentLayer;
 }
 
 /** Per-page island manifest */
@@ -35,7 +35,7 @@ export interface PageIslandManifest {
 export type IslandStrategyMap = Record<string, HydrationStrategy>;
 
 /** Layer map type: tagName -> layer */
-export type IslandLayerMap = Record<string, 'dsd-static' | 'dsd-interactive' | 'pure-island'>;
+export type IslandLayerMap = Record<string, ComponentLayer>;
 
 /**
  * Extract custom element tag names from HTML content.
@@ -148,3 +148,4 @@ export function stableHash(str: string): string {
   }
   return hash.toString(36);
 }
+import type { ComponentLayer } from '@openelement/core';

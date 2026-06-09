@@ -102,6 +102,9 @@ export class DsdElement extends _Base implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
+  /** Rendering mode. Defaults to shadow/DSD; light DOM is explicit opt-in. */
+  static renderMode?: 'shadow' | 'light';
+
   /** v0.25.0: Page head metadata. SSG reads this to inject <title> and <meta> tags. */
   static head?: { title?: string; description?: string; ogImage?: string };
 
@@ -191,15 +194,19 @@ export class DsdElement extends _Base implements ReactiveHost {
    *
    * @returns The existing or newly created ShadowRoot.
    */
-  createRenderRoot(): ShadowRoot {
+  createRenderRoot(): ShadowRoot | this {
+    const ctor = this.constructor as typeof DsdElement;
+    if (ctor.renderMode === 'light') {
+      return this;
+    }
+
     // DSD pre-populated shadow root detection
     if (this.shadowRoot) {
-      this._applyStyles(this.constructor as typeof DsdElement, this.shadowRoot);
+      this._applyStyles(ctor, this.shadowRoot);
       return this.shadowRoot;
     }
 
     // CSR: create a new shadow root
-    const ctor = this.constructor as typeof DsdElement;
     const delegatesFocus = ctor.delegatesFocus ?? false;
     const root = this.attachShadow({ mode: 'open', delegatesFocus });
 
@@ -246,10 +253,12 @@ export class DsdElement extends _Base implements ReactiveHost {
     initializeStaticProps(this);
     syncStaticPropsFromAttributes(this);
 
-    // Ensure shadow root exists and detect DSD pre-population
-    if (!this.shadowRoot) {
+    const isLightDom = ctor.renderMode === 'light';
+
+    // Ensure render target exists and detect DSD pre-population
+    if (!this.shadowRoot && !isLightDom) {
       this.createRenderRoot();
-    } else {
+    } else if (this.shadowRoot) {
       // DSD path: shadow root already populated.
       this.style.display = 'block';
       this._applyStyles(ctor);
@@ -287,6 +296,13 @@ export class DsdElement extends _Base implements ReactiveHost {
    */
   private _renderOrHydrate(): void {
     try {
+      const ctor = this.constructor as typeof DsdElement;
+      if (ctor.renderMode === 'light') {
+        this._renderIntoLightDom();
+        this.onCsrRendered();
+        return;
+      }
+
       const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
       if (isDsd) {
         // DSD: DOM already correct — bind events via VNode walk
@@ -474,8 +490,11 @@ export class DsdElement extends _Base implements ReactiveHost {
   }
 
   private _renderErrorFallback(error: unknown): void {
-    if (!this.shadowRoot) this.createRenderRoot();
-    if (!this.shadowRoot) return;
+    const ctor = this.constructor as typeof DsdElement;
+    const isLightDom = ctor.renderMode === 'light';
+    if (!this.shadowRoot && !isLightDom) this.createRenderRoot();
+    const target = isLightDom ? this : this.shadowRoot;
+    if (!target) return;
 
     let fallback: VNode | null;
     try {
@@ -494,10 +513,10 @@ export class DsdElement extends _Base implements ReactiveHost {
     this.#eventCleanups = [];
 
     if (fallback != null) {
-      while (this.shadowRoot.firstChild) {
-        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+      while (target.firstChild) {
+        target.removeChild(target.firstChild);
       }
-      this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
+      target.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
     }
   }
 
@@ -553,6 +572,11 @@ export class DsdElement extends _Base implements ReactiveHost {
    * duplicating renderToDom() and event hydration.
    */
   update(): void {
+    const ctor = this.constructor as typeof DsdElement;
+    if (ctor.renderMode === 'light') {
+      this._renderIntoLightDom();
+      return;
+    }
     this._renderIntoShadowRoot();
   }
 
@@ -594,15 +618,34 @@ export class DsdElement extends _Base implements ReactiveHost {
    */
   requestReactiveUpdate(): void {
     if (!this.isConnected) return;
+    const ctor = this.constructor as typeof DsdElement;
+    if (ctor.renderMode === 'light') {
+      this._renderIntoLightDom();
+      return;
+    }
     this._renderIntoShadowRoot();
+  }
+
+  private _renderIntoLightDom(): void {
+    this._disposeRenderBindings();
+
+    const result = this.render();
+    this.#vnodeCache = result;
+    this.#vnodeCacheValid = true;
+
+    while (this.firstChild) {
+      this.removeChild(this.firstChild);
+    }
+
+    if (result != null) {
+      this.appendChild(renderToDom(result, undefined, this.#effectDisposers));
+    }
   }
 
   private _renderIntoShadowRoot(): void {
     if (!this.shadowRoot) return;
 
-    // Dispose previous effects
-    for (const d of this.#effectDisposers) d();
-    this.#effectDisposers.clear();
+    this._disposeRenderBindings();
 
     const result = this.render();
     this.#vnodeCache = result;
@@ -613,6 +656,13 @@ export class DsdElement extends _Base implements ReactiveHost {
       }
       this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
     }
+  }
+
+  private _disposeRenderBindings(): void {
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
+    for (const f of this.#eventCleanups) f();
+    this.#eventCleanups = [];
   }
 
   /**

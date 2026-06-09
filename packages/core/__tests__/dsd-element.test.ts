@@ -102,6 +102,51 @@ Deno.test('DsdElement: CSR fallback creates shadow root and populates from rende
   document.body.removeChild(el);
 });
 
+Deno.test('DsdElement: explicit light render mode does not attach shadow root', () => {
+  if (!hasDOM) return;
+  const tagName = `test-light-${Math.random().toString(36).slice(2, 7)}`;
+  class LightElement extends DsdElement {
+    static override renderMode = 'light' as const;
+
+    override render(): VNode | null {
+      return jsx('p', { children: 'light content' });
+    }
+  }
+  customElements.define(tagName, LightElement);
+
+  const el = document.createElement(tagName) as LightElement;
+  document.body.appendChild(el);
+
+  assertEquals(el.shadowRoot, null);
+  assertEquals(el.innerHTML, '<p>light content</p>');
+
+  document.body.removeChild(el);
+});
+
+Deno.test('DsdElement: explicit light render mode updates light DOM', () => {
+  if (!hasDOM) return;
+  const tagName = `test-light-update-${Math.random().toString(36).slice(2, 7)}`;
+  class LightUpdateElement extends DsdElement {
+    static override renderMode = 'light' as const;
+    value = 'before';
+
+    override render(): VNode | null {
+      return jsx('span', { children: this.value });
+    }
+  }
+  customElements.define(tagName, LightUpdateElement);
+
+  const el = document.createElement(tagName) as LightUpdateElement;
+  document.body.appendChild(el);
+  el.value = 'after';
+  el.update();
+
+  assertEquals(el.shadowRoot, null);
+  assertEquals(el.innerHTML, '<span>after</span>');
+
+  document.body.removeChild(el);
+});
+
 Deno.test('DsdElement: existing empty shadow root uses CSR render path', () => {
   if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<p>empty root rendered</p>' });

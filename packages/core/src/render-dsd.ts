@@ -400,7 +400,10 @@ export async function renderDsd(
     }
   }
 
-  const resolvedLayer = dsdOptions?.layer || instance.layer || 'dsd-static';
+  const renderMode = ctor.renderMode ?? 'shadow';
+  const resolvedLayer = renderMode === 'light'
+    ? 'light-dom'
+    : dsdOptions?.layer || instance.layer || 'dsd-static';
 
   const renderEnd = typeof performance !== 'undefined'
     ? performance.now()

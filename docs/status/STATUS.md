@@ -3,7 +3,7 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.0/`.
+package: `docs/next/v0.37.1/`.
 
 ## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
 
@@ -15,12 +15,17 @@ capability or bump the package line. It aligned workflow checks,
 v0.36.3/v0.36.4 completion evidence, public website copy, release docs, and
 AutoFlow state.
 
-v0.37.0 is the active execution package for product doctrine and rendering
-contract reset. It is a docs, ADR, SOP, NextVersion, and contract-audit version;
-product-code implementation starts in later v0.37.x steps.
+v0.37.0 is implemented as the product doctrine and rendering contract reset.
+
+v0.37.1 is the active execution package for the DsdElement shadow/light
+contract. It keeps shadow/DSD as the default and adds explicit light DOM opt-in
+through ADR-0092.
 
 Governing docs:
 
+- `docs/sop/v0.37.1/README.md`
+- `docs/next/v0.37.1/`
+- `docs/adr/ADR-0092-dsdelement-render-mode.md`
 - `docs/sop/v0.37.0/README.md`
 - `docs/next/v0.37.0/`
 - `docs/adr/ADR-0091-four-product-platform-roadmap.md`
@@ -37,6 +42,10 @@ cross-browser E2E gate, and bumped all 20 packages to 0.36.4.
 
 v0.36.5 Status: **IMPLEMENTED.** It closed release-truth and AutoFlow drift
 without product-code changes or package version bumps.
+
+v0.37.0 Status: **IMPLEMENTED.** It reset the roadmap, SOP, ADR, NextVersion,
+status, and website truth around the four-product validation train without
+product-code changes.
 
 v0.36.3 Status: **IMPLEMENTED.** It completed SSG file ownership migration so
 `@openelement/ssg` owns route scanning, entry generation, generated data
@@ -71,8 +80,8 @@ built-in cell generation.
 | v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                            |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Active              | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Planned             | Audit current behavior and define explicit light DOM opt-in                                   |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Active              | Audit current behavior and define explicit light DOM opt-in                                   |
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Planned             | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
 | v0.37.3 | Data / Database Boundary                           | Planned             | Data/database adapter contracts and recipes without built-in ORM ownership                    |
 | v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                    |

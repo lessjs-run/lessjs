@@ -155,9 +155,9 @@ export function serializeRenderNode(node: RenderNode): string {
     }
     case 'dsd-host': {
       const attrs = serializeAttrs(node.tag, node.attrs);
-      if (node.layer === 'pure-island') {
+      if (node.layer === 'pure-island' || node.layer === 'light-dom') {
         return `<${node.tag}${attrs}${node.ssrPropsAttr}${node.source}>${
-          node.light.map(serializeRenderNode).join('')
+          [...node.shadow, ...node.light].map(serializeRenderNode).join('')
         }</${node.tag}>`;
       }
       const style = node.styleCss ? `\n    <style>${node.styleCss}</style>` : '';
