@@ -222,4 +222,10 @@ export {
 } from './generated-data-resolver.ts';
 export type { GeneratedDataResolverOptions } from './generated-data-resolver.ts';
 
-export { createOpenJsrPackageResolverPlugin } from './ssg-package-resolver.ts';
+export {
+  createOpenJsrPackageResolverPlugin,
+  parseOpenPackageSpecifier,
+  resolveOpenPackageExport,
+  resolveVirtualOpenPackageRelative,
+  toVirtualOpenPackageId,
+} from './ssg-package-resolver.ts';

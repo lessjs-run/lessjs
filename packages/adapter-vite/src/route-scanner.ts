@@ -5,6 +5,7 @@
 export {
   detectAndClassifyCemPackages,
   fileToTagName,
+  scanCemManifests,
   scanIslandMeta,
   scanIslands,
   scanPackageManifests,
