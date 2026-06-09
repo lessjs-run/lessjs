@@ -2,7 +2,8 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.36.4 Firefox/WebKit Cross-Browser Proof.\
-> Active patch: v0.36.5 Release Truth and AutoFlow Closure.\
+> Active execution package: v0.37.0 Product Doctrine and Rendering Contract
+> Reset.\
 > Updated: 2026-06-09.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -15,8 +16,9 @@ DSD-first HTML, progressive islands, Hono routes, and a 20-package monorepo
 under `@openelement/*`.
 
 v0.33.0 defined the AI-readable public application contract. v0.36 moved SSG
-ownership into `@openelement/ssg` and proved the current browser surface. v1.0
-remains the stable engine target.
+ownership into `@openelement/ssg` and proved the current browser surface.
+v0.37.x validates the four-product platform in bounded steps. v1.0 remains the
+Stable Four-Product Platform target.
 
 ## Version Ladder
 
@@ -33,11 +35,17 @@ remains the stable engine target.
 | v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell | Done                     |
 | v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite       | Done                     |
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate           | Done                     |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Active                   |
-| v0.37.0 | Server/Data/UI Product Closure                     | Server, data, UI, starters, Hub disposition, pruning evidence                                       | Planned                  |
-| v0.38.0 | Public Surface Reset                               | Final package/product surface reset before the v1 RC                                                | Planned                  |
-| v0.39.0 | v1 Release Candidate                               | Final API, docs, starter, deploy, consumer, and publish gates                                       | Planned                  |
-| v1.0.0  | Stable Engine + AutoFlow Default                   | API freeze with workflow evidence as part of default gates                                          | Vision                   |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Done                     |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Active                   |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Audit current DsdElement/DSD/client-only behavior and define explicit light DOM opt-in              | Planned                  |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Planned                  |
+| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Planned                  |
+| v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling         | Planned                  |
+| v0.37.5 | Protocol Ports + Adapter Map                       | Small ports for renderer, server, build, data, component adapter, and cache/ISR boundaries          | Planned                  |
+| v0.37.6 | Full-Stack Preset Smoke                            | Compose elements, UI, protocol, and framework/create into a real smoke application                  | Planned                  |
+| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on v0.37.x evidence                                  | Planned                  |
+| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                       | Planned                  |
+| v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates        | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
 
@@ -104,7 +112,7 @@ Closed cross-browser E2E proof:
 
 ## v0.36.5 - Release Truth and AutoFlow Closure
 
-Active patch. It fixes repository evidence, not product code:
+Implemented patch. It fixes repository evidence, not product code:
 
 - point `workflow:check` at the active v0.36.5 execution package;
 - complete missing v0.36.4 NextVersion files;
@@ -112,21 +120,86 @@ Active patch. It fixes repository evidence, not product code:
 - record v0.36.3/v0.36.4 AutoFlow evidence where repository proof exists;
 - update stale v0.21.x SOP Gate workflow wording.
 
-## v0.37.0 - Server/Data/UI Product Closure
+## v0.37.0 - Product Doctrine + Rendering Contract Reset
 
-With SSG migration complete and browser proof recorded, v0.37.0 focuses on
-product-line disposition:
+v0.37.0 is a docs, ADR, SOP, and contract-audit version. It replaces the old
+single-version Server/Data/UI closure epic with a v0.37.x validation train.
 
-- close server, data, UI, starter, and Hub disposition decisions;
-- validate a pure CSS UI export shape without mixing it with DsdElement behavior;
-- define server/data helper boundaries without locking the framework to one
-  backend stack;
-- prepare for v0.38 public surface reset.
+The reset establishes:
 
-## v0.38.0 - Public Surface Reset
+- static routes emit zero framework JavaScript unless islands, hydration, or
+  client-only components are explicit;
+- SSR and ISR are framework core capabilities, not a fifth product;
+- DSD/shadow DOM remains the default rendering mode;
+- light DOM is an explicit opt-in contract, not an accidental side effect of
+  `dsd: false`, `hydrate: "only"`, or pure-island behavior;
+- database work enters through data/database boundaries and recipes, not a
+  built-in ORM;
+- AutoFlow remains execution and evidence tooling, not a decision-maker for
+  APIs, packages, licenses, database defaults, security defaults, merges, tags,
+  or releases.
 
-Package/product surface reset with AI-assisted evidence analysis. Human review
-remains required for public API resets and package removals.
+## v0.37.1 - DsdElement Shadow + Light Contract
+
+Define `DsdElement` as the elements product surface without prematurely
+claiming all current behavior as light DOM support.
+
+- audit lifecycle, property reflection, events, DSD output, hydration, and SSR
+  assumptions;
+- define shadow/DSD default behavior;
+- design explicit light DOM opt-in semantics and migration notes;
+- add contract tests before documenting light DOM as supported.
+
+## v0.37.2 - SSR / ISR Server Runtime Contract
+
+Treat SSR and ISR as framework core capability.
+
+- define request-time SSR handler boundaries;
+- validate ISR cache and manifest behavior in server contexts;
+- map Hono-first behavior while leaving room for future server adapters;
+- record zero-JS defaults for static routes and explicit client JS triggers.
+
+## v0.37.3 - Data / Database Boundary
+
+Define data/database integration without becoming an ORM or auth platform.
+
+- specify data adapter and recipe boundaries;
+- keep concrete database choices external, adapter-based, or recipe-based;
+- add minimal test fixtures for memory/file and candidate platform recipes;
+- require ADR review before any default database or migration story.
+
+## v0.37.4 - Pure CSS UI Foundation
+
+Validate a CSS-first UI product surface independent from element behavior.
+
+- complete license and dependency review before deriving from daisyUI ideas;
+- extract token, theme, component class, and accessibility expectations;
+- remove Tailwind runtime/build coupling from the public CSS layer;
+- keep behavior in elements or framework adapters, not in the CSS package.
+
+## v0.37.5 - Protocol Ports + Adapter Map
+
+Turn protocol work into small ports/adapters contracts, not a broad abstraction
+rewrite.
+
+- define renderer, server, build, data, component-adapter, and cache/ISR ports;
+- map existing Deno, Hono, Vite, DsdElement, and SSG assumptions;
+- add conformance tests where a port is public;
+- require ADR approval before package splits or replacement guarantees.
+
+## v0.37.6 - Full-Stack Preset Smoke
+
+Prove the first composed framework path after the preceding contracts exist.
+
+- create or update a preset smoke app using the stabilized surfaces;
+- verify static zero-JS output, explicit islands, SSR/ISR evidence, data recipe
+  boundaries, and CSS UI integration;
+- keep the smoke narrow enough to be repeatable in local and CI gates.
+
+## v0.38.x - Product Surface Reset and Hardening
+
+Package/product surface reset with evidence from the v0.37.x validation train.
+Human review remains required for public API resets and package removals.
 
 Candidate product split to evaluate:
 
@@ -140,22 +213,23 @@ Candidate product split to evaluate:
 - `@openelement/framework` or starter presets that compose the stabilized
   surfaces.
 
-## v0.39.0 - v1 Release Candidate
+## v0.39.0 - Full-Stack Framework RC
 
 Validate final APIs, docs, starters, deploy smoke, publish gates, and consumer
 proof before v1.0.
 
-## v1.0.0 - Stable Engine + AutoFlow Default
+## v1.0.0 - Stable Four-Product Platform
 
-API freeze. AutoFlow evidence becomes part of default release gates. Requires
-multiple autonomous version cycles of evidence, v0.38 reset completion, and
-v0.39 RC gates passing.
+API freeze for the stable elements, UI, protocol, and framework surfaces.
+AutoFlow evidence becomes part of default release gates, but ADR and human
+review continue to govern public API, package, license, security, database, tag,
+release, and publish decisions.
 
 ## Explicit Non-Goals
 
 | Item                              | Decision                                                  |
 | --------------------------------- | --------------------------------------------------------- |
-| Built-in ORM                      | External recipes only.                                    |
+| Built-in ORM                      | External adapters and recipes only.                       |
 | Generic auth platform             | External integrations only.                               |
 | React-like runtime                | openElement outputs Web Components + DSD.                 |
 | String renderer                   | JSX/VNode/RenderNode only.                                |

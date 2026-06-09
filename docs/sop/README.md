@@ -1,7 +1,8 @@
 # SOP Index
 
-This directory is the execution map for openElement releases. Each version should
-have one SOP with:
+This directory is the execution map for openElement releases. SOPs are
+step-by-step implementation plans, not vision documents. Each active or planned
+version should have one SOP with:
 
 - entry criteria: what must be true before work starts
 - step-by-step execution: exact implementation order
@@ -10,7 +11,9 @@ have one SOP with:
 - non-goals: what must not be expanded into the release
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Every active minor
-also has an execution package under `docs/next/<version>/`.
+also has an execution package under `docs/next/<version>/`. Each SOP must map
+to its governing ADRs, NextVersion package, verification commands, and exit
+criteria.
 
 ## Current Execution Ladder
 
@@ -65,11 +68,17 @@ also has an execution package under `docs/next/<version>/`.
 | v0.36.2 | [v0.36.2/](./v0.36.2/)                                                                       | Done     | SSG bridge migration               |
 | v0.36.3 | [v0.36.3/](./v0.36.3/)                                                                       | Done     | Complete SSG file ownership        |
 | v0.36.4 | [v0.36.4/](./v0.36.4/)                                                                       | Done     | Firefox/WebKit cross-browser proof |
-| v0.36.5 | [v0.36.5/](./v0.36.5/)                                                                       | Active   | Release truth and AutoFlow closure |
-| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Planned  | Server/Data/UI product closure     |
-| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Planned  | Public surface reset               |
-| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | v1 release candidate               |
-| v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable engine + AutoFlow default   |
+| v0.36.5 | [v0.36.5/](./v0.36.5/)                                                                       | Done     | Release truth and AutoFlow closure |
+| v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Active   | Product doctrine + rendering reset |
+| v0.37.1 | [v0.37.1/](./v0.37.1/)                                                                       | Planned  | DsdElement shadow/light contract   |
+| v0.37.2 | [v0.37.2/](./v0.37.2/)                                                                       | Planned  | SSR/ISR server runtime contract    |
+| v0.37.3 | [v0.37.3/](./v0.37.3/)                                                                       | Planned  | Data/database boundary             |
+| v0.37.4 | [v0.37.4/](./v0.37.4/)                                                                       | Planned  | Pure CSS UI foundation             |
+| v0.37.5 | [v0.37.5/](./v0.37.5/)                                                                       | Planned  | Protocol ports + adapter map       |
+| v0.37.6 | [v0.37.6/](./v0.37.6/)                                                                       | Planned  | Full-stack preset smoke            |
+| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Planned  | Product surface reset              |
+| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | Full-stack framework RC            |
+| v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable four-product platform       |
 
 ## Operator Rules
 

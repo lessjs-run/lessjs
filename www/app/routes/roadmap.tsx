@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.36.4, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.36.4, v0.37.6, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -246,7 +246,7 @@ export class RoadmapPage extends DsdElement {
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
                 package line is v0.36.4: Firefox/WebKit Cross-Browser Proof. The active
-                patch is v0.36.5: Release Truth and AutoFlow Closure.
+                execution package is v0.37.0: Product Doctrine and Rendering Contract Reset.
               </p>
             </div>
             <aside class="now">
@@ -315,26 +315,56 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.36.5</div>
               <div><h3>Release Truth and AutoFlow Closure</h3><p>Align workflow, release docs, AutoFlow evidence, and website truth without product changes.</p></div>
-              <span class="status current">Active patch</span>
+              <span class="status done">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.0</div>
-              <div><h3>Server/Data/UI Product Closure</h3><p>Server routes, mutations, data recipes, UI starters, Hub disposition, package inventory, and pruning evidence.</p></div>
+              <div><h3>Product Doctrine + Rendering Contract Reset</h3><p>ADR-0091, static default 0JS, DSD/shadow default, light DOM opt-in terms, and the v0.37.x SOP split.</p></div>
+              <span class="status current">Active</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.1</div>
+              <div><h3>DsdElement Shadow + Light Contract</h3><p>Audit DsdElement behavior and define explicit light DOM opt-in without weakening the DSD/shadow default.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
-              <div class="version">v0.38.0</div>
-              <div><h3>Public Surface Reset</h3><p>Final package/product surface reset before the v1 release candidate.</p></div>
+              <div class="version">v0.37.2</div>
+              <div><h3>SSR / ISR Server Runtime Contract</h3><p>Define request-time SSR/ISR framework boundaries, cache behavior, server adapter evidence, and zero-JS defaults.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.3</div>
+              <div><h3>Data / Database Boundary</h3><p>Specify data/database adapter contracts and recipes without adopting a built-in ORM, auth platform, or migration system.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.4</div>
+              <div><h3>Pure CSS UI Foundation</h3><p>Validate a license-reviewed CSS-first UI layer with tokens, themes, class contracts, and no DsdElement behavior coupling.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.5</div>
+              <div><h3>Protocol Ports + Adapter Map</h3><p>Define small renderer, server, build, data, component-adapter, and cache/ISR ports before replacement claims.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.37.6</div>
+              <div><h3>Full-Stack Preset Smoke</h3><p>Compose elements, CSS UI, protocol ports, and framework/create into a repeatable full-stack smoke app.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.38.x</div>
+              <div><h3>Product Surface Reset and Hardening</h3><p>Reset public packages, APIs, and docs based on v0.37.x product evidence.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.39.0</div>
-              <div><h3>v1 Release Candidate</h3><p>Validate final APIs, docs, starters, deploy smoke, consumer smoke, and publish gates.</p></div>
+              <div><h3>Full-Stack Framework RC</h3><p>Validate final APIs, docs, starters, deploy smoke, consumer smoke, and publish gates.</p></div>
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v1.0.0</div>
-              <div><h3>Stable Engine + AutoFlow Default</h3><p>Freeze the proven API surface with workflow evidence as part of the default release gate.</p></div>
+              <div><h3>Stable Four-Product Platform</h3><p>Freeze elements, UI, protocol, and framework surfaces with workflow evidence in the release gate.</p></div>
               <span class="status planned">Planned</span>
             </div>
           </div>
@@ -354,6 +384,7 @@ export class RoadmapPage extends DsdElement {
               <h2>Current</h2>
               <ul>
                 <li>v0.36.4 Firefox/WebKit browser proof</li>
+                <li>v0.37.0 product doctrine reset active</li>
                 <li>SSG ownership lives in @openelement/ssg</li>
                 <li>AutoFlow2 evidence and workflow gates</li>
                 <li>20-package aligned monorepo</li>
@@ -362,9 +393,11 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Deferred</h2>
               <ul>
-                <li>AutoFlow2 sidecar and harness gate</li>
-                <li>ISR / Edge SSR production handler</li>
-                <li>CF Workers KV and Deno KV adapters</li>
+                <li>DsdElement explicit light DOM contract</li>
+                <li>SSR / ISR request-time framework runtime</li>
+                <li>database adapters and recipes</li>
+                <li>pure CSS UI product surface</li>
+                <li>protocol ports and full-stack preset smoke</li>
                 <li>generic auth or ORM systems</li>
               </ul>
             </div>

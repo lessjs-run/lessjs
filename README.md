@@ -2,8 +2,8 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.36.4 current,
-v0.36.5 release-truth patch active).**
+**JSX-first, DSD-first Web Components application framework (v0.36.4 package
+line current, v0.37.0 doctrine reset active).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
 prove the package graph before publishing.
@@ -71,8 +71,9 @@ v0.36.4 browser proof) is intentionally layered:
 ## Packages
 
 All 20 packages are currently aligned together at **v0.36.4** under
-[`@openelement`](https://jsr.io/@openelement). The active development target is
-v0.36.5 (Release Truth and AutoFlow Closure).
+[`@openelement`](https://jsr.io/@openelement). The active execution target is
+v0.37.0 (Product Doctrine and Rendering Contract Reset); v0.36.5 closed release
+truth and AutoFlow evidence without a package-line bump.
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -103,13 +104,21 @@ postprocess ownership into `@openelement/ssg`, while adapter-vite stays focused
 on Vite orchestration. v0.36.4 also records Firefox/WebKit browser proof and
 known limitations.
 
-v0.36.5 focuses on release truth and AutoFlow closure. v0.37.0 then resumes
-Server/Data/UI product closure: server-side rendering enhancements, data layer
-recipes, UI component library maturation, and Hub disposition.
+v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
+v0.37.0 resets product doctrine and rendering contracts before implementation
+continues. The v0.37.x train then validates the four product surfaces in
+bounded steps: elements, CSS-first UI, protocol ports, and the full-stack
+framework/create preset.
 
-The v1.0 target is a stable engine with workflow evidence as part of the
-default release gate, after 3+ autonomous version cycles prove mechanical
-autonomy.
+Static routes should emit zero framework JavaScript unless islands, hydration,
+or client-only components are explicit. SSR and ISR remain framework core
+capabilities, DSD/shadow DOM is the default component mode, and light DOM is an
+explicit future opt-in contract.
+
+The v1.0 target is a Stable Four-Product Platform with workflow evidence as
+part of the default release gate. AutoFlow remains execution and evidence
+tooling; ADR and human review still govern API, package, release, and publish
+decisions.
 
 ## Contributing
 

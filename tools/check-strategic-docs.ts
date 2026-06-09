@@ -78,6 +78,16 @@ const checks: Check[] = [
     required: ['v1.0'],
   },
   {
+    name: 'v0.37 roadmap is split into a validation train',
+    files: [
+      'docs/roadmap/ROADMAP.md',
+      'docs/status/STATUS.md',
+      'docs/sop/README.md',
+      'www/app/routes/roadmap.tsx',
+    ],
+    required: ['v0.37.6'],
+  },
+  {
     name: 'stale version and stale roadmap claims are absent',
     files: publicDocs,
     forbidden: [
@@ -90,6 +100,7 @@ const checks: Check[] = [
       /计划在 v0\.20/,
       /Gate currently passes at threshold Infinity/i,
       /681<\/strong><span>tests/i,
+      /v0\.37\.0\s*\|\s*Server\/Data\/UI Product Closure/i,
     ],
   },
   {

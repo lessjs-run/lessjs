@@ -3,19 +3,27 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.36.5/`.
+package: `docs/next/v0.37.0/`.
 
 ## Current Version Line: v0.36.4 (Firefox/WebKit Cross-Browser Proof)
 
 v0.36.4 is the current implemented package line. All 20 `@openelement/*`
 packages are aligned to `0.36.4`.
 
-v0.36.5 is the active patch task for release truth and AutoFlow closure. It does
-not add product capability. It aligns workflow checks, v0.36.3/v0.36.4
-completion evidence, public website copy, release docs, and AutoFlow state.
+v0.36.5 is implemented as a release-truth patch. It did not add product
+capability or bump the package line. It aligned workflow checks,
+v0.36.3/v0.36.4 completion evidence, public website copy, release docs, and
+AutoFlow state.
+
+v0.37.0 is the active execution package for product doctrine and rendering
+contract reset. It is a docs, ADR, SOP, NextVersion, and contract-audit version;
+product-code implementation starts in later v0.37.x steps.
 
 Governing docs:
 
+- `docs/sop/v0.37.0/README.md`
+- `docs/next/v0.37.0/`
+- `docs/adr/ADR-0091-four-product-platform-roadmap.md`
 - `docs/sop/v0.36.5/README.md`
 - `docs/next/v0.36.5/`
 - `docs/sop/v0.36.4/README.md`
@@ -26,6 +34,9 @@ Governing docs:
 v0.36.4 Status: **IMPLEMENTED.** It closed the Firefox/WebKit cross-browser
 proof line, documented remaining browser-specific limitations, added the
 cross-browser E2E gate, and bumped all 20 packages to 0.36.4.
+
+v0.36.5 Status: **IMPLEMENTED.** It closed release-truth and AutoFlow drift
+without product-code changes or package version bumps.
 
 v0.36.3 Status: **IMPLEMENTED.** It completed SSG file ownership migration so
 `@openelement/ssg` owns route scanning, entry generation, generated data
@@ -59,11 +70,17 @@ built-in cell generation.
 | v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence             |
 | v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
 | v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Active              | Align workflow, release docs, AutoFlow evidence, and website truth                            |
-| v0.37.0 | Server/Data/UI Product Closure                     | Planned             | Server, data, UI, starters, Hub disposition, pruning evidence                                 |
-| v0.38.0 | Public Surface Reset                               | Planned             | Final package/product surface reset before the v1 RC                                          |
-| v0.39.0 | v1 Release Candidate                               | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                 |
-| v1.0.0  | Stable Engine + AutoFlow Default                   | Vision              | API freeze with workflow evidence as part of default gates                                    |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                            |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Active              | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Planned             | Audit current behavior and define explicit light DOM opt-in                                   |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Planned             | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
+| v0.37.3 | Data / Database Boundary                           | Planned             | Data/database adapter contracts and recipes without built-in ORM ownership                    |
+| v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                    |
+| v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Renderer, server, build, data, component-adapter, and cache/ISR ports                         |
+| v0.37.6 | Full-Stack Preset Smoke                            | Planned             | Compose elements, UI, protocol, and framework/create into a real smoke application            |
+| v0.38.x | Product Surface Reset and Hardening                | Planned             | Public package/API/product reset based on v0.37.x evidence                                    |
+| v0.39.0 | Full-Stack Framework RC                            | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                 |
+| v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates  |
 
 ## Current Product Center
 
@@ -78,6 +95,7 @@ built-in cell generation.
 | SSG                  | shipped     | default production rendering; Vite-free core now lives in `@openelement/ssg`                 |
 | DSD                  | shipped     | `renderDsd()` outputs declarative shadow roots                                               |
 | Streaming DSD        | evidence    | `renderDsdStream()` is tested through Web `Response` consumption; not default server runtime |
+| Static zero-JS       | doctrine    | static routes emit no framework JS unless islands, hydration, or client-only are explicit    |
 | JSX+Signal           | shipped     | `render(): VNode \| null`, effect() signal tracking                                          |
 | Island upgrade       | shipped     | binary SSR/client-only boundary                                                              |
 | Hydration strategies | shipped     | `client:load/idle/visible/only`                                                              |
@@ -104,26 +122,36 @@ Package governance before v0.38:
 
 ## Architecture Positioning
 
-1. **Application framework** - file routes, Application API, dev server, build
-   pipeline, Hono API routes.
-2. **DSD/WC element and UI engine** - `DsdElement`, `renderDsd()`, JSX runtime,
-   adapters, UI components, compatibility.
-3. **SSG engine** - all SSG code (render, postprocess, route scanning, entry
+1. **Elements** - `DsdElement`, DSD/shadow defaults, explicit future light DOM
+   opt-in, JSX runtime, and render contracts.
+2. **UI** - pure CSS-first tokens, themes, and component classes; behavior is
+   optional and must not be coupled to the CSS layer.
+3. **Protocol** - small ports/adapters contracts for renderer, server, build,
+   data, component adapter, cache, and ISR boundaries.
+4. **Framework/create** - file routes, Application API, dev server, build
+   pipeline, Hono-first API routes, SSG/SSR/ISR, and full-stack starter presets.
+5. **SSG engine** - all SSG code (render, postprocess, route scanning, entry
    generation, data resolution) lives in `@openelement/ssg`; adapter-vite
    provides only Vite build orchestration glue.
-4. **Registry Hub** - current package and tooling surface; v0.37 must decide
-   whether it remains public product, becomes internal tooling, is deferred, is
-   archived, or is removed.
+6. **Registry Hub** - current package and tooling surface; future product reset
+   must decide whether it remains public product, becomes internal tooling, is
+   deferred, archived, or removed.
 
 ## Future Product Direction
 
-- `DsdElement` is feasible as a Lit-like base-class product surface.
-- A daisyUI-derived pure CSS layer is feasible after license review, token
+- v0.37.x is a Four-Product Validation Train, not one oversized implementation
+  epic.
+- `DsdElement` is feasible as a Lit-like base-class product surface, but it
+  remains DSD/shadow-first until explicit light DOM semantics are tested.
+- SSR and ISR are framework core capabilities, not a fifth product.
+- A daisyUI-inspired pure CSS layer is feasible after license review, token
   extraction, and Tailwind decoupling.
 - A Spring-like protocol layer should grow gradually as ports/adapters, not as
   a broad abstraction rewrite.
-- A full-stack framework preset should compose those surfaces after they
-  stabilize, likely during or after the v0.38 public surface reset.
+- Database work belongs in data/database adapter contracts and recipes. It must
+  not become a built-in ORM, auth platform, or migration system.
+- A full-stack framework preset should compose the stabilized elements, UI,
+  protocol, and framework/create surfaces after v0.37.x evidence exists.
 
 ## Key Decisions
 
@@ -135,6 +163,12 @@ Package governance before v0.38:
   model. `render()` returns `VNode | null`.
 - **DSD-first architecture.** Declarative Shadow DOM is the primary output, zero
   JS by default.
+- **Static default 0JS.** Static routes should emit zero framework JavaScript
+  unless islands, hydration, or client-only components are explicit.
+- **SSR/ISR in framework core.** SSR and ISR belong to the framework product
+  line and are not split into a fifth product.
+- **Light DOM is opt-in.** `DsdElement` remains DSD/shadow-first. Light DOM
+  support requires explicit API, tests, docs, and ADR coverage.
 - **No DOM diff.** Signal writes trigger scoped rerender behavior; complex
   subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions,

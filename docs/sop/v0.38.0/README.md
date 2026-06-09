@@ -1,76 +1,67 @@
-# v0.38.0 SOP: Public Surface Reset
+# v0.38.0 SOP: Product Surface Reset
 
 > Status: Planned\
-> Roadmap: Public Surface Reset\
-> ADR: ADR-0083, ADR-0086
+> Roadmap: Product Surface Reset and Hardening\
+> ADR: ADR-0083, ADR-0091
 
 ## Goal
 
-Perform the final package and public import surface reset before the v1 release
-candidate.
+Reset the public product and package surface after the v0.37.x validation train
+has produced evidence.
 
 ## Entry Criteria
 
-- v0.32 lifecycle contract is implementation-proven.
-- v0.33 AI-readable API foundation is implementation-proven.
-- v0.34 AutoFlow2 sidecar has run through an advisory release.
-- v0.35 AutoFlow2 harness gate is implemented and low-noise.
-- v0.36 rendering runtime and deploy boundaries are implementation-proven.
-- v0.37 server, data, UI, starter, Hub disposition, product-pruning, and
-  consumer-smoke evidence are complete.
-- ADR-0083 remains accepted or has been superseded by a newer package-surface
-  ADR.
+- v0.37.0-v0.37.6 are complete or explicitly deferred by ADR.
+- The four-product target has evidence from a generated full-stack smoke app.
+- Hub disposition has a written decision.
+- The current package graph has no unresolved release-truth drift.
 
-## Tasks
+## ADR Links
 
-- [ ] Inventory every current `@openelement/*` package and subpath.
-- [ ] Classify each surface as public product, subpath, internal, archived, or
-      removed.
-- [ ] Decide the final v1 package map.
-- [ ] Keep protocol contracts small, Web Standards-shaped, and runtime-free.
-- [ ] Move integration APIs toward subpaths unless an ADR justifies a package.
-- [ ] Ensure UI has no framework/router dependency.
-- [ ] Ensure framework does not own ORM, auth, database, backend runtime, or
-      builder internals.
-- [ ] Write migration guide, import-path table, and codemod notes where useful.
-- [ ] Update package READMEs, current docs, create templates, and www docs.
-- [ ] Update package graph gates for the final package map.
-- [ ] Run generated-project matrix and consumer smoke.
-- [ ] Include AutoFlow evidence proving docs, templates, package graph, build,
-      E2E, consumer smoke, publish dry-run, and release notes agree.
+- ADR-0091: Four-Product Platform Roadmap.
+- ADR-0083: Deferred Public Surface Reset.
+- Any package-surface ADRs created during v0.37.x.
+
+## Step-by-Step Tasks
+
+1. Inventory every `@openelement/*` package and public subpath.
+2. Classify each surface as product, advanced subpath, internal, archived, or
+   removed.
+3. Decide whether to introduce `@openelement/elements`,
+   `@openelement/protocol`, or `@openelement/framework`.
+4. Keep UI independent from framework routing.
+5. Keep protocol contracts small and runtime-free.
+6. Move internal implementation details out of public docs.
+7. Update create templates and website docs to the final public surface.
+8. Write migration notes for intentional breaking changes.
+9. Update package graph and architecture gates.
+10. Run consumer smoke and publish dry-run.
 
 ## Verification
 
-- `deno task arch:check`
-- `deno task autoflow:check`
-- `deno task graph:check`
-- `deno task docs:check-current`
-- `deno task docs:check-strategy`
-- `deno task fmt:check`
-- `deno task lint`
-- `deno task typecheck`
-- `deno task test`
-- `deno task build`
-- `deno task dsd:check-report`
-- `deno task consumer:local`
-- `deno task publish:dry-run`
-- `deno task test:e2e`
+- full local gate ladder.
+- consumer smoke.
+- generated project matrix.
+- publish dry-run.
+- website build and E2E.
+- AutoFlow evidence report.
 
 ## Non-Goals
 
-- No new rendering feature scope.
-- No new UI redesign scope.
+- No new feature scope beyond reset blockers.
 - No ORM/auth ownership.
-- No new top-level integration package without ADR approval.
-- No compatibility shim if the import path is intentionally removed during the
-  v1 reset.
+- No silent compatibility shims for intentionally removed 0.x imports.
+- No new package without ADR approval.
 
 ## Exit Criteria
 
-- Final public package map is documented.
-- Current docs, create templates, and package READMEs use final import paths.
-- Internal implementation packages are not presented as product packages.
-- Consumer smoke proves the published package graph from a fresh project.
-- AutoFlow evidence supports the reset instead of merely restating the roadmap.
-- v0.39 release-candidate validation can start without unresolved
-  package-surface contradictions.
+- Public package map is documented and proven.
+- Docs, README, package READMEs, create templates, and website agree.
+- Internal packages are no longer presented as product packages.
+- v0.39 release-candidate validation can start.
+
+## AutoFlow Boundary
+
+AutoFlow may prove docs, templates, package graph, build, E2E, consumer smoke,
+publish dry-run, and release notes agree. It must not decide package names or
+breaking-change policy.
