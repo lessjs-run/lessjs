@@ -3,7 +3,7 @@ type Failure = {
   message: string;
 };
 
-const activeVersion = 'v0.36.2';
+const activeVersion = 'v0.36.5';
 
 const requiredFiles = [
   'docs/governance/PROJECT_WORKFLOW.md',
@@ -34,9 +34,9 @@ const requiredAnchors: Record<string, string[]> = {
   'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', `docs/next/${activeVersion}/`],
   'docs/roadmap/ROADMAP.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  'docs/sop/v0.36.2/README.md': [`docs/next/${activeVersion}/`, 'ADR-0086'],
-  'docs/next/v0.36.2/README.md': [
-    'docs/sop/v0.36.2/README.md',
+  'docs/sop/v0.36.5/README.md': [`docs/next/${activeVersion}/`, 'ADR-0086'],
+  'docs/next/v0.36.5/README.md': [
+    'docs/sop/v0.36.5/README.md',
     'ADR-0086',
   ],
   '.github/PULL_REQUEST_TEMPLATE.md': ['docs/governance/PROJECT_WORKFLOW.md'],

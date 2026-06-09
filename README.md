@@ -2,8 +2,8 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.36.0 released,
-v0.37.0 in development).**
+**JSX-first, DSD-first Web Components application framework (v0.36.4 current,
+v0.36.5 release-truth patch active).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
 prove the package graph before publishing.
@@ -56,7 +56,8 @@ export default defineIsland(
 );
 ```
 
-The current application contract (v0.33.0+, stable through v0.35.6) is intentionally layered:
+The current application contract (v0.33.0+ API foundation, current through
+v0.36.4 browser proof) is intentionally layered:
 
 - application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
 - build configuration: `openElement()` from `@openelement/app/vite`;
@@ -69,16 +70,17 @@ The current application contract (v0.33.0+, stable through v0.35.6) is intention
 
 ## Packages
 
-All 20 packages are currently released together at **v0.36.0** under
+All 20 packages are currently aligned together at **v0.36.4** under
 [`@openelement`](https://jsr.io/@openelement). The active development target is
-v0.37.0 (Server/Data/UI Product Closure).
+v0.36.5 (Release Truth and AutoFlow Closure).
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
 | `@openelement/app`          | JSX-first application authoring API       |
 | `@openelement/app/vite`     | `openElement()` Vite configuration facade |
 | `@openelement/core`         | DSD renderer, DsdElement, JSX runtime     |
-| `@openelement/adapter-vite` | Vite adapter, SSG pipeline, island builds |
+| `@openelement/adapter-vite` | Vite adapter and build orchestration      |
+| `@openelement/ssg`          | SSG engine, route scanning, data resolver |
 | `@openelement/runtime`      | runtime convenience facade                |
 | `@openelement/ui`           | `open-*` DSD component library            |
 | `@openelement/content`      | Markdown, MDX, nav, blog, sitemap         |
@@ -95,14 +97,15 @@ v0.37.0 (Server/Data/UI Product Closure).
 
 ## Current Line
 
-v0.36.0 delivers the `@openelement/ssg` package (ADR-0090), error boundary
-enhancement with retry/degraded rendering, `FileIsrCache` adapter, signals
-system documentation, deployment recipes, and cross-browser E2E testing
-(Chromium + Firefox + WebKit).
+v0.36.4 is the current package line. It builds on the v0.36 SSG extraction by
+moving route scanning, entry generation, generated data resolution, render, and
+postprocess ownership into `@openelement/ssg`, while adapter-vite stays focused
+on Vite orchestration. v0.36.4 also records Firefox/WebKit browser proof and
+known limitations.
 
-v0.37.0 focuses on Server/Data/UI product closure: server-side rendering
-enhancements, data layer recipes, UI component library maturation, and
-Hub disposition.
+v0.36.5 focuses on release truth and AutoFlow closure. v0.37.0 then resumes
+Server/Data/UI product closure: server-side rendering enhancements, data layer
+recipes, UI component library maturation, and Hub disposition.
 
 The v1.0 target is a stable engine with workflow evidence as part of the
 default release gate, after 3+ autonomous version cycles prove mechanical

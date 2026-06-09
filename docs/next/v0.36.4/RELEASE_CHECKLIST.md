@@ -2,18 +2,18 @@
 
 ## Pre-Release
 
-- [ ] `test:e2e:browsers` passes (Chromium + Firefox + WebKit)
-- [ ] Known browser limitations documented
-- [ ] CI workflow updated for cross-browser gate
+- [x] `test:e2e:browsers` passes (Chromium + Firefox + WebKit)
+- [x] Known browser limitations documented
+- [x] CI workflow updated for cross-browser gate
 
 ## Version Bump
 
-- [ ] Bump all 20 packages to 0.36.4
-- [ ] `deno task graph:check` verifies alignment
+- [x] Bump all 20 packages to 0.36.4
+- [x] `deno task graph:check` verifies alignment
 
 ## Branch Flow
 
-- [ ] Push dev, wait for CI green
-- [ ] Merge dev → main
-- [ ] Wait for main CI green
+- [x] Push dev, wait for CI green
+- [x] Merge dev -> main
+- [x] Wait for main CI green
 - [ ] Tag `v0.36.4` on main

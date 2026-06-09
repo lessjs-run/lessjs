@@ -63,8 +63,9 @@ also has an execution package under `docs/next/<version>/`.
 | v0.36.0 | [v0.36.0/](./v0.36.0/)                                                                       | Done     | Rendering runtime and deployment   |
 | v0.36.1 | [v0.36.1/](./v0.36.1/)                                                                       | Done     | AutoFlow closure and release truth |
 | v0.36.2 | [v0.36.2/](./v0.36.2/)                                                                       | Done     | SSG bridge migration               |
-| v0.36.3 | [v0.36.3/](./v0.36.3/)                                                                       | Next     | Complete SSG file ownership        |
-| v0.36.4 | [v0.36.4/](./v0.36.4/)                                                                       | Planned  | Firefox/WebKit cross-browser proof |
+| v0.36.3 | [v0.36.3/](./v0.36.3/)                                                                       | Done     | Complete SSG file ownership        |
+| v0.36.4 | [v0.36.4/](./v0.36.4/)                                                                       | Done     | Firefox/WebKit cross-browser proof |
+| v0.36.5 | [v0.36.5/](./v0.36.5/)                                                                       | Active   | Release truth and AutoFlow closure |
 | v0.37.0 | [v0.37.0/](./v0.37.0/)                                                                       | Planned  | Server/Data/UI product closure     |
 | v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Planned  | Public surface reset               |
 | v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | v1 release candidate               |

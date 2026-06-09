@@ -1,7 +1,7 @@
 ﻿/**
  * /guide/architecture — kept for E2E compatibility.
  *
- * The canonical architecture page is at /architecture (v0.23 redesign).
+ * The canonical architecture page is at /architecture.
  * This page renders a minimal DSD layout so that SSG post-processing
  * properly injects view-transition and speculation rules meta tags.
  */
@@ -30,11 +30,11 @@ export class GuideArchitecturePage extends DsdElement {
         <div class='shell'>
           <h1>Architecture</h1>
           <p>{isZh
-            ? '架构文档已迁移到新的<a href="/architecture">Architecture 分区</a>（v0.23 重新设计）。'
-            : 'The architecture documentation has moved to the new <a href="/architecture">Architecture section</a> (v0.23 redesign).'}</p>
+            ? '架构文档已迁移到新的<a href="/architecture">Architecture 分区</a>。'
+            : 'The architecture documentation has moved to the new <a href="/architecture">Architecture section</a>.'}</p>
           <p>{isZh
-            ? 'openElement v0.23.0 实现了分层包架构：protocols、runtime kernel、product facades、build adapters、feature packages。每次发布前机械检查包图。无向后兼容——旧路径移除而非桥接。WC Package Protocol。六阶段愿景。无 webpack。Registry Hub。'
-            : 'openElement v0.23.0 implements a layered package architecture: protocols, runtime kernel, product facades, build adapters, and feature packages. The package graph is checked mechanically before every publish. No backward compatibility — old paths removed, not bridged. WC Package Protocol. Six-Phase Vision. No webpack. Registry Hub.'}</p>
+            ? 'openElement v0.36.4 的当前架构是 20 包分层：protocols、runtime kernel、product facades、SSG engine、build adapters、feature packages。@openelement/ssg 拥有 route scanning、entry generation 和 generated data resolution；adapter-vite 只保留 Vite orchestration。'
+            : 'openElement v0.36.4 is a 20-package layered architecture: protocols, runtime kernel, product facades, SSG engine, build adapters, and feature packages. @openelement/ssg owns route scanning, entry generation, and generated data resolution; adapter-vite keeps Vite orchestration.'}</p>
         </div>
       
     );
