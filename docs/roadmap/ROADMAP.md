@@ -174,7 +174,8 @@ Define data/database integration without becoming an ORM or auth platform.
 - add minimal test fixtures for memory/file and candidate platform recipes;
 - require ADR review before any default database or migration story.
 - close the 2026-06-10 `main` Publish to JSR hotfix so release-gate evidence
-  does not remain red after code validation is green.
+  can recover from partially published immutable JSR versions and reach
+  consumer-smoke proof after code validation is green.
 
 ## v0.37.4 - Pure CSS UI Foundation
 

@@ -7,10 +7,11 @@
  * - internal jsr:@openelement/* specifiers point at that release line
  * - source-level @openelement/* imports are declared in each package deno.json
  * - no circular package dependencies exist
- * - publish-jsr.yml publishes every package after its dependencies
+ * - release publish order lists every package after its dependencies
  */
 
 import { PACKAGE_COUNT, PACKAGE_VERSION } from './project-constants.ts';
+import { RELEASE_PACKAGE_ORDER } from './package-release-order.ts';
 
 interface PackageInfo {
   name: string;
@@ -27,19 +28,8 @@ interface PublishStep {
   index: number;
 }
 
-async function readPublishOrder(): Promise<PublishStep[]> {
-  const content = await Deno.readTextFile('.github/workflows/publish-jsr.yml');
-  const steps: PublishStep[] = [];
-  let index = 0;
-
-  for (const line of content.split('\n')) {
-    const match = line.match(/publish_if_missing\s+"([^"]+)"\s+"([^"]+)"/);
-    if (match) {
-      steps.push({ pkg: match[1], dir: match[2], index: index++ });
-    }
-  }
-
-  return steps;
+function readPublishOrder(): PublishStep[] {
+  return RELEASE_PACKAGE_ORDER.map((step, index) => ({ ...step, index }));
 }
 
 async function readPackageInfo(dir: string): Promise<PackageInfo | null> {
@@ -340,7 +330,7 @@ function validateInternalJsrRanges(
 async function main(): Promise<void> {
   const failures: string[] = [];
 
-  const publishSteps = await readPublishOrder();
+  const publishSteps = readPublishOrder();
   const publishOrder = publishSteps.map((step) => step.pkg);
 
   console.log(`Publish order (${publishOrder.length} packages):`);
@@ -451,7 +441,7 @@ async function main(): Promise<void> {
     const graphNames = new Set(packages.map((pkg) => pkg.name));
     for (const pkg of publishOrder) {
       if (!graphNames.has(pkg)) {
-        const msg = `"${pkg}" is in publish-jsr.yml but not found in packages/.`;
+        const msg = `"${pkg}" is in RELEASE_PACKAGE_ORDER but not found in packages/.`;
         console.error(`  FAIL: ${msg}`);
         failures.push(msg);
       }
@@ -460,7 +450,7 @@ async function main(): Promise<void> {
     const publishNames = new Set(publishOrder);
     for (const pkg of packages) {
       if (!publishNames.has(pkg.name)) {
-        const msg = `"${pkg.name}" exists in packages/ but is missing from publish-jsr.yml.`;
+        const msg = `"${pkg.name}" exists in packages/ but is missing from RELEASE_PACKAGE_ORDER.`;
         console.error(`  FAIL: ${msg}`);
         failures.push(msg);
       }

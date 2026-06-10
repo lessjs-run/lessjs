@@ -5,6 +5,8 @@
  * a hand-maintained 19-package publish or typecheck chain.
  */
 
+import { RELEASE_PACKAGE_ORDER } from './package-release-order.ts';
+
 interface PackageInfo {
   name: string;
   version: string;
@@ -14,6 +16,10 @@ interface PackageInfo {
 }
 
 const COMMANDS = new Set(['typecheck', 'publish', 'publish:dry-run']);
+const JSR_PUBLISH_TIMEOUT_MS = 20 * 60 * 1000;
+const JSR_PROPAGATION_ATTEMPTS = 24;
+const JSR_PROPAGATION_DELAY_MS = 5_000;
+const JSR_METADATA_TIMEOUT_MS = 10_000;
 
 function normalizeDep(specifier: string, self: string): string | null {
   const prefix = '@openelement/';
@@ -97,34 +103,22 @@ function sortPackages(packages: PackageInfo[]): PackageInfo[] {
   return sorted;
 }
 
-async function readWorkflowPublishOrder(): Promise<string[] | null> {
-  try {
-    const content = await Deno.readTextFile('.github/workflows/publish-jsr.yml');
-    const order: string[] = [];
-    for (const line of content.split('\n')) {
-      const match = line.match(/publish_if_missing\s+"([^"]+)"/);
-      if (match) order.push(match[1]);
-    }
-    return order.length > 0 ? order : null;
-  } catch {
-    return null;
-  }
+function readReleasePublishOrder(): string[] {
+  return RELEASE_PACKAGE_ORDER.map((step) => step.pkg);
 }
 
-async function orderForRelease(packages: PackageInfo[]): Promise<PackageInfo[]> {
-  const topo = sortPackages(packages);
-  const workflowOrder = await readWorkflowPublishOrder();
-  if (!workflowOrder) return topo;
+function orderForRelease(packages: PackageInfo[]): PackageInfo[] {
+  const releaseOrder = readReleasePublishOrder();
 
   const byName = new Map(packages.map((pkg) => [pkg.name, pkg]));
-  if (workflowOrder.length !== packages.length || workflowOrder.some((name) => !byName.has(name))) {
+  if (releaseOrder.length !== packages.length || releaseOrder.some((name) => !byName.has(name))) {
     throw new Error(
-      'GitHub publish workflow package list no longer matches packages/*/deno.json. ' +
+      'Release package order no longer matches packages/*/deno.json. ' +
         'Run deno task graph:check for details.',
     );
   }
 
-  const ordered = workflowOrder.map((name) => byName.get(name)!);
+  const ordered = releaseOrder.map((name) => byName.get(name)!);
   assertDependencyFirst(ordered);
   return ordered;
 }
@@ -172,6 +166,41 @@ async function runCommand(
   }
 }
 
+async function runCommandWithTimeout(
+  command: string,
+  args: string[],
+  cwd: string | undefined,
+  timeoutMs: number,
+): Promise<{ success: boolean; code: number; timedOut: boolean }> {
+  console.log(`$ ${[command, ...args].join(' ')}${cwd ? `  # cwd=${cwd}` : ''}`);
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeoutId = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+    const proc = new Deno.Command(command, {
+      args,
+      cwd,
+      stdin: 'inherit',
+      stdout: 'inherit',
+      stderr: 'inherit',
+      signal: controller.signal,
+    });
+    const status = await proc.spawn().status;
+    return { success: status.success, code: status.code, timedOut };
+  } catch (err) {
+    if (timedOut && err instanceof DOMException && err.name === 'AbortError') {
+      return { success: false, code: 1, timedOut: true };
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function typecheckPackage(pkg: PackageInfo): Promise<void> {
   const entries = exportEntries(pkg);
   if (entries.length === 0) {
@@ -182,10 +211,143 @@ async function typecheckPackage(pkg: PackageInfo): Promise<void> {
   await runCommand('deno', ['check', ...rootEntries]);
 }
 
-async function publishPackage(pkg: PackageInfo, dryRun: boolean): Promise<void> {
-  const args = ['publish', '-c', 'deno.json'];
-  if (dryRun) args.push('--dry-run', '--allow-dirty');
-  await runCommand('deno', args, pkg.dir);
+async function jsrVersionExists(pkg: string, version: string): Promise<boolean> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), JSR_METADATA_TIMEOUT_MS);
+  try {
+    const response = await fetch(`https://jsr.io/${pkg}/${version}_meta.json`, {
+      signal: controller.signal,
+    });
+    if (response.status === 404) return false;
+    if (!response.ok) {
+      throw new Error(
+        `JSR metadata check failed for ${pkg}@${version}: HTTP ${response.status}`,
+      );
+    }
+    return true;
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error(
+        `JSR metadata check timed out for ${pkg}@${version} after ${
+          JSR_METADATA_TIMEOUT_MS / 1000
+        }s`,
+      );
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function waitForJsrVersion(pkg: PackageInfo): Promise<boolean> {
+  for (let attempt = 1; attempt <= JSR_PROPAGATION_ATTEMPTS; attempt++) {
+    try {
+      if (await jsrVersionExists(pkg.name, pkg.version)) return true;
+    } catch (err) {
+      console.warn(
+        `[publish] ${pkg.name}@${pkg.version}: JSR metadata check attempt ${attempt} failed: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      );
+    }
+
+    if (attempt < JSR_PROPAGATION_ATTEMPTS) {
+      console.log(
+        `[publish] ${pkg.name}@${pkg.version}: waiting for JSR propagation ` +
+          `(${attempt}/${JSR_PROPAGATION_ATTEMPTS})`,
+      );
+      await sleep(JSR_PROPAGATION_DELAY_MS);
+    }
+  }
+  return false;
+}
+
+async function assertCleanWorktree(): Promise<void> {
+  const command = new Deno.Command('git', {
+    args: ['status', '--porcelain'],
+    stdout: 'piped',
+    stderr: 'inherit',
+  });
+  const output = await command.output();
+  if (!output.success) {
+    throw new Error(`git status failed with exit code ${output.code}`);
+  }
+
+  const status = new TextDecoder().decode(output.stdout).trim();
+  if (status) {
+    console.error(status);
+    throw new Error('Refusing to publish from a dirty worktree.');
+  }
+}
+
+async function publishPackage(
+  pkg: PackageInfo,
+  dryRun: boolean,
+): Promise<'dry-run' | 'skipped' | 'published' | 'recovered'> {
+  const args = ['publish', '-c', 'deno.json', '--allow-slow-types'];
+  if (dryRun) {
+    args.push('--dry-run', '--allow-dirty');
+    await runCommand('deno', args, pkg.dir);
+    return 'dry-run';
+  }
+
+  if (await jsrVersionExists(pkg.name, pkg.version)) {
+    console.log(`[publish] ${pkg.name}@${pkg.version}: already exists; skipping.`);
+    return 'skipped';
+  }
+
+  console.log(`[publish] ${pkg.name}@${pkg.version}: publishing.`);
+  const status = await runCommandWithTimeout(
+    'deno',
+    [...args, '--no-check'],
+    pkg.dir,
+    JSR_PUBLISH_TIMEOUT_MS,
+  );
+
+  if (status.success) {
+    if (!(await waitForJsrVersion(pkg))) {
+      throw new Error(
+        `${pkg.name}@${pkg.version} publish finished but JSR metadata never appeared.`,
+      );
+    }
+    console.log(`[publish] ${pkg.name}@${pkg.version}: published and visible on JSR.`);
+    return 'published';
+  }
+
+  const reason = status.timedOut
+    ? `timed out after ${JSR_PUBLISH_TIMEOUT_MS / 60_000} minutes`
+    : `failed with exit code ${status.code}`;
+  console.warn(`[publish] ${pkg.name}@${pkg.version}: command ${reason}; checking JSR state.`);
+  if (await waitForJsrVersion(pkg)) {
+    console.warn(
+      `[publish] ${pkg.name}@${pkg.version}: version exists on JSR after command ${reason}; continuing.`,
+    );
+    return 'recovered';
+  }
+
+  throw new Error(
+    `${pkg.name}@${pkg.version} publish ${reason}, and the version is not visible on JSR.`,
+  );
+}
+
+function printJsrRecoveryPlan(packages: PackageInfo[]): void {
+  console.log(
+    '[publish] Live mode skips versions already visible on JSR and publishes ' +
+      'the remaining packages sequentially.',
+  );
+  console.log(
+    '[publish] If a publish command times out or exits non-zero after JSR accepts ' +
+      'the immutable version, the script rechecks JSR metadata before failing.',
+  );
+  console.log(
+    `[publish] Candidate order: ${
+      packages.map((pkg) => `${pkg.name}@${pkg.version}`).join(' -> ')
+    }`,
+  );
 }
 
 function assertVersionConsistency(packages: PackageInfo[]): void {
@@ -202,20 +364,75 @@ function assertVersionConsistency(packages: PackageInfo[]): void {
   throw new Error(`Package versions are not consistent:\n${lines.join('\n')}`);
 }
 
+function parseOnlyFilter(args: string[]): Set<string> | null {
+  const values: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--only') {
+      const value = args[++i];
+      if (!value) throw new Error('--only requires a comma-separated package list.');
+      values.push(value);
+    } else if (arg.startsWith('--only=')) {
+      values.push(arg.slice('--only='.length));
+    } else {
+      throw new Error(`Unknown argument: ${arg}`);
+    }
+  }
+
+  const names = values
+    .flatMap((value) => value.split(','))
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return names.length > 0 ? new Set(names) : null;
+}
+
+function packageKeys(pkg: PackageInfo): string[] {
+  return [pkg.name, pkg.name.replace('@openelement/', '')];
+}
+
+function filterPackagesWithDependencies(
+  packages: PackageInfo[],
+  only: Set<string> | null,
+): PackageInfo[] {
+  if (!only) return packages;
+
+  const byName = new Map(packages.map((pkg) => [pkg.name, pkg]));
+  const selected = new Set<string>();
+  const requested = packages.filter((pkg) => packageKeys(pkg).some((key) => only.has(key)));
+
+  if (requested.length === 0) {
+    throw new Error(`No packages match --only ${[...only].join(',')}`);
+  }
+
+  function visit(pkg: PackageInfo): void {
+    if (selected.has(pkg.name)) return;
+    for (const dep of pkg.deps) {
+      const depPkg = byName.get(dep);
+      if (depPkg) visit(depPkg);
+    }
+    selected.add(pkg.name);
+  }
+
+  for (const pkg of requested) visit(pkg);
+  return packages.filter((pkg) => selected.has(pkg.name));
+}
+
 async function main(): Promise<void> {
-  const [command] = Deno.args;
+  const [command, ...args] = Deno.args;
   if (!COMMANDS.has(command)) {
     throw new Error(
       `Usage: deno run --allow-read --allow-run tools/run-package-graph-task.ts ${
         [...COMMANDS].join('|')
-      }`,
+      } [--only package-a,package-b]`,
     );
   }
+  const only = parseOnlyFilter(args);
 
   const allPackages = await readPackages();
-  const packages = command.startsWith('publish')
-    ? await orderForRelease(allPackages)
+  const orderedPackages = command.startsWith('publish')
+    ? orderForRelease(allPackages)
     : sortPackages(allPackages);
+  const packages = filterPackagesWithDependencies(orderedPackages, only);
   if (packages.length === 0) throw new Error('No packages found under packages/.');
   console.log(
     `[graph-task] ${command}: ${packages.length} packages in dependency order: ${
@@ -226,13 +443,26 @@ async function main(): Promise<void> {
   if (command.startsWith('publish')) {
     assertVersionConsistency(packages);
   }
+  if (command === 'publish') {
+    await assertCleanWorktree();
+    printJsrRecoveryPlan(packages);
+  }
 
+  const publishResults = new Map<string, number>();
   for (const pkg of packages) {
     if (command === 'typecheck') {
       await typecheckPackage(pkg);
     } else {
-      await publishPackage(pkg, command === 'publish:dry-run');
+      const result = await publishPackage(pkg, command === 'publish:dry-run');
+      publishResults.set(result, (publishResults.get(result) ?? 0) + 1);
     }
+  }
+
+  if (command.startsWith('publish')) {
+    const summary = [...publishResults.entries()]
+      .map(([result, count]) => `${result}: ${count}`)
+      .join(', ');
+    console.log(`[graph-task] ${command} summary: ${summary}`);
   }
 
   if (command === 'typecheck') {
