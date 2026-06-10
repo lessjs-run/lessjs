@@ -1,0 +1,14 @@
+# v0.37.4 Risk Register
+
+| Risk                                                               | Severity | Mitigation                                                                                                                                                  |
+| ------------------------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Adapter-vite shell removal causes external consumer breakage       | Medium   | Verify zero external consumers via grep before deletion; bump patch if needed with changelog notice                                                         |
+| Open-layout SPA nav rewrite introduces regressions                 | Medium   | Preserve existing test assertions; add e2e smoke for SPA nav after change                                                                                   |
+| dsd-hydration extraction breaks Lit/React/Vanilla adapter behavior | Medium   | Extract only identical logic; each adapter's framework-specific code stays in its own file; run all adapter tests                                           |
+| Logger unification changes error output format                     | Low      | `createLogger` formats output identically to current `console.*` calls; scoped prefix is the only addition                                                  |
+| Router removal from ui breaks www site navigation                  | Medium   | Open-layout is the primary consumer; inline implementation must match existing Router behavior exactly; e2e nav tests catch regressions                     |
+| Pure CSS tokens break existing open-props-tokens.ts API            | Low      | Tokens are additive — no existing CSS custom properties are removed                                                                                         |
+| DaisyUI license or Tailwind dependency concern                     | Low      | daisyUI is MIT; we fork only compiled CSS class definitions, not the Tailwind plugin source. All `theme()`/`@apply` references rewritten to Open Props vars |
+| Forked CSS breaks in shadow DOM                                    | Medium   | DSD is the root characteristic — every CSS class must be tested inside a shadow root; `@property` + `:host` patterns verified in smoke tests                |
+| DaisyUI class coverage too narrow or too broad                     | Low      | Start with ~15–20 most-used classes; expand incrementally based on www dogfooding feedback                                                                  |
+| Test supplementation scope creep                                   | Low      | Target coverage thresholds are explicit; stop when met                                                                                                      |

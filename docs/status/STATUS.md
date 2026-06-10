@@ -3,7 +3,7 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.3/` (DONE — v0.37.4 Pure CSS UI Foundation is next).
+package: `docs/next/v0.37.4/`.
 
 ## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract) — DONE
 
@@ -42,7 +42,9 @@ The active execution line is now v0.37.4.
 
 Governing docs:
 
-- `docs/sop/v0.37.2/README.md`
+- `docs/sop/v0.37.4/README.md`
+- `docs/next/v0.37.4/`
+- `docs/sop/v0.37.3/README.md`
 - `docs/next/v0.37.2/`
 - `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
 - `docs/sop/v0.37.3/README.md`
@@ -109,7 +111,7 @@ built-in cell generation.
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                                                                                                       |
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                                                                                             |
 | v0.37.3 | Data / Database Boundary                           | Done                | Data/database adapter contracts and recipes without built-in ORM ownership                                                                                                                 |
-| v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                                                                                                                 |
+| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Active              | Close code-quality debt, pure CSS UI foundation, ui/router decoupling, dsd-hydration dedup, and ssg/router/protocols test supplementation                                                  |
 | v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Migrate protocol types from core/app/ssg into @openelement/protocols; add exportable conformance test suites; define renderer, server, build, data, component-adapter, and cache/ISR ports |
 | v0.37.6 | Full-Stack Preset Smoke                            | Planned             | Compose elements, UI, protocol, and framework/create into a real smoke application                                                                                                         |
 | v0.38.x | Product Surface Reset and Hardening                | Planned             | Public package/API/product reset based on v0.37.x evidence                                                                                                                                 |
