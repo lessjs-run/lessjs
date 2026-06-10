@@ -111,7 +111,7 @@
     "publish:app": "cd packages/app && deno publish",
     "publish:hub": "cd packages/hub && deno publish",
     "publish:ssg": "cd packages/ssg && deno publish",
-    "publish": "deno audit && deno task typecheck && deno task lint && deno task fmt:check && deno task test && deno task build && deno run --allow-read --allow-run tools/run-package-graph-task.ts publish",
+    "publish": "deno audit && deno task typecheck && deno task lint && deno task fmt:check && deno task test && deno task build && deno run --allow-read --allow-run --allow-net tools/run-package-graph-task.ts publish",
     "publish:dry-run": "deno run --allow-read --allow-run tools/run-package-graph-task.ts publish:dry-run",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "test:coverage": "deno test --coverage=.coverage --allow-read --allow-write --allow-env --allow-net --allow-run && deno coverage .coverage --lcov > .coverage/lcov.info",
