@@ -1,6 +1,6 @@
 # v0.37.2 SOP: SSR / ISR Server Runtime Contract
 
-> Status: Active\
+> Status: Done
 > Roadmap: Four-Product Validation Train\
 > Depends on: v0.37.0\
 > NextVersion: `docs/next/v0.37.2/`
