@@ -1,6 +1,6 @@
 # v0.37.3 SOP: Data / Database Boundary
 
-> Status: Active\
+> Status: Done\
 > Roadmap: Four-Product Validation Train\
 > Depends on: v0.37.2\
 > NextVersion: `docs/next/v0.37.3/`
@@ -23,23 +23,25 @@ or database. This line also closes the current JSR publish hotfix discovered on
 
 - ADR-0091: Four-Product Platform Roadmap.
 - ADR-0093: SSR / ISR Runtime Contract (cache/injection pattern precedent).
-- ADR-0095: Data / Database Boundary (to be written).
+- ADR-0095: Data / Database Boundary (Accepted).
 
 ## Step-by-Step Tasks
 
-1. Audit all existing data patterns in the repository.
-2. Design a minimal `DataAdapter<T>` type contract that is framework-agnostic
-   and side-effect-free at the type level.
-3. Implement `MemoryDataAdapter` as a baseline (in-memory Map).
-4. Implement `FileDataAdapter` for build-time data loading from JSON files.
-5. Add unit tests for both adapters with error-path coverage.
-6. Verify no regression in existing ISR cache implementations.
-7. Write ADR-0095 documenting the boundary decision and non-goals.
-8. Update workflow and status docs for v0.37.3.
-9. Hotfix the 2026-06-10 `main` Publish to JSR failure so missing-version
-   publishing is deterministic, recoverable after partial JSR publication, and
-   cannot leave downstream packages blocked on unpublished internal
-   dependencies.
+1. [x] Audit all existing data patterns in the repository.
+2. [x] Design a minimal `DataAdapter<T>` type contract that is framework-agnostic
+       and side-effect-free at the type level.
+3. [x] Implement `MemoryDataAdapter` as a baseline (in-memory Map).
+4. [x] Defer `FileDataAdapter` to recipe level per ADR-0095 Non-Goals.
+       Build-time JSON loading is a recipe concern; framework core must not import
+       filesystem APIs.
+5. [x] Add unit tests for `MemoryDataAdapter` with error-path coverage.
+6. [x] Verify no regression in existing ISR cache implementations.
+7. [x] Write ADR-0095 documenting the boundary decision and non-goals.
+8. [x] Update workflow and status docs for v0.37.3.
+9. [x] Hotfix the 2026-06-10 `main` Publish to JSR failure so missing-version
+       publishing is deterministic, recoverable after partial JSR publication, and
+       cannot leave downstream packages blocked on unpublished internal
+       dependencies.
 
 ## Verification
 

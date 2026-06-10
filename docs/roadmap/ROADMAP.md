@@ -192,8 +192,22 @@ Turn protocol work into small ports/adapters contracts, not a broad abstraction
 rewrite.
 
 - define renderer, server, build, data, component-adapter, and cache/ISR ports;
+- migrate protocol types from implementation packages into
+  `@openelement/protocols`:
+  - `RendererProtocol` (from `core/src/render-schemas.ts`);
+  - `IslandConfig` / `HydrationStrategy` (from `app/src/authoring.ts`,
+    `core/src/schemas.ts`);
+  - `SignalEngine` / `SignalLike` (from `signals/src/types.ts`,
+    `core/src/signal-like.ts`);
+  - `DataAdapter` (from `core/src/data.ts`);
+  - `EntryDescriptor` (from `ssg/src/entry-descriptor.ts`);
+- write ADR-00XX for `EntryDescriptor` route manifest contract before type
+  migration;
+- add exportable conformance test suites for each port (parameterized runner
+  pattern: `runRendererConformance(impl)`);
 - map existing Deno, Hono, Vite, DsdElement, and SSG assumptions;
-- add conformance tests where a port is public;
+- keep port contracts thin and frozen — heavy documentation and tests, not heavy
+  interfaces;
 - require ADR approval before package splits or replacement guarantees.
 
 ## v0.37.6 - Full-Stack Preset Smoke
@@ -203,12 +217,22 @@ Prove the first composed framework path after the preceding contracts exist.
 - create or update a preset smoke app using the stabilized surfaces;
 - verify static zero-JS output, explicit islands, SSR/ISR evidence, data recipe
   boundaries, and CSS UI integration;
+- verify adapter-lit passes protocol conformance suites using only
+  `@openelement/protocols` imports (protocol layer proof);
 - keep the smoke narrow enough to be repeatable in local and CI gates.
 
 ## v0.38.x - Product Surface Reset and Hardening
 
 Package/product surface reset with evidence from the v0.37.x validation train.
 Human review remains required for public API resets and package removals.
+
+Governance convergence before v0.38 exit:
+
+- gate tiers: fast dev gate (fmt, lint, typecheck, test) for PRs; full release
+  gate (all 16 checks + E2E) for publishing;
+- AutoFlow feature scope freeze: report/check/health only — no new evolve,
+  generate, or autonomous capabilities;
+- Hub scope deferral to post-v1.0; Hub remains internal tooling through v0.38.
 
 Candidate product split to evaluate:
 
@@ -244,6 +268,7 @@ release, and publish decisions.
 | String renderer                   | JSX/VNode/RenderNode only.                                |
 | Silent compatibility shims        | No. 0.x may break.                                        |
 | Autonomous architecture decisions | No. ADR, API reset, package removal require human review. |
+| Protocol abstraction framework    | No. Thin frozen contracts with conformance tests.         |
 
 ## Document Cross-Reference
 
