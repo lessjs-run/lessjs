@@ -83,7 +83,8 @@ architectural decision, its context, and consequences.
 | 0091 | Four-Product Platform Roadmap                            | Accepted                                         |
 | 0092 | DsdElement Render Mode Contract                          | Accepted                                         |
 | 0093 | SSR / ISR Runtime Contract                               | Accepted                                         |
-| 0094 | Core Type Consolidation — Eliminate `types.ts`           | Proposed                                         |
+| 0094 | Core Type Consolidation — Eliminate `types.ts`           | Accepted                                         |
+| 0095 | Data / Database Boundary                                 | Accepted                                         |
 
 ## Superseded / Historical
 

@@ -202,3 +202,5 @@ export {
   unwrap,
 } from './prop.js';
 export type { PropDecl, PropDeclFull, PropDeclShorthand, PropsFrom, PropType } from './prop.js';
+export { MemoryDataAdapter } from './data.js';
+export type { DataAdapter } from './data.js';
