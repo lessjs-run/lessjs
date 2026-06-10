@@ -8,3 +8,4 @@
 | Type-level contract   | DataAdapter<T> type compatibility, generic inference       | typecheck only           |
 | Graph check           | no new cycles from data adapter module                     | pass                     |
 | Architecture contract | no duplicate data types, no ORM leakage                    | pass                     |
+| JSR publish hotfix    | `main` Publish to JSR after missing-version workflow fix   | pass, consumer smoke run |

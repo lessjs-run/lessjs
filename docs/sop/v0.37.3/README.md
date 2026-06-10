@@ -9,7 +9,8 @@
 
 Define a data adapter contract and validate the boundary between framework core,
 adapters, and user-owned data sources — without becoming an ORM, auth platform,
-or database.
+or database. This line also closes the current JSR publish hotfix discovered on
+`main` after code-validation CI passed.
 
 ## Entry Criteria
 
@@ -35,6 +36,9 @@ or database.
 6. Verify no regression in existing ISR cache implementations.
 7. Write ADR-0095 documenting the boundary decision and non-goals.
 8. Update workflow and status docs for v0.37.3.
+9. Hotfix the 2026-06-10 `main` Publish to JSR failure so missing-version
+   publishing does not stall under per-package timeouts or leave downstream
+   packages blocked on unpublished internal dependencies.
 
 ## Verification
 
@@ -43,6 +47,9 @@ or database.
 - Type-level contract passes `deno check`.
 - No new package cycles (`graph:check`).
 - Architecture contract check passes.
+- `main` Publish to JSR rerun or replacement run passes, including downstream
+  packages that depend on `@openelement/ssg` and `@openelement/adapter-vite`.
+- Post-publish consumer smoke is not skipped because of a failed publish job.
 
 ## Non-Goals
 
@@ -58,6 +65,8 @@ or database.
   adapters provide, what recipes demonstrate.
 - A minimal data adapter contract exists with baseline proof.
 - ADR-0095 is accepted and registered.
+- The `main` release publish gate is green or the exact external blocker is
+  recorded before release closure.
 - v0.37.4 can build on this contract for CSS UI data consumption patterns.
 
 ## AutoFlow Boundary

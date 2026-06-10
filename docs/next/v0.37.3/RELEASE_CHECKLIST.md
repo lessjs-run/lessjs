@@ -8,5 +8,7 @@
 - [ ] `deno task test` passes.
 - [ ] `deno task graph:check` passes.
 - [ ] `deno task arch:check` passes.
+- [ ] `main` Publish to JSR passes after the hotfix.
+- [ ] Post-publish consumer smoke runs and is not skipped by publish failure.
 - [ ] Changelog updated.
 - [ ] Release note written.

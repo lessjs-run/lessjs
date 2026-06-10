@@ -71,7 +71,7 @@ jobs:
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && deno publish -c deno.json)
+            (cd "$dir" && deno publish -c deno.json --allow-slow-types)
           }
 
           publish_if_requested_and_missing "rpc" "@openelement/rpc" "packages/rpc"
