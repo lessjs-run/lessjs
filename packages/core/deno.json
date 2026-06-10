@@ -12,7 +12,8 @@
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
     "./jsx-runtime": "./src/jsx-runtime.ts",
     "./jsx-dev-runtime": "./src/jsx-runtime.ts",
-    "./island-transform": "./src/island-transform.ts"
+    "./island-transform": "./src/island-transform.ts",
+    "./data": "./src/data.ts"
   },
   "imports": {
     "@openelement/signals": "jsr:@openelement/signals@^0.37.2",
