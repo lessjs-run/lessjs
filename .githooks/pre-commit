@@ -1,46 +1,22 @@
 #!/bin/sh
 #
 # openElement pre-commit hook
-# Fast subset of the master gate. Must pass before any commit.
+# autoflow:gate is the single controller — it reads git diff, determines
+# the impact surface, runs all required checks, and prints an LLM-facing
+# impact report.
+#
 # Install: deno task hooks:install
 
 set -e
 
-echo "[1/12] deno task workflow:check"
-deno task workflow:check || { echo "❌ Workflow check failed."; exit 1; }
-
-echo "[2/12] deno task arch:check"
-deno task arch:check || { echo "❌ Architecture check failed."; exit 1; }
-
-echo "[3/12] deno task fmt:check"
-deno task fmt:check || { echo "❌ Format check failed."; exit 1; }
-
-echo "[4/12] deno task lint"
-deno task lint || { echo "❌ Lint check failed."; exit 1; }
-
-echo "[5/12] deno task typecheck"
-deno task typecheck || { echo "❌ Type check failed."; exit 1; }
-
-echo "[6/12] deno task graph:check"
-deno task graph:check || { echo "❌ Package graph check failed."; exit 1; }
-
-echo "[7/12] deno task docs:check-strategy"
-deno task docs:check-strategy || { echo "❌ Strategic docs check failed."; exit 1; }
-
-echo "[8/12] deno task docs:check-current"
-deno task docs:check-current || { echo "❌ Current docs check failed."; exit 1; }
-
-echo "[9/12] deno task autoflow:test"
-deno task autoflow:test || { echo "❌ AutoFlow tests failed."; exit 1; }
-
-echo "[10/12] deno task autoflow:health"
-deno task autoflow:health || { echo "❌ AutoFlow health check failed."; exit 1; }
-
-echo "[11/12] deno task autoflow:check-dev"
-deno task autoflow:check-dev || { echo "❌ autoflow:check-dev failed."; exit 1; }
-
-echo "[12/12] deno task verify:configs"
-deno task verify:configs || { echo "❌ Package config verification failed."; exit 1; }
+echo "[autoflow:gate] pre-commit"
+deno run --allow-read --allow-run --allow-write tools/autoflow/mod-gate.ts --staged || {
+  echo ""
+  echo "❌ autoflow:gate FAILED. Fix the issues above and retry."
+  echo "   The AI assistant is expected to read the impact report"
+  echo "   and verify all LLM directives before retrying."
+  exit 1
+}
 
 echo ""
-echo "All pre-commit checks passed."
+echo "✅ autoflow:gate PASSED — commit allowed."
