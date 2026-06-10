@@ -1,5 +1,5 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
-// Strategic docs anchor: current package line v0.37.2.
+// Strategic docs anchor: current package line v0.37.4.
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';

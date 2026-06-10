@@ -5,16 +5,16 @@
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
 package: `docs/next/v0.37.5/` (Protocol Ports + DaisyUI Coverage Completion).
 
-## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract) â€” DONE
+## Current Version Line: v0.37.4 (SSR / ISR Server Runtime Contract) â€?DONE
 
-v0.37.2 is implemented. All 20 `@openelement/*` packages are aligned to
-`0.37.2`. ADR-0094 (Core Type Consolidation) is also merged as a cross-cutting
+v0.37.4 is implemented. All 20 `@openelement/*` packages are aligned to
+`0.37.4`. ADR-0094 (Core Type Consolidation) is also merged as a cross-cutting
 cleanup.
 
 v0.37.3 (Data / Database Boundary) is DONE as a validation-train stop:
 ADR-0095 accepted and implemented with MemoryDataAdapter baseline, FileDataAdapter
 deferred to recipe, 2026-06-10 JSR publish hotfix closed. Package line remains
-0.37.2 across the v0.37.x train. The active execution line is now v0.37.5.
+0.37.4 across the v0.37.x train. The active execution line is now v0.37.5.
 
 v0.36.5 is implemented as a release-truth patch. It did not add product
 capability or bump the package line. It aligned workflow checks,
@@ -26,16 +26,16 @@ v0.37.0 is implemented as the product doctrine and rendering contract reset.
 v0.37.1 is implemented. It keeps shadow/DSD as the DsdElement default and adds
 explicit light DOM opt-in through ADR-0092.
 
-v0.37.2 is implemented for the SSR / ISR server runtime contract. It adds
+v0.37.4 is implemented for the SSR / ISR server runtime contract. It adds
 ADR-0093 and a platform-neutral `@openelement/core/isr-runtime` subpath for
 request-time ISR semantics, and it carries the package line forward to
-`0.37.2`.
+`0.37.4`.
 
 v0.37.3 is implemented for the Data / Database Boundary. It adds ADR-0095 and
 the baseline data adapter contract. All acceptance criteria are met: DataAdapter
 contract defined and type-safe, MemoryDataAdapter tested, ISR cache regressions
 passed, ADR-0095 accepted, all local gates green, publish gate completed, and
-all 20 `@openelement/*` packages published to JSR at `0.37.2` with consumer
+all 20 `@openelement/*` packages published to JSR at `0.37.4` with consumer
 smoke confirmed on Windows.
 
 v0.37.4 is implemented for the Pure CSS UI Foundation. It completed license and
@@ -43,7 +43,7 @@ dependency review of daisyUI, extracted ~17 CSS class definitions as pure CSS
 with Open Props tokens, created 27 component semantic tokens, added DSD-compatible
 `:host` selectors, delivered the daisyClassSheet via CSSStyleSheet API, and proved
 the interactive-component thin-shell pattern with open-dropdown, open-modal, and
-open-tabs as DsdElement wrappers using signal â†’ host attribute â†’ `:host([attr])`
+open-tabs as DsdElement wrappers using signal â†?host attribute â†?`:host([attr])`
 CSS selectors. All 1600 tests pass.
 
 The active execution line is now v0.37.5.
@@ -57,8 +57,8 @@ Governing docs:
 - `docs/sop/v0.37.3/README.md`
 - `docs/next/v0.37.3/`
 - `docs/adr/ADR-0095-data-database-boundary.md`
-- `docs/sop/v0.37.2/README.md`
-- `docs/next/v0.37.2/`
+- `docs/sop/v0.37.4/README.md`
+- `docs/next/v0.37.4/`
 - `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
 - `docs/sop/v0.37.1/README.md`
 - `docs/next/v0.37.1/`
@@ -119,7 +119,7 @@ built-in cell generation.
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                                                                          |
 | v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                                                   |
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                                                        |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                                              |
+| v0.37.4 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                                              |
 | v0.37.3 | Data / Database Boundary                           | Done                | Data/database adapter contracts and recipes without built-in ORM ownership                                                                  |
 | v0.37.4 | Pure CSS UI Foundation                             | Done                | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                                                                  |
 | v0.37.5 | Protocol Ports + DaisyUI Coverage Completion       | Active              | Complete daisyUI interactive component coverage, migrate protocol types into @openelement/protocols, add exportable conformance test suites |
@@ -155,7 +155,7 @@ built-in cell generation.
 
 ## Package Version State
 
-All 20 packages are aligned to **v0.37.2** under `@openelement/*`.
+All 20 packages are aligned to **v0.37.4** under `@openelement/*`.
 
 Package governance before v0.38:
 

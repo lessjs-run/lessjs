@@ -20,6 +20,7 @@ packages — within a single bounded version.
 ## ADR Links
 
 - ADR-0091: Four-Product Platform Roadmap.
+- ADR-0093: SSR / ISR Runtime Contract.
 - ADR-0074: UI Dual-Track Ocean and Island Architecture.
 - ADR-0075: Fork daisyUI Compiled CSS.
 - ADR-0076: Open Props and daisyUI Token Merge.
