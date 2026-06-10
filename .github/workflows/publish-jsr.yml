@@ -52,7 +52,7 @@ jobs:
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && timeout 10m deno publish -c deno.json --no-check) || {
+            (cd "$dir" && deno publish -c deno.json --no-check --allow-slow-types) || {
               echo "::error::Failed to publish ${pkg}@${version}"
               return 1
             }

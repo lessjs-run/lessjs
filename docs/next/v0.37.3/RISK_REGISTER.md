@@ -6,3 +6,4 @@
 | Data adapter becoming a leaky abstraction | Medium   | Type-level contract first; test with memory/file only; no real database in baseline |
 | Breaking existing ISR cache consumers     | Medium   | Keep FileIsrCache/MemoryIsrCache as-is; data adapter is additive, not replacement   |
 | Too many adapter interfaces               | Low      | Start with a single `DataAdapter<T>`; specialise only when proven needed            |
+| JSR publish gate remains red after CI     | High     | Hotfix the missing-version publish workflow and verify `main` publish plus smoke    |

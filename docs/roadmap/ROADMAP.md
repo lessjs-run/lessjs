@@ -2,8 +2,8 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.37.2 SSR / ISR Server Runtime Contract.\
-> Active execution package: v0.37.2 SSR / ISR Server Runtime Contract.\
-> Updated: 2026-06-09.
+> Active execution package: v0.37.3 Data / Database Boundary.\
+> Updated: 2026-06-10.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -37,8 +37,8 @@ Stable Four-Product Platform target.
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Done                     |
 | v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Done                     |
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                             | Done                     |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Active                   |
-| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Planned                  |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Done                     |
+| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Active                   |
 | v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling         | Planned                  |
 | v0.37.5 | Protocol Ports + Adapter Map                       | Small ports for renderer, server, build, data, component adapter, and cache/ISR boundaries          | Planned                  |
 | v0.37.6 | Full-Stack Preset Smoke                            | Compose elements, UI, protocol, and framework/create into a real smoke application                  | Planned                  |
@@ -173,6 +173,8 @@ Define data/database integration without becoming an ORM or auth platform.
 - keep concrete database choices external, adapter-based, or recipe-based;
 - add minimal test fixtures for memory/file and candidate platform recipes;
 - require ADR review before any default database or migration story.
+- close the 2026-06-10 `main` Publish to JSR hotfix so release-gate evidence
+  does not remain red after code validation is green.
 
 ## v0.37.4 - Pure CSS UI Foundation
 

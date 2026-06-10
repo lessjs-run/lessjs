@@ -14,6 +14,8 @@ Scope:
   decisions, not framework defaults;
 - require ADR-0095 approval before any default database, ORM, or migration
   story.
+- close the 2026-06-10 `main` Publish to JSR hotfix so release-gate evidence is
+  green after the code-validation CI surface is green.
 
 ## Related
 

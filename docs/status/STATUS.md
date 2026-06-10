@@ -21,16 +21,24 @@ v0.37.0 is implemented as the product doctrine and rendering contract reset.
 v0.37.1 is implemented. It keeps shadow/DSD as the DsdElement default and adds
 explicit light DOM opt-in through ADR-0092.
 
-v0.37.2 is the active execution package for the SSR / ISR server runtime
-contract. It adds ADR-0093 and a platform-neutral `@openelement/core/isr-runtime`
-subpath for request-time ISR semantics, and it carries the package line forward
-to `0.37.2`.
+v0.37.2 is implemented for the SSR / ISR server runtime contract. It adds
+ADR-0093 and a platform-neutral `@openelement/core/isr-runtime` subpath for
+request-time ISR semantics, and it carries the package line forward to
+`0.37.2`.
+
+v0.37.3 is the active execution package for the Data / Database Boundary. It
+adds ADR-0095 and the baseline data adapter contract. It also owns the
+2026-06-10 `main` Publish to JSR hotfix after code validation passed but the
+release publish gate failed.
 
 Governing docs:
 
 - `docs/sop/v0.37.2/README.md`
 - `docs/next/v0.37.2/`
 - `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
+- `docs/sop/v0.37.3/README.md`
+- `docs/next/v0.37.3/`
+- `docs/adr/ADR-0095-data-database-boundary.md`
 - `docs/sop/v0.37.1/README.md`
 - `docs/next/v0.37.1/`
 - `docs/adr/ADR-0092-dsdelement-render-mode.md`
@@ -90,8 +98,8 @@ built-in cell generation.
 | v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                            |
 | v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                          |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Active              | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
-| v0.37.3 | Data / Database Boundary                           | Planned             | Data/database adapter contracts and recipes without built-in ORM ownership                    |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
+| v0.37.3 | Data / Database Boundary                           | Active              | Data/database adapter contracts and recipes without built-in ORM ownership                    |
 | v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                    |
 | v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Renderer, server, build, data, component-adapter, and cache/ISR ports                         |
 | v0.37.6 | Full-Stack Preset Smoke                            | Planned             | Compose elements, UI, protocol, and framework/create into a real smoke application            |
