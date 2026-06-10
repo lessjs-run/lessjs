@@ -29,12 +29,12 @@ export class MemoryDataAdapter<T = unknown> implements DataAdapter<T> {
     this.#store = new Map(entries);
   }
 
-  async get(key: string): Promise<T | undefined> {
-    return this.#store.get(key);
+  get(key: string): Promise<T | undefined> {
+    return Promise.resolve(this.#store.get(key));
   }
 
-  async keys(): Promise<string[]> {
-    return Array.from(this.#store.keys());
+  keys(): Promise<string[]> {
+    return Promise.resolve(Array.from(this.#store.keys()));
   }
 
   set(key: string, value: T): void {
