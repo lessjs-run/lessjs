@@ -37,8 +37,9 @@ or database. This line also closes the current JSR publish hotfix discovered on
 7. Write ADR-0095 documenting the boundary decision and non-goals.
 8. Update workflow and status docs for v0.37.3.
 9. Hotfix the 2026-06-10 `main` Publish to JSR failure so missing-version
-   publishing does not stall under per-package timeouts or leave downstream
-   packages blocked on unpublished internal dependencies.
+   publishing is deterministic, recoverable after partial JSR publication, and
+   cannot leave downstream packages blocked on unpublished internal
+   dependencies.
 
 ## Verification
 
@@ -50,6 +51,8 @@ or database. This line also closes the current JSR publish hotfix discovered on
 - `main` Publish to JSR rerun or replacement run passes, including downstream
   packages that depend on `@openelement/ssg` and `@openelement/adapter-vite`.
 - Post-publish consumer smoke is not skipped because of a failed publish job.
+- The publish workflow uses the graph-driven release script rather than
+  hand-written parallel background jobs.
 
 ## Non-Goals
 

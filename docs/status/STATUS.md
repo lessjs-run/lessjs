@@ -29,7 +29,9 @@ request-time ISR semantics, and it carries the package line forward to
 v0.37.3 is the active execution package for the Data / Database Boundary. It
 adds ADR-0095 and the baseline data adapter contract. It also owns the
 2026-06-10 `main` Publish to JSR hotfix after code validation passed but the
-release publish gate failed.
+release publish gate failed in a partially published JSR state. The release
+gate is not closed until the hardened publish workflow finishes and the
+post-publish consumer smoke runs.
 
 Governing docs:
 
