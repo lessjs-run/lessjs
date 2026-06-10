@@ -19,12 +19,18 @@
   in `open-props-tokens.ts`.
 - 3 interactive DsdElement thin shells: `open-dropdown`, `open-modal`,
   `open-tabs` — signal-driven state with `:host([attr])` CSS selectors.
-- `daissyClassSheet` export from `@openelement/ui`.
+- `daisyClassSheet` export from `@openelement/ui`.
 - Shared DSD hydration helpers: `createDsdRenderRoot()` and
   `hydrateDsdEvents()` extracted from adapters into
   `@openelement/core/dsd-hydration`.
 - `DataAdapter<T>` contract in `@openelement/core/data`.
 - `MemoryDataAdapter` baseline (zero I/O, Map-backed).
+- **autoflow:gate** — unified gate controller. Single pre-commit entry point
+  that reads git diff to determine impact surface, runs only relevant checks,
+  and prints LLM directives (impact surface analysis + must-verify checklist).
+  Replaces the 12-individual-task pre-commit hook.
+- **Test supplementation**: +113 tests across ssg (~45), router (~31),
+  protocols (~71). Total: 1600 passed, 0 failed.
 
 ### Changed
 
@@ -34,6 +40,14 @@
   removed from ui package (3 deps from 5).
 - `island-manifest.ts` and `entry-generators.ts` migrated to
   `@openelement/ssg`.
+- All 20 packages bumped to `0.37.4` (from `0.37.2`).
+- `ACTIVE_VERSION` now derived from `PACKAGE_VERSION` in project-constants.ts
+  (single source of truth).
+- www fully converted to daisyUI class system — 36 files updated, zero legacy
+  CSS, no backward compat shims.
+- Pre-commit hook now routes through `autoflow:gate` as single controller.
+- Pre-push hook now routes through `autoflow:gate --push`. Gate task in
+  deno.json also delegates to autoflow:gate.
 
 ### Fixed
 
