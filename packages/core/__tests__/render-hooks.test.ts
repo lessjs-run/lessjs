@@ -8,7 +8,7 @@ import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert
 import { getDefaultRegistry } from '../src/adapter-registry.ts';
 import { jsx } from '../src/jsx-runtime.ts';
 import { renderDsd, type RenderDsdOptions } from '../src/render-dsd.ts';
-import type { RenderError, RenderHooks, RenderInput, RenderOutput } from '../src/types.ts';
+import type { RenderError, RenderHooks, RenderInput, RenderOutput } from '../src/render-schemas.ts';
 import type { VNode } from '../src/vnode.ts';
 
 interface MockComponent {

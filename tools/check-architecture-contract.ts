@@ -251,7 +251,7 @@ function assertDuplicateCounts(files: TextFile[]): void {
   }
   if (
     compatibilityHits.length !== 1 ||
-    compatibilityHits[0].file !== 'packages/core/src/types.ts'
+    compatibilityHits[0].file !== 'packages/core/src/compat-schemas.ts'
   ) {
     for (const hit of compatibilityHits) {
       addIssue(
@@ -264,7 +264,7 @@ function assertDuplicateCounts(files: TextFile[]): void {
     if (compatibilityHits.length === 0) {
       addIssue(
         'duplicate-type',
-        'packages/core/src/types.ts',
+        'packages/core/src/compat-schemas.ts',
         'missing canonical CompatibilityClassification interface',
       );
     }

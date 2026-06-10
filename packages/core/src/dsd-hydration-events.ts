@@ -1,4 +1,4 @@
-import type { HydrateEventDescriptor } from './types.js';
+import type { HydrateEventDescriptor } from './schemas.js';
 
 export function bindHydrateEvents(
   root: ParentNode,

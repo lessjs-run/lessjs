@@ -5,7 +5,7 @@
  * Purely tests the collector data structure.
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import { DsdRenderCollector } from '../src/types.ts';
+import { DsdRenderCollector } from '../src/dsd-collector.ts';
 
 Deno.test('DsdRenderCollector - empty collector', () => {
   const collector = new DsdRenderCollector();

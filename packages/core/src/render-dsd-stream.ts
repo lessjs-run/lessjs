@@ -14,7 +14,7 @@
  */
 
 import { renderDsd } from './render-dsd.js';
-import type { RenderError, RenderOutput } from './types.js';
+import type { RenderError, RenderOutput } from './render-schemas.js';
 
 // --- Streaming types -------------------------------------------
 
@@ -43,7 +43,7 @@ export interface RenderDsdStreamComponent {
   componentClass: CustomElementConstructor;
   props?: Record<string, unknown>;
   sourceInfo?: { route?: string; source?: string };
-  dsdOptions?: import('./types.js').DsdOptions;
+  dsdOptions?: import('./render-schemas.js').DsdOptions;
 }
 
 const textEncoder = new TextEncoder();

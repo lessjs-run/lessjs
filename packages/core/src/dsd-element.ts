@@ -47,7 +47,7 @@
  * @module @openelement/core/dsd-element
  */
 
-import type { ReactiveHost } from './types.js';
+import type { ReactiveHost } from './schemas.js';
 import type { StyleSheetLike } from '@openelement/style-sheet';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 import {
@@ -693,4 +693,14 @@ export class DsdElement extends _Base implements ReactiveHost {
   render(): VNode | null {
     return null;
   }
+}
+
+/** DsdElement constructor with framework-convention static properties. */
+export interface DsdComponentConstructor extends CustomElementConstructor {
+  styles?:
+    | import('@openelement/style-sheet').StyleSheetLike
+    | import('@openelement/style-sheet').StyleSheetLike[];
+  tagName?: string;
+  renderMode?: 'shadow' | 'light';
+  observedAttributes?: string[];
 }
