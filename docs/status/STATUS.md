@@ -3,13 +3,18 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.3/`.
+package: `docs/next/v0.37.3/` (DONE — v0.37.4 Pure CSS UI Foundation is next).
 
 ## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract) — DONE
 
 v0.37.2 is implemented. All 20 `@openelement/*` packages are aligned to
 `0.37.2`. ADR-0094 (Core Type Consolidation) is also merged as a cross-cutting
-cleanup. The active execution line is now v0.37.3.
+cleanup.
+
+v0.37.3 (Data / Database Boundary) is DONE as a validation-train stop:
+ADR-0095 accepted and implemented with MemoryDataAdapter baseline, FileDataAdapter
+deferred to recipe, 2026-06-10 JSR publish hotfix closed. Package line remains
+0.37.2 across the v0.37.x train. The active execution line is now v0.37.4.
 
 v0.36.5 is implemented as a release-truth patch. It did not add product
 capability or bump the package line. It aligned workflow checks,
@@ -26,12 +31,14 @@ ADR-0093 and a platform-neutral `@openelement/core/isr-runtime` subpath for
 request-time ISR semantics, and it carries the package line forward to
 `0.37.2`.
 
-v0.37.3 is the active execution package for the Data / Database Boundary. It
-adds ADR-0095 and the baseline data adapter contract. It also owns the
-2026-06-10 `main` Publish to JSR hotfix after code validation passed but the
-release publish gate failed in a partially published JSR state. The release
-gate is not closed until the hardened publish workflow finishes and the
-post-publish consumer smoke runs.
+v0.37.3 is implemented for the Data / Database Boundary. It adds ADR-0095 and
+the baseline data adapter contract. All acceptance criteria are met: DataAdapter
+contract defined and type-safe, MemoryDataAdapter tested, ISR cache regressions
+passed, ADR-0095 accepted, all local gates green, publish gate completed, and
+all 20 `@openelement/*` packages published to JSR at `0.37.2` with consumer
+smoke confirmed on Windows.
+
+The active execution line is now v0.37.4.
 
 Governing docs:
 
@@ -85,29 +92,29 @@ built-in cell generation.
 
 ## Next Targets
 
-| Version | Theme                                              | Status              | Purpose                                                                                       |
-| ------- | -------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API                          | Done                | App authoring API, `/vite` config split, docs/template DX                                     |
-| v0.32.0 | App Lifecycle Contract                             | Done                | Route, load, context, layout, error, redirect lifecycle                                       |
-| v0.33.0 | AI-Readable API Foundation                         | Done                | Structured page, island, head, route, and render intent APIs                                  |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                | Workflow state, cells, evidence ledger, allowed-action report                                 |
-| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Done                | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                          |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                         |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                | AutoFlow proof and release truth alignment                                                    |
-| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence             |
-| v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite |
-| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                   |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                            |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                          |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                |
-| v0.37.3 | Data / Database Boundary                           | Active              | Data/database adapter contracts and recipes without built-in ORM ownership                    |
-| v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                    |
-| v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Renderer, server, build, data, component-adapter, and cache/ISR ports                         |
-| v0.37.6 | Full-Stack Preset Smoke                            | Planned             | Compose elements, UI, protocol, and framework/create into a real smoke application            |
-| v0.38.x | Product Surface Reset and Hardening                | Planned             | Public package/API/product reset based on v0.37.x evidence                                    |
-| v0.39.0 | Full-Stack Framework RC                            | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                 |
-| v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates  |
+| Version | Theme                                              | Status              | Purpose                                                                                                                                                                                    |
+| ------- | -------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v0.31.0 | JSX-first Application API                          | Done                | App authoring API, `/vite` config split, docs/template DX                                                                                                                                  |
+| v0.32.0 | App Lifecycle Contract                             | Done                | Route, load, context, layout, error, redirect lifecycle                                                                                                                                    |
+| v0.33.0 | AI-Readable API Foundation                         | Done                | Structured page, island, head, route, and render intent APIs                                                                                                                               |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                | Workflow state, cells, evidence ledger, allowed-action report                                                                                                                              |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Done                | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                                                                                                                       |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                                                                                                                      |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                | AutoFlow proof and release truth alignment                                                                                                                                                 |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence                                                                                                          |
+| v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite                                                                                              |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                                                                                                                |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                                                                                                                         |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                                                                                                  |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                                                                                                       |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                                                                                             |
+| v0.37.3 | Data / Database Boundary                           | Done                | Data/database adapter contracts and recipes without built-in ORM ownership                                                                                                                 |
+| v0.37.4 | Pure CSS UI Foundation                             | Planned             | CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling                                                                                                                 |
+| v0.37.5 | Protocol Ports + Adapter Map                       | Planned             | Migrate protocol types from core/app/ssg into @openelement/protocols; add exportable conformance test suites; define renderer, server, build, data, component-adapter, and cache/ISR ports |
+| v0.37.6 | Full-Stack Preset Smoke                            | Planned             | Compose elements, UI, protocol, and framework/create into a real smoke application                                                                                                         |
+| v0.38.x | Product Surface Reset and Hardening                | Planned             | Public package/API/product reset based on v0.37.x evidence                                                                                                                                 |
+| v0.39.0 | Full-Stack Framework RC                            | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                                                                                                              |
+| v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                                                                                               |
 
 ## Current Product Center
 
@@ -179,6 +186,9 @@ Package governance before v0.38:
   not become a built-in ORM, auth platform, or migration system.
 - A full-stack framework preset should compose the stabilized elements, UI,
   protocol, and framework/create surfaces after v0.37.x evidence exists.
+- Governance convergence before v1.0: gate tiers (fast dev gate for PRs,
+  full release gate for publishing), AutoFlow feature scope freeze, Hub scope
+  deferred to post-v1.0. See `docs/roadmap/ROADMAP.md` v0.38.x for details.
 
 ## Key Decisions
 
@@ -206,6 +216,10 @@ Package governance before v0.38:
 - **AutoFlow2 boundary.** AutoFlow2 may report state, evidence, blockers, and
   allowed actions. It must not merge, tag, bump, publish, or replace human review
   for ADRs, public API resets, package removal, release tags, or publishing.
+- **Protocol first-class.** Core rendering, adapter, island/hydration, signal,
+  data, and route-manifest contracts must live in `@openelement/protocols` with
+  exportable conformance test suites by v0.38. Current types reside in
+  implementation packages; migration is planned for v0.37.5.
 
 ## Release Gate Order
 
