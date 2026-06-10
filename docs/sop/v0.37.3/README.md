@@ -1,65 +1,66 @@
-# v0.37.3 SOP: Data and Database Boundary
+# v0.37.3 SOP: Data / Database Boundary
 
-> Status: Planned\
+> Status: Active\
 > Roadmap: Four-Product Validation Train\
-> Depends on: v0.37.0, v0.37.2
+> Depends on: v0.37.2\
+> NextVersion: `docs/next/v0.37.3/`
 
 ## Goal
 
-Define data and database integration boundaries without making openElement an
-ORM, auth platform, or database framework.
+Define a data adapter contract and validate the boundary between framework core,
+adapters, and user-owned data sources — without becoming an ORM, auth platform,
+or database.
 
 ## Entry Criteria
 
-- Page `load()` and API route contexts are implementation-proven.
-- SSR/ISR runtime boundaries are documented.
-- Database ownership has been explicitly rejected by ADR-0091.
+- v0.37.2 SSR / ISR runtime contract is complete.
+- Existing data patterns (FileIsrCache, MemoryIsrCache, blog-data, i18n-data,
+  nav generation, route `revalidate`, `isr-manifest.json`) have been audited.
+- Roadmap mandates no built-in ORM or database ownership.
 
 ## ADR Links
 
 - ADR-0091: Four-Product Platform Roadmap.
-- ADR-0085: App Lifecycle Contract.
+- ADR-0093: SSR / ISR Runtime Contract (cache/injection pattern precedent).
+- ADR-0095: Data / Database Boundary (to be written).
 
 ## Step-by-Step Tasks
 
-1. Audit current page `load()` context, API route context, middleware context,
-   redirects, errors, and generated data resolution.
-2. Identify shared request/data fields that are genuinely common between page
-   load and API routes.
-3. Define a minimal data adapter recipe shape for examples.
-4. Add recipes for file/memory data first.
-5. Add optional recipes for Deno KV and Cloudflare KV/D1 only as examples after
-   the boundary is stable.
-6. Document mutation/action patterns for forms without inventing an ORM.
-7. Add fixture apps proving `load()`, API route data, and one external adapter
-   recipe can build.
-8. Add risk notes for secrets, connection lifetimes, transactions, and runtime
-   portability.
+1. Audit all existing data patterns in the repository.
+2. Design a minimal `DataAdapter<T>` type contract that is framework-agnostic
+   and side-effect-free at the type level.
+3. Implement `MemoryDataAdapter` as a baseline (in-memory Map).
+4. Implement `FileDataAdapter` for build-time data loading from JSON files.
+5. Add unit tests for both adapters with error-path coverage.
+6. Verify no regression in existing ISR cache implementations.
+7. Write ADR-0095 documenting the boundary decision and non-goals.
+8. Update workflow and status docs for v0.37.3.
 
 ## Verification
 
-- type tests for context and recipe interfaces.
-- API route tests.
-- generated fixture build.
-- docs checks.
-- full local gate ladder before release.
+- Data adapter unit tests.
+- ISR cache regression tests.
+- Type-level contract passes `deno check`.
+- No new package cycles (`graph:check`).
+- Architecture contract check passes.
 
 ## Non-Goals
 
-- No built-in ORM.
-- No schema migration tool.
-- No default database.
-- No auth/session framework.
-- No query builder ownership.
+- No built-in ORM, auth, or migration system.
+- No `@openelement/database` package.
+- No default database selection (PostgreSQL, SQLite, etc.).
+- No server-side session management.
+- No replacement of existing ISR cache primitives.
 
 ## Exit Criteria
 
-- Data/database docs are useful for real apps without pretending openElement is
-  a backend platform.
-- At least one recipe smoke proves the boundary.
-- v0.37.6 can include a data-backed starter path.
+- Users can understand the data boundary: what the framework provides, what
+  adapters provide, what recipes demonstrate.
+- A minimal data adapter contract exists with baseline proof.
+- ADR-0095 is accepted and registered.
+- v0.37.4 can build on this contract for CSS UI data consumption patterns.
 
 ## AutoFlow Boundary
 
-AutoFlow may run adapter recipe smoke and detect docs/test drift. It must not
-choose database defaults or security policy.
+AutoFlow may prove adapter test evidence. It must not select a default database,
+ORM, or auth provider.

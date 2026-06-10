@@ -46,13 +46,14 @@ jobs:
             local version
             version="$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' "$dir/deno.json" | head -n 1)"
 
-            if deno info --no-config "jsr:${pkg}@${version}" >/dev/null 2>&1; then
+            # Use JSR REST API for fast existence check (~200ms vs ~5s for deno info)
+            if curl -sf "https://jsr.io/${pkg}/${version}_meta.json" >/dev/null 2>&1; then
               echo "[JSR] ${pkg}@${version} already exists; skipping."
               return 0
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && timeout 10m deno publish -c deno.json)
+            (cd "$dir" && timeout 10m deno publish -c deno.json --no-check)
           }
 
           if [[ -n "$(git status --porcelain)" ]]; then

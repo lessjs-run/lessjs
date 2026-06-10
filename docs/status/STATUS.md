@@ -3,12 +3,13 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.2/`.
+package: `docs/next/v0.37.3/`.
 
-## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract)
+## Current Version Line: v0.37.2 (SSR / ISR Server Runtime Contract) — DONE
 
-v0.37.2 is the current implemented package line. All 20 `@openelement/*`
-packages are aligned to `0.37.2`.
+v0.37.2 is implemented. All 20 `@openelement/*` packages are aligned to
+`0.37.2`. ADR-0094 (Core Type Consolidation) is also merged as a cross-cutting
+cleanup. The active execution line is now v0.37.3.
 
 v0.36.5 is implemented as a release-truth patch. It did not add product
 capability or bump the package line. It aligned workflow checks,
