@@ -28,11 +28,11 @@
  */
 
 import {
-  bindHydrateEvents,
   type Constructor,
   type DsdHydration as BaseDsdHydration,
   type HydrateEventDescriptor,
 } from '@openelement/core';
+import { createDsdRenderRoot, hydrateDsdEvents } from '@openelement/core/dsd-hydration';
 
 /**
  * Instance interface for DSD-hydrated React-wrapped components.
@@ -88,11 +88,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      * Detect pre-populated shadow root from DSD.
      */
     createRenderRoot(): HTMLElement | DocumentFragment {
-      if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-        this._dsdHydrated = true;
-        return this.shadowRoot;
-      }
-      return this.attachShadow({ mode: 'open' });
+      return createDsdRenderRoot(this);
     }
 
     /**
@@ -169,18 +165,10 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      * Bind declared events to existing shadow DOM elements after DSD upgrade.
      */
     protected _hydrateEvents(): void {
-      if (!this.shadowRoot) return;
-
-      const ctor = this.constructor as typeof WithDsdHydrationClass & {
-        hydrateEvents?: HydrateEventDescriptor[];
-      };
-      const events = ctor.hydrateEvents || [];
-      if (events.length === 0) return;
-
-      this._hydrateAbortController = new AbortController();
-      const { signal } = this._hydrateAbortController;
-
-      bindHydrateEvents(this.shadowRoot, this, events, signal);
+      this._hydrateAbortController = hydrateDsdEvents(
+        this,
+        this.constructor as { hydrateEvents?: HydrateEventDescriptor[] },
+      );
     }
   }
 

@@ -1,13 +1,13 @@
 export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
 
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStylesSheet } from '../../components/page-styles.js';
 import '@openelement/ui/open-code-block';
 import '@openelement/ui/open-callout';
 
 export class CoreConceptsPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (
@@ -104,8 +104,8 @@ export default defineIsland('my-counter', () => (
       </open-callout>
 
       <div class='nav-row'>
-        <a href='/guide/getting-started' class='nav-link'>&larr; Getting Started</a>
-        <a href='/guide/routing-and-data' class='nav-link'>Routing &amp; Data &rarr;</a>
+        <a href='/guide/getting-started' class='btn btn-ghost'>&larr; Getting Started</a>
+        <a href='/guide/routing-and-data' class='btn btn-ghost'>Routing &amp; Data &rarr;</a>
       </div>
     </>
   );
@@ -171,8 +171,8 @@ export default defineIsland('my-counter', () => (
       </p>
 
       <div class='nav-row'>
-        <a href='/zh/guide/getting-started' class='nav-link'>&larr; 快速开始</a>
-        <a href='/zh/guide/routing-and-data' class='nav-link'>路由与数据 &rarr;</a>
+        <a href='/zh/guide/getting-started' class='btn btn-ghost'>&larr; 快速开始</a>
+        <a href='/zh/guide/routing-and-data' class='btn btn-ghost'>路由与数据 &rarr;</a>
       </div>
     </>
   );

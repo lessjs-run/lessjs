@@ -3,7 +3,7 @@
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { consumeContext } from '@openelement/core/signal-context';
 import { THEME_CTX } from '@openelement/ui/open-layout';
 import '../../islands/open-search.tsx';
@@ -40,15 +40,12 @@ heroSheet.replaceSync(`
   .ft-card h3 { margin: 0 0 var(--size-2); font-size: var(--font-size-1); font-weight: var(--font-weight-8); color: var(--text-primary); }
   .ft-card p { margin: 0; font-size: var(--font-size-0); line-height: var(--font-lineheight-3); color: var(--text-secondary); }
   .cta-bar { display: flex; gap: var(--size-3); margin-top: var(--size-8); }
-  .btn-primary, .btn-secondary { display: inline-flex; align-items: center; padding: var(--size-3) var(--size-6); border-radius: var(--radius-2); font-size: var(--font-size-0); font-weight: var(--font-weight-7); text-decoration: none; letter-spacing: var(--font-letterspacing-2); }
-  .btn-primary { background: var(--indigo-5); color: var(--bg-base); }
-  .btn-secondary { border: var(--border-size-1) solid var(--border); background: transparent; color: var(--text-secondary); }
   @media (max-width: 1024px) { .hero-inner { grid-template-columns: 1fr; padding: var(--size-6) var(--size-6) 0; gap: var(--size-8); } .feature-grid { grid-template-columns: 1fr 1fr; } .features { padding: var(--size-8) var(--size-6); } }
   @media (max-width: 640px) { .hero-inner { padding: var(--size-4) var(--size-4) 0; } .hero-left { padding-top: var(--size-4); } .features { padding: var(--size-6) var(--size-4); } .feature-grid { grid-template-columns: 1fr; } .giant-headline { font-size: 2.4rem; } .cta-bar { flex-direction: column; } }
 `);
 
 export class DocsHome extends DsdElement {
-  static override styles = [openPropsTokenSheet, heroSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, heroSheet];
 
   override connectedCallback() {
     super.connectedCallback();
@@ -77,8 +74,8 @@ export class DocsHome extends DsdElement {
                 </div>
               </div>
               <div class="cta-bar">
-                <a href="/guide/getting-started" class="btn-primary">Start building</a>
-                <a href="/architecture/architecture" class="btn-secondary">Read architecture</a>
+                <a href="/guide/getting-started" class="btn btn-primary">Start building</a>
+                <a href="/architecture/architecture" class="btn btn-outline">Read architecture</a>
               </div>
             </div>
             <home-console></home-console>

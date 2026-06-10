@@ -1,5 +1,5 @@
 import { openElement } from '@openelement/app/vite';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { openPropsTokenSheet } from '@openelement/ui';
 import { defineConfig } from 'vite';
 
 // www/ is a pure JSR consumer - no resolve.alias needed.

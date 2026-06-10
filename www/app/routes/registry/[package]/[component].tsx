@@ -16,7 +16,7 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import pkgRecords from '../../../data/registry/hub-data.ts';
 import type { HubPackageRecord } from '../../../data/registry/hub-data.ts';
 
@@ -320,7 +320,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
   private _record: HubPackageRecord | null = null;
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();

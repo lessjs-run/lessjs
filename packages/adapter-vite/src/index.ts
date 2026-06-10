@@ -33,29 +33,25 @@ export { OpenElementBuildContext } from './build-context.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
 
-// SSG post-processing
+// SSG post-processing & island manifests (re-exported from @openelement/ssg)
 export {
   buildIslandChunkMap,
   buildSpeculationRulesJson,
+  extractCustomElementTags,
+  generateIslandManifests,
   injectClientScript,
   injectCspMeta,
   injectDsdPolyfill,
   injectSpeculationRules,
   injectViewTransitionMeta,
   insertAfterHead,
-  type SpeculationRulesOptions,
-} from './ssg-postprocess.js';
-
-// Island manifests
-export {
-  extractCustomElementTags,
-  generateIslandManifests,
   type IslandLayerMap,
   type IslandManifestEntry,
   type IslandStrategyMap,
   type PageIslandManifest,
+  type SpeculationRulesOptions,
   writeIslandManifests,
-} from './island-manifest.js';
+} from '@openelement/ssg';
 
 // External resolver types (moved to @openelement/ssg in v0.36.3)
 export type { ExternalManifest } from '@openelement/ssg';

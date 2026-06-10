@@ -20,7 +20,7 @@ import type { VNode } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 interface SearchEntry {
   path: string;
@@ -169,7 +169,7 @@ sheet.replaceSync(`
 `);
 
 export default class OpenSearch extends DsdElement {
-  static override styles = [openPropsTokenSheet, sheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, sheet];
 
   // ── Signals ──────────────────────────────────────────────────────────────
 

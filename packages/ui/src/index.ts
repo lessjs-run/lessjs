@@ -31,6 +31,9 @@
 // Design tokens (CSSStyleSheet, zero Lit dependency)
 export { openPropsTokenSheet } from './open-props-tokens.js';
 
+// daisyUI forked class sheet (Pure CSS, Open Props tokens)
+export { daisyClassSheet } from './daisy-classes.js';
+
 // Components
 export { OpenButton, tagName as openButtonTagName } from './open-button.js';
 export { OpenCard, tagName as openCardTagName } from './open-card.js';
@@ -43,6 +46,9 @@ export { default as OpenHeroPing, tagName as openHeroPingTagName } from './open-
 export { OpenDialog, tagName as openDialogTagName } from './open-dialog.js';
 export { OpenCallout, tagName as openCalloutTagName } from './open-callout.js';
 export { OpenStepCard, tagName as openStepCardTagName } from './open-step-card.js';
+export { OpenDropdown, tagName as openDropdownTagName } from './open-dropdown.js';
+export { OpenModal, tagName as openModalTagName } from './open-modal.js';
+export { OpenTabs, tagName as openTabsTagName } from './open-tabs.js';
 
 // Package manifest (WC Package Protocol)
 // Consumers (adapter-vite) read manifest.declarations to derive island metadata.

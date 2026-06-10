@@ -14,6 +14,7 @@ import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
 import { trustRenderHtml } from './security.ts';
 import { effect } from '@openelement/signals';
+import { createLogger } from './logger.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -312,9 +313,10 @@ export function renderToDom(
       const result = instance.render();
       return renderToDom(result, signal, disposers);
     } catch (err) {
-      console.error(
-        `[openElement/CSR] renderToDom() failed for <${String(tag)}>:`,
-        err instanceof Error ? err.message : String(err),
+      createLogger('dom-render').error(
+        `renderToDom() failed for <${String(tag)}>: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
       );
       return document.createTextNode('');
     }
@@ -324,9 +326,10 @@ export function renderToDom(
       const result = tag({ ...props, children });
       return renderToDom(result, signal, disposers);
     } catch (err) {
-      console.error(
-        `[openElement/CSR] renderToDom() failed for <${String(tag)}>:`,
-        err instanceof Error ? err.message : String(err),
+      createLogger('dom-render').error(
+        `renderToDom() failed for <${String(tag)}>: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
       );
       return document.createTextNode('');
     }

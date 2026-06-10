@@ -2,7 +2,7 @@ export const meta = { section: 'Compatibility', label: 'Package Compatibility', 
 
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 
 const baseStyle = pageStylesSheet;
@@ -10,7 +10,7 @@ const baseStyle = pageStylesSheet;
 export class PackageCompatibilityGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, baseStyle];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, baseStyle];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -166,8 +166,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href={`/{loc}/architecture/architecture`}>← Architecture</a>
-            <a class="nav-link" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
+            <a class="btn btn-ghost" href={`/{loc}/architecture/architecture`}>← Architecture</a>
+            <a class="btn btn-ghost" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
           </nav>
         </div>
       
@@ -330,8 +330,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href={`/{loc}/architecture/architecture`}>← Architecture</a>
-            <a class="nav-link" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
+            <a class="btn btn-ghost" href={`/{loc}/architecture/architecture`}>← Architecture</a>
+            <a class="btn btn-ghost" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
           </nav>
         </div>
       

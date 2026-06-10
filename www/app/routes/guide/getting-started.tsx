@@ -4,7 +4,7 @@ export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { pageStylesSheet } from '../../components/page-styles.js';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui/open-callout';
 import '@openelement/ui/open-code-block';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
@@ -13,15 +13,11 @@ const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
   .step { margin: var(--size-6) 0 var(--size-8); }
   .step h2 { margin-top: 0; }
-  .note { background: var(--gray-1); border: 0.5px solid var(--gray-3); border-radius: var(--radius-1); padding: var(--size-3) var(--size-4); margin: var(--size-4) 0; }
   .nav-row { margin-top: var(--size-8); padding-top: var(--size-4); border-top: 0.5px solid var(--gray-3); display: flex; justify-content: flex-end; }
-  .nav-link { color: var(--indigo-5); text-decoration: none; font-weight: var(--font-weight-5); font-size: var(--font-size-2); }
-  .nav-link:hover { text-decoration: underline; }
-  .note p { margin: 0; }
 `);
 
 export class GettingStartedPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStylesSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet, routeSheet];
 
   override render() {
     return (
@@ -171,7 +167,7 @@ export default defineConfig({
   plugins: [openElement({ routesDir: 'app/routes', islandsDir: 'app/islands' })],
 });`}</code></pre></open-code-block>
 
-      <div class='note'>
+      <div class='alert alert-info'>
         <p>
           The v1.0 target is a stable application engine. {OPENELEMENT_VERSION} keeps the
           Application API structured and AI-readable while @openelement/ssg owns
@@ -180,7 +176,7 @@ export default defineConfig({
       </div>
 
       <div class='nav-row'>
-        <a href='/guide/core-concepts' class='nav-link'>Core Concepts &rarr;</a>
+        <a href='/guide/core-concepts' class='btn btn-ghost'>Core Concepts &rarr;</a>
       </div>
     </>
   );
@@ -257,7 +253,7 @@ export default defineIsland(
   ),
 );`}</code></pre></open-code-block>
 
-      <div class='note'>
+      <div class='alert alert-info'>
         <p>
           v1.0 的目标是稳定应用引擎。{OPENELEMENT_VERSION} 让 Application API
           结构化且对 AI 可读。
@@ -265,7 +261,7 @@ export default defineIsland(
       </div>
 
       <div class='nav-row'>
-        <a href='/zh/guide/core-concepts' class='nav-link'>核心概念 &rarr;</a>
+        <a href='/zh/guide/core-concepts' class='btn btn-ghost'>核心概念 &rarr;</a>
       </div>
     </>
   );

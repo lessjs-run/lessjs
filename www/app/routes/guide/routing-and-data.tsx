@@ -1,13 +1,13 @@
 export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStylesSheet } from '../../components/page-styles.js';
 import '@openelement/ui/open-code-block';
 import '@openelement/ui/open-callout';
 
 export class RoutingDataPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (
@@ -125,8 +125,8 @@ export default definePage<Post>({
       </open-callout>
 
       <div class='nav-row'>
-        <a href='/guide/core-concepts' class='nav-link'>&larr; Core Concepts</a>
-        <a href='/guide/islands-and-ssr' class='nav-link'>Islands &amp; SSR &rarr;</a>
+        <a href='/guide/core-concepts' class='btn btn-ghost'>&larr; Core Concepts</a>
+        <a href='/guide/islands-and-ssr' class='btn btn-ghost'>Islands &amp; SSR &rarr;</a>
       </div>
     </>
   );
@@ -202,8 +202,8 @@ export default definePage({
 });`}</code></pre></open-code-block>
 
       <div class='nav-row'>
-        <a href='/zh/guide/core-concepts' class='nav-link'>&larr; 核心概念</a>
-        <a href='/zh/guide/islands-and-ssr' class='nav-link'>Islands 与 SSR &rarr;</a>
+        <a href='/zh/guide/core-concepts' class='btn btn-ghost'>&larr; 核心概念</a>
+        <a href='/zh/guide/islands-and-ssr' class='btn btn-ghost'>Islands 与 SSR &rarr;</a>
       </div>
     </>
   );

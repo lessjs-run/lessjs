@@ -11,7 +11,7 @@ import { defineCustomElement, DsdElement } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
 import { signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 export const tagName = 'scroll-reveal';
 export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
@@ -40,7 +40,7 @@ styles.replaceSync(`
 `);
 
 export default class ScrollReveal extends DsdElement {
-  static override styles = [openPropsTokenSheet, styles];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
 
   #visible = signal(false);
   #observer: IntersectionObserver | null = null;

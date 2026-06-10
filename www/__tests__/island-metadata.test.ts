@@ -6,12 +6,8 @@ import {
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
 import { fromFileUrl, join } from 'jsr:@std/path@^1.0.0';
-import { generateClientEntry } from '../../packages/adapter-vite/src/entry-generators.ts';
-import {
-  fileToTagName,
-  scanIslandMeta,
-  scanIslands,
-} from '../../packages/adapter-vite/src/route-scanner.ts';
+import { generateClientEntry } from '@openelement/ssg';
+import { fileToTagName, scanIslandMeta, scanIslands } from '@openelement/ssg';
 
 const REPO_ROOT = fromFileUrl(new URL('../..', import.meta.url));
 const WWW_ISLANDS_DIR = join(REPO_ROOT, 'www', 'app', 'islands');

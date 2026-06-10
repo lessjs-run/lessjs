@@ -60,6 +60,7 @@ import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
 import { effect, type Signal, signal } from '@openelement/signals';
+import { createLogger } from './logger.js';
 
 /**
  * SSR-safe base class for DsdElement.
@@ -482,9 +483,10 @@ export class DsdElement extends _Base implements ReactiveHost {
    * Subclasses may return a VNode fallback.
    */
   protected onRenderError(error: unknown): VNode | null {
-    console.error(
-      `[DsdElement] <${this.tagName.toLowerCase()}> render/hydrate failed:`,
-      error instanceof Error ? error.message : String(error),
+    createLogger('dsd').error(
+      `<${this.tagName.toLowerCase()}> render/hydrate failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
     );
     return null;
   }
@@ -500,9 +502,10 @@ export class DsdElement extends _Base implements ReactiveHost {
     try {
       fallback = this.onRenderError(error);
     } catch (fallbackError) {
-      console.error(
-        `[DsdElement] <${this.tagName.toLowerCase()}> onRenderError failed:`,
-        fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
+      createLogger('dsd').error(
+        `<${this.tagName.toLowerCase()}> onRenderError failed: ${
+          fallbackError instanceof Error ? fallbackError.message : String(fallbackError)
+        }`,
       );
       fallback = null;
     }

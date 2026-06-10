@@ -17,6 +17,7 @@ import { DANGEROUS_KEYS, trustRenderHtml } from './security.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
 import { renderDsd } from './render-dsd.js';
+import { createLogger } from './logger.js';
 
 export type RenderNode =
   | { kind: 'text'; value: string }
@@ -224,8 +225,8 @@ export async function renderToNode(
     try {
       return await renderToNode(callComponent(tag, props, children), eventContext);
     } catch (err) {
-      console.error(
-        `[openElement/SSR] render failed for <${String(tag)}>:` +
+      createLogger('render').error(
+        `render failed for <${String(tag)}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
       return fragmentNode([]);
@@ -258,8 +259,8 @@ export async function renderToNode(
       });
       return trustedHtmlNode(dsdResult.html);
     } catch (err) {
-      console.error(
-        `[openElement/SSR] renderDsd failed for registered CE <${tagName}>:` +
+      createLogger('render').error(
+        `renderDsd failed for registered CE <${tagName}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
     }

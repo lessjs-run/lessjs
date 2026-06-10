@@ -4,7 +4,7 @@
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { posts } from '@openelement/generated/blog-data';
 
 const routeSheet = new StyleSheet();
@@ -21,7 +21,7 @@ routeSheet.replaceSync(`
 `);
 
 export class BlogIndexPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (

@@ -32,7 +32,6 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 import { type Context, createContext, provideContext } from '@openelement/core';
-import { Router } from '@openelement/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeAttr, escapeHtml } from '@openelement/core';
 import '.\/open-theme-toggle.js';
@@ -57,6 +56,52 @@ function isSafeLayoutUrl(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+/* --- Navigation API types (for SPA routing) --- */
+interface NavigationLike extends EventTarget {
+  addEventListener(type: 'navigate', listener: EventListener): void;
+  removeEventListener(type: 'navigate', listener: EventListener): void;
+}
+
+interface NavigationNavigateEvent extends Event {
+  canIntercept: boolean;
+  hashChange: boolean;
+  downloadRequest: boolean;
+  destination: { url: string };
+  intercept(opts: { handler: () => void }): void;
+}
+
+/* --- Locale/path helpers (inlined from @openelement/router) --- */
+
+const LOCALE_LABELS: Record<string, string> = { en: '中文', zh: 'English' };
+
+function parsePathWithoutLocale(pathname: string, locales: string[]): string {
+  const segs = pathname.split('/').filter(Boolean);
+  if (segs.length > 0 && locales.includes(segs[0])) {
+    return '/' + segs.slice(1).join('/') || '/';
+  }
+  return pathname || '/';
+}
+
+function detectLocale(pathname: string, locales: string[], defaultLocale: string): string {
+  const segs = pathname.split('/').filter(Boolean);
+  if (segs.length > 0 && locales.includes(segs[0])) return segs[0];
+  return defaultLocale;
+}
+
+function localizePath(path: string, locale: string): string {
+  if (path.startsWith('http')) return path;
+  return `/${locale}${path}`;
+}
+
+function switchPath(currentPath: string, currentLocale: string, locales: string[]): string {
+  const other = locales.find((l) => l !== currentLocale) || currentLocale;
+  return `/${other}${currentPath}`;
+}
+
+function switchLabel(currentLocale: string): string {
+  return LOCALE_LABELS[currentLocale] || currentLocale;
 }
 
 /** SignalContext key: theme state shared across all components */
@@ -455,7 +500,54 @@ sheet.replaceSync(`
 `);
 
 export class OpenLayout extends DsdElement {
-  private routing = new Router(this);
+  private _cleanupNav?: () => void;
+  private _navOptions?: {
+    contentLoader: (path: string, locale: string) => Promise<void>;
+    onAfterSwap?: (path: string, locale: string) => void;
+  };
+
+  private get _locales(): string[] {
+    try {
+      const raw = (this as Record<string, unknown>).locales || this.getAttribute('locales');
+      if (raw) {
+        if (Array.isArray(raw)) return raw as string[];
+        if (typeof raw === 'string') {
+          try {
+            return JSON.parse(raw);
+          } catch { /* ignore */ }
+        }
+      }
+      return ['en'];
+    } catch {
+      return ['en'];
+    }
+  }
+
+  private get _defaultLocale(): string {
+    return this.getAttribute('locale') || this._locales[0] || 'en';
+  }
+
+  private get _currentLocale(): string {
+    try {
+      if (typeof globalThis.location !== 'undefined') {
+        return detectLocale(location.pathname, this._locales, this._defaultLocale);
+      }
+      return this._defaultLocale;
+    } catch {
+      return this._defaultLocale;
+    }
+  }
+
+  private get _currentPathWithoutLocale(): string {
+    try {
+      if (typeof globalThis.location !== 'undefined') {
+        return parsePathWithoutLocale(location.pathname, this._locales);
+      }
+      return this.getAttribute('current-path') || '/';
+    } catch {
+      return '/';
+    }
+  }
 
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = [
@@ -491,20 +583,22 @@ export class OpenLayout extends DsdElement {
     return this.hasAttribute(attr);
   }
 
-  // _routeParams(), _locale(), _locales(), _switchPath(),
-  // _switchLabel(), _updateSwitch(), _localize()
-  // ?? all delegated to this.routing (Router instance)
+  // _currentPathWithoutLocale, _currentLocale, _locales, _switchPath(),
+  // _switchLabel(), _updateSwitch(), _localizePath()
+  // ?? all inlined (replaces former @openelement/router dependency)
 
   private _currentPath(): string {
-    // SSR-safe: prefer attribute/prop set by renderDsd over Router
-    // Router uses location.pathname which is undefined during build.
+    // SSR-safe: prefer attribute/prop set by renderDsd over URL detection
+    // location.pathname is undefined during build.
     const prop = (this as Record<string, unknown>).currentPath;
     if (typeof prop === 'string' && prop.length > 0) return prop;
     const attr = this.getAttribute('current-path');
     if (attr && attr.length > 0) return attr;
-    // Fall back to Router (CSR only ?? requires location global)
     try {
-      return this.routing.path;
+      if (typeof globalThis.location !== 'undefined') {
+        return parsePathWithoutLocale(location.pathname, this._locales);
+      }
+      return this.getAttribute('current-path') || '/';
     } catch {
       return '/';
     }
@@ -678,7 +772,7 @@ export class OpenLayout extends DsdElement {
     const safeHref = this._safeHref(href);
     const isExternal = this._isExternalHref(safeHref);
     return {
-      href: isExternal ? safeHref : this.routing.localize(safeHref),
+      href: isExternal ? safeHref : localizePath(safeHref, this._currentLocale),
       isExternal,
     };
   }
@@ -693,9 +787,11 @@ export class OpenLayout extends DsdElement {
     const footerText = this._getStr('footer-text', '');
     const githubUrl = this._safeHref(this._getStr('github-url', ''), '');
     const editUrl = this._safeHref(this.getAttribute('edit-url') || this._computeEditUrl(), '');
-    const locales = this.routing.locales;
-    const switchLabel = locales.length > 1 ? this._esc(this.routing.switchLabel()) : '';
-    const switchPath = locales.length > 1 ? this.routing.switchPath() : '';
+    const locales = this._locales;
+    const currentLocale = this._currentLocale;
+    const currentPath = this._currentPathWithoutLocale;
+    const langLabel = locales.length > 1 ? switchLabel(currentLocale) : '';
+    const langHref = locales.length > 1 ? switchPath(currentPath, currentLocale, locales) : '';
 
     return (
       <div className='app-layout' part='container' home={home || undefined}>
@@ -737,10 +833,10 @@ export class OpenLayout extends DsdElement {
               {locales.length > 1 && (
                 <a
                   className='lang-switch'
-                  href={switchPath}
-                  data-nav={switchPath}
+                  href={langHref}
+                  data-nav={langHref}
                 >
-                  {switchLabel}
+                  {this._esc(langLabel)}
                 </a>
               )}
               {githubUrl && (
@@ -849,15 +945,14 @@ export class OpenLayout extends DsdElement {
     const MOBILE_TAB_LIMIT = 5;
     const mobileLinks = links.slice(0, MOBILE_TAB_LIMIT);
 
+    const locs = this._locales;
     const sectionRoot = (href: string): string => {
       const segs = href.split('/').filter(Boolean);
-      const start = this.routing.locales.length > 1 && this.routing.locales.includes(segs[0])
-        ? 1
-        : 0;
+      const start = locs.length > 1 && locs.includes(segs[0]) ? 1 : 0;
       return segs.length > start + 1 ? '/' + segs[start] : href;
     };
 
-    const rawPath = this.routing.path;
+    const rawPath = this._currentPathWithoutLocale;
 
     return (
       <nav className='mobile-tab-bar' aria-label='Quick navigation'>
@@ -887,9 +982,9 @@ export class OpenLayout extends DsdElement {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    const locales = this.routing.locales;
+    const locales = this._locales;
     if (locales.length > 1) {
-      const { locale } = this.routing;
+      const locale = this._currentLocale;
       if (locales.includes(locale)) {
         this.setAttribute('locale', locale);
       }
@@ -921,7 +1016,7 @@ export class OpenLayout extends DsdElement {
       this._setupDetailsToggle();
     }
 
-    this.routing.start({
+    this._setupSpaNavigation({
       contentLoader: async (path: string, locale: string) => {
         await this._loadContent(path, locale);
       },
@@ -937,7 +1032,7 @@ export class OpenLayout extends DsdElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.routing.stop();
+    this._teardownSpaNavigation();
     this._docClickCleanup?.();
     if (this._themeHandler) {
       globalThis.removeEventListener?.('open:theme-change', this._themeHandler);
@@ -1117,7 +1212,7 @@ export class OpenLayout extends DsdElement {
     this.setAttribute('locale', locale);
     this.setAttribute(
       'current-path',
-      newLayout.getAttribute('current-path') || this.routing.path,
+      newLayout.getAttribute('current-path') || this._currentPathWithoutLocale,
     );
   }
 
@@ -1133,7 +1228,156 @@ export class OpenLayout extends DsdElement {
     this.shadowRoot.appendChild(document.adoptNode(shadowTemplate.content));
     this._activateDeclarativeShadowRoots(this.shadowRoot);
     this._setupDetailsToggle();
-    this.routing.updateSwitch(this.shadowRoot);
+    this._updateSwitch(this.shadowRoot);
+  }
+
+  /* --- SPA navigation (inlined from @openelement/router) --- */
+
+  private _setupSpaNavigation(opts: {
+    contentLoader: (path: string, locale: string) => Promise<void>;
+    onAfterSwap?: (path: string, locale: string) => void;
+  }): void {
+    this._navOptions = opts;
+
+    if (this.shadowRoot) {
+      this._setupClickDelegation(this.shadowRoot);
+    }
+    this._setupNavigationApi();
+    this._setupPopState();
+  }
+
+  private _teardownSpaNavigation(): void {
+    this._cleanupNav?.();
+    this._cleanupNav = undefined;
+    this._navOptions = undefined;
+  }
+
+  private _setupClickDelegation(root: ShadowRoot): void {
+    const handler = (e: Event) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      if (
+        href.startsWith('http') ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('javascript:')
+      ) {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      const isLangSwitch = link.classList.contains('lang-switch');
+      if (isLangSwitch) {
+        this._replaceTo(href);
+      } else {
+        this._navigateTo(href);
+      }
+    };
+    root.addEventListener('click', handler);
+    const prev = this._cleanupNav;
+    this._cleanupNav = () => {
+      root.removeEventListener('click', handler);
+      prev?.();
+    };
+  }
+
+  private _setupNavigationApi(): void {
+    const nav = (globalThis as typeof globalThis & { navigation?: NavigationLike }).navigation;
+    if (!nav) return;
+
+    const onNav: EventListener = (event) => {
+      const e = event as NavigationNavigateEvent;
+      if (!e.canIntercept || e.hashChange || e.downloadRequest) return;
+
+      const url = new URL(e.destination.url);
+      if (url.origin !== location.origin) return;
+
+      e.intercept({
+        handler: () => this._navigateNow(url.pathname),
+      });
+    };
+
+    try {
+      nav.addEventListener('navigate', onNav);
+      const prev = this._cleanupNav;
+      this._cleanupNav = () => {
+        try {
+          nav.removeEventListener('navigate', onNav);
+        } catch { /* */ }
+        prev?.();
+      };
+    } catch {
+      // Navigation API interception is optional; fall back to popstate routing.
+    }
+  }
+
+  private _setupPopState(): void {
+    const handler = () => {
+      this._navigateNow(location.pathname);
+    };
+    globalThis.addEventListener('popstate', handler);
+    const prev = this._cleanupNav;
+    this._cleanupNav = () => {
+      globalThis.removeEventListener('popstate', handler);
+      prev?.();
+    };
+  }
+
+  private _navigateTo(href: string): void {
+    const url = new URL(href, location.origin);
+    if (url.origin !== location.origin) {
+      location.href = href;
+      return;
+    }
+
+    history.pushState(null, '', url.pathname + url.search + url.hash);
+    this._navigateNow(url.pathname);
+  }
+
+  private _replaceTo(href: string): void {
+    const url = new URL(href, location.origin);
+    if (url.origin !== location.origin) return;
+
+    history.replaceState(null, '', url.pathname + url.search + url.hash);
+    this._navigateNow(url.pathname);
+  }
+
+  private _navigateNow(pathname: string): void {
+    const locale = detectLocale(pathname, this._locales, this._defaultLocale);
+    this.setAttribute('current-path', pathname);
+    this.setAttribute('locale', locale);
+
+    const opts = this._navOptions;
+    if (!opts) return;
+
+    // Update lang-switch immediately (before async fetch)
+    if (this.shadowRoot) {
+      this._updateSwitch(this.shadowRoot);
+    }
+
+    opts.contentLoader(pathname, locale).then(() => {
+      if (this.shadowRoot) {
+        this._updateSwitch(this.shadowRoot);
+      }
+      opts.onAfterSwap?.(pathname, locale);
+    }).catch((err) => {
+      console.warn('[open-layout] content load failed:', err);
+      location.reload();
+    });
+  }
+
+  private _updateSwitch(shadowRoot: ShadowRoot): void {
+    const link = shadowRoot.querySelector('.lang-switch') as HTMLAnchorElement | null;
+    if (!link) return;
+    const pathWithoutLocale = this._currentPathWithoutLocale;
+    const currentLocale = this._currentLocale;
+    link.textContent = switchLabel(currentLocale);
+    link.setAttribute('href', switchPath(pathWithoutLocale, currentLocale, this._locales));
   }
 
   private async _loadContent(path: string, locale: string): Promise<void> {

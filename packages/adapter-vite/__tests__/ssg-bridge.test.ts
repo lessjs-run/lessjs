@@ -10,7 +10,7 @@ Deno.test('SSG bridge: adapter-vite compatibility exports delegate to @openeleme
 });
 
 Deno.test('SSG bridge: adapter-vite postprocess re-exports @openelement/ssg helpers', async () => {
-  const adapter = await import('../src/ssg-postprocess.ts');
+  const adapter = await import('@openelement/ssg');
   const ssg = await import('@openelement/ssg');
 
   assertEquals(adapter.buildIslandChunkMap, ssg.buildIslandChunkMap);

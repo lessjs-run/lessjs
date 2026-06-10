@@ -1,3 +1,52 @@
+## v0.37.4 (2026-06-10) — Hygiene, CSS UI Foundation & Architecture Decoupling
+
+### Breaking
+
+- `@openelement/ui` no longer depends on `@openelement/router`. Consumers
+  importing Router through ui must now depend on router directly.
+- 11 deprecated re-export shells removed from `@openelement/adapter-vite`.
+  Consumers importing SSG APIs from adapter-vite must now use
+  `@openelement/ssg` directly (migration was announced in v0.36.3).
+
+### Added
+
+- **CSS UI Foundation**: Forked daisyUI class set (20+ classes: btn, card,
+  badge, alert, input, textarea, select, divider, tooltip, modal, menu,
+  dropdown, tabs, table, hero, kbd, link, loading, stats, steps, timeline,
+  skeleton) as pure CSS CSSStyleSheet — zero Tailwind, Open Props token
+  engine, DSD shadow DOM compatible.
+- 27 component semantic tokens (`--btn-*`, `--card-*`, `--badge-*`, etc.)
+  in `open-props-tokens.ts`.
+- 3 interactive DsdElement thin shells: `open-dropdown`, `open-modal`,
+  `open-tabs` — signal-driven state with `:host([attr])` CSS selectors.
+- `daissyClassSheet` export from `@openelement/ui`.
+- Shared DSD hydration helpers: `createDsdRenderRoot()` and
+  `hydrateDsdEvents()` extracted from adapters into
+  `@openelement/core/dsd-hydration`.
+- `DataAdapter<T>` contract in `@openelement/core/data`.
+- `MemoryDataAdapter` baseline (zero I/O, Map-backed).
+
+### Changed
+
+- Core logger unified: `dsd-element.ts`, `render-ir.ts`, `security.ts`,
+  `jsx-render-dom.ts` now use scoped `createLogger()`.
+- `open-layout.tsx` locale/SPA navigation inlined — router dependency
+  removed from ui package (3 deps from 5).
+- `island-manifest.ts` and `entry-generators.ts` migrated to
+  `@openelement/ssg`.
+
+### Fixed
+
+- `authoring.ts` `${ERROR_PREFIX}` interpolation bug (single-quote → backtick).
+- JSR publish gate recovery: graph-driven sequential publish.
+
+### Removed
+
+- 11 deprecated re-export shells from `packages/adapter-vite/src/`.
+- `@openelement/router` dependency from `@openelement/ui`.
+
+---
+
 ## v0.36.5 - Release Truth and AutoFlow Closure (2026-06-09)
 
 ### Governance and Release Truth

@@ -13,7 +13,8 @@
     "./jsx-runtime": "./src/jsx-runtime.ts",
     "./jsx-dev-runtime": "./src/jsx-runtime.ts",
     "./island-transform": "./src/island-transform.ts",
-    "./data": "./src/data.ts"
+    "./data": "./src/data.ts",
+    "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
     "@openelement/signals": "jsr:@openelement/signals@^0.37.2",

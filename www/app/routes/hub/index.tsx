@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Hub landing page - v0.23 artifact-first.
  *
  * Package evidence surface: compatibility tiers, validation status, trust policy.
@@ -8,7 +8,7 @@ export const tagName = 'page-hub';
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: block; }
@@ -16,17 +16,12 @@ sheet.replaceSync(`
   h1 { margin: 0; color: var(--gray-10); font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.95; }
   .lede { max-width: 680px; margin: 18px 0 0; color: var(--gray-6); font-size: 16px; line-height: 1.75; }
   .grid { margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .card { border: 1px solid var(--gray-3); border-radius: 8px; background: var(--gray-0); padding: 22px; text-decoration: none; color: inherit; }
-  .card:hover { border-color: color-mix(in srgb, var(--indigo-5) 28%, transparent); }
-  .card h2 { margin: 0 0 var(--size-2); color: var(--gray-10); font-size: var(--font-size-2); }
-  .card p { margin: 0; color: var(--gray-6); font-size: var(--font-size-00); line-height: var(--font-lineheight-4); }
-  .chip { display: inline-flex; align-items: center; min-height: 26px; margin-bottom: 12px; padding: 0 8px; border-radius: 5px; font-size: 11px; font-weight: 750; color: var(--indigo-5); border: 1px solid rgba(81,72,184,0.22); background: rgba(81,72,184,0.06); }
   @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .shell { padding: 32px 16px 56px; } }
 `);
 
 export class HubPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, sheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, sheet];
 
   override render() {
     return (
@@ -39,19 +34,19 @@ export class HubPage extends DsdElement {
             validation, and last verified date.
           </p>
           <div class='grid'>
-            <a class='card' href='/registry'>
-              <span class='chip'>Browse</span>
-              <h2>Package Index</h2>
+            <a class='card card-bordered p-5 text-inherit no-underline' href='/registry'>
+              <span class='badge badge-outline mb-3'>Browse</span>
+              <h2 class='card-title'>Package Index</h2>
               <p>Browse registered Web Components with compatibility tiers and DSD conformance status.</p>
             </a>
-            <a class='card' href='/architecture/package-compatibility'>
-              <span class='chip'>Validate</span>
-              <h2>Compatibility Check</h2>
+            <a class='card card-bordered p-5 text-inherit no-underline' href='/architecture/package-compatibility'>
+              <span class='badge badge-outline mb-3'>Validate</span>
+              <h2 class='card-title'>Compatibility Check</h2>
               <p>Understand SSR, DSD, island, and client-only classifications for third-party components.</p>
             </a>
-            <a class='card' href='/architecture/standards-registry'>
-              <span class='chip'>Policy</span>
-              <h2>Trust Policy</h2>
+            <a class='card card-bordered p-5 text-inherit no-underline' href='/architecture/standards-registry'>
+              <span class='badge badge-outline mb-3'>Policy</span>
+              <h2 class='card-title'>Trust Policy</h2>
               <p>Manifest hash verification, artifact integrity, and submission trust gates.</p>
             </a>
           </div>

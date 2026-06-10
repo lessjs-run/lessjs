@@ -2,7 +2,7 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.37.2 SSR / ISR Server Runtime Contract.\
-> Active execution package: v0.37.3 Data / Database Boundary.\
+> Active execution package: v0.37.5 Protocol Ports + DaisyUI Coverage Completion.\
 > Updated: 2026-06-10.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -21,30 +21,30 @@ Stable Four-Product Platform target.
 
 ## Version Ladder
 
-| Version | Name                                               | Goal                                                                                                | Status                   |
-| ------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------ |
-| v0.30.x | Contract cleanup                                   | Architecture and package contract cleanup                                                           | Done                     |
-| v0.31.0 | JSX-first Application API                          | App authoring API, `/vite` config split, docs/template DX                                           | Done                     |
-| v0.32.0 | App Lifecycle Contract                             | Route, load, context, layout, error, redirect lifecycle                                             | Done                     |
-| v0.33.0 | AI-Readable API Foundation                         | Structured page, island, head, route, and render intent APIs                                        | Done                     |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Workflow state, cells, evidence ledger, allowed-action report                                       | Done                     |
-| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Harness Gate, Cell Execution, Evolution Loop, full-auto evidence                                    | Done                     |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Rendering runtime evidence, docs, ISR, SSG Phase 1, parallel SSG, AutoFlow cell base                | Done with deferred items |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Windows-safe AutoFlow tests, real merged cell metrics, release truth alignment                      | Done                     |
-| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell | Done                     |
-| v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite       | Done                     |
-| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate           | Done                     |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                  | Done                     |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split           | Done                     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                             | Done                     |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                      | Done                     |
-| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                          | Active                   |
-| v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling         | Planned                  |
-| v0.37.5 | Protocol Ports + Adapter Map                       | Small ports for renderer, server, build, data, component adapter, and cache/ISR boundaries          | Planned                  |
-| v0.37.6 | Full-Stack Preset Smoke                            | Compose elements, UI, protocol, and framework/create into a real smoke application                  | Planned                  |
-| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on v0.37.x evidence                                  | Planned                  |
-| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                       | Planned                  |
-| v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates        | Vision                   |
+| Version | Name                                               | Goal                                                                                                   | Status                   |
+| ------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------ |
+| v0.30.x | Contract cleanup                                   | Architecture and package contract cleanup                                                              | Done                     |
+| v0.31.0 | JSX-first Application API                          | App authoring API, `/vite` config split, docs/template DX                                              | Done                     |
+| v0.32.0 | App Lifecycle Contract                             | Route, load, context, layout, error, redirect lifecycle                                                | Done                     |
+| v0.33.0 | AI-Readable API Foundation                         | Structured page, island, head, route, and render intent APIs                                           | Done                     |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Workflow state, cells, evidence ledger, allowed-action report                                          | Done                     |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Harness Gate, Cell Execution, Evolution Loop, full-auto evidence                                       | Done                     |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Rendering runtime evidence, docs, ISR, SSG Phase 1, parallel SSG, AutoFlow cell base                   | Done with deferred items |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Windows-safe AutoFlow tests, real merged cell metrics, release truth alignment                         | Done                     |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell    | Done                     |
+| v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite          | Done                     |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate              | Done                     |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                     | Done                     |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split              | Done                     |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                                | Done                     |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                         | Done                     |
+| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                             | Done                     |
+| v0.37.4 | Pure CSS UI Foundation                             | License-reviewed CSS-first UI layer, tokens, class surface, no DsdElement behavior coupling            | Done                     |
+| v0.37.5 | Protocol Ports + DaisyUI Coverage Completion       | Complete daisyUI interactive component coverage and migrate protocol types into @openelement/protocols | Active                   |
+| v0.37.6 | Full-Stack Preset Smoke                            | Compose elements, UI, protocol, and framework/create into a real smoke application                     | Planned                  |
+| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on v0.37.x evidence                                     | Planned                  |
+| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                          | Planned                  |
+| v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates           | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
 
@@ -186,29 +186,40 @@ Validate a CSS-first UI product surface independent from element behavior.
 - remove Tailwind runtime/build coupling from the public CSS layer;
 - keep behavior in elements or framework adapters, not in the CSS package.
 
-## v0.37.5 - Protocol Ports + Adapter Map
+## v0.37.5 - Protocol Ports + DaisyUI Coverage Completion
 
-Turn protocol work into small ports/adapters contracts, not a broad abstraction
-rewrite.
+Complete daisyUI interactive component coverage and migrate protocol types.
 
-- define renderer, server, build, data, component-adapter, and cache/ISR ports;
-- migrate protocol types from implementation packages into
-  `@openelement/protocols`:
-  - `RendererProtocol` (from `core/src/render-schemas.ts`);
-  - `IslandConfig` / `HydrationStrategy` (from `app/src/authoring.ts`,
-    `core/src/schemas.ts`);
-  - `SignalEngine` / `SignalLike` (from `signals/src/types.ts`,
-    `core/src/signal-like.ts`);
-  - `DataAdapter` (from `core/src/data.ts`);
-  - `EntryDescriptor` (from `ssg/src/entry-descriptor.ts`);
-- write ADR-00XX for `EntryDescriptor` route manifest contract before type
-  migration;
-- add exportable conformance test suites for each port (parameterized runner
-  pattern: `runRendererConformance(impl)`);
-- map existing Deno, Hono, Vite, DsdElement, and SSG assumptions;
-- keep port contracts thin and frozen — heavy documentation and tests, not heavy
-  interfaces;
-- require ADR approval before package splits or replacement guarantees.
+### daisyUI Interactive Completion (12 components)
+
+- collapse (accordion): DsdElement thin shell, signal `#open` index, `:host([data-open])` CSS
+- drawer: DsdElement thin shell, signal `#open`, slide-from-left with backdrop
+- carousel: DsdElement thin shell, signal `#index`, snap-scroll + prev/next buttons
+- swap: DsdElement thin shell, signal `#active`, two-face toggle with rotation
+- toast: DsdElement thin shell, signal `#toasts[]`, position-fixed stack with auto-dismiss
+- navbar: DsdElement thin shell, responsive collapse menu
+- footer: pure CSS component (no interaction, just layout)
+- indicator: pure CSS component (badge positioning on avatars/icons)
+- skeleton: already in v0.37.4 daisy-classes.css — no additional work
+- loading: already in v0.37.4 daisy-classes.css — no additional work
+- chat bubble: pure CSS component
+- toggle (theme switch wrapper): DsdElement thin shell
+
+### Form Enhancement Components (4 components)
+
+- checkbox: DsdElement thin shell, signal `#checked`, custom ::before/::after
+- radio: DsdElement thin shell, signal `#checked`, radio group via slot
+- range: DsdElement thin shell, signal `#value`, custom track/fill via CSS
+- file-input: DsdElement thin shell, signal `#file`, drag-and-drop zone
+
+### Protocol Type Migration
+
+- migrate `RendererProtocol` (from core/src/render-schemas.ts)
+- migrate `IslandConfig` / `HydrationStrategy` (from app/src/authoring.ts, core/src/schemas.ts)
+- migrate `SignalEngine` / `SignalLike` (from signals/src/types.ts, core/src/signal-like.ts)
+- migrate `DataAdapter` (from core/src/data.ts)
+- write ADR for `EntryDescriptor` route manifest contract
+- add exportable conformance test suites: `runRendererConformance(impl)`
 
 ## v0.37.6 - Full-Stack Preset Smoke
 

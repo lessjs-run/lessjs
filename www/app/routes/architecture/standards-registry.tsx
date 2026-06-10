@@ -2,11 +2,11 @@
 
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 export class StandardsRegistryGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -137,8 +137,8 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href={`/{loc}/architecture/architecture`} class="nav-link">&larr; Architecture</a>
-            <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
+            <a href={`/{loc}/architecture/architecture`} class="btn btn-ghost">&larr; Architecture</a>
+            <a href="/roadmap" class="btn btn-ghost">Roadmap &rarr;</a>
           </div>
         </div>
       
@@ -283,8 +283,8 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href={`/{loc}/architecture/architecture`} class="nav-link">&larr; Architecture</a>
-            <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
+            <a href={`/{loc}/architecture/architecture`} class="btn btn-ghost">&larr; Architecture</a>
+            <a href="/roadmap" class="btn btn-ghost">Roadmap &rarr;</a>
           </div>
         </div>
       

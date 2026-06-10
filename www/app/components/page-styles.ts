@@ -1,12 +1,10 @@
 /**
  * openElement Docs - Shared Page Styles
  *
- * v0.27.0 Typography overhaul:
- * - Unified type scale per docs/design/typography.md
- * - h1-h6 hierarchy aligned to heading roles
- * - body text font-size-1 (16px), dense content font-size-0
- * - All line-heights use var(--font-lineheight-N)
- * - Zero hardcoded values — all dimensions driven by custom properties
+ * Retains only www-unique styles (docs typography, TOC, code, tables, nav,
+ * callouts, pillars). All daisyUI-duplicated classes (btn, card, badge, alert,
+ * input, textarea, select, divider, tooltip, modal, menu, dropdown, tabs) have
+ * been removed — they are provided by daisyClassSheet from @openelement/ui.
  *
  * Custom properties (project-level tokens):
  *   --content-width:     720px   (default prose width)
@@ -234,21 +232,6 @@ export const pageStyles = `
     display: flex;
     justify-content: space-between;
   }
-  .nav-link {
-    color: var(--brand);
-    text-decoration: none;
-    font-weight: var(--font-weight-5);
-    font-size: var(--font-size-1);
-    padding: var(--size-2) var(--size-4);
-    border: var(--border-hairline) solid var(--border);
-    border-radius: var(--radius-2);
-    transition: all var(--ease-2) var(--duration-2);
-  }
-  .nav-link:hover {
-    color: var(--text-primary);
-    border-color: var(--brand);
-    background: var(--bg-surface);
-  }
 
   /* ─── Content grid (TOC + content) ─── */
   .content-grid {
@@ -289,7 +272,7 @@ export const pageStyles = `
   }
 
   :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { a, .nav-link { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { a { transition: none; } }
 `;
 
 export const pageStylesSheet = new StyleSheet();

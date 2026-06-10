@@ -11,7 +11,7 @@ import {
   assertFalse,
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
-import { generateClientEntry } from '../src/entry-generators.ts';
+import { generateClientEntry } from '@openelement/ssg';
 import { buildPlugin } from '../src/build.ts';
 import { OpenElementBuildContext } from '../src/build-context.ts';
 

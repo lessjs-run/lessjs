@@ -229,3 +229,19 @@ export {
   resolveVirtualOpenPackageRelative,
   toVirtualOpenPackageId,
 } from './ssg-package-resolver.ts';
+
+export {
+  extractCustomElementTags,
+  generateIslandManifests,
+  stableHash,
+  writeIslandManifests,
+} from './island-manifest.ts';
+export type {
+  IslandLayerMap,
+  IslandManifestEntry,
+  IslandStrategyMap,
+  PageIslandManifest,
+} from './island-manifest.ts';
+
+export { generateClientEntry, validateClientIslandEntry } from './entry-generators.ts';
+export type { ClientIslandEntry } from './entry-generators.ts';

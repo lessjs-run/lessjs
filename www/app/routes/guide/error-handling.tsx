@@ -1,7 +1,7 @@
 export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import '@openelement/ui/open-code-block';
 
@@ -11,7 +11,7 @@ routeSheet.replaceSync(pageStyles + `
 `);
 
 export class ErrorHandlingPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (
@@ -25,8 +25,8 @@ export class ErrorHandlingPage extends DsdElement {
         <h2>Structured Logging</h2>
         <p>Use <span class="inline-code">createLogger(scope)</span> for scoped DEBUG, INFO, WARN, and ERROR messages. Logs identify the subsystem without leaking private runtime state.</p>
         <div class="nav-row">
-          <a href="/guide/security-middleware" class="nav-link">Security and Middleware</a>
-          <a href="/guide/testing" class="nav-link">Testing</a>
+          <a href="/guide/security-middleware" class="btn btn-ghost">Security and Middleware</a>
+          <a href="/guide/testing" class="btn btn-ghost">Testing</a>
         </div>
       </div>
     );

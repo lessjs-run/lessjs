@@ -213,12 +213,12 @@ const HYDRATION_STRATEGIES = new Set(['load', 'idle', 'visible', 'only']);
 function assertCanonicalPageDefinition(input: unknown): asserts input is PageDefinition {
   if (typeof input === 'function') {
     throw new Error(
-      '${ERROR_PREFIX} definePage() requires a canonical object descriptor. ' +
+      `${ERROR_PREFIX} definePage() requires a canonical object descriptor. ` +
         'Use definePage({ route, head, renderIntent, load, render, error }).',
     );
   }
   if (typeof input !== 'object' || input === null) {
-    throw new Error('${ERROR_PREFIX} definePage() requires an object descriptor.');
+    throw new Error(`${ERROR_PREFIX} definePage() requires an object descriptor.`);
   }
   for (const key of Object.keys(input)) {
     if (PAGE_DESCRIPTOR_FIELDS.has(key)) continue;
@@ -228,7 +228,7 @@ function assertCanonicalPageDefinition(input: unknown): asserts input is PageDef
     );
   }
   if (typeof (input as { render?: unknown }).render !== 'function') {
-    throw new Error('${ERROR_PREFIX} definePage() descriptor requires a render() function.');
+    throw new Error(`${ERROR_PREFIX} definePage() descriptor requires a render() function.`);
   }
 }
 
@@ -348,7 +348,7 @@ export interface IslandConfig {
 
 export function defineIslandConfig(config: IslandConfig): IslandConfig {
   if (typeof config !== 'object' || config === null || Array.isArray(config)) {
-    throw new Error('${ERROR_PREFIX} defineIslandConfig() requires an object descriptor.');
+    throw new Error(`${ERROR_PREFIX} defineIslandConfig() requires an object descriptor.`);
   }
   for (const key of Object.keys(config)) {
     if (!ISLAND_CONFIG_FIELDS.has(key)) {

@@ -1,9 +1,9 @@
-﻿/**
+/**
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '../islands/open-search.tsx';
 
 const POPULAR_LINKS = [
@@ -42,30 +42,17 @@ const REDIRECT_MAP: Record<string, string> = {
 const styles = new StyleSheet();
 styles.replaceSync(`
   :host { display: block; }
-  .container { max-width: 700px; margin: var(--size-12) auto; text-align: center; }
-  h1 { font-size: 4rem; font-weight: var(--font-weight-7); color: var(--gray-10); margin: 0; }
-  p { color: var(--gray-6); font-size: var(--font-size-4); margin: var(--size-4) 0 var(--size-8); }
-  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--size-3); }
-  .links a {
-    padding: var(--size-2) var(--size-4);
-    border: 0.5px solid var(--gray-3);
-    border-radius: var(--radius-2);
-    color: var(--gray-7);
-    text-decoration: none;
-    font-size: var(--font-size-1);
-  }
-  .links a:hover { border-color: var(--gray-4); color: var(--gray-10); }
 `);
 
 export default class Page404 extends DsdElement {
-  static styles = [openPropsTokenSheet, styles];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
   override render() {
     return (
-      <div class='container'>
-        <h1>404</h1>
-        <p>Page not found. Here are some helpful links:</p>
-        <div class='links'>
-          {POPULAR_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+      <div class='container text-center' style='max-width:700px;margin:var(--size-12) auto;'>
+        <h1 style='font-size:4rem;font-weight:var(--font-weight-7);color:var(--gray-10);margin:0;'>404</h1>
+        <p style='color:var(--gray-6);font-size:var(--font-size-4);margin:var(--size-4) 0 var(--size-8);'>Page not found. Here are some helpful links:</p>
+        <div class='flex flex-wrap justify-center gap-3'>
+          {POPULAR_LINKS.map((l) => <a href={l.href} class='btn btn-ghost btn-sm'>{l.label}</a>)}
         </div>
       </div>
     );

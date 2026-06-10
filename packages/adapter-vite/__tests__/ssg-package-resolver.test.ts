@@ -5,7 +5,7 @@ import {
   resolveOpenPackageExport,
   resolveVirtualOpenPackageRelative,
   toVirtualOpenPackageId,
-} from '../src/ssg-package-resolver.ts';
+} from '@openelement/ssg';
 
 Deno.test('parseOpenPackageSpecifier parses bare openElement package ids', () => {
   assertEquals(parseOpenPackageSpecifier('@openelement/core'), {

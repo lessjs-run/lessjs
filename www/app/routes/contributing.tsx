@@ -4,7 +4,7 @@
 export const meta = { section: '', label: 'Contributing', order: 30 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../components/page-styles.js';
 import '@openelement/ui\/open-code-block';
 
@@ -46,7 +46,7 @@ routeSheet.replaceSync(
 );
 
 export class ContributingPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
@@ -89,8 +89,8 @@ deno task docs:dev</code></pre>
             <li>创建 GitHub Release</li>
           </ol>
           <div class='nav-row'>
-            <a href='/changelog' class='nav-link'>← Changelog</a>
-            <a href='/roadmap' class='nav-link'>Roadmap →</a>
+            <a href='/changelog' class='btn btn-ghost'>← Changelog</a>
+            <a href='/roadmap' class='btn btn-ghost'>Roadmap →</a>
           </div>
         </div>
       
@@ -153,8 +153,8 @@ deno task docs:dev</code></pre>
             <li>Create GitHub Release</li>
           </ol>
           <div class='nav-row'>
-            <a href='/changelog' class='nav-link'>← Changelog</a>
-            <a href='/roadmap' class='nav-link'>Roadmap →</a>
+            <a href='/changelog' class='btn btn-ghost'>← Changelog</a>
+            <a href='/roadmap' class='btn btn-ghost'>Roadmap →</a>
           </div>
         </div>
       

@@ -20,7 +20,7 @@ import { OpenElementError, SsrRenderError } from '@openelement/core/errors';
 import { createSsrContext, extractParams, parseQuery } from '@openelement/core/context';
 import { renderSsrError, wrapInDocument } from '@openelement/core';
 
-import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
+import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '@openelement/ssg';
 
 import { printBuildManifest, scanClientBuild, scanSSGOutput } from '../src/build-manifest.ts';
 

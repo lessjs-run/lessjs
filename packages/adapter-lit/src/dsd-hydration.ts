@@ -43,8 +43,8 @@
  */
 
 import { LitElement } from 'lit';
-import { bindHydrateEvents } from '@openelement/core';
 import type { Constructor, DsdHydration, HydrateEventDescriptor } from '@openelement/core';
+import { createDsdRenderRoot, hydrateDsdEvents } from '@openelement/core/dsd-hydration';
 
 // Re-export for public API compatibility
 export type { DsdHydration };
@@ -104,13 +104,11 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
      * a shadow root and populates it with the template content BEFORE
      * customElements.define() upgrades the element. This method detects
      * that situation and returns the existing shadow root.
+     *
+     * Delegates to the shared createDsdRenderRoot() from @openelement/core.
      */
     override createRenderRoot(): HTMLElement | DocumentFragment {
-      if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-        this._dsdHydrated = true;
-        return this.shadowRoot;
-      }
-      return this.attachShadow({ mode: 'open' });
+      return createDsdRenderRoot(this);
     }
 
     /**
@@ -141,27 +139,14 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
     /**
      * Bind declared events to existing shadow DOM elements after DSD upgrade.
      *
-     * Walks through `hydrateEvents` (from the class and its prototypes),
-     * queries the shadow root for matching elements, and attaches
-     * event listeners that delegate to the component's methods.
-     *
-     * Event listeners are bound with { signal } for automatic cleanup
-     * when the component disconnects (via _hydrateAbortController).
+     * Delegates to the shared hydrateDsdEvents() from @openelement/core
+     * and stores the returned AbortController for cleanup on disconnect.
      */
     protected _hydrateEvents(): void {
-      if (!this.shadowRoot) return;
-
-      // Collect hydrateEvents from the class hierarchy
-      const ctor = this.constructor as typeof WithDsdHydrationClass & {
-        hydrateEvents?: HydrateEventDescriptor[];
-      };
-      const events = ctor.hydrateEvents || [];
-      if (events.length === 0) return;
-
-      this._hydrateAbortController = new AbortController();
-      const { signal } = this._hydrateAbortController;
-
-      bindHydrateEvents(this.shadowRoot, this, events, signal);
+      this._hydrateAbortController = hydrateDsdEvents(
+        this,
+        this.constructor as { hydrateEvents?: HydrateEventDescriptor[] },
+      );
     }
   }
 

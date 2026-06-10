@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Registry Hub - Package Search &amp; List
  *
  * v0.19.0: Browse and search validated Web Component packages.
@@ -14,7 +14,7 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 import { DsdElement } from '@openelement/core';
 import { signal, computed } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import hubData from '../../data/registry/hub-index.ts';
 import type { HubIndexData, HubIndexEntry } from '../../data/registry/hub-index.ts';
 
@@ -338,7 +338,7 @@ export default class DocsRegistryHome extends DsdElement {
   #packages: HubIndexEntry[] = [];
   #filtered = computed(() => this._computeFiltered());
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();

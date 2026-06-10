@@ -7,7 +7,7 @@
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import '@openelement/ui\/open-button';
 import '@openelement/ui\/open-card';
@@ -249,7 +249,7 @@ routeSheet.replaceSync(
 );
 
 export class UIShowcase extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -372,8 +372,8 @@ export class UIShowcase extends DsdElement {
             <p>Deno、Node、Bun。零配置。</p>
           </div>
           <div class='nav-row'>
-            <a href={`/${loc}/architecture/architecture`} class='nav-link'>← Architecture</a>
-            <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
+            <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
+            <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
           </div>
         </div>
       
@@ -497,8 +497,8 @@ export class UIShowcase extends DsdElement {
             <p>Deno, Node, Bun. Zero config.</p>
           </div>
           <div class='nav-row'>
-            <a href={`/${loc}/architecture/architecture`} class='nav-link'>← Architecture</a>
-            <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
+            <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
+            <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
           </div>
         </div>
       
