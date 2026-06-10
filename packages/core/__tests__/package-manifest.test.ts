@@ -7,7 +7,7 @@ import type {
   OpenElementPackageManifest,
   ValidationError,
   ValidationWarning,
-} from '../src/types.js';
+} from '../src/schemas.js';
 import {
   clear as clearRegistry,
   generateIndex,

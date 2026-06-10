@@ -3,7 +3,7 @@
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { createSsrContext, extractParams, parseQuery } from '../src/context.ts';
-import type { RouteEntry } from '../src/types.ts';
+import type { RouteEntry } from '../src/schemas.ts';
 
 Deno.test('context - extractParams', async (t) => {
   await t.step('extracts single param', () => {

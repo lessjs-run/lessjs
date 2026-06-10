@@ -8,7 +8,7 @@
  * - Minimal framework overhead - only what's needed for SSR + Islands
  */
 
-import type { RouteEntry } from './types.js';
+import type { RouteEntry } from './schemas.js';
 import { createLogger } from './logger.js';
 
 /**

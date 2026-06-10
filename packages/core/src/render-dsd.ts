@@ -13,18 +13,21 @@
 
 import {
   type ComponentLayer,
-  type DsdComponentConstructor,
+  type DsdComponent,
   type DsdOptions,
-  type DsdRenderCollector,
   type DsdRenderMetrics,
   type HydrationHint,
   type RenderError,
+  type RenderErrorCode,
   type RenderHooks,
   type RenderInput,
   type RenderOutput,
-} from './types.js';
+  type RenderPhase,
+} from './render-schemas.js';
 import { getDefaultRegistry } from './adapter-registry.js';
 import { createLogger } from './logger.js';
+import { DsdRenderCollector } from './dsd-collector.js';
+import { type DsdComponentConstructor } from './dsd-element.js';
 import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
 import { renderDsdTree } from './render-ir.js';
@@ -36,22 +39,12 @@ import {
   trustedHtmlNode,
 } from './render-ir.js';
 import { DANGEROUS_KEYS } from './security.js';
-import type { DsdComponent } from './types.js';
 
 const log = createLogger('core');
 const _textEncoder = new TextEncoder();
 
 // ─── Error Classification ──────────────────────────────────────
-
-export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'serialize';
-
-export type RenderErrorCode =
-  | 'LESS_RENDER_INSTANTIATE_FAILED'
-  | 'LESS_RENDER_INVALID_OUTPUT'
-  | 'LESS_RENDER_RENDER_FAILED'
-  | 'LESS_RENDER_NESTED_FAILED'
-  | 'LESS_RENDER_STYLE_FAILED'
-  | 'LESS_RENDER_SERIALIZE_FAILED';
+// RenderPhase and RenderErrorCode are imported from render-schemas.js.
 
 export function classifyError(
   phase: RenderPhase,

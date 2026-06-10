@@ -197,7 +197,7 @@ export function wrapInDocument(
 
 // ─── Error page rendering ────────────────────────────────────────
 
-import type { RouteEntry } from './types.js';
+import type { RouteEntry } from './schemas.js';
 
 /**
  * Render an error page to HTML string.

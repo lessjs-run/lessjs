@@ -28,7 +28,7 @@ export type {
   RouteEntry,
   SpecialFileType,
   SsrContext,
-} from './types.js';
+} from './schemas.js';
 
 export {
   BuildError,
@@ -48,7 +48,7 @@ export type { ErrorPhase, ErrorSeverity, ErrorTelemetryHook, SsrErrorEntry } fro
 export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
-export type { OpenElementApiContext } from './types.js';
+export type { OpenElementApiContext } from './schemas.js';
 export { createIsrCacheKey, FileIsrCache, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
 export type {
   IsrCache,
@@ -84,24 +84,9 @@ export {
   getDefaultRegistry,
 } from './adapter-registry.js';
 export type {
-  CemCompatibilityReport,
-  CompatibilityClassification,
-  CompatibilityTier,
   ComponentLayer,
-  DomSimulationAttempt,
-  DomSimulationReport,
-  DsdBuildReport,
-  DsdHydrationHintSummary,
-  DsdHydrationStrategySummary,
-  DsdMetricsSummary,
-  DsdOptions,
-  DsdPageDiagnostics,
   HydrateEventDescriptor,
-  HydrationHint,
   HydrationStrategy,
-  IsrRouteRecord,
-  ManifestDecision,
-  ManifestValidationReport,
   OpenElementAttribute,
   OpenElementCssPart,
   OpenElementCssProperty,
@@ -117,20 +102,39 @@ export type {
   ReactiveHost,
   RegistryIndex,
   RegistryIndexEntry,
+  StrategySource,
+  Unsubscribe,
+  ValidationError,
+  ValidationResult,
+  ValidationWarning,
+} from './schemas.js';
+export type {
+  CemCompatibilityReport,
+  CompatibilityClassification,
+  CompatibilityTier,
+  ManifestValidationReport,
+  ValidatedTag,
+  ValidationDiagnostic,
+} from './compat-schemas.js';
+export type {
+  DomSimulationAttempt,
+  DomSimulationReport,
+  DsdBuildReport,
+  DsdHydrationHintSummary,
+  DsdHydrationStrategySummary,
+  DsdMetricsSummary,
+  DsdOptions,
+  DsdPageDiagnostics,
+  HydrationHint,
+  IsrRouteRecord,
+  ManifestDecision,
   RendererProtocol,
   RenderHooks,
   RenderInput,
   RenderOutput,
   RenderPhase,
   SsrAdmissionDecision,
-  StrategySource,
-  Unsubscribe,
-  ValidatedTag,
-  ValidationDiagnostic,
-  ValidationError,
-  ValidationResult,
-  ValidationWarning,
-} from './types.js';
+} from './render-schemas.js';
 export {
   escapeAttr,
   escapeAttrValue,

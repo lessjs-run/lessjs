@@ -17,7 +17,7 @@ import { ERROR_PREFIX } from '@openelement/core';
  */
 
 import { createLogger } from './logger.js';
-import type { HydrationStrategy } from './types.js';
+import type { HydrationStrategy } from './schemas.js';
 
 /** WeakSet to track elements that have already had SSR props bound (idempotent). */
 const ssrPropsBoundSet = new WeakSet<HTMLElement>();

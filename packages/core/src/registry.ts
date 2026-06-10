@@ -17,7 +17,7 @@ import type {
   ValidationError,
   ValidationResult,
   ValidationWarning,
-} from './types.js';
+} from './schemas.js';
 
 const _packages: OpenElementPackageManifest[] = [];
 

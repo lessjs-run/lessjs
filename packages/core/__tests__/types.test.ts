@@ -12,7 +12,7 @@ import type {
   RouteEntry,
   SpecialFileType,
   SsrContext,
-} from '../src/types.ts';
+} from '../src/schemas.ts';
 
 // Compile-time type existence checks (lint compliance: consume the imported types)
 type _LessMiddleware = OpenElementMiddleware;

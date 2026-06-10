@@ -4,10 +4,7 @@
 const LEGACY: Array<{ re: RegExp; name: string }> = [
   { re: /html`/, name: 'html template' },
   { re: /@prop\(/, name: '@prop()' },
-  { re: /classMap\(/, name: 'classMap()' },
-  { re: /when\(/, name: 'when()' },
   { re: /choose\(/, name: 'choose()' },
-  { re: /repeat\(/, name: 'repeat()' },
   { re: /unsafeHTML\(/, name: 'unsafeHTML()' },
   { re: /TemplateResult/, name: 'TemplateResult' },
   { re: /renderTemplateToString/, name: 'renderTemplateToString()' },

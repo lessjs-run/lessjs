@@ -1,6 +1,6 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { createAdapterRegistry } from '../src/adapter-registry.ts';
-import type { RendererProtocol } from '../src/types.ts';
+import type { RendererProtocol } from '../src/render-schemas.ts';
 
 Deno.test('createAdapterRegistry scopes adapter state per registry instance', () => {
   const lit: RendererProtocol = { name: 'lit' };
