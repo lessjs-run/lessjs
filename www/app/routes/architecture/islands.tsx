@@ -1,7 +1,7 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 
 const routeSheet = new StyleSheet();
@@ -36,7 +36,7 @@ routeSheet.replaceSync(`
 export class IslandsGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -145,8 +145,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
             build，并引入页面级 island manifest，让每个页面只加载实际出现的 island。
           </p>
           <div class="nav-row">
-            <a href={`/{loc}/architecture/dsd`} class="nav-link">&larr; DSD 渲染架构</a>
-            <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island 深度指南 &rarr;</a>
+            <a href={`/{loc}/architecture/dsd`} class="btn btn-ghost">&larr; DSD 渲染架构</a>
+            <a href={`/{loc}/architecture/islands-deep`} class="btn btn-ghost">Island 深度指南 &rarr;</a>
           </div>
         </div>
       
@@ -239,8 +239,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
             behavior, openElement should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
-            <a href={`/{loc}/architecture/dsd`} class="nav-link">&larr; DSD Architecture</a>
-            <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island Deep Guide &rarr;</a>
+            <a href={`/{loc}/architecture/dsd`} class="btn btn-ghost">&larr; DSD Architecture</a>
+            <a href={`/{loc}/architecture/islands-deep`} class="btn btn-ghost">Island Deep Guide &rarr;</a>
           </div>
         </div>
       

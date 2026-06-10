@@ -15,7 +15,7 @@ import {
   assertFalse,
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
-import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
+import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '@openelement/ssg';
 import type { RouteEntry } from '@openelement/core';
 
 // Fixtures
@@ -487,9 +487,9 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
         ],
       },
     ],
-    html: { lang: 'zh-CN', title: 'openElement 鏂囨。' },
+    html: { lang: 'zh-CN', title: 'openElement' },
     headExtras: '<link rel="stylesheet" href="/styles.css" />',
-    upgradeStrategy: 'idle',
+    upgradeStrategy: 'idle' as const,
   });
 
   // All features present
@@ -500,7 +500,7 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
   assertStringIncludes(code, '_middleware');
   assertStringIncludes(code, 'open-layout');
   assertStringIncludes(code, 'lang: "zh-CN"');
-  assertStringIncludes(code, 'openElement 鏂囨。');
+  assertStringIncludes(code, 'openElement');
   assertStringIncludes(code, '/styles.css');
   // No process.env
   const codeLines = code.split('\n').filter((l) => !l.trimStart().startsWith('//'));

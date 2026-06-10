@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import '@openelement/ui\/open-code-block';
 
@@ -20,7 +20,7 @@ routeSheet.replaceSync(
 );
 
 export class ApiPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
@@ -64,8 +64,8 @@ export class ApiPage extends DsdElement {
             或平台函数部署 API routes。
           </p>
           <div class='nav-row'>
-            <a href='/api/reference' class='nav-link'>← RPC 远程调用</a>
-            <a href='/guide/configuration' class='nav-link'>Configuration →</a>
+            <a href='/api/reference' class='btn btn-ghost'>← RPC 远程调用</a>
+            <a href='/guide/configuration' class='btn btn-ghost'>Configuration →</a>
           </div>
         </div>
       
@@ -142,8 +142,8 @@ export default function GET(ctx: OpenElementApiContext) {'{'}
             functions when runtime behavior is needed.
           </p>
           <div class='nav-row'>
-            <a href='/api/reference' class='nav-link'>← RPC</a>
-            <a href='/guide/configuration' class='nav-link'>Configuration →</a>
+            <a href='/api/reference' class='btn btn-ghost'>← RPC</a>
+            <a href='/guide/configuration' class='btn btn-ghost'>Configuration →</a>
           </div>
         </div>
       

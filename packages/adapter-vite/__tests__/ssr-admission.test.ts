@@ -8,8 +8,8 @@
  */
 
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
-import { buildSsrAdmissionPlan } from '../src/entry-descriptor.ts';
-import type { IslandDecl } from '../src/entry-descriptor.ts';
+import { buildSsrAdmissionPlan } from '@openelement/ssg';
+import type { IslandDecl } from '@openelement/ssg';
 import type { CompatibilityClassification } from '@openelement/core';
 
 // Section

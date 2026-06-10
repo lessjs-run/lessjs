@@ -1,7 +1,7 @@
 export const meta = { section: 'Production', label: 'Deployment', order: 5 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import '@openelement/ui\/open-code-block';
 
@@ -31,7 +31,7 @@ routeSheet.replaceSync(
 );
 
 export class DeploymentPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -142,8 +142,8 @@ export default defineConfig({
             <li>如果 island 调用运行时端点，单独部署 API 路由。</li>
           </ul>
           <div class='nav-row'>
-            <a href='/guide/islands-and-ssr' class='nav-link'>← Islands 与 SSR</a>
-            <a href='/roadmap' class='nav-link'>开发计划 →</a>
+            <a href='/guide/islands-and-ssr' class='btn btn-ghost'>← Islands 与 SSR</a>
+            <a href='/roadmap' class='btn btn-ghost'>开发计划 →</a>
           </div>
         </div>
       
@@ -235,8 +235,8 @@ export default defineConfig({
             <li>If islands call runtime endpoints, deploy API routes separately.</li>
           </ul>
           <div class='nav-row'>
-            <a href='/guide/islands-and-ssr' class='nav-link'>← Islands &amp; SSR</a>
-            <a href='/roadmap' class='nav-link'>Roadmap →</a>
+            <a href='/guide/islands-and-ssr' class='btn btn-ghost'>← Islands &amp; SSR</a>
+            <a href='/roadmap' class='btn btn-ghost'>Roadmap →</a>
           </div>
         </div>
       

@@ -1,11 +1,11 @@
 export const meta = { section: 'Production', label: 'Testing', order: 40 };
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 
 export class TestingPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
@@ -34,8 +34,8 @@ export class TestingPage extends DsdElement {
             openElement 包含 Playwright 端到端测试，在真实浏览器中验证 SSG 输出。
           </p>
           <div class='nav-row'>
-            <a href='/guide/error-handling' class='nav-link'>← 错误处理</a>
-            <a href='/guide/deployment' class='nav-link'>部署 →</a>
+            <a href='/guide/error-handling' class='btn btn-ghost'>← 错误处理</a>
+            <a href='/guide/deployment' class='btn btn-ghost'>部署 →</a>
           </div>
         </div>
       
@@ -79,8 +79,8 @@ export class TestingPage extends DsdElement {
             work as expected.
           </p>
           <div class='nav-row'>
-            <a href='/guide/error-handling' class='nav-link'>← Error Handling</a>
-            <a href='/guide/deployment' class='nav-link'>Deployment →</a>
+            <a href='/guide/error-handling' class='btn btn-ghost'>← Error Handling</a>
+            <a href='/guide/deployment' class='btn btn-ghost'>Deployment →</a>
           </div>
         </div>
       

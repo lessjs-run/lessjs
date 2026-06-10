@@ -1,4 +1,4 @@
-﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
+export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
 // ADR-0037 anchors: DSD-first. Version: v0.37.2, v0.37.6, v1.0.
@@ -6,7 +6,7 @@ export const tagName = 'page-roadmap';
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '../islands/open-search.tsx';
 
 const routeSheet = new StyleSheet();
@@ -20,6 +20,8 @@ routeSheet.replaceSync(`
   :host([data-theme="dark"]) .truth {
     background: var(--gray-0);
   }
+
+  .chip { display: inline-flex; align-items: center; }
 
   .shell {
     max-width: 1080px;
@@ -59,18 +61,9 @@ routeSheet.replaceSync(`
     padding: var(--size-4);
   }
 
-  .now span,
-  .chip {
+  .now span {
     display: inline-flex;
     align-items: center;
-    min-height: var(--size-7);
-    padding: 0 10px;
-    border: 1px solid color-mix(in srgb, var(--indigo-5) 28%, transparent);
-    border-radius: var(--radius-2);
-    background: color-mix(in srgb, var(--indigo-5) 8%, transparent);
-    color: var(--indigo-5);
-    font-size: var(--font-size-0);
-    font-weight: 750;
   }
 
   .now h2 {
@@ -124,32 +117,6 @@ routeSheet.replaceSync(`
 
   .status {
     justify-self: end;
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--size-7);
-    padding: 0 10px;
-    border-radius: var(--radius-2);
-    font-size: var(--font-size-0);
-    font-weight: 750;
-    border: 1px solid var(--gray-3);
-  }
-
-  .done {
-    color: var(--green-6);
-    border-color: color-mix(in srgb, var(--green-6) 26%, transparent);
-    background: color-mix(in srgb, var(--green-6) 8%, transparent);
-  }
-
-  .current {
-    color: var(--indigo-5);
-    border-color: color-mix(in srgb, var(--indigo-5) 28%, transparent);
-    background: color-mix(in srgb, var(--indigo-5) 8%, transparent);
-  }
-
-  .planned {
-    color: var(--orange-6);
-    border-color: color-mix(in srgb, var(--orange-6) 24%, transparent);
-    background: color-mix(in srgb, var(--orange-6) 8%, transparent);
   }
 
   .truth-grid {
@@ -195,20 +162,6 @@ routeSheet.replaceSync(`
     gap: 10px;
   }
 
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--size-10);
-    padding: 0 14px;
-    border: 1px solid var(--gray-3);
-    border-radius: 7px;
-    background: var(--gray-0);
-    color: var(--gray-10);
-    text-decoration: none;
-    font-size: var(--font-size-1);
-    font-weight: var(--font-weight-7);
-  }
-
   @media (max-width: 820px) {
     .hero,
     .phase,
@@ -231,7 +184,7 @@ routeSheet.replaceSync(`
 export class RoadmapPage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (
@@ -249,8 +202,8 @@ export class RoadmapPage extends DsdElement {
                 execution package is v0.37.2.
               </p>
             </div>
-            <aside class="now">
-              <span>current line</span>
+            <aside class="card card-bordered p-4">
+              <span class='badge badge-outline'>current line</span>
               <h2>v0.37.2 ISR Runtime</h2>
               <p>20 packages aligned, DsdElement light DOM opt-in proven, and ISR runtime contract recorded.</p>
             </aside>
@@ -260,112 +213,112 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.30.x</div>
               <div><h3>Architecture Contract Freeze</h3><p>One renderer model, one metadata boundary, openElement rename, and cleanup gates.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.31.0</div>
               <div><h3>JSX-first Application API</h3><p>definePage, defineIsland, defineElement, defineLayout, and the @openelement/app/vite split.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.32.0</div>
               <div><h3>App Lifecycle Contract</h3><p>Route params, load context, route metadata, redirect, not-found, error fallback, rendering intent, and streaming intent.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.33.0</div>
               <div><h3>AI-Readable API Foundation</h3><p>Object-form pages, structured head/route/render intent, explicit island metadata, and old API rejection proof.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.34.0</div>
               <div><h3>AutoFlow2 Sidecar Kernel</h3><p>Workflow state, cells, evidence ledger, blockers, and allowed-action report without automatic edits.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.35.0</div>
               <div><h3>AutoFlow2 Harness Gate</h3><p>Low-noise workflow contradictions become local and CI blockers through model-backed checks.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.0</div>
               <div><h3>Rendering Runtime and Deployment</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes under AutoFlow evidence.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.1</div>
               <div><h3>AutoFlow Closure and Release Truth</h3><p>Windows-safe AutoFlow tests, merged-cell metrics, and v0.36 release evidence alignment.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.2</div>
               <div><h3>SSG Bridge Migration</h3><p>Move Vite-free SSG render and postprocess code into @openelement/ssg.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.3</div>
               <div><h3>Complete SSG File Ownership</h3><p>Move route scanning, entry generation, generated data, and SSG plugin logic into @openelement/ssg.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.4</div>
               <div><h3>Firefox/WebKit Cross-Browser Proof</h3><p>Record browser proof, known limitations, and 20-package v0.36.4 alignment.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.36.5</div>
               <div><h3>Release Truth and AutoFlow Closure</h3><p>Align workflow, release docs, AutoFlow evidence, and website truth without product changes.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.0</div>
               <div><h3>Product Doctrine + Rendering Contract Reset</h3><p>ADR-0091, static default 0JS, DSD/shadow default, light DOM opt-in terms, and the v0.37.x SOP split.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.1</div>
               <div><h3>DsdElement Shadow + Light Contract</h3><p>Audit DsdElement behavior and define explicit light DOM opt-in without weakening the DSD/shadow default.</p></div>
-              <span class="status done">Done</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.2</div>
               <div><h3>SSR / ISR Server Runtime Contract</h3><p>Define request-time SSR/ISR framework boundaries, cache behavior, server adapter evidence, and zero-JS defaults.</p></div>
-              <span class="status current">Active</span>
+              <span class="badge badge-primary status">Active</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.3</div>
               <div><h3>Data / Database Boundary</h3><p>Specify data/database adapter contracts and recipes without adopting a built-in ORM, auth platform, or migration system.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.4</div>
               <div><h3>Pure CSS UI Foundation</h3><p>Validate a license-reviewed CSS-first UI layer with tokens, themes, class contracts, and no DsdElement behavior coupling.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.5</div>
               <div><h3>Protocol Ports + Adapter Map</h3><p>Define small renderer, server, build, data, component-adapter, and cache/ISR ports before replacement claims.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.6</div>
               <div><h3>Full-Stack Preset Smoke</h3><p>Compose elements, CSS UI, protocol ports, and framework/create into a repeatable full-stack smoke app.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.38.x</div>
               <div><h3>Product Surface Reset and Hardening</h3><p>Reset public packages, APIs, and docs based on v0.37.x product evidence.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v0.39.0</div>
               <div><h3>Full-Stack Framework RC</h3><p>Validate final APIs, docs, starters, deploy smoke, consumer smoke, and publish gates.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v1.0.0</div>
               <div><h3>Stable Four-Product Platform</h3><p>Freeze elements, UI, protocol, and framework surfaces with workflow evidence in the release gate.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="badge badge-warning status">Planned</span>
             </div>
           </div>
 
@@ -402,9 +355,9 @@ export class RoadmapPage extends DsdElement {
           </div>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/architecture/architecture">Architecture {'->'}</a>
-            <a class="nav-link" href="/changelog">Changelog {'->'}</a>
-            <a class="nav-link" href="/guide/deployment">Deployment {'->'}</a>
+            <a class="btn btn-ghost" href="/architecture/architecture">Architecture {'->'}</a>
+            <a class="btn btn-ghost" href="/changelog">Changelog {'->'}</a>
+            <a class="btn btn-ghost" href="/guide/deployment">Deployment {'->'}</a>
           </nav>
         </div>
       

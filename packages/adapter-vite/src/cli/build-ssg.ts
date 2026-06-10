@@ -123,7 +123,7 @@ interface BuildSSGOptions {
    * Enables browser prefetch/prerender of pages before the user navigates.
    * Can be a boolean (true = auto-generate from routes) or explicit rules.
    */
-  speculation?: boolean | import('../ssg-postprocess.js').SpeculationRulesOptions;
+  speculation?: boolean | import('@openelement/ssg').SpeculationRulesOptions;
   /** ADR-0047: Skip Deno pre-resolution, use regex fallback for external deps. */
   skipPreResolution?: boolean;
 }

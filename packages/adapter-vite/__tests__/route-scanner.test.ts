@@ -11,7 +11,7 @@ import {
   scanIslands,
   scanPackageManifests,
   scanRoutes,
-} from '../src/route-scanner.ts';
+} from '@openelement/ssg';
 
 const FIXTURES_DIR = join(Deno.cwd(), 'packages/core/__test_fixtures__');
 
@@ -339,7 +339,7 @@ Deno.test({
 // ─── scanIslands edge cases ──────────────────────────
 
 Deno.test('route-scanner - scanIslands with non-existent dir', async () => {
-  const { scanIslands } = await import('../src/route-scanner.ts');
+  const { scanIslands } = await import('@openelement/ssg');
   const result = await scanIslands('/nonexistent/path/islands');
   assertEquals(result, []);
 });

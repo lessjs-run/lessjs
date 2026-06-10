@@ -1,13 +1,13 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 
 export class ConfigurationPage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
@@ -117,8 +117,8 @@ export default defineConfig({'{'}
 {'}'});</code></pre>
           </open-code-block>
           <div class='nav-row'>
-            <a href='/api/reference' class='nav-link'>← API Design</a>
-            <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
+            <a href='/api/reference' class='btn btn-ghost'>← API Design</a>
+            <a href='/guide/error-handling' class='btn btn-ghost'>Security &amp; Middleware →</a>
           </div>
         </div>
       
@@ -246,8 +246,8 @@ export default defineConfig({'{'}
             guide for CSP and middleware configuration.
           </p>
           <div class='nav-row'>
-            <a href='/api/reference' class='nav-link'>← API Design</a>
-            <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
+            <a href='/api/reference' class='btn btn-ghost'>← API Design</a>
+            <a href='/guide/error-handling' class='btn btn-ghost'>Security &amp; Middleware →</a>
           </div>
         </div>
       

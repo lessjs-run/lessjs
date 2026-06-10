@@ -13,7 +13,7 @@
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui/open-code-block';
 import pkgRecords from '../../data/registry/hub-data.ts';
 
@@ -178,7 +178,7 @@ export default class DocsRegistryDetail extends DsdElement {
   private _record: HubPackageRecord | null = null;
   private _showValidation = false;
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();

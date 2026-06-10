@@ -1,4 +1,4 @@
-﻿/**
+/**
  * openElement Benchmark & Performance
  *
  * Zero-noise performance characteristics: SSG build time, DSD rendering,
@@ -8,7 +8,7 @@ export const meta = { section: 'Reference', label: 'Performance', order: 100 };
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import '@openelement/ui/open-code-block';
 
@@ -20,7 +20,7 @@ styles.replaceSync(pageStyles + `
 `);
 
 export default class Benchmark extends DsdElement {
-  static styles = [openPropsTokenSheet, styles];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -56,21 +56,21 @@ export default class Benchmark extends DsdElement {
       
         <div class='container'>
           <h1>性能与基准测试</h1>
-          <p class='subtitle'>零噪音，实测数据。</p>
+          <p class='subtitle'>零噪音。我们实际测量的数据。</p>
 
           <h2>构建性能</h2>
-          <div class='metric'><span class='label'>SSG 构建 (www)</span><span class='value'>~3s（37 页面，478 URL）</span></div>
+          <div class='metric'><span class='label'>SSG 构建 (www)</span><span class='value'>~3s（37 页，478 URL）</span></div>
           <div class='metric'><span class='label'>开发冷启动</span><span class='value'>~100ms（deno task dev:fast）</span></div>
           <div class='metric'><span class='label'>Vite 开发启动</span><span class='value'>~2s（deno task dev）</span></div>
-          <div class='metric'><span class='label'>客户端包体积</span><span class='value'>~0 KB（仅 islands，2 虚拟模块）</span></div>
+          <div class='metric'><span class='label'>客户端捆绑包</span><span class='value'>~0 KB（仅 islands，2 个虚拟模块）</span></div>
 
           <h2>渲染</h2>
           <div class='metric'><span class='label'>DSD SSR</span><span class='value'>零 JS 解析成本（浏览器原生）</span></div>
-          <div class='metric'><span class='label'>Island 水合</span><span class='value'>按组件、策略门控</span></div>
-          <div class='metric'><span class='label'>路由切换 (SPA)</span><span class='value'>~0ms（无整页重载）</span></div>
+          <div class='metric'><span class='label'>Island 水合</span><span class='value'>按组件，策略控制</span></div>
+          <div class='metric'><span class='label'>路由切换 (SPA)</span><span class='value'>~0ms（无整页重新加载）</span></div>
 
-          <h2>包体积</h2>
-          <p>openElement 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
+          <h2>包大小</h2>
+          <p>openElement 的 DSD 组件零运行时 JS。Islands 按需加载。关键路径上无框架运行时。</p>
         </div>
       
     );

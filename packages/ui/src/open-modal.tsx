@@ -1,0 +1,58 @@
+/** @jsxImportSource @openelement/core */
+/**
+ * @openelement/ui - open-modal
+ *
+ * DaisyUI-style modal using DsdElement + Signals.
+ * Uses signal-to-DOM binding on the `open` attribute; the daisyUI
+ * `.modal[open]` CSS selector handles show/hide without re-renders.
+ *
+ * Usage:
+ * ```html
+ * <open-modal>
+ *   <div>Modal content here</div>
+ * </open-modal>
+ * ```
+ *
+ * @slot - Modal body content
+ */
+
+import { DsdElement, type VNode } from '@openelement/core';
+import { signal } from '@openelement/signals';
+import { openPropsTokenSheet } from './open-props-tokens.js';
+import { daisyClassSheet } from './daisy-classes.js';
+
+export const tagName = 'open-modal';
+
+export class OpenModal extends DsdElement {
+  static override styles = [daisyClassSheet, openPropsTokenSheet];
+  #open = signal(false);
+
+  open(): void {
+    this.#open.value = true;
+  }
+  close(): void {
+    this.#open.value = false;
+  }
+
+  #closeOnBackdrop(e: Event): void {
+    if ((e.target as HTMLElement).classList.contains('modal-backdrop')) this.close();
+  }
+
+  override render(): VNode {
+    return (
+      <div class='modal' open={this.#open} role='dialog' aria-modal='true'>
+        <div class='modal-backdrop' onClick={(e: Event) => this.#closeOnBackdrop(e)} />
+        <div class='modal-content'>
+          <slot />
+        </div>
+      </div>
+    );
+  }
+}
+
+export default OpenModal;
+
+// Guard: idempotent across SSR paths
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, OpenModal);
+}

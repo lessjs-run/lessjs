@@ -4,7 +4,7 @@
 export const meta = { section: '', label: 'Changelog', order: 20 };
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../components/page-styles.js';
 import { marked } from 'marked';
 // @deno-types="npm:@types/sanitize-html@^2"
@@ -21,7 +21,7 @@ routeSheet.replaceSync(pageStyles + `
 `);
 
 export class ChangelogPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     const changelogPath = new URL('../../../../CHANGELOG.md', import.meta.url);
@@ -44,8 +44,8 @@ export class ChangelogPage extends DsdElement {
         <p>The project follows Keep a Changelog and SemVer. Historical entries preserve older names where they describe older releases; current docs use the openElement contract.</p>
         <div class="changelog-content" innerHTML={html} trustedHtml={true} />
         <div class="nav-row">
-          <a href="/roadmap" class="nav-link">Roadmap</a>
-          <a href="/guide/getting-started" class="nav-link">Getting Started</a>
+          <a href="/roadmap" class="btn btn-ghost">Roadmap</a>
+          <a href="/guide/getting-started" class="btn btn-ghost">Getting Started</a>
         </div>
       </div>
     );

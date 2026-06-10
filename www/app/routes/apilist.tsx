@@ -5,7 +5,7 @@
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 export const tagName = 'api-core-page';
 export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
@@ -20,7 +20,7 @@ routeSheet.replaceSync(`
 `);
 
 export default class ApiCorePage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return this._renderContent();

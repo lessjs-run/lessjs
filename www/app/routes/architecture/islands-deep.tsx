@@ -3,7 +3,7 @@ export const tagName = 'page-islands-deep-guide';
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui/open-code-block';
 
 const routeSheet = new StyleSheet();
@@ -19,7 +19,7 @@ routeSheet.replaceSync(`
 `);
 
 export class IslandsDeepGuidePage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (
@@ -62,8 +62,8 @@ export class IslandsDeepGuidePage extends DsdElement {
         <p>Dynamic island content should return VNode or VNode arrays. HTML injection stays behind the explicit <span class="inline-code">trustedHtml</span> boundary for pre-sanitized, non-interactive content only.</p>
 
         <div class="nav-row">
-          <a href="/architecture/dsd" class="nav-link">DSD Architecture</a>
-          <a href="/guide/islands-and-ssr" class="nav-link">Islands and SSR</a>
+          <a href="/architecture/dsd" class="btn btn-ghost">DSD Architecture</a>
+          <a href="/guide/islands-and-ssr" class="btn btn-ghost">Islands and SSR</a>
         </div>
       </div>
     );

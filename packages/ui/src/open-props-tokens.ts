@@ -88,6 +88,32 @@ function createTokenSheet(): StyleSheetLike {
   --brand-glow: rgba(83, 74, 183, 0.15);
 
   /* ═══════════════════════════════════════════════
+     Component Semantic Tokens (for daisyUI classes)
+     ═══════════════════════════════════════════════ */
+  --btn-padding-x: var(--size-4); --btn-padding-y: var(--size-2);
+  --btn-radius: var(--radius-1);
+  --btn-font-size: var(--font-size-0); --btn-font-weight: var(--font-weight-6);
+  --btn-text-case: none;
+  --card-padding: var(--size-6); --card-radius: var(--radius-3);
+  --badge-padding-x: var(--size-2); --badge-padding-y: 2px;
+  --badge-radius: var(--radius-round); --badge-font-size: var(--font-size-00);
+  --alert-padding: var(--size-4); --alert-radius: var(--radius-2);
+  --input-padding-x: var(--size-3); --input-padding-y: var(--size-2);
+  --input-radius: var(--radius-1); --input-font-size: var(--font-size-0);
+  --input-border-color: var(--border);
+  --divider-margin: var(--size-4) 0;
+  --divider-color: var(--border);
+  --tooltip-bg: var(--gray-9); --tooltip-color: var(--gray-0);
+  --tooltip-radius: var(--radius-1); --tooltip-padding: var(--size-1) var(--size-2);
+  --modal-bg: var(--bg-elevated); --modal-radius: var(--radius-3);
+  --modal-padding: var(--size-6);
+  --menu-padding: var(--size-2); --menu-radius: var(--radius-2);
+  --menu-item-padding: var(--size-2) var(--size-4);
+  --dropdown-bg: var(--bg-elevated); --dropdown-radius: var(--radius-2);
+  --tab-padding: var(--size-2) var(--size-4);
+  --tab-radius: var(--radius-1);
+
+  /* ═══════════════════════════════════════════════
      UI Semantic Tokens (light defaults)
      Dark mode overrides via :root[data-theme="dark"] in SSG
      ═══════════════════════════════════════════════ */

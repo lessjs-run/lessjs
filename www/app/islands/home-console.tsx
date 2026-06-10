@@ -3,7 +3,7 @@ import { defineCustomElement, DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { signal } from '@openelement/signals';
 import { consumeContext } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { THEME_CTX } from '@openelement/ui/open-layout';
 
 export const tagName = 'home-console';
@@ -45,7 +45,7 @@ styles.replaceSync(`
 `);
 
 export default class HomeConsole extends DsdElement {
-  static override styles = [openPropsTokenSheet, styles];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
   #count = signal(42);
 
   constructor() {

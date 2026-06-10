@@ -7,7 +7,7 @@
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
 import { getPostBySlug, posts } from '@openelement/generated/blog-data';
 
@@ -50,7 +50,7 @@ routeSheet.replaceSync(
 export default class BlogPostPage extends DsdElement {
   slug = '';
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -90,7 +90,7 @@ export default class BlogPostPage extends DsdElement {
           <p class='blog-date'>{post.frontmatter.date}</p>
           <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
           <div class='nav-row'>
-            <a href='/blog' class='nav-link'>← 返回博客</a>
+            <a href='/blog' class='btn btn-ghost'>← 返回博客</a>
           </div>
         </div>
       
@@ -131,7 +131,7 @@ export default class BlogPostPage extends DsdElement {
           <p class='blog-date'>{post.frontmatter.date}</p>
           <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
           <div class='nav-row'>
-            <a href='/blog' class='nav-link'>← Back to Blog</a>
+            <a href='/blog' class='btn btn-ghost'>← Back to Blog</a>
           </div>
         </div>
       

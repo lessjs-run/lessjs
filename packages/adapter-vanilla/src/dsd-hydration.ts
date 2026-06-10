@@ -43,13 +43,13 @@
  */
 
 import {
-  bindHydrateEvents,
   type Constructor,
   type DsdHydration,
   type HydrateEventDescriptor,
   isVNode,
   renderToDom,
 } from '@openelement/core';
+import { createDsdRenderRoot, hydrateDsdEvents } from '@openelement/core/dsd-hydration';
 
 // Re-export for public API compatibility
 export type { DsdHydration };
@@ -97,13 +97,11 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
 
     /**
      * Detect pre-populated shadow root from DSD.
+     *
+     * Delegates to the shared createDsdRenderRoot() from @openelement/core.
      */
     createRenderRoot(): HTMLElement | DocumentFragment {
-      if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-        this._dsdHydrated = true;
-        return this.shadowRoot;
-      }
-      return this.attachShadow({ mode: 'open' });
+      return createDsdRenderRoot(this);
     }
 
     /**
@@ -150,20 +148,15 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
 
     /**
      * Bind declared events to existing shadow DOM elements after DSD upgrade.
+     *
+     * Delegates to the shared hydrateDsdEvents() from @openelement/core
+     * and stores the returned AbortController for cleanup on disconnect.
      */
     protected _hydrateEvents(): void {
-      if (!this.shadowRoot) return;
-
-      const ctor = this.constructor as typeof WithDsdHydrationClass & {
-        hydrateEvents?: HydrateEventDescriptor[];
-      };
-      const events = ctor.hydrateEvents || [];
-      if (events.length === 0) return;
-
-      this._hydrateAbortController = new AbortController();
-      const { signal } = this._hydrateAbortController;
-
-      bindHydrateEvents(this.shadowRoot, this, events, signal);
+      this._hydrateAbortController = hydrateDsdEvents(
+        this,
+        this.constructor as { hydrateEvents?: HydrateEventDescriptor[] },
+      );
     }
   }
 
@@ -205,8 +198,8 @@ export const DsdVanillaElement:
   & (new (...args: any[]) => HTMLElement & DsdHydration) = new Proxy(
     {} as
       & typeof HTMLElement
-      // deno-lint-ignore no-explicit-any
-      & (new (...args: any[]) => HTMLElement & DsdHydration),
+      & // deno-lint-ignore no-explicit-any
+      (new (...args: any[]) => HTMLElement & DsdHydration),
     {
       get(_target, prop, receiver) {
         if (typeof globalThis.HTMLElement === 'undefined') {

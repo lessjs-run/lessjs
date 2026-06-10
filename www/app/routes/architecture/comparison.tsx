@@ -1,10 +1,10 @@
-﻿/**
+/**
  * @openelement/docs - Comparison: openElement vs Alternatives
  */
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 export const tagName = 'comparison-page';
 
 export const meta = { section: 'Principles', label: 'Comparison', order: 20 };
@@ -84,7 +84,7 @@ routeSheet.replaceSync(`
       }
 
       .tag-yes::before {
-        content: '✓ ';
+        content: '? ';
       }
 
       .tag-no {
@@ -124,7 +124,7 @@ routeSheet.replaceSync(`
     `);
 
 export default class ComparisonPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
@@ -133,8 +133,8 @@ export default class ComparisonPage extends DsdElement {
         <div class="container">
           <h1>{isZh ? 'openElement 与竞品对比' : 'openElement vs Alternatives'}</h1>
           <p class="subtitle">
-            openElement 当前是 DSD-first Web Components 应用框架。与同级框架的对比基于 DSD/WC 引擎、
-            渐进 island 和 Registry evidence pipeline。
+            openElement 是领先的 DSD-first Web Components 应用框架。不同框架的对比基于 DSD/WC 特性、
+            以及 island 和 Registry evidence pipeline。
           </p>
 
           <div class="table-wrap">
@@ -152,9 +152,9 @@ export default class ComparisonPage extends DsdElement {
                 <tr>
                   <td>定位</td>
                   <td class="openElement-col">DSD-first WC 应用框架</td>
-                  <td>全栈（多框架）</td>
-                  <td>全栈（Preact）</td>
-                  <td>全栈（React）</td>
+                  <td>全栈框架</td>
+                  <td>全栈 (Preact)</td>
+                  <td>全栈 (React)</td>
                 </tr>
                 <tr>
                   <td>Runtime</td>
@@ -164,7 +164,7 @@ export default class ComparisonPage extends DsdElement {
                   <td>Node.js</td>
                 </tr>
                 <tr>
-                  <td>首屏 JS</td>
+                  <td>客户端 JS</td>
                   <td class="openElement-col"><span class="tag-yes">0 KB</span></td>
                   <td><span class="tag-yes">0 KB</span></td>
                   <td><span class="tag-no">~23 KB</span></td>
@@ -173,14 +173,14 @@ export default class ComparisonPage extends DsdElement {
                 <tr>
                   <td>WC 原生</td>
                   <td class="openElement-col"><span class="tag-yes">DSD 一等公民</span></td>
-                  <td><span class="tag-no">当普通元素</span></td>
+                  <td><span class="tag-no">不适用（通过通用组件）</span></td>
                   <td><span class="tag-no">Preact-only</span></td>
-                  <td><span class="tag-no">❌</span></td>
+                  <td><span class="tag-no">?</span></td>
                 </tr>
                 <tr>
-                  <td>跨框架</td>
-                  <td class="openElement-col">Lit / React / Vanilla 共存</td>
-                  <td>多框架共存</td>
+                  <td>适配器</td>
+                  <td class="openElement-col">Lit / React / Vanilla 适配器</td>
+                  <td>适配器架构</td>
                   <td>Preact</td>
                   <td>React</td>
                 </tr>
@@ -193,10 +193,10 @@ export default class ComparisonPage extends DsdElement {
                 </tr>
                 <tr>
                   <td>Registry Hub</td>
-                  <td class="openElement-col"><span class="tag-yes">内建</span></td>
-                  <td><span class="tag-no">❌</span></td>
-                  <td><span class="tag-no">❌</span></td>
-                  <td><span class="tag-no">❌</span></td>
+                  <td class="openElement-col"><span class="tag-yes">已集成</span></td>
+                  <td><span class="tag-no">?</span></td>
+                  <td><span class="tag-no">?</span></td>
+                  <td><span class="tag-no">?</span></td>
                 </tr>
                 <tr>
                   <td>Server</td>
@@ -207,17 +207,17 @@ export default class ComparisonPage extends DsdElement {
                 </tr>
                 <tr>
                   <td>组件模型</td>
-                  <td class="openElement-col">3-layer (DSD/Island) + 多适配器</td>
+                  <td class="openElement-col">3-layer (DSD/Island) + 信号驱动</td>
                   <td>Islands only</td>
                   <td>Islands only</td>
                   <td>Full hydration</td>
                 </tr>
                 <tr>
-                  <td>渲染时机</td>
-                  <td class="openElement-col">SSG ✅ / ISR 📋 / SSR 📋</td>
-                  <td>SSG ✅ / SSR ✅</td>
-                  <td>SSR ✅</td>
-                  <td>SSR ✅ / SSG ✅</td>
+                  <td>渲染时间</td>
+                  <td class="openElement-col">SSG ? / ISR ?? / SSR ??</td>
+                  <td>SSG ? / SSR ?</td>
+                  <td>SSR ?</td>
+                  <td>SSR ? / SSG ?</td>
                 </tr>
                 <tr>
                   <td>Ecosystem</td>
@@ -237,18 +237,18 @@ export default class ComparisonPage extends DsdElement {
             </table>
           </div>
 
-          <h2>openElement 三支柱差异化</h2>
+          <h2>openElement 的差异化优势</h2>
           <ul>
-            <li><strong>支柱 2 独有价值</strong> - DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
-            <li><strong>支柱 2+3 组合</strong> - 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
-            <li><strong>支柱 1 差异</strong> - WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
+            <li><strong>支持 2 种价值模式</strong> — DSD 和 runtime 都提供价值。Astro 只有 WC 原生支持，Fresh 只有 DSD，Next 只有 React runtime。原生方案无法通过优化追平。</li>
+            <li><strong>支持 2+3 层架构</strong> — 渲染层 + Registry 一体化。封装、渲染、验证、部署。</li>
+            <li><strong>支持单框架</strong> — WC 原生全栈方案。"全栈框架 + WC 集成" 模式。"WC 是一等公民"。</li>
           </ul>
 
-          <h2>openElement 不优化的方向</h2>
+          <h2>openElement 的局限性</h2>
           <ul>
-            <li><strong>大而全的元框架</strong> - openElement 三支柱各有独立价值，不是什么都做的平台</li>
-            <li><strong>npm 生态优先</strong> - JSR-only 包分发对 npm 用户需要额外配置</li>
-            <li><strong>旧浏览器兼容</strong> - 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
+            <li><strong>全平台支持有限</strong> — openElement 支持所有现代浏览器，但无法覆盖所有平台。</li>
+            <li><strong>npm 生态访问受限</strong> — JSR-only 的发布方式。npm 用户需要额外工具。</li>
+            <li><strong>浏览器兼容性要求</strong> — 需要 DSD 支持的浏览器：Chrome 90+、Safari 16.4+、Firefox 123+。</li>
           </ul>
         </div>
       

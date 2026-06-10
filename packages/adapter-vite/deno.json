@@ -8,7 +8,6 @@
     "./plugin": "./src/plugin.ts",
     "./subpath-resolver": "./src/subpath-resolver.ts",
     "./optional-package-stubs": "./src/optional-package-stubs.ts",
-    "./generated-data-resolver": "./src/generated-data-resolver.ts",
     "./plugin-mdx": "./src/plugin-mdx.ts",
     "./cli/build": "./src/cli/build.ts",
     "./cli/build-client": "./src/cli/build-client.ts",

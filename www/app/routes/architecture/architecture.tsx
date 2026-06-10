@@ -1,9 +1,9 @@
-﻿export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
+export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
 import '@openelement/ui/open-code-block';
 
@@ -35,30 +35,7 @@ pageSheet.replaceSync(`
     margin-bottom: var(--size-5);
   }
 
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--size-7);
-    padding: 0 var(--size-3);
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    background: var(--gray-1);
-    color: var(--gray-6);
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-7);
-  }
-
-  .chip.current {
-    color: var(--indigo-5);
-    border-color: color-mix(in srgb, var(--indigo-5) 28%, transparent);
-    background: color-mix(in srgb, var(--indigo-5) 8%, transparent);
-  }
-
-  .chip.pass {
-    color: var(--green-6);
-    border-color: color-mix(in srgb, var(--green-6) 26%, transparent);
-    background: color-mix(in srgb, var(--green-6) 8%, transparent);
-  }
+  .eyebrow { display: flex; flex-wrap: wrap; gap: var(--size-2); margin-bottom: var(--size-5); }
 
   h1 {
     margin: 0;
@@ -183,26 +160,6 @@ pageSheet.replaceSync(`
     gap: var(--size-3);
   }
 
-  .card {
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    background: var(--gray-1);
-    padding: var(--size-4);
-  }
-
-  .card h3 {
-    margin: 0 0 var(--size-2);
-    color: var(--gray-10);
-    font-size: var(--font-size-3);
-  }
-
-  .card p {
-    margin: 0;
-    color: var(--gray-6);
-    font-size: var(--font-size-1);
-    line-height: 1.65;
-  }
-
   .gate-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -236,20 +193,6 @@ pageSheet.replaceSync(`
     flex-wrap: wrap;
     gap: 10px;
     margin-top: var(--size-8);
-  }
-
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--size-10);
-    padding: 0 14px;
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    background: var(--gray-1);
-    color: var(--gray-10);
-    text-decoration: none;
-    font-size: var(--font-size-1);
-    font-weight: var(--font-weight-7);
   }
 
   @media (max-width: 900px) {
@@ -292,7 +235,7 @@ content -> adapter-vite -> app`;
 export class ArchitecturePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, pageSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageSheet];
 
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
@@ -302,9 +245,9 @@ export class ArchitecturePage extends DsdElement {
           <section class="hero">
             <div>
               <div class="eyebrow">
-                <span class="chip current">ADR-0050</span>
-                <span class="chip current">{OPENELEMENT_VERSION}</span>
-                <span class="chip pass">graph gate passing</span>
+                <span class="badge badge-primary">ADR-0050</span>
+                <span class="badge badge-primary">{OPENELEMENT_VERSION}</span>
+                <span class="badge badge-success">graph gate passing</span>
               </div>
               <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
               <p class="lede">
@@ -319,26 +262,26 @@ export class ArchitecturePage extends DsdElement {
                 <strong>package graph sketch</strong>
                 <span>source imports declared per package</span>
               </div>
-              <pre><code>{`signals ────────────────────────── (leaf)
-style-sheet ────────────────────── (leaf)
-protocols ──────────────────────── (leaf)
-rpc ────────────────────────────── (leaf)
-router ─────────────────────────── (leaf)
-create ─────────────────────────── (leaf)
+              <pre><code>{`signals ──────────────────────────────────────────────────── (leaf)
+style-sheet ──────────────────────────────────────────── (leaf)
+protocols ────────────────────────────────────────────────── (leaf)
+rpc ────────────────────────────────────────────────────────────── (leaf)
+router ──────────────────────────────────────────────────────── (leaf)
+create ──────────────────────────────────────────────────────── (leaf)
 
-core ──────────▶ signals, style-sheet
-runtime ───────▶ core, signals, style-sheet
-cem ───────────▶ core
-compat-check ──▶ cem, core
-content ───────▶ protocols
-i18n ──────────▶ protocols
-adapter-lit ───▶ core
-adapter-react ─▶ core
-adapter-vanilla▶ core
-adapter-vite ──▶ cem, compat-check, content, core, protocols, style-sheet
-ui ────────────▶ core, router, signals, style-sheet
-app ───────────▶ adapter-vite, content, core, i18n
-hub ───────────▶ compat-check, core`}</code></pre>
+core ────────────────────? signals, style-sheet
+runtime ──────────────? core, signals, style-sheet
+cem ──────────────────────? core
+compat-check ────? cem, core
+content ──────────────? protocols
+i18n ────────────────────? protocols
+adapter-lit ────? core
+adapter-react ──? core
+adapter-vanilla? core
+adapter-vite ────? cem, compat-check, content, core, protocols, style-sheet
+ui ────────────────────────? core, router, signals, style-sheet
+app ──────────────────────? adapter-vite, content, core, i18n
+hub ──────────────────────? compat-check, core`}</code></pre>
             </div>
           </section>
 
@@ -378,15 +321,15 @@ hub ───────────▶ compat-check, core`}</code></pre>
               </p>
             </div>
             <div class="cards">
-              <div class="card">
+              <div class="card card-bordered p-4">
                 <h3>{isZh ? '为什么需要 protocols？' : 'Why protocols?'}</h3>
                 <p>Content, i18n, ssg, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
               </div>
-              <div class="card">
+              <div class="card card-bordered p-4">
                 <h3>{isZh ? '为什么需要 runtime？' : 'Why runtime?'}</h3>
                 <p>Generated components need a single authoring import. Runtime provides that without turning core into an all-purpose DX barrel.</p>
               </div>
-              <div class="card">
+              <div class="card card-bordered p-4">
                 <h3>{isZh ? '为什么需要 signals facade？' : 'Why signals facade?'}</h3>
                 <p>openElement uses alien-signals as the engine. The public openElement contract is .value, subscribe(), and DSD integration semantics.</p>
               </div>
@@ -414,9 +357,9 @@ hub ───────────▶ compat-check, core`}</code></pre>
           </section>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/roadmap">Roadmap truth {'->'}</a>
-            <a class="nav-link" href="/changelog">Changelog {'->'}</a>
-            <a class="nav-link" href="/guide/getting-started">Start building {'->'}</a>
+            <a class="btn btn-ghost" href="/roadmap">Roadmap truth {'->'}</a>
+            <a class="btn btn-ghost" href="/changelog">Changelog {'->'}</a>
+            <a class="btn btn-ghost" href="/guide/getting-started">Start building {'->'}</a>
           </nav>
         </div>
       

@@ -2,7 +2,7 @@ export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 }
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 import '../../islands/reactive-showcase.js';
 
@@ -38,7 +38,7 @@ routeSheet.replaceSync(`
 export class DsdGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -129,9 +129,9 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href={`/${loc}/architecture/architecture`} class="nav-link">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
-            <a href={`/${loc}/architecture/islands`} class="nav-link">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
-            <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
+            <a href={`/${loc}/architecture/architecture`} class="btn btn-ghost">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
+            <a href={`/${loc}/architecture/islands`} class="btn btn-ghost">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
+            <a href={`/${loc}/architecture/standards-registry`} class="btn btn-ghost">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
       
@@ -226,9 +226,9 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href={`/${loc}/architecture/architecture`} class="nav-link">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
-            <a href={`/${loc}/architecture/islands`} class="nav-link">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
-            <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
+            <a href={`/${loc}/architecture/architecture`} class="btn btn-ghost">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
+            <a href={`/${loc}/architecture/islands`} class="btn btn-ghost">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
+            <a href={`/${loc}/architecture/standards-registry`} class="btn btn-ghost">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
       

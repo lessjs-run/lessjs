@@ -17,7 +17,7 @@ import { defineCustomElement, DsdElement } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signals';
 import { StyleSheet } from '@openelement/style-sheet';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 export const tagName = 'reactive-showcase';
 export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });
@@ -87,7 +87,7 @@ const FRAMEWORKS = [
 ];
 
 export default class ReactiveShowcase extends DsdElement {
-  static override styles = [openPropsTokenSheet, showcaseStyles];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, showcaseStyles];
 
   #count = signal(0);
   #isDark = signal(false);

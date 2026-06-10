@@ -1,12 +1,12 @@
 export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { DsdElement } from '@openelement/core';
-import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 import '@openelement/ui\/open-callout';
 
 export class IslandsSsrPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageStylesSheet];
+  static override styles = [daisyClassSheet, openPropsTokenSheet, pageStylesSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
@@ -142,8 +142,8 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
           </open-callout>
 
           <div class="nav-row">
-            <a href="/guide/routing-and-data" class="nav-link">&larr; 路由与数据</a>
-            <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
+            <a href="/guide/routing-and-data" class="btn btn-ghost">&larr; 路由与数据</a>
+            <a href="/guide/deployment" class="btn btn-ghost">部署 &rarr;</a>
           </div>
         </div>
       
@@ -284,8 +284,8 @@ customElements.define('my-counter', Counter);`}</code></pre></open-code-block>
           </open-callout>
 
           <div class="nav-row">
-            <a href="/guide/routing-and-data" class="nav-link">&larr; Routing & Data</a>
-            <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
+            <a href="/guide/routing-and-data" class="btn btn-ghost">&larr; Routing & Data</a>
+            <a href="/guide/deployment" class="btn btn-ghost">Deployment &rarr;</a>
           </div>
         </div>
       

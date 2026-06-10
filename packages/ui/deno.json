@@ -13,15 +13,18 @@
     "./open-dialog": "./src/open-dialog.tsx",
     "./open-callout": "./src/open-callout.tsx",
     "./open-step-card": "./src/open-step-card.tsx",
+    "./open-dropdown": "./src/open-dropdown.tsx",
+    "./open-modal": "./src/open-modal.tsx",
+    "./open-tabs": "./src/open-tabs.tsx",
+    "./daisy-classes": "./src/daisy-classes.ts",
+    "./daisy-classes.js": "./src/daisy-classes.ts",
     "./open-props-tokens": "./src/open-props-tokens.ts",
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
     "@openelement/core": "jsr:@openelement/core@^0.37.2",
     "@openelement/signals": "jsr:@openelement/signals@^0.37.2",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.37.2",
-    "@openelement/router": "jsr:@openelement/router@^0.37.2",
-    "@openelement/router/client-router": "jsr:@openelement/router@^0.37.2/client-router"
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.37.2"
   },
   "publish": {
     "include": [

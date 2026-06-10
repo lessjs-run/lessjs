@@ -13,7 +13,7 @@
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
-import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
+import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '@openelement/ssg';
 
 // ─── Test fixtures ─────────────────────────────────────────────
 
