@@ -1,0 +1,187 @@
+/**
+ * Wait until JSR package-level metadata exposes the current release version.
+ *
+ * Deno's fresh JSR resolver reads `https://jsr.io/<pkg>/meta.json` before it
+ * can resolve an exact version. JSR may expose `<version>_meta.json` before
+ * package-level `meta.json` is updated, so post-publish consumer smoke must
+ * wait for the package-level metadata rather than sleeping for a fixed delay.
+ */
+
+import { RELEASE_PACKAGE_ORDER } from './package-release-order.ts';
+
+interface Options {
+  version: string;
+  timeoutMs: number;
+  intervalMs: number;
+}
+
+interface PackageMetadataState {
+  name: string;
+  versionVisible: boolean;
+  latestMatches: boolean;
+  latest: string | null;
+  status: number | null;
+  error?: string;
+}
+
+const DEFAULT_TIMEOUT_MS = 120 * 60 * 1000;
+const DEFAULT_INTERVAL_MS = 15_000;
+const METADATA_REQUEST_TIMEOUT_MS = 10_000;
+
+function parseArgs(args: string[]): Partial<Options> {
+  const options: Partial<Options> = {};
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--version') {
+      options.version = args[++i];
+    } else if (arg.startsWith('--version=')) {
+      options.version = arg.slice('--version='.length);
+    } else if (arg === '--timeout-minutes') {
+      options.timeoutMs = Number(args[++i]) * 60 * 1000;
+    } else if (arg.startsWith('--timeout-minutes=')) {
+      options.timeoutMs = Number(arg.slice('--timeout-minutes='.length)) * 60 * 1000;
+    } else if (arg === '--interval-seconds') {
+      options.intervalMs = Number(args[++i]) * 1000;
+    } else if (arg.startsWith('--interval-seconds=')) {
+      options.intervalMs = Number(arg.slice('--interval-seconds='.length)) * 1000;
+    } else {
+      throw new Error(`Unknown argument: ${arg}`);
+    }
+  }
+  return options;
+}
+
+async function readWorkspaceVersion(): Promise<string> {
+  const text = await Deno.readTextFile('packages/create/deno.json');
+  const json = JSON.parse(text);
+  if (!json.version || typeof json.version !== 'string') {
+    throw new Error('packages/create/deno.json does not contain a string version.');
+  }
+  return json.version;
+}
+
+function assertPositiveNumber(value: number, name: string): void {
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`${name} must be a positive number.`);
+  }
+}
+
+async function buildOptions(): Promise<Options> {
+  const parsed = parseArgs(Deno.args);
+  const timeoutMs = parsed.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const intervalMs = parsed.intervalMs ?? DEFAULT_INTERVAL_MS;
+  assertPositiveNumber(timeoutMs, '--timeout-minutes');
+  assertPositiveNumber(intervalMs, '--interval-seconds');
+  return {
+    version: parsed.version ?? await readWorkspaceVersion(),
+    timeoutMs,
+    intervalMs,
+  };
+}
+
+async function fetchPackageMetadataState(
+  name: string,
+  version: string,
+): Promise<PackageMetadataState> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), METADATA_REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(`https://jsr.io/${name}/meta.json`, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      return {
+        name,
+        versionVisible: false,
+        latestMatches: false,
+        latest: null,
+        status: response.status,
+      };
+    }
+    const metadata = await response.json();
+    const versionVisible = Boolean(metadata?.versions?.[version]);
+    const latest = typeof metadata?.latest === 'string' ? metadata.latest : null;
+    return {
+      name,
+      versionVisible,
+      latestMatches: latest === version,
+      latest,
+      status: response.status,
+    };
+  } catch (error) {
+    return {
+      name,
+      versionVisible: false,
+      latestMatches: false,
+      latest: null,
+      status: null,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function summarizeMissing(states: PackageMetadataState[]): string {
+  return states
+    .filter((state) => !state.versionVisible || !state.latestMatches)
+    .map((state) => {
+      const details = [
+        state.versionVisible ? 'version=ok' : 'version=missing',
+        state.latestMatches ? 'latest=ok' : `latest=${state.latest ?? 'missing'}`,
+        state.status === null ? 'status=error' : `status=${state.status}`,
+      ];
+      if (state.error) details.push(`error=${state.error}`);
+      return `${state.name} (${details.join(', ')})`;
+    })
+    .join('; ');
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function main(): Promise<void> {
+  const options = await buildOptions();
+  const packageNames = RELEASE_PACKAGE_ORDER.map((step) => step.pkg);
+  const deadline = Date.now() + options.timeoutMs;
+  let attempt = 1;
+
+  console.log(
+    `[jsr-meta] Waiting for ${packageNames.length} packages to expose ${options.version} ` +
+      `in package-level JSR metadata.`,
+  );
+
+  while (true) {
+    const states = await Promise.all(
+      packageNames.map((name) => fetchPackageMetadataState(name, options.version)),
+    );
+    const ready = states.every((state) => state.versionVisible && state.latestMatches);
+    if (ready) {
+      console.log(
+        `[jsr-meta] Ready: all ${packageNames.length} packages expose ${options.version} ` +
+          'and report it as latest.',
+      );
+      return;
+    }
+
+    const missing = summarizeMissing(states);
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) {
+      throw new Error(
+        `[jsr-meta] Timed out waiting for package metadata after ${
+          options.timeoutMs / 60_000
+        } minutes. Missing: ${missing}`,
+      );
+    }
+
+    console.log(
+      `[jsr-meta] Attempt ${attempt}: metadata not ready. Missing: ${missing}`,
+    );
+    await sleep(Math.min(options.intervalMs, remainingMs));
+    attempt++;
+  }
+}
+
+await main();

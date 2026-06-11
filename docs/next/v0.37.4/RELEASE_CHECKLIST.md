@@ -20,5 +20,7 @@
 - [ ] Publish recovery uses the live-metadata watcher path: 20-minute
       per-package window, provenance retained, hung `deno publish` stopped only
       after JSR reports the immutable version.
+- [ ] JSR package-level `meta.json` exposes `0.37.4` and `latest: "0.37.4"`
+      for all 20 packages before consumer smoke starts.
 - [ ] Post-publish consumer smoke passes against the freshly published
       `0.37.4` package line.

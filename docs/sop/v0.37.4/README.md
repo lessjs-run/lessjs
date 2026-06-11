@@ -98,8 +98,10 @@ packages — within a single bounded version.
 27. [ ] Record evidence in `docs/next/v0.37.4/`.
 28. [ ] Close publish recovery only after JSR reports 20/20 packages at
         `0.37.4` and post-publish consumer smoke passes. The recovery workflow
-        must retain provenance, keep the 20-minute package window, and rely on
-        live JSR metadata before stopping any hung `deno publish` process.
+        must retain provenance, keep the 20-minute package window, rely on live
+        JSR version metadata before stopping any hung `deno publish` process,
+        and wait for package-level `meta.json` propagation before fresh-consumer
+        smoke starts.
 
 ## Verification
 
@@ -110,7 +112,8 @@ packages — within a single bounded version.
 - ssg/router/protocols test coverage meets targets.
 - CSS tokens work in plain HTML, DsdElement light DOM, and DsdElement shadow DOM (DSD SSR verified).
 - All existing gates pass.
-- Publish recovery reaches live JSR 20/20 and post-publish consumer smoke passes.
+- Publish recovery reaches live JSR 20/20 at package-level `meta.json` and
+  post-publish consumer smoke passes.
 
 ## Non-Goals
 

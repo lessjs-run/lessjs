@@ -33,3 +33,21 @@ imports map as `jsr:` entries.
 - Always verify: `grep -rn "from '@openelement/PKG" packages/THIS/src/` before adding jsr deps
 - Workspace-level `deno.json` import map provides local resolution; `jsr:` entries are
   only needed for published packages
+
+## Metadata Propagation Gate
+
+JSR can expose `https://jsr.io/@openelement/<pkg>/<version>_meta.json` before
+`https://jsr.io/@openelement/<pkg>/meta.json` lists that version. The version
+metadata proves that JSR accepted the immutable package, but Deno fresh
+consumers still resolve through package-level `meta.json`.
+
+Post-publish smoke must therefore wait for package-level metadata before
+running `deno run -A jsr:@openelement/create@<version>`:
+
+```sh
+deno run --allow-read --allow-net tools/wait-jsr-release-metadata.ts
+```
+
+The release may be called closed only after all workspace packages list the
+release in package-level metadata, report it as `latest`, and consumer smoke
+passes.
