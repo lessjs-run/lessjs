@@ -198,14 +198,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                package line is v0.37.2: SSR / ISR Server Runtime Contract. The active
-                execution package is v0.37.2.
+                package line is v0.37.4: Hygiene + Pure CSS UI + Architecture
+                Decoupling. Publish recovery remains open until JSR reaches 20/20.
               </p>
             </div>
             <aside class="card card-bordered p-4">
               <span class='badge badge-outline'>current line</span>
-              <h2>v0.37.2 ISR Runtime</h2>
-              <p>20 packages aligned, DsdElement light DOM opt-in proven, and ISR runtime contract recorded.</p>
+              <h2>v0.37.4 Publish Recovery</h2>
+              <p>Implementation, tag, and GitHub release exist; JSR publish recovery must finish before release closure.</p>
             </aside>
           </section>
 
@@ -283,21 +283,21 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.37.2</div>
               <div><h3>SSR / ISR Server Runtime Contract</h3><p>Define request-time SSR/ISR framework boundaries, cache behavior, server adapter evidence, and zero-JS defaults.</p></div>
-              <span class="badge badge-primary status">Active</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.3</div>
               <div><h3>Data / Database Boundary</h3><p>Specify data/database adapter contracts and recipes without adopting a built-in ORM, auth platform, or migration system.</p></div>
-              <span class="badge badge-warning status">Planned</span>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.4</div>
-              <div><h3>Pure CSS UI Foundation</h3><p>Validate a license-reviewed CSS-first UI layer with tokens, themes, class contracts, and no DsdElement behavior coupling.</p></div>
-              <span class="badge badge-warning status">Planned</span>
+              <div><h3>Hygiene + Pure CSS UI + Architecture Decoupling</h3><p>Close audit hygiene, SSG ownership, ui/router decoupling, dsd-hydration dedup, CSS UI foundation, and test supplementation.</p></div>
+              <span class="badge badge-primary status">Recovery</span>
             </div>
             <div class="phase">
               <div class="version">v0.37.5</div>
-              <div><h3>Protocol Ports + Adapter Map</h3><p>Define small renderer, server, build, data, component-adapter, and cache/ISR ports before replacement claims.</p></div>
+              <div><h3>Protocol Ports + DaisyUI Coverage Completion</h3><p>Complete interactive UI coverage and move public protocol types into @openelement/protocols with conformance tests.</p></div>
               <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">

@@ -16,7 +16,7 @@ interface PackageInfo {
 }
 
 const COMMANDS = new Set(['typecheck', 'publish', 'publish:dry-run']);
-const JSR_PUBLISH_TIMEOUT_MS = 20 * 60 * 1000;
+const JSR_PUBLISH_TIMEOUT_MS = 5 * 60 * 1000;
 const JSR_PROPAGATION_ATTEMPTS = 24;
 const JSR_PROPAGATION_DELAY_MS = 5_000;
 const JSR_METADATA_TIMEOUT_MS = 10_000;
@@ -342,6 +342,10 @@ function printJsrRecoveryPlan(packages: PackageInfo[]): void {
   console.log(
     '[publish] If a publish command times out or exits non-zero after JSR accepts ' +
       'the immutable version, the script rechecks JSR metadata before failing.',
+  );
+  console.log(
+    `[publish] Per-package publish timeout: ${JSR_PUBLISH_TIMEOUT_MS / 60_000} minutes. ` +
+      'This keeps recovery moving when deno publish hangs after JSR accepts a version.',
   );
   console.log(
     `[publish] Candidate order: ${

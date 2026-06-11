@@ -16,3 +16,6 @@
 - [ ] E2E gateway passes (`deno task test:e2e`).
 - [ ] Changelog updated.
 - [ ] Release note written.
+- [ ] JSR publish recovery reaches 20/20 packages at `0.37.4`.
+- [ ] Post-publish consumer smoke passes against the freshly published
+      `0.37.4` package line.

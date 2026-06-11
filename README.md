@@ -70,9 +70,10 @@ v0.37.4 Hygiene + CSS UI Foundation) is intentionally layered:
 
 ## Packages
 
-All 20 packages are currently aligned together at **v0.37.4** under
-[`@openelement`](https://jsr.io/@openelement). The active execution target is
-v0.37.4 (Hygiene + Pure CSS UI + Architecture Decoupling).
+All 20 workspace packages are currently aligned together at **v0.37.4** under
+[`@openelement`](https://jsr.io/@openelement). The active release-truth target is
+v0.37.4 JSR publish recovery; v0.37.5 protocol/UI work starts after release
+closure.
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -97,12 +98,14 @@ v0.37.4 (Hygiene + Pure CSS UI + Architecture Decoupling).
 
 ## Current Line
 
-v0.37.4 is the current package line. It delivers code-quality hygiene
+v0.37.4 is the current workspace package line. It delivers code-quality hygiene
 (authoring.ts fix, logger unification, deprecated shell removal),
 architecture decoupling (ui/router separation, dsd-hydration consolidation),
 a Pure CSS UI Foundation (forked daisyUI class set as DSD-compatible
 CSSStyleSheet with Open Props token engine, 3 interactive thin-shell
 components), and test supplementation (ssg/router/protocols +113 tests).
+JSR publish recovery remains open until all 20 packages are visible at
+`0.37.4` and post-publish consumer smoke passes.
 
 v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
 v0.37.0 resets product doctrine and rendering contracts before implementation
