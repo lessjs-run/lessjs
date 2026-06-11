@@ -98,7 +98,7 @@ packages — within a single bounded version.
 27. [ ] Record evidence in `docs/next/v0.37.4/`.
 28. [ ] Close publish recovery only after JSR reports 20/20 packages at
         `0.37.4` and post-publish consumer smoke passes. The recovery workflow
-        must retain provenance, keep the 20-minute package window, rely on live
+        must retain provenance, keep the 45-minute package window, rely on live
         JSR version metadata before stopping any hung `deno publish` process,
         and wait for package-level `meta.json` propagation before fresh-consumer
         smoke starts.

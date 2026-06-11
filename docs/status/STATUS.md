@@ -14,15 +14,16 @@ post-publish consumer smoke passes.
 
 Live registry state on 2026-06-11: `@openelement/rpc`,
 `@openelement/protocols`, and `@openelement/router` are visible on JSR at
-`0.37.4`; the remaining 17 packages still need publish recovery. The first
-recovery patch failed because a 5-minute per-package timeout interrupted
-`@openelement/style-sheet` before JSR accepted the immutable version. The
-current recovery patch restores a 20-minute package window, keeps provenance
-enabled, polls live JSR version metadata during `deno publish`, stops the hung
-publish process after the immutable version becomes visible, extends the publish
-job to 360 minutes for the remaining 17-package recovery path, and makes
-post-publish consumer smoke wait for package-level `meta.json` propagation
-before invoking a fresh `jsr:@openelement/create@0.37.4` consumer.
+`0.37.4`; publish recovery has progressed to 15/20 packages. The first recovery
+patch failed because a 5-minute per-package timeout interrupted
+`@openelement/style-sheet` before JSR accepted the immutable version; the next
+attempt proved the 20-minute window still fails for slower packages such as
+`@openelement/content`. The current recovery patch uses a 45-minute package
+window, keeps provenance enabled, polls live JSR version metadata during
+`deno publish`, stops the hung publish process after the immutable version
+becomes visible, extends the publish job to 360 minutes for the recovery path,
+and makes post-publish consumer smoke wait for package-level `meta.json`
+propagation before invoking a fresh `jsr:@openelement/create@0.37.4` consumer.
 
 v0.37.4 delivered the 2026-06-10 audit hygiene fixes, ADR-0094 Core Type
 Consolidation, adapter-vite deprecated shell removal, SSG ownership cleanup,

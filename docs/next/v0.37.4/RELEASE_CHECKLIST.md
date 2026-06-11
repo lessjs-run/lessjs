@@ -17,7 +17,7 @@
 - [ ] Changelog updated.
 - [ ] Release note written.
 - [ ] JSR publish recovery reaches 20/20 packages at `0.37.4`.
-- [ ] Publish recovery uses the live-metadata watcher path: 20-minute
+- [ ] Publish recovery uses the live-metadata watcher path: 45-minute
       per-package window, provenance retained, hung `deno publish` stopped only
       after JSR reports the immutable version.
 - [ ] JSR package-level `meta.json` exposes `0.37.4` and `latest: "0.37.4"`
