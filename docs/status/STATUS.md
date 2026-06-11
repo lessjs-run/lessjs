@@ -14,9 +14,13 @@ post-publish consumer smoke passes.
 
 Live registry state on 2026-06-11: `@openelement/rpc`,
 `@openelement/protocols`, and `@openelement/router` are visible on JSR at
-`0.37.4`; the remaining 17 packages still need publish recovery. The publish
-workflow has been updated to keep moving when `deno publish` hangs after JSR
-accepts an immutable version.
+`0.37.4`; the remaining 17 packages still need publish recovery. The first
+recovery patch failed because a 5-minute per-package timeout interrupted
+`@openelement/style-sheet` before JSR accepted the immutable version. The
+current recovery patch restores a 20-minute package window, keeps provenance
+enabled, polls live JSR metadata during `deno publish`, stops the hung publish
+process after the version becomes visible, and extends the publish job to 360
+minutes for the remaining 17-package recovery path.
 
 v0.37.4 delivered the 2026-06-10 audit hygiene fixes, ADR-0094 Core Type
 Consolidation, adapter-vite deprecated shell removal, SSG ownership cleanup,
@@ -28,7 +32,8 @@ evidence recorded for the release: 1600 tests passed before publish recovery.
 v0.37.3 (Data / Database Boundary) is done as a validation-train stop:
 ADR-0095 accepted and implemented with MemoryDataAdapter baseline,
 FileDataAdapter deferred to recipe, and the 2026-06-10 JSR publish hotfix
-closed for the prior package line.
+closed for the prior package line. The current v0.37.4 publish recovery remains
+open until the live registry and consumer-smoke evidence agree.
 
 The next implementation line is v0.37.5, but publish recovery remains the P0
 release-truth task before v0.37.5 can be called in progress beyond planning.

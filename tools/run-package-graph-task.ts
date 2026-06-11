@@ -16,7 +16,8 @@ interface PackageInfo {
 }
 
 const COMMANDS = new Set(['typecheck', 'publish', 'publish:dry-run']);
-const JSR_PUBLISH_TIMEOUT_MS = 5 * 60 * 1000;
+const JSR_PUBLISH_TIMEOUT_MS = 20 * 60 * 1000;
+const JSR_PUBLISH_POLL_DELAY_MS = 30_000;
 const JSR_PROPAGATION_ATTEMPTS = 24;
 const JSR_PROPAGATION_DELAY_MS = 5_000;
 const JSR_METADATA_TIMEOUT_MS = 10_000;
@@ -166,15 +167,65 @@ async function runCommand(
   }
 }
 
-async function runCommandWithTimeout(
+async function runPublishCommand(
+  pkg: PackageInfo,
   command: string,
   args: string[],
   cwd: string | undefined,
   timeoutMs: number,
-): Promise<{ success: boolean; code: number; timedOut: boolean }> {
+): Promise<{
+  success: boolean;
+  code: number;
+  timedOut: boolean;
+  visibleOnJsr: boolean;
+  stoppedAfterJsrVisible: boolean;
+}> {
   console.log(`$ ${[command, ...args].join(' ')}${cwd ? `  # cwd=${cwd}` : ''}`);
   const controller = new AbortController();
   let timedOut = false;
+  let visibleOnJsr = false;
+  let stopped = false;
+  let stopWatcher!: () => void;
+  const stopWatcherPromise = new Promise<void>((resolve) => {
+    stopWatcher = resolve;
+  });
+
+  async function sleepOrStop(ms: number): Promise<void> {
+    await Promise.race([sleep(ms), stopWatcherPromise]);
+  }
+
+  const watcher = (async () => {
+    let attempt = 1;
+    while (!stopped && !timedOut && !visibleOnJsr) {
+      await sleepOrStop(JSR_PUBLISH_POLL_DELAY_MS);
+      if (stopped || timedOut || visibleOnJsr) break;
+
+      try {
+        if (await jsrVersionExists(pkg.name, pkg.version)) {
+          visibleOnJsr = true;
+          console.warn(
+            `[publish] ${pkg.name}@${pkg.version}: version is visible on JSR while ` +
+              'deno publish is still running; stopping the hung publish process.',
+          );
+          controller.abort();
+          return;
+        }
+      } catch (err) {
+        console.warn(
+          `[publish] ${pkg.name}@${pkg.version}: live JSR metadata check ${attempt} failed: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        );
+      }
+
+      console.log(
+        `[publish] ${pkg.name}@${pkg.version}: publish still running; ` +
+          `JSR metadata not visible yet (${attempt}).`,
+      );
+      attempt++;
+    }
+  })();
+
   const timeoutId = setTimeout(() => {
     timedOut = true;
     controller.abort();
@@ -190,14 +241,38 @@ async function runCommandWithTimeout(
       signal: controller.signal,
     });
     const status = await proc.spawn().status;
-    return { success: status.success, code: status.code, timedOut };
+    return {
+      success: status.success,
+      code: status.code,
+      timedOut,
+      visibleOnJsr,
+      stoppedAfterJsrVisible: false,
+    };
   } catch (err) {
     if (timedOut && err instanceof DOMException && err.name === 'AbortError') {
-      return { success: false, code: 1, timedOut: true };
+      return {
+        success: false,
+        code: 1,
+        timedOut: true,
+        visibleOnJsr,
+        stoppedAfterJsrVisible: false,
+      };
+    }
+    if (visibleOnJsr && err instanceof DOMException && err.name === 'AbortError') {
+      return {
+        success: false,
+        code: 1,
+        timedOut: false,
+        visibleOnJsr: true,
+        stoppedAfterJsrVisible: true,
+      };
     }
     throw err;
   } finally {
+    stopped = true;
+    stopWatcher();
     clearTimeout(timeoutId);
+    await watcher;
   }
 }
 
@@ -301,21 +376,29 @@ async function publishPackage(
   }
 
   console.log(`[publish] ${pkg.name}@${pkg.version}: publishing.`);
-  const status = await runCommandWithTimeout(
+  const status = await runPublishCommand(
+    pkg,
     'deno',
     [...args, '--no-check'],
     pkg.dir,
     JSR_PUBLISH_TIMEOUT_MS,
   );
 
-  if (status.success) {
+  if (status.success || status.visibleOnJsr) {
     if (!(await waitForJsrVersion(pkg))) {
       throw new Error(
         `${pkg.name}@${pkg.version} publish finished but JSR metadata never appeared.`,
       );
     }
+    if (status.stoppedAfterJsrVisible) {
+      console.warn(
+        `[publish] ${pkg.name}@${pkg.version}: recovered after JSR became visible and ` +
+          'the hung deno publish process was stopped.',
+      );
+      return 'recovered';
+    }
     console.log(`[publish] ${pkg.name}@${pkg.version}: published and visible on JSR.`);
-    return 'published';
+    return status.success ? 'published' : 'recovered';
   }
 
   const reason = status.timedOut
@@ -345,7 +428,8 @@ function printJsrRecoveryPlan(packages: PackageInfo[]): void {
   );
   console.log(
     `[publish] Per-package publish timeout: ${JSR_PUBLISH_TIMEOUT_MS / 60_000} minutes. ` +
-      'This keeps recovery moving when deno publish hangs after JSR accepts a version.',
+      'During the command, CI also polls JSR and stops a hung publish process as soon ' +
+      'as the immutable version becomes visible.',
   );
   console.log(
     `[publish] Candidate order: ${

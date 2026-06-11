@@ -199,13 +199,13 @@ export class RoadmapPage extends DsdElement {
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
                 package line is v0.37.4: Hygiene + Pure CSS UI + Architecture
-                Decoupling. Publish recovery remains open until JSR reaches 20/20.
+                Decoupling. Publish recovery remains open until JSR reaches 20/20 and consumer smoke passes.
               </p>
             </div>
             <aside class="card card-bordered p-4">
               <span class='badge badge-outline'>current line</span>
               <h2>v0.37.4 Publish Recovery</h2>
-              <p>Implementation, tag, and GitHub release exist; JSR publish recovery must finish before release closure.</p>
+              <p>Implementation, tag, and GitHub release exist; publish recovery now uses a 20-minute provenance-preserving JSR metadata watcher before release closure.</p>
             </aside>
           </section>
 

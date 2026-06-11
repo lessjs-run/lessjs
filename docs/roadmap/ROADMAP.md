@@ -198,6 +198,12 @@ Release-truth note: v0.37.4 implementation, tag, and GitHub release exist, but
 the release remains in publish recovery until all 20 packages are visible on JSR
 at `0.37.4` and post-publish consumer smoke passes.
 
+Recovery implementation note: the failed 2026-06-11 recovery attempt proved a
+5-minute package timeout is too short for JSR's current publish behavior. The
+active recovery path restores a 20-minute per-package window, preserves
+provenance, polls JSR while `deno publish` is running, and stops a hung publish
+process as soon as the immutable version is visible.
+
 ## v0.37.5 - Protocol Ports + DaisyUI Coverage Completion
 
 Complete daisyUI interactive component coverage and migrate protocol types.
