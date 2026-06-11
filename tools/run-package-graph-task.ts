@@ -18,6 +18,7 @@ interface PackageInfo {
 const COMMANDS = new Set(['typecheck', 'publish', 'publish:dry-run']);
 const JSR_PUBLISH_TIMEOUT_MS = 20 * 60 * 1000;
 const JSR_PUBLISH_POLL_DELAY_MS = 30_000;
+const JSR_PUBLISH_FORCE_KILL_DELAY_MS = 5_000;
 const JSR_PROPAGATION_ATTEMPTS = 24;
 const JSR_PROPAGATION_DELAY_MS = 5_000;
 const JSR_METADATA_TIMEOUT_MS = 10_000;
@@ -185,10 +186,43 @@ async function runPublishCommand(
   let timedOut = false;
   let visibleOnJsr = false;
   let stopped = false;
+  let stopRequested = false;
+  let child: Deno.ChildProcess | null = null;
+  let forceKillTimeoutId: number | undefined;
   let stopWatcher!: () => void;
   const stopWatcherPromise = new Promise<void>((resolve) => {
     stopWatcher = resolve;
   });
+
+  function sendSignal(signal: Deno.Signal): void {
+    if (!child || stopped) return;
+    try {
+      child.kill(signal);
+    } catch (err) {
+      if (!stopped) {
+        console.warn(
+          `[publish] ${pkg.name}@${pkg.version}: unable to send ${signal} to ` +
+            `deno publish: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
+  }
+
+  function stopPublishProcess(reason: string): void {
+    if (stopRequested) return;
+    stopRequested = true;
+    controller.abort();
+    sendSignal('SIGTERM');
+    forceKillTimeoutId = setTimeout(() => {
+      if (!stopped) {
+        console.warn(
+          `[publish] ${pkg.name}@${pkg.version}: deno publish did not stop after ` +
+            `${JSR_PUBLISH_FORCE_KILL_DELAY_MS / 1000}s (${reason}); sending SIGKILL.`,
+        );
+        sendSignal('SIGKILL');
+      }
+    }, JSR_PUBLISH_FORCE_KILL_DELAY_MS);
+  }
 
   async function sleepOrStop(ms: number): Promise<void> {
     await Promise.race([sleep(ms), stopWatcherPromise]);
@@ -207,7 +241,7 @@ async function runPublishCommand(
             `[publish] ${pkg.name}@${pkg.version}: version is visible on JSR while ` +
               'deno publish is still running; stopping the hung publish process.',
           );
-          controller.abort();
+          stopPublishProcess('JSR version metadata is visible');
           return;
         }
       } catch (err) {
@@ -228,7 +262,7 @@ async function runPublishCommand(
 
   const timeoutId = setTimeout(() => {
     timedOut = true;
-    controller.abort();
+    stopPublishProcess(`timeout after ${timeoutMs / 60_000} minutes`);
   }, timeoutMs);
 
   try {
@@ -240,7 +274,8 @@ async function runPublishCommand(
       stderr: 'inherit',
       signal: controller.signal,
     });
-    const status = await proc.spawn().status;
+    child = proc.spawn();
+    const status = await child.status;
     return {
       success: status.success,
       code: status.code,
@@ -272,6 +307,7 @@ async function runPublishCommand(
     stopped = true;
     stopWatcher();
     clearTimeout(timeoutId);
+    if (forceKillTimeoutId !== undefined) clearTimeout(forceKillTimeoutId);
     await watcher;
   }
 }
@@ -428,7 +464,7 @@ function printJsrRecoveryPlan(packages: PackageInfo[]): void {
   );
   console.log(
     `[publish] Per-package publish timeout: ${JSR_PUBLISH_TIMEOUT_MS / 60_000} minutes. ` +
-      'During the command, CI also polls JSR and stops a hung publish process as soon ' +
+      'During the command, CI also polls JSR and kills a hung publish process as soon ' +
       'as the immutable version becomes visible.',
   );
   console.log(
