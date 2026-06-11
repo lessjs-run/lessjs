@@ -64,7 +64,7 @@ jobs:
         run: >
           deno run --allow-read --allow-net
           tools/wait-jsr-release-metadata.ts
-          --timeout-minutes 120
+          --timeout-minutes 300
           --interval-seconds 15
       - name: Generate consumer project from JSR
         shell: bash

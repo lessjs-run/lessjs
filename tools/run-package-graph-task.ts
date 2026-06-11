@@ -388,6 +388,7 @@ async function waitForPackageLevelMetadata(pkg: PackageInfo): Promise<void> {
     intervalMs: JSR_PACKAGE_METADATA_INTERVAL_MS,
     requireLatest: true,
     logPrefix: 'publish-meta',
+    bypassCdnCache: true,
   });
 }
 
@@ -400,6 +401,7 @@ async function waitForDependencyPackageMetadata(pkg: PackageInfo): Promise<void>
     intervalMs: JSR_PACKAGE_METADATA_INTERVAL_MS,
     requireLatest: false,
     logPrefix: 'publish-deps',
+    bypassCdnCache: true,
   });
 }
 
@@ -503,7 +505,9 @@ function printJsrRecoveryPlan(packages: PackageInfo[]): void {
     `[publish] Package-level metadata timeout: ${
       JSR_PACKAGE_METADATA_TIMEOUT_MS / 60_000
     } minutes. ` +
-      'Each published package waits for package-level JSR metadata before dependents publish.',
+      'Each published package waits for cache-busted package-level JSR metadata ' +
+      'before dependents publish; the post-publish consumer smoke gate still ' +
+      'waits for the normal uncached consumer path.',
   );
   console.log(
     `[publish] Candidate order: ${

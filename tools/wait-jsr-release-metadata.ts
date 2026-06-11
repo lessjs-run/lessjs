@@ -13,6 +13,7 @@ interface Options {
   version: string;
   timeoutMs: number;
   intervalMs: number;
+  bypassCdnCache: boolean;
 }
 
 export interface PackageMetadataState {
@@ -31,6 +32,7 @@ export interface WaitForJsrPackageMetadataOptions {
   intervalMs: number;
   requireLatest?: boolean;
   logPrefix?: string;
+  bypassCdnCache?: boolean;
 }
 
 const DEFAULT_TIMEOUT_MS = 120 * 60 * 1000;
@@ -53,6 +55,8 @@ function parseArgs(args: string[]): Partial<Options> {
       options.intervalMs = Number(args[++i]) * 1000;
     } else if (arg.startsWith('--interval-seconds=')) {
       options.intervalMs = Number(arg.slice('--interval-seconds='.length)) * 1000;
+    } else if (arg === '--bypass-cdn-cache') {
+      options.bypassCdnCache = true;
     } else {
       throw new Error(`Unknown argument: ${arg}`);
     }
@@ -85,17 +89,22 @@ async function buildOptions(): Promise<Options> {
     version: parsed.version ?? await readWorkspaceVersion(),
     timeoutMs,
     intervalMs,
+    bypassCdnCache: parsed.bypassCdnCache ?? false,
   };
 }
 
 export async function fetchPackageMetadataState(
   name: string,
   version: string,
+  bypassCdnCache = false,
 ): Promise<PackageMetadataState> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), METADATA_REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(`https://jsr.io/${name}/meta.json`, {
+    const cacheBuster = bypassCdnCache
+      ? `?releaseProbe=${encodeURIComponent(version)}-${Date.now()}`
+      : '';
+    const response = await fetch(`https://jsr.io/${name}/meta.json${cacheBuster}`, {
       headers: { Accept: 'application/json' },
       signal: controller.signal,
     });
@@ -167,12 +176,15 @@ export async function waitForJsrPackageMetadata(
   console.log(
     `[${prefix}] Waiting for ${options.packageNames.length} packages to expose ` +
       `${options.version} in package-level JSR metadata` +
-      `${requireLatest ? ' and report it as latest' : ''}.`,
+      `${requireLatest ? ' and report it as latest' : ''}` +
+      `${options.bypassCdnCache ? ' using cache-busted metadata probes' : ''}.`,
   );
 
   while (true) {
     const states = await Promise.all(
-      options.packageNames.map((name) => fetchPackageMetadataState(name, options.version)),
+      options.packageNames.map((name) =>
+        fetchPackageMetadataState(name, options.version, options.bypassCdnCache ?? false)
+      ),
     );
     const ready = states.every((state) =>
       state.versionVisible && (!requireLatest || state.latestMatches)
@@ -181,7 +193,8 @@ export async function waitForJsrPackageMetadata(
       console.log(
         `[${prefix}] Ready: all ${options.packageNames.length} packages expose ` +
           `${options.version} in package-level JSR metadata` +
-          `${requireLatest ? ' and report it as latest' : ''}.`,
+          `${requireLatest ? ' and report it as latest' : ''}` +
+          `${options.bypassCdnCache ? ' using cache-busted metadata probes' : ''}.`,
       );
       return;
     }
@@ -212,6 +225,7 @@ async function main(): Promise<void> {
     timeoutMs: options.timeoutMs,
     intervalMs: options.intervalMs,
     requireLatest: true,
+    bypassCdnCache: options.bypassCdnCache,
   });
 }
 
