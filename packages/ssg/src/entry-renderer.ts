@@ -430,6 +430,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push(`import { wrapInDocument } from '@openelement/core';`);
   lines.push(`import { jsx } from '@openelement/core/jsx-runtime';`);
   lines.push(`import { createLogger } from '@openelement/core/logger';`);
+  lines.push(`import { createRuntimeAdapter } from '@openelement/protocols/runtime';`);
   lines.push(
     `import { headerNav as __headerNav, navSections as __navSections } from '@openelement/generated/nav';`,
   );
@@ -724,6 +725,14 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
 
   // --- Export ---
+  lines.push('export const openElementHandler = (request, context = {}) => {');
+  lines.push('  return app.fetch(request, context.env || {}, context.platform)');
+  lines.push('}');
+  lines.push('');
+  lines.push('export const openElementRuntimeAdapter = {');
+  lines.push("  ...createRuntimeAdapter({ name: 'openelement-hono', fetch: openElementHandler }),");
+  lines.push('}');
+  lines.push('');
   lines.push('export default app');
 
   // ADR 0008 Phase C: After viteBuild(ssr:true, noExternal) produces a

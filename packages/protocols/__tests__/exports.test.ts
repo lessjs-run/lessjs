@@ -5,6 +5,7 @@ Deno.test('@openelement/protocols exports runtime validators and type-only contr
   assertEquals(Object.keys(protocols).sort(), [
     'MemoryDataAdapter',
     'createPluginMeta',
+    'createRuntimeAdapter',
     'isOpenBlogOptions',
     'isOpenBuildContextLike',
     'isOpenHeaderNavLink',

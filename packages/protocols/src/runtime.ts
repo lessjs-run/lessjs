@@ -21,8 +21,30 @@ export interface RuntimePrerenderResult {
   headers?: HeadersInit;
 }
 
+export type OpenElementRequestHandler<
+  Env extends Record<string, unknown> = Record<string, unknown>,
+> = (request: Request, context?: RuntimeContext<Env>) => Response | Promise<Response>;
+
 export interface RuntimeAdapter<Env extends Record<string, unknown> = Record<string, unknown>> {
   name: string;
-  fetch(request: Request, context?: RuntimeContext<Env>): Response | Promise<Response>;
+  fetch: OpenElementRequestHandler<Env>;
   prerender?(): AsyncIterable<RuntimePrerenderResult> | Iterable<RuntimePrerenderResult>;
+}
+
+export interface RuntimeAdapterOptions<
+  Env extends Record<string, unknown> = Record<string, unknown>,
+> {
+  name: string;
+  fetch: OpenElementRequestHandler<Env>;
+  prerender?(): AsyncIterable<RuntimePrerenderResult> | Iterable<RuntimePrerenderResult>;
+}
+
+export function createRuntimeAdapter<
+  Env extends Record<string, unknown> = Record<string, unknown>,
+>(options: RuntimeAdapterOptions<Env>): RuntimeAdapter<Env> {
+  return {
+    name: options.name,
+    fetch: options.fetch,
+    ...(options.prerender ? { prerender: options.prerender } : {}),
+  };
 }

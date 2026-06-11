@@ -9,6 +9,7 @@
     "@openelement/core/errors": "jsr:@openelement/core@^0.37.5/errors",
     "@openelement/core/logger": "jsr:@openelement/core@^0.37.5/logger",
     "@openelement/protocols/routes": "jsr:@openelement/protocols@^0.37.5/routes",
+    "@openelement/protocols/runtime": "jsr:@openelement/protocols@^0.37.5/runtime",
     "@openelement/cem": "jsr:@openelement/cem@^0.37.5",
     "@openelement/compat-check": "jsr:@openelement/compat-check@^0.37.5",
     "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.37.5",

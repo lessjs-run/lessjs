@@ -36,6 +36,23 @@ Deno.test('renderEntry: produces valid module code with imports and export', () 
   assertStringIncludes(code, 'export default app');
 });
 
+Deno.test('renderEntry: exports universal openElement request handler', () => {
+  const desc = buildEntryDescriptor(basicRoutes);
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, 'export const openElementHandler = (request, context = {}) => {');
+  assertStringIncludes(code, 'return app.fetch(request, context.env || {}, context.platform)');
+  assertStringIncludes(
+    code,
+    "import { createRuntimeAdapter } from '@openelement/protocols/runtime'",
+  );
+  assertStringIncludes(code, 'export const openElementRuntimeAdapter = {');
+  assertStringIncludes(
+    code,
+    "...createRuntimeAdapter({ name: 'openelement-hono', fetch: openElementHandler })",
+  );
+});
+
 Deno.test('renderEntry: SSG mode excludes DOM shim', () => {
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
   const code = renderEntry(desc);

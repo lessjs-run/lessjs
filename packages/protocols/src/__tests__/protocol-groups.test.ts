@@ -3,6 +3,7 @@ import {
   type CacheAdapter,
   type CacheEntry,
   type ComponentAdapter,
+  createRuntimeAdapter,
   type EntryDescriptor,
   type IslandConfig,
   MemoryDataAdapter,
@@ -148,10 +149,10 @@ Deno.test('protocols: route entry descriptor is pure data', () => {
 });
 
 Deno.test('protocols: runtime adapter conformance accepts fetch-compatible adapters', async () => {
-  const adapter = {
+  const adapter = createRuntimeAdapter({
     name: 'fetch-runtime',
     fetch: () => new Response('ok', { status: 200 }),
-  };
+  });
 
   const results = await runRuntimeAdapterConformance(adapter, new Request('https://example.test/'));
 
