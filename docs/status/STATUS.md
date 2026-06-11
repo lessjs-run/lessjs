@@ -3,17 +3,34 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.5/` (Protocol-First Runtime Architecture).
+package: `docs/next/v0.37.6/` (Vite + Nitro Runtime Proof).
 
-## Current Version Line: v0.37.5 (Protocol-First Runtime Architecture)
+## Current Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
 
-v0.37.5 implementation is complete locally. All 20 `@openelement/*` workspace
-packages are aligned to `0.37.5`, `ACTIVE_VERSION` points at `v0.37.5`, and
-the local release gates passed for workflow, graph, architecture, docs, format,
-lint, typecheck, test, build, and publish dry-run. v0.37.5 establishes
-`@openelement/protocols` as the replacement boundary for renderer, component,
-runtime, route, island, cache, signal, and data contracts while positioning
-Vite + Nitro as the default base engine for the v0.37.6 runtime proof.
+v0.37.6 is active on `dev`. The first implementation slice exposes the
+openElement universal request handler from the generated route pipeline and
+adds a Nitro mount boundary in `@openelement/adapter-vite` that converts a
+Nitro-like event into a Web `Request`, passes runtime context through the
+protocol layer, and returns Web `Response` data without making Nitro the
+authoring API. Local evidence for this slice: targeted Nitro mount tests,
+`deno task graph:check`, `deno task typecheck`, `deno task fmt:check`,
+`deno task arch:check`, and `deno task test` passed. Remote `dev` CI for the
+handler contract slice passed Lint & Format, CodeQL, Test, and SOP Gate.
+
+The next v0.37.6 slices must replace the mount-level proof with real Nitro
+Node and Cloudflare Workers output evidence, static asset/island chunk checks,
+route behavior checks, and ISR/cache mapping evidence.
+
+## Prior Version Line: v0.37.5 (Protocol-First Runtime Architecture)
+
+v0.37.5 is released. Tag `v0.37.5` and the GitHub release exist at commit
+`e1016ec0`. All 20 `@openelement/*` workspace packages are aligned to
+`0.37.5`, `ACTIVE_VERSION` points at `v0.37.5`, and local release gates passed
+for workflow, graph, architecture, docs, format, lint, typecheck, test, build,
+and publish dry-run. v0.37.5 establishes `@openelement/protocols` as the
+replacement boundary for renderer, component, runtime, route, island, cache,
+signal, and data contracts while positioning Vite + Nitro as the default base
+engine for the v0.37.6 runtime proof.
 
 ADR-0097 changes the release policy: JSR package visibility is no longer a
 version-exit gate. JSR publish remains best-effort distribution telemetry and a
@@ -58,12 +75,13 @@ closed for the prior package line. v0.37.4 JSR distribution remains externally
 unhealthy, but ADR-0097 prevents that external state from blocking roadmap
 execution.
 
-The next implementation line is v0.37.6. It can proceed from v0.37.5 protocol
-evidence once v0.37.5 release truth is recorded; JSR visibility does not block
-it.
+The active implementation line is now v0.37.6. It proceeds from v0.37.5
+protocol evidence; JSR visibility does not block it.
 
 Governing docs:
 
+- `docs/sop/v0.37.6/README.md`
+- `docs/next/v0.37.6/`
 - `docs/sop/v0.37.5/README.md`
 - `docs/next/v0.37.5/`
 - `docs/adr/ADR-0096-protocol-first-vite-nitro-runtime.md`

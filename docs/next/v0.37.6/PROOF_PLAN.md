@@ -98,6 +98,11 @@ deno task nitro:proof:node
 deno task nitro:proof:workers
 ```
 
+The first implementation slice wires these proof commands to the
+openElement-to-Nitro mount boundary. Before v0.37.6 can exit, the same commands
+must be expanded or supplemented to prove real Nitro Node and Cloudflare
+Workers output.
+
 JSR publish attempts remain best-effort distribution telemetry under ADR-0097
 and are not proof-plan exit criteria.
 

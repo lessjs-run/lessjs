@@ -10,6 +10,8 @@ Prove that Vite + Nitro can become openElement's default base engine for build,
 production runtime, and deployment without replacing openElement application,
 component, route, render, island, or light/shadow semantics.
 
+Execution dossier: `docs/next/v0.37.6/`.
+
 ## Entry Criteria
 
 - v0.37.5 protocol boundaries and route manifest contracts are complete.

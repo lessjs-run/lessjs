@@ -70,5 +70,13 @@ export type { OpenMdxPluginOptions } from './plugin-mdx.js';
 // Optional package stubs
 export { OPTIONAL_PACKAGE_STUBS } from './optional-package-stubs.js';
 
+// Nitro runtime proof boundary
+export { createOpenElementNitroHandler } from './nitro-mount.js';
+export type {
+  NitroLikeRequestEvent,
+  NitroLikeResponse,
+  OpenElementNitroMountOptions,
+} from './nitro-mount.js';
+
 // Default export
 export { openPipeline as default } from './build-pipeline.js';

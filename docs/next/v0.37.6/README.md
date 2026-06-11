@@ -13,8 +13,10 @@ contracts.
 
 ### Runtime Proof
 
-- generate or expose an openElement universal request handler;
-- mount that handler in Nitro;
+- [x] generate or expose an openElement universal request handler;
+- [x] add the first Nitro mount boundary for converting a Nitro-like event to a
+      Web `Request` and returning Web `Response` data;
+- [ ] mount that handler in a real Nitro server entry;
 - build a minimal proof application through Vite + Nitro;
 - prove Node output;
 - prove Cloudflare Workers output.
@@ -39,6 +41,19 @@ contracts.
 - ISR/cache intent maps to Nitro cache or route rules only through documented
   adapter semantics;
 - Hono remains an implementation detail where useful, not the product identity.
+
+## Current Evidence
+
+- `@openelement/protocols/runtime` defines `OpenElementRequestHandler` and
+  `createRuntimeAdapter`.
+- Generated SSG/Hono entries export `openElementHandler` and
+  `openElementRuntimeAdapter`.
+- `@openelement/adapter-vite/nitro-mount` exposes
+  `createOpenElementNitroHandler`, which preserves the Web Request/Response
+  boundary and passes runtime context through the protocol.
+- `deno task nitro:proof:node` and `deno task nitro:proof:workers` currently
+  prove the mount boundary. They are not yet a substitute for real Nitro output
+  proof.
 
 ## Non-Goals
 
