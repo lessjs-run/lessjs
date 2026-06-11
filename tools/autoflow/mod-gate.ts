@@ -356,11 +356,11 @@ function buildImpactReport(paths: string[]): string {
   }
 
   // Always check
-  lines.push('- [ ] README.md / README.zh.md version references match PACKAGE_VERSION (0.37.4)');
-  lines.push('- [ ] CHANGELOG.md entry exists for current version');
-  lines.push('- [ ] docs/release/ release note exists for current version');
-  lines.push('- [ ] STATUS.md current version line matches PACKAGE_VERSION');
-  lines.push('- [ ] project-constants.ts ACTIVE_VERSION matches PACKAGE_VERSION_TAG');
+  lines.push('- [ ] README.md / README.zh.md version references match the released package line');
+  lines.push('- [ ] CHANGELOG.md entry exists before release closure');
+  lines.push('- [ ] docs/release/ release note exists before tag/release');
+  lines.push('- [ ] STATUS.md active execution line matches ACTIVE_VERSION');
+  lines.push('- [ ] PACKAGE_VERSION_TAG remains the released package line until release bump');
   lines.push('- [ ] No dead files or stale imports introduced');
 
   return lines.join('\n');
