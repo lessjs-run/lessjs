@@ -15,13 +15,22 @@ interface Options {
   intervalMs: number;
 }
 
-interface PackageMetadataState {
+export interface PackageMetadataState {
   name: string;
   versionVisible: boolean;
   latestMatches: boolean;
   latest: string | null;
   status: number | null;
   error?: string;
+}
+
+export interface WaitForJsrPackageMetadataOptions {
+  packageNames: string[];
+  version: string;
+  timeoutMs: number;
+  intervalMs: number;
+  requireLatest?: boolean;
+  logPrefix?: string;
 }
 
 const DEFAULT_TIMEOUT_MS = 120 * 60 * 1000;
@@ -79,7 +88,7 @@ async function buildOptions(): Promise<Options> {
   };
 }
 
-async function fetchPackageMetadataState(
+export async function fetchPackageMetadataState(
   name: string,
   version: string,
 ): Promise<PackageMetadataState> {
@@ -123,13 +132,18 @@ async function fetchPackageMetadataState(
   }
 }
 
-function summarizeMissing(states: PackageMetadataState[]): string {
+function summarizeMissing(
+  states: PackageMetadataState[],
+  requireLatest: boolean,
+): string {
   return states
-    .filter((state) => !state.versionVisible || !state.latestMatches)
+    .filter((state) => !state.versionVisible || (requireLatest && !state.latestMatches))
     .map((state) => {
       const details = [
         state.versionVisible ? 'version=ok' : 'version=missing',
-        state.latestMatches ? 'latest=ok' : `latest=${state.latest ?? 'missing'}`,
+        requireLatest
+          ? state.latestMatches ? 'latest=ok' : `latest=${state.latest ?? 'missing'}`
+          : `latest=${state.latest ?? 'missing'}`,
         state.status === null ? 'status=error' : `status=${state.status}`,
       ];
       if (state.error) details.push(`error=${state.error}`);
@@ -142,46 +156,65 @@ async function sleep(ms: number): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function main(): Promise<void> {
-  const options = await buildOptions();
-  const packageNames = RELEASE_PACKAGE_ORDER.map((step) => step.pkg);
+export async function waitForJsrPackageMetadata(
+  options: WaitForJsrPackageMetadataOptions,
+): Promise<void> {
   const deadline = Date.now() + options.timeoutMs;
   let attempt = 1;
+  const requireLatest = options.requireLatest ?? true;
+  const prefix = options.logPrefix ?? 'jsr-meta';
 
   console.log(
-    `[jsr-meta] Waiting for ${packageNames.length} packages to expose ${options.version} ` +
-      `in package-level JSR metadata.`,
+    `[${prefix}] Waiting for ${options.packageNames.length} packages to expose ` +
+      `${options.version} in package-level JSR metadata` +
+      `${requireLatest ? ' and report it as latest' : ''}.`,
   );
 
   while (true) {
     const states = await Promise.all(
-      packageNames.map((name) => fetchPackageMetadataState(name, options.version)),
+      options.packageNames.map((name) => fetchPackageMetadataState(name, options.version)),
     );
-    const ready = states.every((state) => state.versionVisible && state.latestMatches);
+    const ready = states.every((state) =>
+      state.versionVisible && (!requireLatest || state.latestMatches)
+    );
     if (ready) {
       console.log(
-        `[jsr-meta] Ready: all ${packageNames.length} packages expose ${options.version} ` +
-          'and report it as latest.',
+        `[${prefix}] Ready: all ${options.packageNames.length} packages expose ` +
+          `${options.version} in package-level JSR metadata` +
+          `${requireLatest ? ' and report it as latest' : ''}.`,
       );
       return;
     }
 
-    const missing = summarizeMissing(states);
+    const missing = summarizeMissing(states, requireLatest);
     const remainingMs = deadline - Date.now();
     if (remainingMs <= 0) {
       throw new Error(
-        `[jsr-meta] Timed out waiting for package metadata after ${
+        `[${prefix}] Timed out waiting for package metadata after ${
           options.timeoutMs / 60_000
         } minutes. Missing: ${missing}`,
       );
     }
 
     console.log(
-      `[jsr-meta] Attempt ${attempt}: metadata not ready. Missing: ${missing}`,
+      `[${prefix}] Attempt ${attempt}: metadata not ready. Missing: ${missing}`,
     );
     await sleep(Math.min(options.intervalMs, remainingMs));
     attempt++;
   }
 }
 
-await main();
+async function main(): Promise<void> {
+  const options = await buildOptions();
+  await waitForJsrPackageMetadata({
+    packageNames: RELEASE_PACKAGE_ORDER.map((step) => step.pkg),
+    version: options.version,
+    timeoutMs: options.timeoutMs,
+    intervalMs: options.intervalMs,
+    requireLatest: true,
+  });
+}
+
+if (import.meta.main) {
+  await main();
+}

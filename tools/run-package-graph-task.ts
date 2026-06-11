@@ -6,6 +6,7 @@
  */
 
 import { RELEASE_PACKAGE_ORDER } from './package-release-order.ts';
+import { waitForJsrPackageMetadata } from './wait-jsr-release-metadata.ts';
 
 interface PackageInfo {
   name: string;
@@ -22,6 +23,8 @@ const JSR_PUBLISH_FORCE_KILL_DELAY_MS = 5_000;
 const JSR_PROPAGATION_ATTEMPTS = 24;
 const JSR_PROPAGATION_DELAY_MS = 5_000;
 const JSR_METADATA_TIMEOUT_MS = 10_000;
+const JSR_PACKAGE_METADATA_TIMEOUT_MS = 30 * 60 * 1000;
+const JSR_PACKAGE_METADATA_INTERVAL_MS = 15_000;
 
 function normalizeDep(specifier: string, self: string): string | null {
   const prefix = '@openelement/';
@@ -377,6 +380,29 @@ async function waitForJsrVersion(pkg: PackageInfo): Promise<boolean> {
   return false;
 }
 
+async function waitForPackageLevelMetadata(pkg: PackageInfo): Promise<void> {
+  await waitForJsrPackageMetadata({
+    packageNames: [pkg.name],
+    version: pkg.version,
+    timeoutMs: JSR_PACKAGE_METADATA_TIMEOUT_MS,
+    intervalMs: JSR_PACKAGE_METADATA_INTERVAL_MS,
+    requireLatest: true,
+    logPrefix: 'publish-meta',
+  });
+}
+
+async function waitForDependencyPackageMetadata(pkg: PackageInfo): Promise<void> {
+  if (pkg.deps.length === 0) return;
+  await waitForJsrPackageMetadata({
+    packageNames: pkg.deps,
+    version: pkg.version,
+    timeoutMs: JSR_PACKAGE_METADATA_TIMEOUT_MS,
+    intervalMs: JSR_PACKAGE_METADATA_INTERVAL_MS,
+    requireLatest: false,
+    logPrefix: 'publish-deps',
+  });
+}
+
 async function assertCleanWorktree(): Promise<void> {
   const command = new Deno.Command('git', {
     args: ['status', '--porcelain'],
@@ -406,8 +432,11 @@ async function publishPackage(
     return 'dry-run';
   }
 
+  await waitForDependencyPackageMetadata(pkg);
+
   if (await jsrVersionExists(pkg.name, pkg.version)) {
     console.log(`[publish] ${pkg.name}@${pkg.version}: already exists; skipping.`);
+    await waitForPackageLevelMetadata(pkg);
     return 'skipped';
   }
 
@@ -431,9 +460,11 @@ async function publishPackage(
         `[publish] ${pkg.name}@${pkg.version}: recovered after JSR became visible and ` +
           'the hung deno publish process was stopped.',
       );
+      await waitForPackageLevelMetadata(pkg);
       return 'recovered';
     }
     console.log(`[publish] ${pkg.name}@${pkg.version}: published and visible on JSR.`);
+    await waitForPackageLevelMetadata(pkg);
     return status.success ? 'published' : 'recovered';
   }
 
@@ -445,6 +476,7 @@ async function publishPackage(
     console.warn(
       `[publish] ${pkg.name}@${pkg.version}: version exists on JSR after command ${reason}; continuing.`,
     );
+    await waitForPackageLevelMetadata(pkg);
     return 'recovered';
   }
 
@@ -466,6 +498,12 @@ function printJsrRecoveryPlan(packages: PackageInfo[]): void {
     `[publish] Per-package publish timeout: ${JSR_PUBLISH_TIMEOUT_MS / 60_000} minutes. ` +
       'During the command, CI also polls JSR and kills a hung publish process as soon ' +
       'as the immutable version becomes visible.',
+  );
+  console.log(
+    `[publish] Package-level metadata timeout: ${
+      JSR_PACKAGE_METADATA_TIMEOUT_MS / 60_000
+    } minutes. ` +
+      'Each published package waits for package-level JSR metadata before dependents publish.',
   );
   console.log(
     `[publish] Candidate order: ${
