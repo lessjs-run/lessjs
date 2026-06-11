@@ -23,7 +23,8 @@ async function main(): Promise<void> {
   // Read current project state
   const status = readStatus(rootDir);
   const version = status.currentVersion || 'unknown';
-  const packageGraph = readPackageGraph(rootDir, version);
+  const packageVersion = status.packageVersion || version;
+  const packageGraph = readPackageGraph(rootDir, packageVersion);
 
   // Build package version list
   const packageVersions = packageGraph.packages.map((p) => p.version);
@@ -37,7 +38,7 @@ async function main(): Promise<void> {
   }
 
   const report = await checkAllInvariants(ledger, {
-    statusVersion: version,
+    statusVersion: packageVersion,
     packageVersions,
     rootDir,
   }, { strict, devMode });

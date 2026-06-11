@@ -46,7 +46,7 @@ export const INVARIANTS: Invariant[] = [
   },
   {
     id: 'I-VERSION-ALIGNMENT',
-    description: 'All package versions must match STATUS.md declared version',
+    description: 'All package versions must match the repository package line',
     severity: 'error',
   },
   {
@@ -66,7 +66,7 @@ export const INVARIANTS: Invariant[] = [
   },
   {
     id: 'I-STATUS-MATCHES-REALITY',
-    description: 'STATUS.md version must match package graph version or state is drifted',
+    description: 'Repository package line must match package graph version or state is drifted',
     severity: 'warning',
   },
   {
@@ -147,7 +147,7 @@ function checkVersionAlignment(
       invariantId: 'I-VERSION-ALIGNMENT',
       severity: 'error',
       description:
-        `${mismatched.length} package(s) version-mismatched with STATUS.md (${statusVersion})`,
+        `${mismatched.length} package(s) version-mismatched with package line (${statusVersion})`,
       detail: mismatched.join(', '),
     };
   }

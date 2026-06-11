@@ -14,6 +14,16 @@ const CURRENT_VERSION_RE = /^## Current Version Line:\s*(.+?)\s*\(/m;
 const NEXT_VERSION_RE = /package:\s*`(docs\/next\/[^`]+)`/;
 const GATE_LINE_RE = /^deno task (\S+)/gm;
 
+function readPackageVersionTag(rootDir: string): string {
+  try {
+    const constants = Deno.readTextFileSync(`${rootDir}/tools/project-constants.ts`);
+    const match = /PACKAGE_VERSION\s*=\s*['"]([^'"]+)['"]/.exec(constants);
+    return match ? `v${match[1]}` : '';
+  } catch {
+    return '';
+  }
+}
+
 export function readStatus(rootDir: string): StatusData {
   const path = `${rootDir}/docs/status/STATUS.md`;
   let text: string;
@@ -43,9 +53,7 @@ export function readStatus(rootDir: string): StatusData {
     gates.push(match[1]);
   }
 
-  // Extract package version line
-  const pkgMatch = /\*\*v([\d.]+)\*\*/.exec(text);
-  const packageVersion = pkgMatch ? `v${pkgMatch[1]}` : '';
+  const packageVersion = readPackageVersionTag(rootDir);
 
   return {
     currentVersion,
