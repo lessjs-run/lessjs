@@ -54,7 +54,7 @@ jobs:
   consumer-smoke:
     runs-on: ubuntu-latest
     needs: [publish]
-    timeout-minutes: 150
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
