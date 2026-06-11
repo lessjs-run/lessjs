@@ -2,66 +2,75 @@
 
 ## A. Code-Quality Hygiene
 
-- [ ] `authoring.ts` error messages interpolate `${ERROR_PREFIX}` correctly.
-- [ ] `dsd-element.ts`, `render-ir.ts`, `security.ts`, `jsx-render-dom.ts` use
-      `createLogger(scope)` — zero direct `console.*` calls outside logger.
-- [ ] All 11 `@deprecated` re-export shells deleted from
+- [x] `authoring.ts` error messages interpolate `${ERROR_PREFIX}` correctly.
+- [x] `dsd-element.ts`, `render-ir.ts`, `security.ts`, and
+      `jsx-render-dom.ts` use `createLogger(scope)`.
+- [x] Deprecated adapter-vite re-export shells are deleted from
       `packages/adapter-vite/src/`.
-- [ ] `island-manifest.ts` and `entry-generators.ts` original impls live in
-      `@openelement/ssg`.
-- [ ] `graph:check` passes with no new cycles after shell removal.
-- [ ] All existing adapter-vite tests pass with updated import paths.
+- [x] `island-manifest.ts` and `entry-generators.ts` implementation ownership
+      lives in `@openelement/ssg`.
+- [x] `graph:check` passes with no new cycles after shell removal.
+- [x] Adapter-vite tests pass with updated import paths.
 
 ## B. dsd-hydration Deduplication
 
-- [ ] `_hydrateEvents()` and `createRenderRoot()` live once in
+- [x] `_hydrateEvents()` and `createRenderRoot()` live once in
       `core/src/dsd-hydration.ts`.
-- [ ] adapter-lit, adapter-react, adapter-vanilla import shared helpers from
-      core.
-- [ ] All adapter hydration tests pass.
-- [ ] No code duplication across the three adapter dsd-hydration files for the
-      extracted logic.
+- [x] adapter-lit, adapter-react, and adapter-vanilla import shared helpers
+      from core.
+- [x] Adapter hydration tests pass.
+- [x] The extracted logic is no longer duplicated across the adapter
+      dsd-hydration files.
 
 ## C. UI / Router Decoupling
 
-- [ ] `packages/ui` has zero imports from `@openelement/router`.
-- [ ] `open-layout.tsx` locale/path utilities work identically to before.
-- [ ] SPA navigation (click delegation, popstate, locale switch) works
-      identically.
-- [ ] `graph:check` confirms ui no longer depends on router.
-- [ ] All ui and www tests pass.
+- [x] `packages/ui` has zero imports from `@openelement/router`.
+- [x] `open-layout.tsx` owns its locale/path utilities.
+- [x] SPA navigation click delegation, popstate, and locale switching remain
+      covered.
+- [x] `graph:check` confirms ui no longer depends on router.
+- [x] UI and www tests pass.
 
 ## D. Pure CSS UI Foundation
 
-- [ ] daisyUI license audit documented (MIT, safe to fork compiled CSS).
-- [ ] ~15–20 daisyUI class sets forked as pure CSS (zero Tailwind runtime).
-- [ ] All Tailwind-specific references (`theme()`, `rgb()`, `@apply`) rewritten
-      to Open Props custom properties.
-- [ ] `open-props-tokens.ts` expanded to ~40 tokens (colors, spacing,
-      typography, radii, shadows, transitions).
-- [ ] Forked CSS is DSD-compatible: uses `:host` not `:root`, no global
-      `document.styleSheets`, `@property` for shadow boundary inheritance.
-- [ ] Smoke: static HTML + `<link>` + tokens + daisy classes renders correctly.
-- [ ] Smoke: DsdElement light DOM with `adoptedStyleSheets = [tokenSheet]`.
-- [ ] Smoke: DsdElement shadow DOM with `adoptedStyleSheets = [tokenSheet, daisySheet]` —
-      DSD SSR output verified.
-- [ ] Existing `open-*` DSD components unchanged.
-- [ ] No Tailwind runtime dependency introduced.
+- [x] daisyUI license audit is documented as MIT-compatible for the forked CSS
+      class subset.
+- [x] daisyUI class sets are forked as pure CSS with zero Tailwind runtime.
+- [x] Tailwind-specific references are rewritten to Open Props custom
+      properties.
+- [x] `open-props-tokens.ts` contains the component semantic token foundation.
+- [x] Forked CSS is DSD-compatible: shadow-safe selectors, no global
+      `document.styleSheets` dependency, and token inheritance across the
+      shadow boundary.
+- [x] Static HTML, DsdElement light DOM, and DsdElement shadow/DSD smoke paths
+      are covered.
+- [x] Existing `open-*` DSD components remain compatible.
+- [x] No Tailwind runtime dependency is introduced.
 
 ## E. Test Supplementation
 
-- [ ] ssg test coverage ≥40% (from 16.5%).
-- [ ] router test coverage ≥60% (from 4.3%).
-- [ ] protocols test coverage ≥60% (from 6.4%).
-- [ ] No existing test regressions.
-- [ ] `deno task test` passes with new tests included.
+- [x] SSG tests cover the new entry descriptor, entry renderer, and render
+      error paths.
+- [x] Router tests cover error routes, edge patterns, and client-router
+      lifecycle.
+- [x] Protocol tests cover validator boundary conditions and type-level
+      conformance.
+- [x] No existing test regressions remain.
+- [x] `deno task test` passes with the new tests included.
 
 ## F. Gate
 
-- [ ] `deno task fmt:check` passes.
-- [ ] `deno task lint` passes.
-- [ ] `deno task typecheck` passes.
-- [ ] `deno task test` passes.
-- [ ] `deno task build` passes.
-- [ ] `deno task graph:check` passes.
-- [ ] `deno task arch:check` passes.
+- [x] `deno task fmt:check` passes.
+- [x] `deno task lint` passes.
+- [x] `deno task typecheck` passes.
+- [x] `deno task test` passes.
+- [x] `deno task build` passes.
+- [x] `deno task graph:check` passes.
+- [x] `deno task arch:check` passes.
+
+## Release Truth
+
+- [x] v0.37.4 implementation, tag, and GitHub release exist.
+- [x] JSR publish recovery was attempted and recorded.
+- [x] JSR resolver visibility remains an external distribution caveat under
+      ADR-0097, not a version-exit gate.

@@ -14,7 +14,8 @@ packages — within a single bounded version.
 ## Entry Criteria
 
 - v0.37.3 Data / Database Boundary is closed.
-- v0.37.2 JSR publish (20/20) and consumer smoke confirmed.
+- v0.37.2 repository-controlled release gates confirmed. JSR publish state is
+  best-effort distribution under ADR-0097.
 - Comprehensive audit `docs/conversation/20260610/` completed and reviewed.
 
 ## ADR Links
@@ -96,12 +97,10 @@ packages — within a single bounded version.
         arch:check, docs:check, autoflow, dsd:check-report, publish:dry-run,
         hub:validate, verify:configs).
 27. [ ] Record evidence in `docs/next/v0.37.4/`.
-28. [ ] Close publish recovery only after JSR reports 20/20 packages at
-        `0.37.4` and post-publish consumer smoke passes. The recovery workflow
-        must retain provenance, keep the 45-minute package window, rely on live
-        JSR version metadata before stopping any hung `deno publish` process,
-        and wait for package-level `meta.json` propagation before fresh-consumer
-        smoke starts.
+28. [ ] Attempt JSR publish through the local or CI publish path and record the
+        registry state. JSR success, 20/20 visibility, and post-publish JSR
+        consumer smoke are best-effort distribution telemetry, not v0.37.4 exit
+        criteria.
 
 ## Verification
 
@@ -112,8 +111,8 @@ packages — within a single bounded version.
 - ssg/router/protocols test coverage meets targets.
 - CSS tokens work in plain HTML, DsdElement light DOM, and DsdElement shadow DOM (DSD SSR verified).
 - All existing gates pass.
-- Publish recovery reaches live JSR 20/20 at package-level `meta.json` and
-  post-publish consumer smoke passes.
+- JSR publish has been attempted or scheduled through CI, and any registry
+  failure is recorded as an external distribution caveat.
 
 ## Non-Goals
 
@@ -132,6 +131,8 @@ packages — within a single bounded version.
 - Behavior components remain optional.
 - ssg test ≥40%, router test ≥60%, protocols test ≥60%.
 - `deno task gate` fully green.
+
+- JSR publish status is recorded but does not block exit.
 
 ## AutoFlow Boundary
 

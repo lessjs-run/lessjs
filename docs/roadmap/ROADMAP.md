@@ -2,22 +2,30 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.37.4 Hygiene + Pure CSS UI + Architecture Decoupling.\
-> Active execution package: v0.37.5 Protocol Ports + DaisyUI Coverage Completion.\
-> Updated: 2026-06-11.
+> Active execution package: v0.37.5 Protocol-First Runtime Architecture.\
+> Updated: 2026-06-12.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 ## Product Position
 
-openElement is a JSX-first Web Components application framework with
-Declarative Shadow DOM as the default server-rendered output. Built on
-DSD-first HTML, progressive islands, Hono routes, and a 20-package monorepo
-under `@openelement/*`.
+openElement is a Web Components application framework powered by Vite + Nitro.
+It provides JSX authoring, file routes, progressive islands, SSG/SSR/ISR, API
+routes, shadow/DSD as the default render mode, and explicit light DOM opt-in.
+The product identity is Web Components application semantics; DSD/shadow is the
+default render mode rather than the whole framework identity.
+
+Historical positioning note: earlier ADRs used the phrase DSD-first to protect
+shadow/DSD output as the default. ADR-0096 refines that into Web Components
+application framework identity, with shadow/DSD as the default render mode and
+light DOM as first-class opt-in.
 
 v0.33.0 defined the AI-readable public application contract. v0.36 moved SSG
 ownership into `@openelement/ssg` and proved the current browser surface.
-v0.37.x validates the four-product platform in bounded steps. v1.0 remains the
-Stable Four-Product Platform target.
+v0.37.x now validates a protocol-first modular platform: openElement owns the
+application/component/render semantics while Vite + Nitro become the default
+base engine for build, runtime, and deployment. v1.0 remains the Stable
+Protocol-First Web Components Platform target.
 
 ## Version Ladder
 
@@ -39,10 +47,10 @@ Stable Four-Product Platform target.
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                                              | Done                     |
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                       | Done                     |
 | v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                                           | Done                     |
-| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate | Publish recovery         |
-| v0.37.5 | Protocol Ports + DaisyUI Coverage Completion       | Complete daisyUI interactive component coverage and migrate protocol types into @openelement/protocols               | Planned                  |
-| v0.37.6 | Full-Stack Preset Smoke                            | Compose elements, UI, protocol, and framework/create into a real smoke application                                   | Planned                  |
-| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on v0.37.x evidence                                                   | Planned                  |
+| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate | Done / JSR caveat        |
+| v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Planned                  |
+| v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Planned                  |
+| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Planned                  |
 | v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                                        | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
@@ -194,18 +202,42 @@ Implemented as a bounded hygiene and foundation release:
   pattern with `open-dropdown`, `open-modal`, and `open-tabs`;
 - supplement tests across ssg, router, and protocols.
 
-Release-truth note: v0.37.4 implementation, tag, and GitHub release exist, but
-the release remains in publish recovery until all 20 packages are visible on JSR
-at `0.37.4` and post-publish consumer smoke passes.
+Release-truth note: v0.37.4 implementation, tag, and GitHub release exist.
+ADR-0097 makes live JSR visibility a best-effort distribution concern rather
+than a version-exit gate. JSR state must still be recorded honestly; release
+notes must not claim JSR availability unless direct resolver checks prove it.
 
-Recovery implementation note: the failed 2026-06-11 recovery attempts proved a
-5-minute package timeout and then a 20-minute package timeout are both too short
-for JSR's current publish behavior. The active recovery path uses a 45-minute
-per-package window, preserves provenance, polls JSR while `deno publish` is
-running, and stops a hung publish process as soon as the immutable version is
-visible.
+Distribution note: failed 2026-06-11 recovery attempts proved a 5-minute
+package timeout and then a 20-minute package timeout are both too short for
+JSR's current publish behavior. Publishing may continue through local or CI
+best-effort attempts, but roadmap execution should continue after local gates,
+AutoFlow evidence, and non-JSR CI are correct.
 
-## v0.37.5 - Protocol Ports + DaisyUI Coverage Completion
+## v0.37.5 - Protocol-First Runtime Architecture
+
+Make `@openelement/protocols` the real replacement boundary and accept
+ADR-0096: Protocol-First Vite + Nitro Runtime Architecture. ADR-0098 defines
+the EntryDescriptor route manifest contract required before Nitro can consume
+route semantics without importing SSG implementation modules.
+
+v0.37.5 repositions openElement as a Web Components application framework
+powered by Vite + Nitro. Vite may be the deep default build/module graph engine,
+and Nitro may be the deep default production runtime/deployment engine, but the
+protocol layer stays frontend-framework-agnostic and runtime-agnostic.
+
+Core work:
+
+- move or re-export runtime-free renderer, component adapter, route manifest,
+  island, signal, data, runtime adapter, cache, and storage contracts into
+  `@openelement/protocols`;
+- add conformance test entry points such as `runRendererConformance(impl)`;
+- write the EntryDescriptor / route manifest ADR before route protocol
+  migration;
+- document the openElement universal request handler shape required by Nitro;
+- preserve daisyUI interactive/form component coverage as a later UI product
+  slice after the runtime pivot.
+
+### Superseded v0.37.5 Backlog Trace
 
 Complete daisyUI interactive component coverage and migrate protocol types.
 
@@ -240,7 +272,21 @@ Complete daisyUI interactive component coverage and migrate protocol types.
 - write ADR for `EntryDescriptor` route manifest contract
 - add exportable conformance test suites: `runRendererConformance(impl)`
 
-## v0.37.6 - Full-Stack Preset Smoke
+## v0.37.6 - Vite + Nitro Runtime Proof
+
+Prove the new default engine with a narrow real application.
+
+- generate an openElement universal request handler and mount it in Nitro;
+- prove Node output and Cloudflare Workers output;
+- verify openElement file routes, `load()`, layouts, error/redirect/not-found,
+  API routes, static assets, island chunks, and explicit client JS triggers;
+- map ISR/cache intent to Nitro cache or route-rule primitives without replacing
+  openElement semantics;
+- verify static zero-JS output remains true for routes without explicit islands;
+- keep Hono as a viable request/API route implementation detail where useful;
+- record evidence before v0.38 package/product reset.
+
+### Superseded v0.37.6 Backlog Trace
 
 Prove the first composed framework path after the preceding contracts exist.
 
@@ -263,6 +309,9 @@ Governance convergence before v0.38 exit:
 - AutoFlow feature scope freeze: report/check/health only — no new evolve,
   generate, or autonomous capabilities;
 - Hub scope deferral to post-v1.0; Hub remains internal tooling through v0.38.
+- JSR release instability mitigation: keep direct registry visibility checks,
+  best-effort publish attempts, release-note caveats, and fallback
+  publishing/distribution options in the release design.
 
 Candidate product split to evaluate:
 
@@ -270,9 +319,9 @@ Candidate product split to evaluate:
   class product surface;
 - `@openelement/ui` with a pure CSS layer inspired by daisyUI only after license,
   token, and Tailwind dependency review;
-- `@openelement/protocol` or `@openelement/protocols` as a small ports/adapters
-  layer, starting with renderer, server, build, data, and component-adapter
-  contracts;
+- `@openelement/protocols` as the runtime-free replacement boundary for
+  renderer, component adapter, route manifest, island, runtime, cache, storage,
+  signal, and data contracts;
 - `@openelement/framework` or starter presets that compose the stabilized
   surfaces.
 
@@ -294,11 +343,11 @@ release, and publish decisions.
 | --------------------------------- | --------------------------------------------------------- |
 | Built-in ORM                      | External adapters and recipes only.                       |
 | Generic auth platform             | External integrations only.                               |
-| React-like runtime                | openElement outputs Web Components + DSD.                 |
+| React-like default runtime        | Web Components remain the default; adapters may exist.    |
 | String renderer                   | JSX/VNode/RenderNode only.                                |
 | Silent compatibility shims        | No. 0.x may break.                                        |
 | Autonomous architecture decisions | No. ADR, API reset, package removal require human review. |
-| Protocol abstraction framework    | No. Thin frozen contracts with conformance tests.         |
+| Abstract protocol theater         | No. Protocols require baseline implementations and tests. |
 
 ## Document Cross-Reference
 

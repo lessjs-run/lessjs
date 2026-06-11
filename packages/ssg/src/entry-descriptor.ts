@@ -41,10 +41,28 @@ import type {
   RouteEntry,
   SsrAdmissionDecision,
 } from '@openelement/core';
+import type {
+  ApiRouteDecl as ProtocolApiRouteDecl,
+  AppShellDecl as ProtocolAppShellDecl,
+  AppShellPlan as ProtocolAppShellPlan,
+  CorsOriginConfig as ProtocolCorsOriginConfig,
+  CspConfig as ProtocolCspConfig,
+  DocumentConfig as ProtocolDocumentConfig,
+  EntryDescriptor as ProtocolEntryDescriptor,
+  ImportDecl as ProtocolImportDecl,
+  IslandDecl as ProtocolIslandDecl,
+  MiddlewareDecl as ProtocolMiddlewareDecl,
+  MiddlewareScopeDecl as ProtocolMiddlewareScopeDecl,
+  PageRouteDecl as ProtocolPageRouteDecl,
+  RendererDecl as ProtocolRendererDecl,
+  ResolvedAppShell as ProtocolResolvedAppShell,
+  RouteDecl as ProtocolRouteDecl,
+  SsrAdmissionPlan as ProtocolSsrAdmissionPlan,
+} from '@openelement/protocols/routes';
 import { fileToTagName } from './route-scanner.ts';
 
 /** Import declaration for the generated entry module */
-export interface ImportDecl {
+export interface ImportDecl extends ProtocolImportDecl {
   /** Module specifier (e.g. 'hono', 'hono/cors') */
   from: string;
   /** Named imports (e.g. ['Hono'], ['cors']) */
@@ -54,13 +72,10 @@ export interface ImportDecl {
 }
 
 /** CORS origin configuration - string, array of strings, or serialized function body */
-export type CorsOriginConfig =
-  | string
-  | string[]
-  | { type: 'function'; body: string };
+export type CorsOriginConfig = ProtocolCorsOriginConfig;
 
 /** CSP configuration for Content-Security-Policy header */
-export interface CspConfig {
+export interface CspConfig extends ProtocolCspConfig {
   /** CSP policy string (e.g. "default-src 'self'; script-src 'self'") */
   policy?: string;
   /** Auto-generate nonce for <script> tags (default: false) */
@@ -70,7 +85,7 @@ export interface CspConfig {
 }
 
 /** Middleware registration declaration for the Hono entry */
-export interface MiddlewareDecl {
+export interface MiddlewareDecl extends ProtocolMiddlewareDecl {
   kind: 'requestId' | 'logger' | 'cors' | 'securityHeaders' | 'csp';
   /** Comments to emit before the middleware registration */
   comment?: string;
@@ -82,7 +97,7 @@ export interface MiddlewareDecl {
 }
 
 /** API route declaration (e.g. /api/hello) */
-export interface ApiRouteDecl {
+export interface ApiRouteDecl extends ProtocolApiRouteDecl {
   kind: 'api';
   /** URL path pattern (e.g. '/api/hello') */
   path: string;
@@ -95,7 +110,7 @@ export interface ApiRouteDecl {
 }
 
 /** Page route declaration (e.g. /about) with SSR rendering */
-export interface PageRouteDecl {
+export interface PageRouteDecl extends ProtocolPageRouteDecl {
   kind: 'page';
   /** URL path pattern */
   path: string;
@@ -116,10 +131,10 @@ export interface PageRouteDecl {
 }
 
 /** Union type for all route declarations */
-export type RouteDecl = ApiRouteDecl | PageRouteDecl;
+export type RouteDecl = ProtocolRouteDecl;
 
 /** Island component declaration for runtime upgrade detection */
-export interface IslandDecl {
+export interface IslandDecl extends ProtocolIslandDecl {
   /** Custom element tag name */
   tagName: string;
   /** Module path for dynamic import (e.g. '/app/islands/counter.ts') */
@@ -141,7 +156,8 @@ export interface IslandDecl {
 // imported from @openelement/core
 
 /** Build-time plan that decides which tags may enter the SSR bundle. */
-export interface SsrAdmissionPlan {
+export interface SsrAdmissionPlan
+  extends Omit<ProtocolSsrAdmissionPlan, 'decisions' | 'cemClassifications'> {
   renderableTags: string[];
   clientOnlyTags: string[];
   rejectedTags: string[];
@@ -152,7 +168,7 @@ export interface SsrAdmissionPlan {
 }
 
 /** Renderer declaration - wraps page SSR output (like Next.js layout.tsx) */
-export interface RendererDecl {
+export interface RendererDecl extends ProtocolRendererDecl {
   /** Variable name for the imported module */
   varName: string;
   /** Directory scope (e.g. '/guide') - applies to this dir and subdirs */
@@ -164,7 +180,7 @@ export interface RendererDecl {
 }
 
 /** Middleware scope declaration - Hono middleware mounted to directory prefix */
-export interface MiddlewareScopeDecl {
+export interface MiddlewareScopeDecl extends ProtocolMiddlewareScopeDecl {
   /** Variable name for the imported module */
   varName: string;
   /** Directory scope (e.g. '/api') */
@@ -174,7 +190,7 @@ export interface MiddlewareScopeDecl {
 }
 
 /** HTML document wrapping configuration */
-export interface DocumentConfig {
+export interface DocumentConfig extends ProtocolDocumentConfig {
   /** <html> lang attribute (default: 'en') */
   lang: string;
   /** <title> content (default: 'openElement') */
@@ -190,21 +206,25 @@ export interface DocumentConfig {
   allowHeadExtrasScripts: boolean;
 }
 
-export interface AppShellDecl {
+export interface AppShellDecl extends ProtocolAppShellDecl {
   tagName: string;
   importPath: string;
   props: Record<string, unknown>;
 }
 
-export type ResolvedAppShell = false | AppShellDecl;
+export type ResolvedAppShell = ProtocolResolvedAppShell;
 
-export interface AppShellPlan {
+export interface AppShellPlan extends ProtocolAppShellPlan {
   default: ResolvedAppShell;
   layouts: Record<string, ResolvedAppShell>;
 }
 
 /** Complete structured descriptor of the Hono entry module to be generated */
-export interface EntryDescriptor {
+export interface EntryDescriptor extends
+  Omit<
+    ProtocolEntryDescriptor,
+    'ssrAdmissionPlan' | 'cemClassifications' | 'appShell'
+  > {
   /** Whether this is an SSG build (injects DOM shim) */
   isSSG: boolean;
 

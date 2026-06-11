@@ -1,12 +1,12 @@
 {
   "name": "@openelement/cem",
-  "version": "0.37.4",
+  "version": "0.37.5",
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.37.4"
+    "@openelement/core": "jsr:@openelement/core@^0.37.5"
   },
   "publish": {
     "include": [

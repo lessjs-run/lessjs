@@ -87,12 +87,12 @@ Deno.test('create-open: deno.json build:ssg uses @openelement/adapter-vite', () 
 
 Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtime facade)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  // v0.23 SOP-003: Keep generated import map minimal while listing direct authoring/config imports.
+  // v0.37.5: generated apps must carry protocol imports used by source packages.
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    9,
-    `Expected 9 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    18,
+    `Expected 18 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
   // v0.23.6: external SSR dependencies declared in consumer import map
   assertEquals(denoJson.imports['alien-signals'], 'npm:alien-signals@^3.2.0');
@@ -101,6 +101,39 @@ Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtim
   assertEquals(denoJson.imports['hono'], 'npm:hono@4.12.23');
   assertEquals(denoJson.imports['@openelement/app'], 'jsr:@openelement/app@^${v.app}');
   assertEquals(denoJson.imports['@openelement/app/vite'], 'jsr:@openelement/app@^${v.app}/vite');
+  assertEquals(denoJson.imports['@openelement/core'], 'jsr:@openelement/core@^${v.core}');
+  assertEquals(
+    denoJson.imports['@openelement/core/jsx-runtime'],
+    'jsr:@openelement/core@^${v.core}/jsx-runtime',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols'],
+    'jsr:@openelement/protocols@^${v.protocols}',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/conformance'],
+    'jsr:@openelement/protocols@^${v.protocols}/conformance',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/data'],
+    'jsr:@openelement/protocols@^${v.protocols}/data',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/islands'],
+    'jsr:@openelement/protocols@^${v.protocols}/islands',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/renderer'],
+    'jsr:@openelement/protocols@^${v.protocols}/renderer',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/routes'],
+    'jsr:@openelement/protocols@^${v.protocols}/routes',
+  );
+  assertEquals(
+    denoJson.imports['@openelement/protocols/signals'],
+    'jsr:@openelement/protocols@^${v.protocols}/signals',
+  );
   assertEquals(denoJson.imports['@openelement/runtime'], 'jsr:@openelement/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@openelement/ui'], 'jsr:@openelement/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
@@ -252,6 +285,36 @@ Deno.test('create-open: generated project builds through the one-command pipelin
     denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
       join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
     ).href;
+    denoJson.imports['@openelement/protocols'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/cache'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'cache.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/components'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'components.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/conformance'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'conformance.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/data'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'data.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/islands'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'islands.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/renderer'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'renderer.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/routes'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'routes.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/runtime'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'runtime.ts'),
+    ).href;
+    denoJson.imports['@openelement/protocols/signals'] = pathToFileURL(
+      join(repoRoot, 'packages', 'protocols', 'src', 'signals.ts'),
+    ).href;
     denoJson.imports['@openelement/runtime'] = pathToFileURL(
       join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
     ).href;
@@ -296,10 +359,51 @@ Deno.test('create-open: generated project builds through the one-command pipelin
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
+    const protocolsSrc = join(repoRoot, 'packages', 'protocols', 'src');
     const aliases = [
       {
         find: '@openelement/adapter-vite',
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
+      },
+      {
+        find: '@openelement/protocols/cache',
+        replacement: vitePath(join(protocolsSrc, 'cache.ts')),
+      },
+      {
+        find: '@openelement/protocols/components',
+        replacement: vitePath(join(protocolsSrc, 'components.ts')),
+      },
+      {
+        find: '@openelement/protocols/conformance',
+        replacement: vitePath(join(protocolsSrc, 'conformance.ts')),
+      },
+      {
+        find: '@openelement/protocols/data',
+        replacement: vitePath(join(protocolsSrc, 'data.ts')),
+      },
+      {
+        find: '@openelement/protocols/islands',
+        replacement: vitePath(join(protocolsSrc, 'islands.ts')),
+      },
+      {
+        find: '@openelement/protocols/renderer',
+        replacement: vitePath(join(protocolsSrc, 'renderer.ts')),
+      },
+      {
+        find: '@openelement/protocols/routes',
+        replacement: vitePath(join(protocolsSrc, 'routes.ts')),
+      },
+      {
+        find: '@openelement/protocols/runtime',
+        replacement: vitePath(join(protocolsSrc, 'runtime.ts')),
+      },
+      {
+        find: '@openelement/protocols/signals',
+        replacement: vitePath(join(protocolsSrc, 'signals.ts')),
+      },
+      {
+        find: '@openelement/protocols',
+        replacement: vitePath(join(protocolsSrc, 'index.ts')),
       },
       {
         find: '@openelement/core/logger',

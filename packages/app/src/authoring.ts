@@ -7,8 +7,9 @@ import { ERROR_PREFIX } from '@openelement/core';
  * graph.
  */
 
-import { DsdElement, type HydrationStrategy, type VNode } from '@openelement/core';
+import { DsdElement, type VNode } from '@openelement/core';
 import { defineIsland as defineRuntimeIsland } from '@openelement/core';
+import type { IslandConfig as ProtocolIslandConfig } from '@openelement/protocols/islands';
 
 export type PageRenderingMode = 'auto' | 'static' | 'dynamic';
 export type PageStreamingMode = 'auto' | 'force' | false;
@@ -334,17 +335,9 @@ export function defineLayout<Props extends Record<string, unknown> = Record<stri
   return defineElement(tagName, input);
 }
 
-export interface AppIslandOptions {
-  hydrate?: HydrationStrategy;
-  dsd?: boolean;
-  ssr?: boolean;
-}
+export type AppIslandOptions = ProtocolIslandConfig;
 
-export interface IslandConfig {
-  hydrate?: HydrationStrategy;
-  dsd?: boolean;
-  ssr?: boolean;
-}
+export type IslandConfig = ProtocolIslandConfig;
 
 export function defineIslandConfig(config: IslandConfig): IslandConfig {
   if (typeof config !== 'object' || config === null || Array.isArray(config)) {

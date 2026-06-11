@@ -62,7 +62,9 @@ Required files:
 - Remove duplicate or obsolete code instead of adding compatibility shims.
 - Do not claim a SOP item is complete without a code, docs, test, or gate proof.
 - Do not bump packages until local gates for the version pass.
-- Do not write release notes as published unless the publish state is real.
+- Do not claim JSR availability unless direct registry checks prove it.
+- JSR publish is a best-effort distribution step, not a version-exit gate. See
+  ADR-0097.
 - Do not merge `dev` to `main` until `dev` CI is green.
 - Do not tag until `main` CI is green.
 
@@ -95,7 +97,13 @@ Use this order for a minor release:
 9. merge `dev` into `main`;
 10. wait for all `main` CI jobs;
 11. create and push the release tag;
-12. publish the GitHub release note.
+12. publish the GitHub release note;
+13. let the JSR publish workflow run, or trigger local/CI publish manually, and
+    record any registry failure as external distribution state.
+
+JSR package visibility and post-publish JSR consumer smoke do not block version
+exit when repository-controlled evidence is complete. They remain distribution
+telemetry and release-note caveats.
 
 ## Automation Gates
 

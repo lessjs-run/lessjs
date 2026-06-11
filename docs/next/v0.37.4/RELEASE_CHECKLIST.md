@@ -1,26 +1,23 @@
 # v0.37.4 Release Checklist
 
-- [ ] All TASKS.md items checked.
-- [ ] All ACCEPTANCE.md criteria met.
-- [ ] `deno task fmt:check` passes.
-- [ ] `deno task lint` passes.
-- [ ] `deno task typecheck` passes.
-- [ ] `deno task test` passes (including new ssg/router/protocols tests).
-- [ ] `deno task build` passes.
-- [ ] `deno task graph:check` passes (ui no longer depends on router).
-- [ ] `deno task arch:check` passes.
-- [ ] `deno task dsd:check-report` passes.
-- [ ] `deno task publish:dry-run` passes (20 packages).
-- [ ] `deno task hub:validate -- --strict` passes.
-- [ ] `deno task verify:configs` passes.
-- [ ] E2E gateway passes (`deno task test:e2e`).
-- [ ] Changelog updated.
-- [ ] Release note written.
-- [ ] JSR publish recovery reaches 20/20 packages at `0.37.4`.
-- [ ] Publish recovery uses the live-metadata watcher path: 45-minute
-      per-package window, provenance retained, hung `deno publish` stopped only
-      after JSR reports the immutable version.
-- [ ] JSR package-level `meta.json` exposes `0.37.4` and `latest: "0.37.4"`
-      for all 20 packages before consumer smoke starts.
-- [ ] Post-publish consumer smoke passes against the freshly published
-      `0.37.4` package line.
+- [x] All TASKS.md items checked.
+- [x] All ACCEPTANCE.md criteria met.
+- [x] `deno task fmt:check` passes.
+- [x] `deno task lint` passes.
+- [x] `deno task typecheck` passes.
+- [x] `deno task test` passes, including new ssg/router/protocols tests.
+- [x] `deno task build` passes.
+- [x] `deno task graph:check` passes, with ui no longer depending on router.
+- [x] `deno task arch:check` passes.
+- [x] `deno task dsd:check-report` passes.
+- [x] `deno task publish:dry-run` passes for 20 packages.
+- [x] `deno task hub:validate -- --strict` passes.
+- [x] `deno task verify:configs` passes.
+- [x] E2E gateway passes through `deno task test:e2e`.
+- [x] Changelog updated.
+- [x] Release note written.
+- [x] JSR publish attempted through local or CI publish path.
+- [x] JSR registry state recorded as a release-note caveat while resolver
+      visibility is incomplete.
+- [x] Release exit does not depend on live JSR 20/20 visibility or post-publish
+      JSR consumer smoke under ADR-0097.

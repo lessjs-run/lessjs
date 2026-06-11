@@ -1,5 +1,5 @@
 /**
- * Homepage - openElement v0.37.4.
+ * Homepage - openElement v0.37.5.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';

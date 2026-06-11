@@ -3,6 +3,7 @@ import * as protocols from '../src/index.ts';
 
 Deno.test('@openelement/protocols exports runtime validators and type-only contracts', () => {
   assertEquals(Object.keys(protocols).sort(), [
+    'MemoryDataAdapter',
     'createPluginMeta',
     'isOpenBlogOptions',
     'isOpenBuildContextLike',
@@ -10,5 +11,12 @@ Deno.test('@openelement/protocols exports runtime validators and type-only contr
     'isOpenI18nOptions',
     'isOpenNavSection',
     'isOpenPluginMeta',
+    'isSignalLike',
+    'runCacheAdapterConformance',
+    'runComponentAdapterConformance',
+    'runDataAdapterConformance',
+    'runRendererConformance',
+    'runRuntimeAdapterConformance',
+    'unwrapSignalLike',
   ]);
 });

@@ -1,9 +1,18 @@
 {
   "name": "@openelement/protocols",
-  "version": "0.37.4",
+  "version": "0.37.5",
   "exports": {
     ".": "./src/index.ts",
     "./build-types": "./src/build-types.ts",
+    "./cache": "./src/cache.ts",
+    "./components": "./src/components.ts",
+    "./conformance": "./src/conformance.ts",
+    "./data": "./src/data.ts",
+    "./islands": "./src/islands.ts",
+    "./renderer": "./src/renderer.ts",
+    "./routes": "./src/routes.ts",
+    "./runtime": "./src/runtime.ts",
+    "./signals": "./src/signals.ts",
     "./validators": "./src/validators.ts"
   },
   "imports": {},

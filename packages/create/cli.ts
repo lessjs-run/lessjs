@@ -28,6 +28,7 @@ const PKG_DIR_MAP: Record<string, string> = {
   i18n: 'i18n',
   ui: 'ui',
   signals: 'signals',
+  protocols: 'protocols',
   runtime: 'runtime',
   styleSheet: 'style-sheet',
 };
@@ -102,6 +103,7 @@ async function resolveVersions(): Promise<Record<string, string>> {
     i18n: 'i18n',
     ui: 'ui',
     signals: 'signals',
+    protocols: 'protocols',
     runtime: 'runtime',
     styleSheet: 'style-sheet',
   };
@@ -125,6 +127,15 @@ node_modules/
     "hono": "npm:hono@4.12.23",
     "@openelement/app": "jsr:@openelement/app@^${v.app}",
     "@openelement/app/vite": "jsr:@openelement/app@^${v.app}/vite",
+    "@openelement/core": "jsr:@openelement/core@^${v.core}",
+    "@openelement/core/jsx-runtime": "jsr:@openelement/core@^${v.core}/jsx-runtime",
+    "@openelement/protocols": "jsr:@openelement/protocols@^${v.protocols}",
+    "@openelement/protocols/conformance": "jsr:@openelement/protocols@^${v.protocols}/conformance",
+    "@openelement/protocols/data": "jsr:@openelement/protocols@^${v.protocols}/data",
+    "@openelement/protocols/islands": "jsr:@openelement/protocols@^${v.protocols}/islands",
+    "@openelement/protocols/renderer": "jsr:@openelement/protocols@^${v.protocols}/renderer",
+    "@openelement/protocols/routes": "jsr:@openelement/protocols@^${v.protocols}/routes",
+    "@openelement/protocols/signals": "jsr:@openelement/protocols@^${v.protocols}/signals",
     "@openelement/runtime": "jsr:@openelement/runtime@^${v.runtime}",
     "@openelement/ui": "jsr:@openelement/ui@^${v.ui}",
     "vite": "npm:vite@8.0.10"

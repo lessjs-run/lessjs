@@ -1,42 +1,15 @@
 /**
- * @openelement/signals - Public type exports
+ * @openelement/signals - Public type exports.
  *
- * Shared types used by framework and sugar layers.
- * No internal polyfill dependencies.
+ * The protocol shape is owned by @openelement/protocols. This package keeps
+ * the historical public import path while implementing the concrete engine.
  */
 
-/** Unsubscribe function */
-export type Unsubscribe = () => void;
-
-/**
- * openElement WritableSignal - user-friendly wrapper around Signal.State
- * Uses .value syntax (like Preact/Solid) instead of .get()/.set() (TC39)
- */
-export interface WritableSignal<T> {
-  /** Read the current value */
-  get value(): T;
-  /** Write a new value */
-  set value(v: T);
-  /** Subscribe to value changes. Called immediately with current value. */
-  subscribe(fn: (value: T) => void): Unsubscribe;
-}
-
-/**
- * openElement ReadonlySignal - derived from computed or manually created read-only
- */
-export interface ReadonlySignal<T> {
-  /** Read the current value */
-  readonly value: T;
-  /** Subscribe to value changes. Called immediately with current value. */
-  subscribe(fn: (value: T) => void): Unsubscribe;
-}
-
-/** Alias for readability */
-export type Signal<T> = WritableSignal<T> | ReadonlySignal<T>;
-
-/** Signal engine protocol used by framework integrations. */
-export interface SignalEngine {
-  signal<T>(initialValue: T): WritableSignal<T>;
-  computed<T>(fn: () => T): ReadonlySignal<T>;
-  effect(fn: () => void | Unsubscribe): Unsubscribe;
-}
+export type {
+  ReadonlySignal,
+  Signal,
+  SignalEngine,
+  SignalLike,
+  Unsubscribe,
+  WritableSignal,
+} from '@openelement/protocols/signals';
