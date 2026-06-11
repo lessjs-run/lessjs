@@ -83,7 +83,7 @@ export interface IslandDecl {
   reason?: string;
 }
 
-export interface CompatibilityClassificationLike {
+export interface CemClassificationLike {
   tagName: string;
   tier?: string;
   compatible?: boolean;
@@ -105,7 +105,7 @@ export interface SsrAdmissionPlan {
   rejectedTags: string[];
   reasons: Record<string, string>;
   decisions: SsrAdmissionDecisionLike[];
-  cemClassifications?: CompatibilityClassificationLike[];
+  cemClassifications?: CemClassificationLike[];
 }
 
 export interface RendererDecl {
@@ -149,7 +149,7 @@ export interface EntryDescriptor {
   pageRoutes: PageRouteDecl[];
   islands: IslandDecl[];
   ssrAdmissionPlan: SsrAdmissionPlan;
-  cemClassifications?: CompatibilityClassificationLike[];
+  cemClassifications?: CemClassificationLike[];
   hubClientOnlyTags?: string[];
   renderers: RendererDecl[];
   middlewareScopes: MiddlewareScopeDecl[];
