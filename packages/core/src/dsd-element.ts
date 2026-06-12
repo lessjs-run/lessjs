@@ -59,7 +59,8 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
-import { effect, type Signal, signal } from '@openelement/signals';
+import type { Signal } from '@openelement/protocols/signals';
+import { effect, signal } from '@openelement/signals';
 import { createLogger } from './logger.js';
 
 /**

@@ -78,6 +78,7 @@ function main(): void {
     'arch:check',
     'graph:check',
     'ci:check-package-tests',
+    'signals:check-protocol-boundary',
     'docs:check-public',
     'docs:check-current',
     'docs:check-strategy',

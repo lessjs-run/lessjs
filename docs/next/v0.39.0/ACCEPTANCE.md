@@ -35,6 +35,8 @@ CI, and release evidence.
 - [x] `deno task docs:check-public` passes.
 - [x] `deno task ci:check-package-tests` proves every package with
       `__tests__` is represented in `.github/workflows/test.yml`.
+- [x] `deno task signals:check-protocol-boundary` prevents `core` from importing
+      signal protocol types from the concrete `@openelement/signals` engine.
 - [x] Package versions are bumped only after implementation gates pass.
 - [x] `dev` and `main` non-JSR CI pass before tag/release.
 - [x] JSR publish succeeds locally or in CI before release closure.

@@ -37,6 +37,12 @@ const CHECK_GROUPS: CheckGroup[] = [
     triggers: [],
     command: ['deno', 'task', 'ci:check-package-tests'],
   },
+  {
+    name: 'signals:check-protocol-boundary',
+    always: true,
+    triggers: [],
+    command: ['deno', 'task', 'signals:check-protocol-boundary'],
+  },
 
   // Conditional checks — only run when affected paths change
   {
