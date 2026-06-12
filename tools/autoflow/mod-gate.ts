@@ -25,6 +25,12 @@ const CHECK_GROUPS: CheckGroup[] = [
   { name: 'lint', always: true, triggers: [], command: ['deno', 'task', 'lint'] },
   { name: 'typecheck', always: true, triggers: [], command: ['deno', 'task', 'typecheck'] },
   { name: 'graph', always: true, triggers: [], command: ['deno', 'task', 'graph:check'] },
+  {
+    name: 'docs:check-public',
+    always: true,
+    triggers: [],
+    command: ['deno', 'task', 'docs:check-public'],
+  },
 
   // Conditional checks — only run when affected paths change
   {

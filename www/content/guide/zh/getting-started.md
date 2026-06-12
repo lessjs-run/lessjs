@@ -7,8 +7,14 @@ order: 1
 
 # 快速开始
 
-openElement 是 JSX-first 的 Web Components 应用框架。页面用 JSX 编写，
-框架把它们渲染为 Declarative Shadow DOM，需要交互的部分再作为 islands 升级。
+openElement 是 JSX-first 的 Web Components 平台：
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
+
+页面使用 JSX 编写。Framework 默认可以用 shadow/DSD 渲染 Web Components，
+需要交互的部分再作为 islands 升级。
 
 ## 创建项目
 
@@ -40,8 +46,8 @@ export default definePage({
 });
 ```
 
-`definePage()` 只接受一个 canonical object descriptor。`route` 是意图元数据；
-真实路由匹配仍由文件扫描器负责。
+`definePage()` 使用一个 canonical object descriptor。`route` 是意图
+metadata；真实路由匹配仍由文件扫描器负责。
 
 ## 添加 island
 
@@ -75,4 +81,5 @@ export default defineConfig({
 });
 ```
 
-根入口 `@openelement/app` 用于应用编写。构建配置入口是 `@openelement/app/vite`。
+根入口 `@openelement/app` 用于应用编写。构建配置入口是
+`@openelement/app/vite`。

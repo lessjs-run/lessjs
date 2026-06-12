@@ -1,9 +1,11 @@
 # @openelement/ui
 
-openElement Web Components package.
+openElement UI product package.
 
-The components are authored as native `DsdElement` custom elements and designed
-to work with openElement Declarative Shadow DOM output and island upgrade.
+The components are first-party `open-*` Web Components. They are designed to
+prove the openElement Elements model with shadow/DSD output, explicit light DOM
+where needed, and island upgrade. ADR-0099 makes UI one of the four first-class
+products and keeps external UI libraries out of the current default target.
 
 ## Install
 

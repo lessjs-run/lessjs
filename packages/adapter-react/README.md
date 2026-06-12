@@ -2,6 +2,9 @@
 
 React SSR adapter for [openElement](https://github.com/open-element/openelement).
 
+> v0.39 surface: advanced adapter ecosystem. React expansion is not part of the
+> v0.39 heavy-framework island plan.
+
 ## Overview
 
 SSR adapter for React components used as Web Components in the openElement

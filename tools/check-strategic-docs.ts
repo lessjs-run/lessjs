@@ -1,4 +1,4 @@
-import { PACKAGE_VERSION_TAG } from './project-constants.ts';
+import { ACTIVE_VERSION, PACKAGE_VERSION_TAG } from './project-constants.ts';
 
 type Check = {
   name: string;
@@ -59,14 +59,19 @@ const currentDocs = [
 
 const checks: Check[] = [
   {
-    name: 'ADR-0037 positioning anchors',
+    name: 'ADR-0099 four-product matrix anchors',
     files: currentDocs,
-    required: ['DSD-first'],
+    required: ['openElement = Elements + UI + Framework + Protocols'],
   },
   {
     name: `${PACKAGE_VERSION_TAG} is the current package line`,
     files: currentDocs,
     required: [PACKAGE_VERSION_TAG],
+  },
+  {
+    name: `${ACTIVE_VERSION} is the active execution line`,
+    files: currentDocs,
+    required: [ACTIVE_VERSION],
   },
   {
     name: 'v1.0 is the stable engine target',
@@ -103,6 +108,8 @@ const checks: Check[] = [
       /Gate currently passes at threshold Infinity/i,
       /681<\/strong><span>tests/i,
       /v0\.37\.0\s*\|\s*Server\/Data\/UI Product Closure/i,
+      /v0\.37\.6 package\s+line current/i,
+      /active execution target is\s+v0\.38\.0/i,
     ],
   },
   {

@@ -5,6 +5,7 @@
 | Workflow               | `deno task workflow:check`        | Yes       |
 | Package graph          | `deno task graph:check`           | Yes       |
 | Architecture           | `deno task arch:check`            | Yes       |
+| Public docs integrity  | `deno task docs:check-public`     | Yes       |
 | Docs current           | `deno task docs:check-current`    | Yes       |
 | Docs strategy          | `deno task docs:check-strategy`   | Yes       |
 | Format                 | `deno task fmt:check`             | Yes       |

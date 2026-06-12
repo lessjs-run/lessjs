@@ -1,5 +1,6 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
-// Strategic docs anchor: current package line v0.38.0.
+// Strategic docs anchor: current package line v0.38.0, active line v0.39.0.
+// openElement = Elements + UI + Framework + Protocols.
 
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -35,9 +36,9 @@ function GettingStartedEn() {
     <>
       <h1>Getting Started</h1>
       <p class='subtitle'>
-        Create a minimal JSX-first, DSD-first openElement app, start the dev
-        server, build static output, and learn where the {OPENELEMENT_VERSION} application
-        lifecycle lives.
+        Create a minimal JSX-first openElement app, start the dev server, build
+        static output, and learn where the {OPENELEMENT_VERSION} application
+        lifecycle lives inside the four-product platform.
       </p>
 
       <open-callout type='info' label='Recommended'>
@@ -187,15 +188,14 @@ function GettingStartedZh() {
     <>
       <h1>快速开始</h1>
       <p class='subtitle'>
-        创建一个 JSX-first、DSD-first 的 openElement 应用，启动开发服务器，
-        构建静态输出，并理解 {OPENELEMENT_VERSION} 的应用 API。
+        创建一个 JSX-first 的 openElement 应用，启动开发服务器，构建静态输出，并理解
+        {OPENELEMENT_VERSION} 的应用 API 如何落在四产品平台中。
       </p>
 
       <open-callout type='info' label='推荐'>
         推荐 Deno 2.7+。openElement <strong>{OPENELEMENT_VERSION}</strong>
-        {' '}使用 Deno tasks、<code>deno.json</code> imports、JSX/VNode
-        渲染，以及来自 <code>@openelement/app/vite</code> 的
-        <code>openElement()</code> Vite facade。
+        {' '}使用 Deno tasks、<code>deno.json</code> imports、JSX/VNode 渲染，以及来自
+        <code>@openelement/app/vite</code> 的 <code>openElement()</code> Vite facade。
       </open-callout>
 
       <section class='step'>
@@ -212,8 +212,7 @@ function GettingStartedZh() {
         <h2>2. 启动开发服务器</h2>
         <open-code-block><pre><code>deno task dev</code></pre></open-code-block>
         <p>
-          开发模式由 Vite 提供模块加载和热更新，SSR/API 行为来自生成的
-          Hono entry。
+          开发模式由 Vite 提供模块加载和热更新，SSR/API 行为来自生成的 Hono entry。
         </p>
       </section>
 
@@ -221,9 +220,8 @@ function GettingStartedZh() {
         <h2>3. 构建静态输出</h2>
         <open-code-block><pre><code>deno task build</code></pre></open-code-block>
         <p>
-          构建会扫描 routes 和 islands，生成 SSR wiring，输出 DSD HTML
-          和 client island chunks，最终结果位于
-          <span class='inline-code'>dist/</span>。
+          构建会扫描 routes 和 islands，生成 SSR wiring，输出 DSD HTML 和 client island chunks，
+          最终结果位于 <span class='inline-code'>dist/</span>。
         </p>
       </section>
 
@@ -255,8 +253,8 @@ export default defineIsland(
 
       <div class='alert alert-info'>
         <p>
-          v1.0 的目标是稳定应用引擎。{OPENELEMENT_VERSION} 让 Application API
-          结构化且对 AI 可读。
+          v1.0 的目标是稳定 Elements、UI、Framework 和 Protocols 四个产品面。
+          {OPENELEMENT_VERSION} 继续验证结构化、AI 可读的 Application API。
         </p>
       </div>
 
@@ -266,7 +264,6 @@ export default defineIsland(
     </>
   );
 }
-
 customElements.define('page-getting-started', GettingStartedPage);
 export default GettingStartedPage;
 export const tagName = 'page-getting-started';

@@ -7,9 +7,14 @@ order: 1
 
 # Getting Started
 
-openElement is a JSX-first Web Components framework. Pages are written as JSX,
-the framework renders them to Declarative Shadow DOM, and interactive parts are
-upgraded as islands.
+openElement is a JSX-first Web Components platform:
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
+
+Pages are written as JSX. The framework can render Web Components with
+shadow/DSD by default, and interactive parts are upgraded as islands.
 
 ## Create a Project
 

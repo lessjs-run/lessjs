@@ -2,6 +2,10 @@
 
 openElement build orchestration for Vite.
 
+> v0.39 surface: advanced Framework infrastructure. First-run apps should use
+> `@openelement/app/vite` or generated `@openelement/create` tasks instead of
+> importing this package directly.
+
 This package scans routes and islands, generates virtual entries, builds client
 island chunks, runs SSG, and writes post-processed HTML. It is build-time
 infrastructure; runtime primitives live in `@openelement/core`.

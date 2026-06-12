@@ -340,7 +340,7 @@ if (buildResult.code !== 0) {
   Deno.exit(1);
 }
 
-if (!stdout.includes('Routes: 1 page(s), 1 API route(s)')) {
+if (!stdout.includes('Routes: 2 page(s), 1 API route(s)')) {
   console.error('Consumer build did not scan the expected page/API route surface.');
   console.error(stdout);
   console.error(stderr);
@@ -352,6 +352,24 @@ if (!stdout.includes('Routes: 1 page(s), 1 API route(s)')) {
 const indexHtmlPath = join(appDir, 'dist', 'index.html');
 if (!existsSync(indexHtmlPath)) {
   console.error('dist/index.html not found; consumer build produced no output');
+  console.error(stdout);
+  console.error(stderr);
+  cleanup();
+  Deno.exit(1);
+}
+
+const freshnessHtmlPath = join(appDir, 'dist', 'freshness', 'index.html');
+if (!existsSync(freshnessHtmlPath)) {
+  console.error('dist/freshness/index.html not found; ISR intent route was not generated');
+  console.error(stdout);
+  console.error(stderr);
+  cleanup();
+  Deno.exit(1);
+}
+
+const assetPath = join(appDir, 'dist', 'openelement-mark.svg');
+if (!existsSync(assetPath)) {
+  console.error('dist/openelement-mark.svg not found; public asset was not copied');
   console.error(stdout);
   console.error(stderr);
   cleanup();
@@ -373,8 +391,23 @@ if (!indexHtml.includes('data-open-layout="app-shell"')) {
   Deno.exit(1);
 }
 
+if (!indexHtml.includes('/openelement-mark.svg')) {
+  console.error('dist/index.html does not reference the generated public asset');
+  console.error('Last 300 chars:', indexHtml.substring(indexHtml.length - 300));
+  cleanup();
+  Deno.exit(1);
+}
+
+const freshnessHtml = readFileSync(freshnessHtmlPath, 'utf-8');
+if (!freshnessHtml.includes('Freshness proof')) {
+  console.error('dist/freshness/index.html does not contain expected ISR intent content');
+  console.error('Last 300 chars:', freshnessHtml.substring(freshnessHtml.length - 300));
+  cleanup();
+  Deno.exit(1);
+}
+
 console.log(
-  'Local consumer build passed; generated page, app shell, and API route surface verified.',
+  'Local consumer build passed; pages, app shell, island, API route, asset, and ISR intent surface verified.',
 );
 
 // Step 7: Mount the generated server entry in a real Nitro node output.
@@ -506,6 +539,41 @@ try {
       !homeHtml.includes('data-open-layout="app-shell"')
     ) {
       console.error(JSON.stringify({ status: home.status, body: homeHtml.slice(-500) }, null, 2));
+      nitroSmokeFailed = true;
+    }
+  }
+
+  if (!nitroSmokeFailed) {
+    const freshness = await fetch(`${baseUrl}/freshness`);
+    const freshnessHtml = await freshness.text();
+    if (
+      freshness.status !== 200 ||
+      !freshnessHtml.includes('Freshness proof') ||
+      !freshnessHtml.includes('data-open-layout="app-shell"')
+    ) {
+      console.error(JSON.stringify(
+        {
+          status: freshness.status,
+          body: freshnessHtml.slice(-500),
+        },
+        null,
+        2,
+      ));
+      nitroSmokeFailed = true;
+    }
+  }
+
+  if (!nitroSmokeFailed) {
+    const asset = await fetch(`${baseUrl}/openelement-mark.svg`);
+    const assetBody = await asset.text();
+    if (
+      asset.status !== 200 ||
+      !assetBody.includes('<svg') ||
+      !assetBody.includes('openElement mark')
+    ) {
+      console.error(
+        JSON.stringify({ status: asset.status, body: assetBody.slice(0, 200) }, null, 2),
+      );
       nitroSmokeFailed = true;
     }
   }

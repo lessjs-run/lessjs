@@ -2,6 +2,9 @@
 
 Lit adapter for openElement DSD rendering.
 
+> v0.39 surface: advanced adapter ecosystem. It is not part of the first-run
+> generated app surface.
+
 The adapter lets `@openelement/core` render Lit `TemplateResult` values into clean
 Declarative Shadow DOM HTML. It does not use `@lit-labs/ssr` and does not emit
 Lit marker comments in the final DSD output.

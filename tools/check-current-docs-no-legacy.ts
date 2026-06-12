@@ -59,7 +59,9 @@ async function check(f: string) {
 }
 
 for (const d of ['www/app/routes', 'docs']) for await (const f of walk(d)) await check(f);
-for (const f of ['packages/core/README.md', 'packages/runtime/README.md', 'README.md']) {
+for (
+  const f of ['packages/core/README.md', 'packages/runtime/README.md', 'README.md', 'README.zh.md']
+) {
   await check(f);
 }
 

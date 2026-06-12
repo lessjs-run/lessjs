@@ -6,22 +6,29 @@
       are met.
 - [x] Generated app smoke evidence is recorded.
 - [x] Deployment/runtime evidence is recorded.
-- [ ] Root README, README.zh, website docs, package READMEs, and generated
+- [x] ADR-0099 exists and is listed in the ADR index.
+- [x] Root README, README.zh, website docs, package READMEs, and generated
       templates agree.
-- [ ] Migration notes are recorded for intentional 0.x behavior changes.
-- [ ] `deno task workflow:check` passes for `docs/next/v0.39.0/`.
-- [ ] `deno task graph:check` passes.
-- [ ] `deno task arch:check` passes.
-- [ ] `deno task docs:check-current` passes.
-- [ ] `deno task docs:check-strategy` passes.
-- [ ] `deno task fmt:check` passes.
-- [ ] `deno task lint` passes.
-- [ ] `deno task typecheck` passes.
-- [ ] `deno task test` passes.
-- [ ] `deno task test:e2e` passes.
-- [ ] `deno task build` passes.
-- [ ] `deno task dsd:check-report` passes.
-- [ ] `deno task publish:dry-run` passes before release closure.
+- [x] README.md and README.zh report package line `0.39.0` and active line
+      `v0.39.0`.
+- [x] README.zh has no mojibake/replacement text.
+- [x] Public docs present `openElement = Elements + UI + Framework +
+      Protocols`.
+- [x] Migration notes are recorded for intentional 0.x behavior changes.
+- [x] `deno task workflow:check` passes for `docs/next/v0.39.0/`.
+- [x] `deno task docs:check-public` passes.
+- [x] `deno task graph:check` passes.
+- [x] `deno task arch:check` passes.
+- [x] `deno task docs:check-current` passes.
+- [x] `deno task docs:check-strategy` passes.
+- [x] `deno task fmt:check` passes.
+- [x] `deno task lint` passes.
+- [x] `deno task typecheck` passes.
+- [x] `deno task test` passes.
+- [x] `deno task test:e2e` passes.
+- [x] `deno task build` passes.
+- [x] `deno task dsd:check-report` passes.
+- [x] `deno task publish:dry-run` passes before release closure.
 - [ ] Package versions are bumped only after implementation gates pass.
 - [ ] `dev` is pushed and non-JSR CI is green.
 - [ ] `dev` is merged or synced to `main`.

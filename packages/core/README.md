@@ -1,20 +1,22 @@
 # @openelement/core
 
-Pure openElement runtime package.
+Advanced openElement runtime kernel.
 
-`@openelement/core` owns the platform-facing runtime primitives:
+Most users should start from `@openelement/app`, `@openelement/ui`, or the
+future Elements product surface. `@openelement/core` owns low-level primitives
+used by those products:
 
-- **JSX + Signal component model** — `jsx()`, `jsxs()`, `VNode`, `renderToString()`, `renderToDom()`
-- **DsdElement** — zero-framework base class for DSD components
-- **static props** — ES2022 class fields for reactive properties
-- **DSD rendering** — `renderDsd()`, `renderDsdStream()`
-- **Unified errors** — OpenElementError hierarchy, ErrorBoundary, telemetry
-- **Signal utilities** — `isSignalLike()`, `unwrapSignalLike()`
-- **Island metadata** — island detection, strategy, hydration
-- **Navigation** — SPA helpers
-- **SSR context** — per-request context, escaping, structured errors
+- JSX and VNode runtime primitives.
+- DSD rendering through `renderDsd()` and `renderDsdStream()`.
+- The existing `DsdElement` implementation API.
+- Static props, event hydration, island metadata, and SSR context helpers.
+- Unified errors, signal-like utilities, and DOM rendering helpers.
 
-It does not contain Vite, CLI, or build orchestration logic.
+ADR-0099 defines the public Elements direction as `@openelement/elements` and
+`OpenElement`. Until that package is implemented, `DsdElement` remains the
+current low-level implementation API, not the long-term product name.
+
+This package does not contain Vite, CLI, or build orchestration logic.
 
 ## Install
 
@@ -62,7 +64,6 @@ import {
   renderDsd,
   renderDsdStream,
   renderToDom,
-  renderToString,
   SsrRenderError,
   unwrapSignalLike,
   VNode,

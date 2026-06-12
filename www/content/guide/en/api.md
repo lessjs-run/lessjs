@@ -42,7 +42,8 @@ export default defineIsland('my-counter', () => <button>Count</button>, {
 
 ### `defineElement(tagName, render)`
 
-Declares a reusable DSD-native custom element.
+Declares a reusable Elements-native custom element. Shadow/DSD is the default
+render mode; light DOM remains explicit opt-in.
 
 ### `defineLayout(tagName, render)`
 
@@ -57,9 +58,14 @@ import { openElement } from '@openelement/app/vite';
 `openElement()` configures Vite, route scanning, SSG, islands, AppShell,
 content, and i18n.
 
-## Runtime Packages
+## Product And Runtime Packages
 
-- `@openelement/runtime`: low-level DSD element, signals, and stylesheet exports.
+- `@openelement/app` and `@openelement/create`: Framework product surface.
+- `@openelement/ui`: first-party UI product surface.
+- `@openelement/protocols`: runtime-free Protocols product surface.
+- Future `@openelement/elements`: Elements product surface with `OpenElement`.
+- `@openelement/runtime`: current low-level element, signals, and stylesheet
+  facade.
 - `@openelement/core`: renderer kernel and JSX runtime.
 - `@openelement/signals`: signal primitives.
 - `@openelement/style-sheet`: CSSStyleSheet abstraction.

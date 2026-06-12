@@ -1,16 +1,22 @@
-# Current Architecture - v0.32.0
+# Current Architecture - v0.39.0
 
-> Status: **CURRENT (APP LIFECYCLE LINE)**\
-> Version line: v0.32.0\
+> Status: **CURRENT (FRAMEWORK RC + FOUR-PRODUCT MATRIX)**\
+> Package line: 0.38.0\
+> Active execution line: v0.39.0\
 > Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082,
-> ADR-0083, ADR-0084, ADR-0085, ADR-0086\
-> Last hardened: 2026-06-06
+> ADR-0083, ADR-0084, ADR-0085, ADR-0086, ADR-0096, ADR-0097, ADR-0098,
+> ADR-0099\
+> Last hardened: 2026-06-12
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 ## Architecture Center
 
-openElement is a JSX-first Web Components application framework.
+openElement is a four-product Web Components platform:
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
 
 The architecture is designed around deterministic output:
 
@@ -21,8 +27,9 @@ The architecture is designed around deterministic output:
 - generated projects as release artifacts;
 - package graph gates before publish.
 
-openElement owns the Web Component and DSD application layer. Hono, Vite, Deno,
-JSR, and Web Platform APIs remain the substrate.
+openElement owns the Elements, UI, Framework, and Protocols product semantics.
+Shadow/DSD is the default Elements render mode, not the product name. Hono,
+Vite, Nitro, Deno, JSR, and Web Platform APIs remain substrates or engines.
 
 ## Layer Model
 
@@ -30,10 +37,13 @@ JSR, and Web Platform APIs remain the substrate.
 tools and release gates
   arch:check, graph:check, docs gates, publish dry-run, consumer smoke
 
-application authoring
+framework authoring
   @openelement/app: definePage, defineIsland, defineElement, defineLayout,
   redirect, notFound
-  @openelement/runtime: runtime convenience exports
+
+elements authoring
+  future @openelement/elements: OpenElement
+  @openelement/runtime: current convenience facade
 
 build configuration
   @openelement/app/vite: openElement()
@@ -42,15 +52,16 @@ build configuration
 framework adapters
   @openelement/adapter-lit, @openelement/adapter-react, @openelement/adapter-vanilla
 
-product packages
-  @openelement/create, @openelement/app, @openelement/runtime,
-  @openelement/ui, @openelement/protocols
+product surfaces
+  Elements, UI, Framework, Protocols
+  @openelement/create, @openelement/app, @openelement/ui,
+  @openelement/protocols
 
 advanced and implementation packages
   @openelement/adapter-vite, @openelement/content, @openelement/i18n,
   @openelement/signals, @openelement/style-sheet, @openelement/router,
   @openelement/ssg, @openelement/cem, @openelement/compat-check,
-  @openelement/rpc
+  @openelement/runtime, @openelement/rpc
 
 runtime kernel
   @openelement/core: DsdElement, JSX runtime, renderDsd, renderer IR,
@@ -66,26 +77,25 @@ kernel must not import a concrete build adapter.
 
 ## Public Surface Governance
 
-The current 20-package graph is intentionally not reorganized physically during
-v0.38.0 unless an ADR approves a package-name or removal decision. ADR-0083
-deferred the public surface reset, and `docs/next/v0.38.0/PRODUCT_MAP.md` now
-keeps the existing package names while separating product, advanced, internal,
-and archived surfaces.
+The current 20-package graph is still physically aligned at package version
+0.38.0. ADR-0099 approves the future `@openelement/elements` package name and
+Vue adapter proof, but implementation must update package count, release order,
+import maps, graph checks, docs, and migration notes.
 
 New work must still follow the target direction:
 
 - no new top-level `@openelement/*` package without an ADR;
-- integration APIs prefer subpaths over new packages;
+- integration APIs prefer subpaths over new packages unless an ADR approves a
+  new product package;
 - protocol contracts stay small, explicit, and runtime-free;
 - `@openelement/ui` must not depend on framework routing or app state;
 - framework code must not own database, ORM, auth, backend runtime, or builder
   choices;
 - adapters live at the edge, never in the renderer or Elements core.
 
-The v0.38 review target is a smaller public product surface centered on
-protocols, Elements authoring, UI, Framework, and create scaffolding. It is a
-documentation and template contract first; physical package moves require ADR
-coverage.
+The v0.39 review target is the Framework RC plus ADR-0099 four-product matrix:
+Elements, UI, Framework, and Protocols. It is a documentation and template
+contract first; physical package moves require implementation evidence.
 
 ## Current Package Surfaces
 
@@ -94,10 +104,11 @@ coverage.
 | `@openelement/create`          | project scaffolding                 | product tooling               |
 | `@openelement/app`             | application authoring facade        | product framework             |
 | `@openelement/app/vite`        | build configuration subpath         | product framework             |
-| `@openelement/runtime`         | runtime convenience facade          | product elements              |
+| future `@openelement/elements` | Elements product package            | product Elements direction    |
+| `@openelement/runtime`         | runtime convenience facade          | advanced facade               |
 | `@openelement/core`            | runtime kernel                      | advanced kernel               |
 | `@openelement/protocols`       | shared build contracts              | product protocols             |
-| `@openelement/ui`              | DSD component library               | product UI                    |
+| `@openelement/ui`              | first-party `open-*` components     | product UI                    |
 | `@openelement/signals`         | signal facade over `alien-signals`  | advanced                      |
 | `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | advanced                      |
 | `@openelement/router`          | client and route helpers            | advanced                      |
@@ -113,10 +124,12 @@ coverage.
 | `@openelement/adapter-react`   | React interop                       | advanced adapter ecosystem    |
 | `@openelement/adapter-vanilla` | vanilla WC interop                  | advanced adapter ecosystem    |
 
-There are 20 workspace packages; `@openelement/app/vite` is a product subpath,
-not an additional package. `@openelement/hub` remains in the current package
-graph, but v0.38.0 classifies it as archived for the v1 public product map. New
-Hub product work requires a fresh roadmap entry and ADR.
+There are currently 20 workspace packages; `@openelement/app/vite` is a product
+subpath, not an additional package. The future `@openelement/elements` and
+Vue adapter implementation will raise that count only after package-graph
+updates. `@openelement/hub` remains in the current package graph, but v0.38.0
+classifies it as archived for the v1 public product map. New Hub product work
+requires a fresh roadmap entry and ADR.
 
 ## Public Application Contract
 
@@ -174,7 +187,9 @@ export default definePage({
 });
 ```
 
-`DsdElement` is still the runtime primitive. It is not the default tutorial API.
+`DsdElement` is still the current low-level runtime primitive. ADR-0099
+supersedes it as public product terminology in favor of the future
+`OpenElement` Elements surface.
 
 ## Renderer Pipeline
 

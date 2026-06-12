@@ -31,7 +31,7 @@ export default definePage({
 
 ### `defineIsland(tagName, render, options?)`
 
-声明可交互 Custom Element 和 hydration metadata。
+声明可交互 Custom Element 及其 hydration metadata。
 
 ```tsx
 export default defineIsland('my-counter', () => <button>Count</button>, {
@@ -42,7 +42,8 @@ export default defineIsland('my-counter', () => <button>Count</button>, {
 
 ### `defineElement(tagName, render)`
 
-声明可复用的 DSD-native custom element。
+声明可复用的 Elements-native custom element。Shadow/DSD 是默认渲染模式；
+light DOM 必须显式选择。
 
 ### `defineLayout(tagName, render)`
 
@@ -54,11 +55,16 @@ export default defineIsland('my-counter', () => <button>Count</button>, {
 import { openElement } from '@openelement/app/vite';
 ```
 
-`openElement()` 配置 Vite、route scanning、SSG、islands、AppShell、content 和 i18n。
+`openElement()` 配置 Vite、route scanning、SSG、islands、AppShell、content 和
+i18n。
 
-## Runtime packages
+## 产品和 Runtime packages
 
-- `@openelement/runtime`：低层 DSD element、signals 和 stylesheet exports。
+- `@openelement/app` 和 `@openelement/create`：Framework 产品面。
+- `@openelement/ui`：第一方 UI 产品面。
+- `@openelement/protocols`：runtime-free Protocols 产品面。
+- 未来 `@openelement/elements`：带 `OpenElement` 的 Elements 产品面。
+- `@openelement/runtime`：当前底层 element、signals、stylesheet facade。
 - `@openelement/core`：renderer kernel 和 JSX runtime。
 - `@openelement/signals`：signal primitives。
 - `@openelement/style-sheet`：CSSStyleSheet abstraction。

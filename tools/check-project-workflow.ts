@@ -34,7 +34,13 @@ const requiredAnchors: Record<string, string[]> = {
   'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', `docs/next/${ACTIVE_VERSION}/`],
   'docs/roadmap/ROADMAP.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  [`docs/sop/${ACTIVE_VERSION}/README.md`]: [`docs/next/${ACTIVE_VERSION}/`, 'ADR-0093'],
+  [`docs/sop/${ACTIVE_VERSION}/README.md`]: [
+    `docs/next/${ACTIVE_VERSION}/`,
+    'ADR-0093',
+    'ADR-0096',
+    'ADR-0097',
+    'ADR-0099',
+  ],
   'docs/next/v0.37.2/README.md': [
     'docs/sop/v0.37.2/README.md',
     'ADR-0093',

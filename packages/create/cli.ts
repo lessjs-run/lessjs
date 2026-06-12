@@ -119,6 +119,13 @@ function buildTemplates(v: Record<string, string>): Record<string, string> {
     '.gitignore': `dist/
 node_modules/
 `,
+    'public/openelement-mark.svg':
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="openElement mark">
+  <rect width="96" height="96" rx="18" fill="#212529"/>
+  <path d="M26 58V38l22-13 22 13v20L48 71 26 58Z" fill="none" stroke="#f8f9fa" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M36 48h24" stroke="#7cc7ff" stroke-width="6" stroke-linecap="round"/>
+</svg>
+`,
     'deno.json': `{
   "imports": {
     "alien-signals": "npm:alien-signals@^3.2.0",
@@ -226,7 +233,10 @@ export default defineLayout(tagName, {
       <>
         <header data-open-layout="app-shell">
           <a href="/">{props.siteName ?? 'openElement'}</a>
-          <a href="/api/health">API health</a>
+          <nav>
+            <a href="/freshness">Freshness</a>
+            <a href="/api/health">API health</a>
+          </nav>
         </header>
         <main>
           <slot></slot>
@@ -248,6 +258,7 @@ styles.replaceSync(\`
   :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
   h1 { font-size: 2rem; margin-bottom: 0.5rem; }
   p { color: var(--text-secondary, #666); }
+  img { width: 64px; height: 64px; }
 \`);
 
 defineElement(tagName, {
@@ -260,6 +271,7 @@ defineElement(tagName, {
           Your openElement app is running. Edit <code>app/routes/index.tsx</code> to
           get started.
         </p>
+        <img src="/openelement-mark.svg" alt="openElement mark" />
         <my-counter></my-counter>
       </>
     );
@@ -279,6 +291,46 @@ export default definePage({
   },
   render() {
     return <home-page />;
+  },
+});
+`,
+    'app/routes/freshness.tsx': `/** @jsxImportSource @openelement/core */
+import { defineElement, definePage } from '@openelement/app';
+import { StyleSheet } from '@openelement/runtime';
+
+export const tagName = 'freshness-page';
+
+const styles = new StyleSheet();
+styles.replaceSync(\`
+  :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+  p { color: var(--text-secondary, #666); }
+\`);
+
+defineElement(tagName, {
+  styles,
+  render() {
+    return (
+      <>
+        <h1>Freshness proof</h1>
+        <p>This page records ISR/cache intent with a 300 second revalidate window.</p>
+      </>
+    );
+  },
+});
+
+export default definePage({
+  route: { path: '/freshness' },
+  head: {
+    title: 'Freshness proof',
+    description: 'Generated openElement ISR intent route',
+  },
+  renderIntent: {
+    mode: 'static',
+    streaming: 'auto',
+    revalidate: 300,
+  },
+  render() {
+    return <freshness-page />;
   },
 });
 `,

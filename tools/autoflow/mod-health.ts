@@ -77,6 +77,7 @@ function main(): void {
     'workflow:check',
     'arch:check',
     'graph:check',
+    'docs:check-public',
     'docs:check-current',
     'docs:check-strategy',
     'dsd:check-report',

@@ -2,6 +2,10 @@
 
 Build-time content pipeline for openElement apps.
 
+> v0.39 surface: advanced Framework feature. Configure it through
+> `@openelement/app/vite`; first-run app modules should not import it at
+> runtime.
+
 This package owns Markdown, MDX, blog data, navigation metadata, sitemap, and
 robots generation. Route components should consume generated virtual modules;
 they should not import the content package at runtime.

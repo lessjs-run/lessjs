@@ -1,5 +1,7 @@
 /**
  * Homepage - openElement v0.38.0.
+ * Strategic anchor: openElement = Elements + UI + Framework + Protocols.
+ * Active execution: v0.39.0.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -60,9 +62,9 @@ export class DocsHome extends DsdElement {
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-left">
-              <p class="eyebrow">openElement v0.38.0</p>
+              <p class="eyebrow">openElement 0.38.0 / v0.39.0 active</p>
               <h1 class="giant-headline">THE OPEN<br /><span class="glow-line">ELEMENT.</span></h1>
-              <p class="hero-desc">A DSD-first Web Components framework with JSX pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
+              <p class="hero-desc">A four-product Web Components platform: Elements, UI, Framework, and Protocols. JSX pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
               <div class="terminal">
                 <div class="terminal-head"><span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>openelement build</div>
                 <div class="terminal-body">
@@ -88,7 +90,7 @@ export class DocsHome extends DsdElement {
             <h2>Static-first Web Components without duplicate render paths.</h2>
           </div>
           <div class="feature-grid">
-            <div class="ft-card"><span class="ft-icon">DSD</span><h3>DSD-first</h3><p>Server output is native Declarative Shadow DOM, not a framework-specific hydration shell.</p></div>
+            <div class="ft-card"><span class="ft-icon">EL</span><h3>Elements-first</h3><p>OpenElement is the future Elements surface; shadow/DSD remains the default render mode.</p></div>
             <div class="ft-card"><span class="ft-icon">IR</span><h3>One renderer model</h3><p>JSX becomes VNode IR. SSR, CSR, signals, and events share the same structural model.</p></div>
             <div class="ft-card"><span class="ft-icon">LIFE</span><h3>App lifecycle</h3><p>Route params, load context, route metadata, redirect, not-found, and error fallback are explicit app contracts.</p></div>
             <div class="ft-card"><span class="ft-icon">SEC</span><h3>Trusted boundary</h3><p>HTML injection is explicit and reserved for pre-sanitized non-interactive content.</p></div>

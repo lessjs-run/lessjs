@@ -8,8 +8,11 @@ Most applications should start from `@openelement/app`:
 import { defineIsland, definePage } from '@openelement/app';
 ```
 
-Use `@openelement/runtime` when you need direct access to the renderer class,
-signals, or stylesheet primitive in library code.
+Use `@openelement/runtime` when you need direct access to the current element
+base class, signals, or stylesheet primitive in library code. ADR-0099 defines
+the future public Elements direction as `@openelement/elements` and
+`OpenElement`; this package remains a facade while that product surface is
+implemented.
 
 ## Install
 

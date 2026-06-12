@@ -3,24 +3,29 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.39.0/` (Full-Stack Framework RC).
+package: `docs/next/v0.39.0/` (Framework RC + Four-Product Matrix Reset).
 
-## Current Version Line: v0.39.0 (Full-Stack Framework RC)
+## Current Version Line: v0.39.0 (Framework RC + Four-Product Matrix Reset)
 
-v0.39.0 is the active release-candidate framework line. Its job is to prove
-that the v0.38 product map works as a generated, deployable,
-consumer-verified openElement app before v1.0 API freeze work begins. The
-active SOP is `docs/sop/v0.39.0/README.md`; the active NextVersion package is
+v0.39.0 is the active release-candidate framework line and product-matrix
+reset. Its job is to prove that the v0.38 product map works as a generated,
+deployable, consumer-verified openElement app while ADR-0099 resets the public
+target to `openElement = Elements + UI + Framework + Protocols`. The active SOP
+is `docs/sop/v0.39.0/README.md`; the active NextVersion package is
 `docs/next/v0.39.0/`.
 
-v0.39.0 starts from package version `0.38.0`; package versions must not be
-bumped until implementation gates pass. JSR publish remains best-effort
-telemetry and is not an exit gate under ADR-0097.
+v0.39.0 now owns package version `0.39.0` after local implementation gates
+passed. JSR publish remains best-effort telemetry and is not an exit gate under
+ADR-0097.
 
-The active work is to validate generated starter behavior from
-`@openelement/create`, prove pages/layouts/islands/API routes/static output and
-SSR/ISR intent through the documented Vite + Nitro path, align docs/templates
-with the RC surface, and record consumer/deploy/release evidence.
+The local v0.39.0 RC proof now validates generated starter behavior from
+`@openelement/create`, proves pages/layouts/islands/API routes/static output,
+assets, SSR/ISR intent, and Nitro runtime behavior through `consumer:local`,
+aligns docs/templates with the four-product matrix, adds public README
+integrity gates, excludes Web Awesome from the current target, and records Vue
+as the only heavy-framework island adapter proof. The package bump to `0.39.0`
+is complete and post-bump local gates passed. Remaining release work is
+`dev` / `main` non-JSR CI, merge/sync, and best-effort JSR publish telemetry.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
@@ -131,6 +136,7 @@ Governing docs:
 - `docs/adr/ADR-0096-protocol-first-vite-nitro-runtime.md`
 - `docs/adr/ADR-0097-jsr-best-effort-release-gate.md`
 - `docs/adr/ADR-0098-entry-descriptor-route-manifest-contract.md`
+- `docs/adr/ADR-0099-four-product-matrix-and-elements-reset.md`
 - `docs/sop/v0.37.4/README.md`
 - `docs/next/v0.37.4/`
 - `docs/sop/v0.37.3/README.md`
@@ -183,41 +189,48 @@ built-in cell generation.
 
 ## Next Targets
 
-| Version | Theme                                              | Status              | Purpose                                                                                                        |
-| ------- | -------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| v0.31.0 | JSX-first Application API                          | Done                | App authoring API, `/vite` config split, docs/template DX                                                      |
-| v0.32.0 | App Lifecycle Contract                             | Done                | Route, load, context, layout, error, redirect lifecycle                                                        |
-| v0.33.0 | AI-Readable API Foundation                         | Done                | Structured page, island, head, route, and render intent APIs                                                   |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                | Workflow state, cells, evidence ledger, allowed-action report                                                  |
-| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Done                | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                                           |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals | Rendering/runtime evidence and Phase 1 SSG extraction                                                          |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                | AutoFlow proof and release truth alignment                                                                     |
-| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence                              |
-| v0.36.3 | Complete SSG File Ownership Migration              | Done                | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite                  |
-| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                | Resolve Firefox/WebKit E2E timeout and behavior differences                                                    |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Done                | Align workflow, release docs, AutoFlow evidence, and website truth                                             |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                      |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Done                | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                           |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                 |
-| v0.37.3 | Data / Database Boundary                           | Done                | Data/database adapter contracts and recipes without built-in ORM ownership                                     |
-| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Done / JSR caveat   | Implementation complete; JSR distribution is best-effort under ADR-0097                                        |
-| v0.37.5 | Protocol-First Runtime Architecture                | Done                | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
-| v0.37.6 | Vite + Nitro Runtime Proof                         | Done                | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
-| v0.38.0 | Product Surface Reset and Hardening                | Done                | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
-| v0.39.0 | Full-Stack Framework RC                            | Active              | Final API, docs, starter, deploy, consumer, and publish gates                                                  |
-| v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                   |
+| Version | Theme                                              | Status                      | Purpose                                                                                                        |
+| ------- | -------------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| v0.31.0 | JSX-first Application API                          | Done                        | App authoring API, `/vite` config split, docs/template DX                                                      |
+| v0.32.0 | App Lifecycle Contract                             | Done                        | Route, load, context, layout, error, redirect lifecycle                                                        |
+| v0.33.0 | AI-Readable API Foundation                         | Done                        | Structured page, island, head, route, and render intent APIs                                                   |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Done                        | Workflow state, cells, evidence ledger, allowed-action report                                                  |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Done                        | Harness Gate, Cell Execution, Evolution Loop, and full-auto evidence                                           |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Done with deferrals         | Rendering/runtime evidence and Phase 1 SSG extraction                                                          |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Done                        | AutoFlow proof and release truth alignment                                                                     |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Done                        | Move Vite-free SSG core into `@openelement/ssg` and close ISR/SSR/stream evidence                              |
+| v0.36.3 | Complete SSG File Ownership Migration              | Done                        | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite                  |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Done                        | Resolve Firefox/WebKit E2E timeout and behavior differences                                                    |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Done                        | Align workflow, release docs, AutoFlow evidence, and website truth                                             |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | Done                        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                      |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Done                        | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                           |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                        | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                 |
+| v0.37.3 | Data / Database Boundary                           | Done                        | Data/database adapter contracts and recipes without built-in ORM ownership                                     |
+| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Done / JSR caveat           | Implementation complete; JSR distribution is best-effort under ADR-0097                                        |
+| v0.37.5 | Protocol-First Runtime Architecture                | Done                        | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
+| v0.37.6 | Vite + Nitro Runtime Proof                         | Done                        | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
+| v0.38.0 | Product Surface Reset and Hardening                | Done                        | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | Active / local gates passed | ADR-0099, public docs integrity, Elements direction, Vue adapter plan, starter/deploy/consumer gates           |
+| v1.0.0  | Stable Four-Product Platform                       | Vision                      | API freeze for Elements, UI, Framework, and Protocols with workflow evidence in release gates                  |
 
 ## Current Product Center
 
-> Web Components application framework powered by Vite + Nitro, with JSX
-> authoring, file routes, progressive islands, SSG/SSR/ISR, API routes,
-> shadow/DSD as the default render mode, explicit light DOM opt-in, and a
-> 20-package `@openelement/*` monorepo.
+> openElement = Elements + UI + Framework + Protocols.
+
+ADR-0099 defines the current product matrix:
+
+| Product   | Current/future primary surface                | Status                                         |
+| --------- | --------------------------------------------- | ---------------------------------------------- |
+| Elements  | future `@openelement/elements`, `OpenElement` | Product direction; implementation follow-up    |
+| UI        | `@openelement/ui`                             | First-party `open-*` component library         |
+| Framework | `@openelement/app`, `@openelement/create`     | Active v0.39 RC proof                          |
+| Protocols | `@openelement/protocols`                      | Replacement boundary and conformance contracts |
 
 Historical positioning note: earlier ADRs used the phrase DSD-first to protect
 shadow/DSD output as the default. ADR-0096 refines that into Web Components
 application framework identity, with shadow/DSD as the default render mode and
-light DOM as first-class opt-in.
+light DOM as first-class opt-in. ADR-0099 further refines the product matrix:
+DSD/shadow is a default Elements render mode, not the product name.
 
 ## Current Rendering Mode
 
@@ -241,12 +254,15 @@ light DOM as first-class opt-in.
 
 ## Package Version State
 
-All 20 packages are aligned to **v0.37.4** under `@openelement/*`.
+All 20 workspace packages are aligned to **0.39.0** under `@openelement/*`.
+The active execution package is **v0.39.0**.
 
-Package governance before v0.38:
+Package governance for v0.39:
 
 - do not add a new top-level package without an ADR;
-- prefer integration subpaths over package sprawl;
+- ADR-0099 approves future `@openelement/elements` and Vue adapter work, but
+  implementation must update package count, release order, import maps, graph
+  checks, docs, and migration notes;
 - keep protocol contracts small and runtime-free;
 - keep UI independent from framework routing;
 - keep database, ORM, auth, backend, runtime, cache, storage, and deployment
@@ -254,40 +270,43 @@ Package governance before v0.38:
 
 ## Architecture Positioning
 
-1. **Framework** - `definePage()`, `defineIsland()`, file routes, layouts,
+1. **Elements** - native Web Components authoring with JSX, signals, styles,
+   shadow/DSD defaults, explicit light DOM opt-in, and the future
+   `OpenElement` base class.
+2. **UI** - first-party `open-*` components built on the Elements model and
+   independent from framework routing.
+3. **Framework** - `definePage()`, `defineIsland()`, file routes, layouts,
    `load()`, error/redirect/not-found behavior, SSG/SSR/ISR, API routes, and
    starter/create workflows.
-2. **Elements and UI** - Web Components by default, `DsdElement`, shadow/DSD
-   defaults, explicit light DOM opt-in, JSX runtime, pure CSS tokens, and
-   `open-*` component conventions.
-3. **Protocols** - runtime-free contracts for renderer, component adapter,
+4. **Protocols** - runtime-free contracts for renderer, component adapter,
    route manifest, island metadata, runtime adapter, cache/storage, data, and
    signal interoperability.
-4. **Default engine** - Vite owns module graph, plugin orchestration, client
-   bundling, and HMR; Nitro is the planned default production runtime,
-   deployment output, platform preset, cache/storage, and route-rule engine.
-5. **SSG engine** - current SSG code (render, postprocess, route scanning, entry
-   generation, data resolution) lives in `@openelement/ssg`; v0.37.5 must decide
-   which contracts graduate into `@openelement/protocols`.
-6. **Registry Hub** - current package and tooling surface; future product reset
-   must decide whether it remains public product, becomes internal tooling, is
-   deferred, archived, or removed.
+5. **Default engine bridge** - Vite owns module graph, plugin orchestration,
+   client bundling, and HMR; Nitro owns production runtime, deployment output,
+   platform presets, cache/storage, and route-rule plumbing.
+6. **Supporting packages** - runtime/core, adapters, SSG, router, content, i18n,
+   signals, and style-sheet support the four products without becoming product
+   lines.
 
 ## Future Product Direction
 
-- v0.37.x becomes a protocol-first validation train: prove replacement
-  boundaries before expanding product surface.
-- Web Components are the default component model, but renderer and component
+- ADR-0099 supersedes the v0.38 package-name deferral for future work and
+  approves the four-product matrix.
+- Elements becomes a first-class product direction, with `OpenElement` replacing
+  `DsdElement` terminology in future public APIs.
+- Web Components remain the default component model, but renderer and component
   adapter protocols must not assume only one frontend framework.
-- Shadow/DSD remains the default render mode; explicit light DOM opt-in is a
-  first-class supported mode.
+- Shadow/DSD remains the default Elements render mode; explicit light DOM opt-in
+  is a first-class supported mode.
 - Vite + Nitro are the default base engine. Vite handles build/module graph and
   Nitro handles production runtime/deployment, but neither should leak as the
   primary user-facing application API.
 - Protocols should grow through concrete conformance tests, not broad
   abstraction rewrites.
-- The daisyUI-inspired pure CSS layer remains a valid UI product line, but
-  interactive/form coverage moves behind the protocol/runtime pivot.
+- UI remains first-party and Elements-based. Web Awesome is not part of the
+  current target.
+- Heavy-framework island expansion is limited to a Vue adapter proof in the
+  current plan.
 - Database work belongs in data/database adapter contracts and recipes. It must
   not become a built-in ORM, auth platform, or migration system.
 - A Vite + Nitro runtime proof should compose openElement routes, rendering,
@@ -301,8 +320,13 @@ Package governance before v0.38:
 
 ## Key Decisions
 
-- **Application API first.** Users write `definePage()` and `defineIsland()`
-  before touching `DsdElement`.
+- **Four-product matrix.** openElement is Elements + UI + Framework +
+  Protocols; supporting packages do not become first-class products by
+  existing in the workspace.
+- **Elements product reset.** Future public element authoring centers on
+  `@openelement/elements` and `OpenElement`, not `DsdElement` terminology.
+- **Application API first.** App authors write `definePage()` and
+  `defineIsland()` before touching lower-level Elements APIs.
 - **Vite config split.** `openElement()` is imported from
   `@openelement/app/vite`.
 - **Vite + Nitro default engine.** Vite is the default build/module graph
@@ -319,8 +343,11 @@ Package governance before v0.38:
   unless islands, hydration, or client-only components are explicit.
 - **SSR/ISR in framework core.** SSR and ISR belong to the framework product
   line and are not split into a fifth product.
-- **Light DOM is opt-in.** `DsdElement` remains DSD/shadow-first. Light DOM
-  support requires explicit API, tests, docs, and ADR coverage.
+- **Light DOM is opt-in.** Shadow/DSD remains the default Elements render mode.
+  Light DOM support requires explicit API, tests, docs, and ADR coverage.
+- **Current heavy island target.** Vue is the only planned heavy-framework
+  island adapter proof for v0.39; React is not expanded and Web Awesome is out
+  of scope.
 - **No DOM diff.** Signal writes trigger scoped rerender behavior; complex
   subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions,
@@ -336,14 +363,13 @@ Package governance before v0.38:
   for ADRs, public API resets, package removal, release tags, or publishing.
 - **Protocol first-class.** Core rendering, adapter, island/hydration, signal,
   data, route-manifest, runtime, cache, storage, and component-adapter contracts
-  must live in `@openelement/protocols` with exportable conformance test suites
-  by v0.38. Current types reside in implementation packages; migration is
-  planned for v0.37.5.
+  live in `@openelement/protocols` with conformance tests.
 
 ## Release Gate Order
 
 ```bash
 deno task workflow:check
+deno task docs:check-public
 deno task arch:check
 deno task graph:check
 deno task docs:check-current

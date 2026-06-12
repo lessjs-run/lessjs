@@ -2,6 +2,9 @@
 
 Dependency-light shared openElement contracts.
 
+> v0.39 surface: Protocols product. This package is a first-class product
+> boundary for runtime-free contracts, not an adapter implementation package.
+
 This package owns build-time, runtime, renderer, component, route, cache,
 signal, and data contracts that must be shared across packages without making
 feature packages depend on adapter implementation modules.

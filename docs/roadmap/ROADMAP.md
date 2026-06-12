@@ -1,31 +1,36 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.38.0 Product Surface Reset.\
-> Active execution package: v0.39.0 Full-Stack Framework RC.\
+> Current package line: v0.39.0 Framework RC + Four-Product Matrix Reset.\
+> Active execution package: v0.39.0 Framework RC + Four-Product Matrix Reset.\
 > Updated: 2026-06-12.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
 ## Product Position
 
-openElement is a Web Components application framework powered by Vite + Nitro.
-It provides JSX authoring, file routes, progressive islands, SSG/SSR/ISR, API
-routes, shadow/DSD as the default render mode, and explicit light DOM opt-in.
-The product identity is Web Components application semantics; DSD/shadow is the
-default render mode rather than the whole framework identity.
+openElement is a four-product Web Components platform:
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
+
+Elements is the native Web Components authoring surface. Its public direction
+is `@openelement/elements` and `OpenElement`, competing with Lit and FAST while
+keeping shadow/DSD as the default render mode and explicit light DOM opt-in.
+UI is the first-party `open-*` component library built on the Elements model.
+Framework is the application layer powered by Vite + Nitro. Protocols is the
+runtime-free replacement boundary for renderers, routes, islands, adapters,
+runtime, cache, data, and signals.
 
 Historical positioning note: earlier ADRs used the phrase DSD-first to protect
 shadow/DSD output as the default. ADR-0096 refines that into Web Components
 application framework identity, with shadow/DSD as the default render mode and
 light DOM as first-class opt-in.
 
-v0.33.0 defined the AI-readable public application contract. v0.36 moved SSG
-ownership into `@openelement/ssg` and proved the current browser surface.
-v0.37.x now validates a protocol-first modular platform: openElement owns the
-application/component/render semantics while Vite + Nitro become the default
-base engine for build, runtime, and deployment. v1.0 remains the Stable
-Protocol-First Web Components Platform target.
+Vite + Nitro remain default Framework engines, not first-class products.
+`@openelement/runtime`, `@openelement/core`, adapter packages, and advanced
+feature packages support the four products without replacing them.
 
 ## Version Ladder
 
@@ -51,7 +56,7 @@ Protocol-First Web Components Platform target.
 | v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
-| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                                        | Active                   |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, Vue adapter plan, starter/deploy/consumer gates                 | Active                   |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
@@ -310,38 +315,34 @@ Governance convergence before v0.38 exit:
 
 - gate tiers: fast dev gate (fmt, lint, typecheck, test) for PRs; full release
   gate (all 16 checks + E2E) for publishing;
-- AutoFlow feature scope freeze: report/check/health only — no new evolve,
+- AutoFlow feature scope freeze: report/check/health only - no new evolve,
   generate, or autonomous capabilities;
 - Hub scope deferral to post-v1.0; Hub remains internal tooling through v0.38.
 - JSR release instability mitigation: keep direct registry visibility checks,
   best-effort publish attempts, release-note caveats, and fallback
   publishing/distribution options in the release design.
 
-Candidate product split to evaluate:
+ADR-0099 supersedes the v0.38 candidate package-name deferral for future work.
+It approves the four-product matrix and the future `@openelement/elements`
+product name, while leaving package implementation for v0.39 follow-up tasks.
 
-- `@openelement/elements` or a core subpath for a Lit-like `DsdElement` base
-  class product surface;
-- `@openelement/ui` with a pure CSS layer inspired by daisyUI only after license,
-  token, and Tailwind dependency review;
-- `@openelement/protocols` as the runtime-free replacement boundary for
-  renderer, component adapter, route manifest, island, runtime, cache, storage,
-  signal, and data contracts;
-- `@openelement/framework` or starter presets that compose the stabilized
-  surfaces.
-
-## v0.39.0 - Full-Stack Framework RC
+## v0.39.0 - Framework RC + Four-Product Matrix Reset
 
 Validate the release-candidate framework surface on top of the v0.38 product
-map before v1.0 API freeze work begins.
+map while resetting the public product matrix before v1.0 API freeze work
+begins.
 
 The line proves that a generated openElement app can use the documented
 first-run surface end to end: app authoring, pages, layouts, islands, API
 routes, static/SSR/ISR intent, Vite + Nitro build/runtime output, docs, deploy
-guidance, consumer smoke, and release gates.
+guidance, consumer smoke, and release gates. It also records ADR-0099,
+establishes Elements as the Lit/FAST-facing product direction, excludes Web
+Awesome from the current target, and limits heavy-framework island planning to
+a Vue adapter proof.
 
 ## v1.0.0 - Stable Four-Product Platform
 
-API freeze for the stable elements, UI, protocol, and framework surfaces.
+API freeze for the stable Elements, UI, Framework, and Protocols surfaces.
 AutoFlow evidence becomes part of default release gates, but ADR and human
 review continue to govern public API, package, license, security, database, tag,
 release, and publish decisions.

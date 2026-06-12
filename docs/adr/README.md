@@ -88,6 +88,7 @@ architectural decision, its context, and consequences.
 | 0096 | Protocol-First Vite + Nitro Runtime Architecture         | Accepted                                         |
 | 0097 | JSR Best-Effort Release Gate                             | Accepted                                         |
 | 0098 | EntryDescriptor Route Manifest Contract                  | Accepted                                         |
+| 0099 | Four-Product Matrix and Elements Reset                   | Accepted                                         |
 
 ## Superseded / Historical
 

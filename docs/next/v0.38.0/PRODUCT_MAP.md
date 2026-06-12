@@ -7,6 +7,11 @@ This is the v0.38.0 product surface target derived from:
 - `docs/sop/v0.38.0/README.md`
 - `docs/arch/current-architecture.md`
 
+Supersession note: ADR-0099 later approves the future four-product matrix and
+`@openelement/elements` direction for v0.39+ planning. The v0.38.0 decision to
+defer new top-level package names remains historical release truth for v0.38.0,
+not the current forward target.
+
 ## Decision
 
 v0.38.0 keeps the current package names. It does not introduce

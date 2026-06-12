@@ -75,6 +75,12 @@ Deno.test('create-open: gitignore hides generated build artifacts', () => {
   assert(gitignore.includes('node_modules/'));
 });
 
+Deno.test('create-open: starter includes a public static asset', () => {
+  const mark = extractTemplate('public/openelement-mark.svg');
+  assert(mark.includes('<svg'));
+  assert(mark.includes('openElement mark'));
+});
+
 Deno.test('create-open: deno.json build:client uses @openelement/adapter-vite', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
   assert(denoJson.tasks['build:client'].includes('@openelement/adapter-vite'));
@@ -175,6 +181,7 @@ Deno.test('create-open: route index uses JSX-first definePage API', () => {
   assert(routeIndex.includes('@jsxImportSource @openelement/core'));
   assert(routeIndex.includes('StyleSheet'));
   assert(routeIndex.includes("route: { path: '/' }"));
+  assert(routeIndex.includes('/openelement-mark.svg'));
   assert(routeIndex.includes('head: {'));
   assert(routeIndex.includes("title: 'My openElement App'"));
   assert(routeIndex.includes('renderIntent: {'));
@@ -194,6 +201,17 @@ Deno.test('create-open: route index uses JSX-first definePage API', () => {
   // Verify no Lit dependency in Ocean template
   assertEquals(routeIndex.includes("from 'lit'"), false);
   assertEquals(routeIndex.includes('LitElement'), false);
+});
+
+Deno.test('create-open: freshness route records ISR cache intent', () => {
+  const freshnessRoute = extractTemplate('app/routes/freshness.tsx');
+  assert(freshnessRoute.includes('definePage'));
+  assert(freshnessRoute.includes('defineElement'));
+  assert(freshnessRoute.includes("route: { path: '/freshness' }"));
+  assert(freshnessRoute.includes('renderIntent: {'));
+  assert(freshnessRoute.includes("mode: 'static'"));
+  assert(freshnessRoute.includes('revalidate: 300'));
+  assert(freshnessRoute.includes('Freshness proof'));
 });
 
 Deno.test('create-open: island counter uses JSX-first defineIsland API', () => {
@@ -523,7 +541,10 @@ Deno.test('create-open: generated project builds through the one-command pipelin
     assertEquals(buildResult.code, 0, `${stdout}\n${stderr}`);
 
     const indexHtmlPath = join(appDir, 'dist', 'index.html');
+    const freshnessHtmlPath = join(appDir, 'dist', 'freshness', 'index.html');
     assertEquals(existsSync(indexHtmlPath), true);
+    assertEquals(existsSync(freshnessHtmlPath), true);
+    assertEquals(existsSync(join(appDir, 'dist', 'openelement-mark.svg')), true);
     assertEquals(existsSync(join(appDir, 'dist', 'client', '.vite', 'manifest.json')), true);
     const indexHtml = readFileSync(indexHtmlPath, 'utf-8');
     if (!indexHtml.includes('Hello from openElement')) {
@@ -534,7 +555,10 @@ Deno.test('create-open: generated project builds through the one-command pipelin
       console.error('last 300 chars:', indexHtml.substring(indexHtml.length - 300));
     }
     assertEquals(indexHtml.includes('Hello from openElement'), true);
+    assertEquals(indexHtml.includes('/openelement-mark.svg'), true);
     assertEquals(indexHtml.includes('[object Object]'), false);
+    const freshnessHtml = readFileSync(freshnessHtmlPath, 'utf-8');
+    assertEquals(freshnessHtml.includes('Freshness proof'), true);
   } finally {
     rmSync(tmpRoot, { recursive: true, force: true });
   }

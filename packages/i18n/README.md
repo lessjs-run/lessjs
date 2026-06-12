@@ -2,6 +2,10 @@
 
 Build-time i18n support for openElement SSG apps.
 
+> v0.39 surface: advanced Framework feature. Configure it through
+> `@openelement/app/vite`; keep first-run route modules on product-level
+> authoring APIs.
+
 ## Install
 
 ```bash

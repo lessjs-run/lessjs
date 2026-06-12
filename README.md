@@ -1,12 +1,14 @@
 # openElement
 
-English | [简体中文](./README.zh.md)
+English | [Simplified Chinese](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.37.6 package
-line current).**
-openElement builds static-first applications with Declarative Shadow DOM,
-JSX/VNode rendering, progressive islands, Hono routes, and release gates that
-prove the package graph before publishing.
+**JSX-first Web Components platform. Package line: `0.39.0` (`v0.39.0`
+release). Active execution: `v0.39.0` Framework RC + Four-Product Matrix
+Reset.**
+
+openElement builds static-first applications with Web Components, JSX/VNode
+rendering, progressive islands, API routes, and Vite + Nitro output. Shadow/DSD
+is the default component render mode; light DOM is explicit opt-in.
 
 Mandatory project workflow:
 [`docs/governance/PROJECT_WORKFLOW.md`](./docs/governance/PROJECT_WORKFLOW.md).
@@ -24,11 +26,30 @@ cd my-app
 deno task dev
 ```
 
+## Product Matrix
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
+
+| Product   | Surface                                       | Role                                                                    |
+| --------- | --------------------------------------------- | ----------------------------------------------------------------------- |
+| Elements  | future `@openelement/elements`, `OpenElement` | Native Web Components authoring layer, competing with Lit and FAST.     |
+| UI        | `@openelement/ui`                             | First-party `open-*` components built on the Elements model.            |
+| Framework | `@openelement/app`, `@openelement/create`     | Pages, layouts, islands, API routes, Vite + Nitro build/runtime output. |
+| Protocols | `@openelement/protocols`                      | Runtime-free replacement boundaries and conformance contracts.          |
+
+Supporting packages such as `@openelement/runtime`, `@openelement/core`,
+adapters, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
+advanced or implementation surfaces. They support the four products; they are
+not separate first-class product lines.
+
 ## Why openElement
 
-openElement renders Web Components on the server through Declarative Shadow DOM.
-Static content ships as HTML first. Interactive pieces are islands that upgrade
-only when their `client:*` strategy says they should.
+openElement renders Web Components on the server through Declarative Shadow DOM
+where that mode is selected. Static content ships as HTML first. Interactive
+pieces are islands that upgrade only when their hydration strategy says they
+should.
 
 ```tsx
 import { definePage } from '@openelement/app';
@@ -56,41 +77,19 @@ export default defineIsland(
 );
 ```
 
-The current application contract (v0.33.0+ API foundation, current through
-v0.37.6 Vite + Nitro Runtime Proof) is intentionally layered:
+## Current Line
 
-- application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
-- build configuration: `openElement()` from `@openelement/app/vite`;
-- renderer model: JSX -> VNode -> RenderNode -> DSD HTML or DOM;
-- island metadata field: `export const openElement = defineIslandConfig(...)`;
-- UI naming line: `open-*`;
-- trust boundary: `trustedHtml` for pre-sanitized, non-interactive content.
-- app lifecycle: `load(ctx)`, route/meta context, `redirect()`, `notFound()`,
-  and page `error(ctx)` fallback.
+All 20 workspace packages are aligned at **0.39.0** (`v0.39.0`) under
+[`@openelement`](https://jsr.io/@openelement). The active execution line is
+**v0.39.0**. JSR publish and live registry visibility are best-effort
+distribution telemetry under ADR-0097, not version-exit gates.
 
-## Packages
+v0.39.0 validates the generated Framework RC surface and records ADR-0099's
+four-product matrix reset. It also keeps Web Awesome out of the current UI
+target and limits heavy-framework island planning to a Vue adapter proof.
 
-All 20 workspace packages are currently aligned together at **v0.37.6** under
-[`@openelement`](https://jsr.io/@openelement). The active execution target is
-v0.38.0 product surface reset; JSR publish and registry visibility remain
-best-effort distribution telemetry under ADR-0097.
-
-| Package                  | Role                                      |
-| ------------------------ | ----------------------------------------- |
-| `@openelement/create`    | generated project contract                |
-| `@openelement/app`       | JSX-first application authoring API       |
-| `@openelement/app/vite`  | `openElement()` Vite configuration facade |
-| `@openelement/runtime`   | component-authoring convenience facade    |
-| `@openelement/core`      | advanced DSD renderer and JSX kernel      |
-| `@openelement/ui`        | `open-*` DSD component library            |
-| `@openelement/protocols` | runtime-free protocol contracts           |
-
-Advanced and internal packages remain published in the workspace graph. The
-v0.38.0 product map keeps `@openelement/adapter-vite`, `@openelement/content`,
-`@openelement/i18n`, router, adapter, and styling/signal packages in advanced
-reference docs, while `@openelement/hub`, `@openelement/ssg`,
-`@openelement/cem`, `@openelement/compat-check`, and `@openelement/rpc` are not
-primary v1 product surfaces.
+The v1.0 target is a stable four-product platform with frozen Elements, UI,
+Framework, and Protocols contracts.
 
 ## Documentation
 
@@ -99,29 +98,6 @@ primary v1 product surfaces.
 | Guide         | [openelement.org/guide/getting-started](https://openelement.org/guide/getting-started)         |
 | API Reference | [openelement.org/apilist](https://openelement.org/apilist)                                     |
 | Architecture  | [openelement.org/architecture/architecture](https://openelement.org/architecture/architecture) |
-
-## Current Line
-
-v0.37.6 is the current workspace package line. v0.38.0 is the active execution
-line for the public product surface reset: package names are retained unless an
-ADR approves a new name, Hub is archived from the primary v1 product map, and
-internal build/tooling packages are moved out of first-run documentation.
-
-v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
-v0.37.0 resets product doctrine and rendering contracts before implementation
-continues. The v0.37.x train then validates the four product surfaces in
-bounded steps: elements, CSS-first UI, protocol ports, and the full-stack
-framework/create preset.
-
-Static routes should emit zero framework JavaScript unless islands, hydration,
-or client-only components are explicit. SSR and ISR remain framework core
-capabilities, DSD/shadow DOM is the default component mode, and light DOM is an
-explicit future opt-in contract.
-
-The v1.0 target is a Stable Four-Product Platform with workflow evidence as
-part of the default release gate. AutoFlow remains execution and evidence
-tooling; ADR and human review still govern API, package, release, and publish
-decisions.
 
 ## Contributing
 

@@ -7,7 +7,16 @@ order: 2
 
 # Core Concepts
 
-openElement is built around one application model and one renderer pipeline.
+openElement is built around one application model, one renderer pipeline, and
+four product surfaces:
+
+```text
+openElement = Elements + UI + Framework + Protocols
+```
+
+Elements is the native Web Components authoring surface. UI is the first-party
+`open-*` component library. Framework owns pages, layouts, islands, API routes,
+and Vite + Nitro output. Protocols define replacement boundaries.
 
 ## Application API
 
@@ -17,7 +26,7 @@ import { defineElement, defineIsland, definePage } from '@openelement/app';
 
 - `definePage()` declares route components and page metadata.
 - `defineIsland()` declares interactive Custom Elements.
-- `defineElement()` declares reusable DSD-native elements.
+- `defineElement()` declares reusable Elements-native custom elements.
 - `defineLayout()` is a semantic alias for layout elements.
 
 ## Renderer Pipeline
@@ -42,9 +51,11 @@ Static content remains static. Interactive components are isolated islands with
 explicit hydration strategy metadata such as `load`, `idle`, `visible`, or
 `only`.
 
-## Runtime Primitives
+## Elements And Runtime Primitives
 
-`@openelement/runtime` remains available for low-level library code:
+The future Elements product direction is `@openelement/elements` with an
+`OpenElement` base class. Today, `@openelement/runtime` remains available for
+low-level library code:
 
 ```tsx
 import { DsdElement, signal, StyleSheet } from '@openelement/runtime';

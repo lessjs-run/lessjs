@@ -1,7 +1,8 @@
 export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.37.2, v0.37.6, v0.38.0, v1.0.
+// Strategic anchors: openElement = Elements + UI + Framework + Protocols.
+// Version: v0.37.2, v0.37.6, v0.38.0, v0.39.0, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -312,12 +313,12 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v0.39.0</div>
-              <div><h3>Full-Stack Framework RC</h3><p>Validate final APIs, docs, starters, deploy smoke, consumer smoke, and publish gates.</p></div>
-              <span class="badge badge-warning status">Planned</span>
+              <div><h3>Framework RC + Four-Product Matrix Reset</h3><p>Validate generated framework apps, public docs integrity, Elements direction, Vue adapter planning, and release gates.</p></div>
+              <span class="badge badge-info status">Active</span>
             </div>
             <div class="phase">
               <div class="version">v1.0.0</div>
-              <div><h3>Stable Four-Product Platform</h3><p>Freeze elements, UI, protocol, and framework surfaces with workflow evidence in the release gate.</p></div>
+              <div><h3>Stable Four-Product Platform</h3><p>Freeze Elements, UI, Framework, and Protocols surfaces with workflow evidence in the release gate.</p></div>
               <span class="badge badge-warning status">Planned</span>
             </div>
           </div>

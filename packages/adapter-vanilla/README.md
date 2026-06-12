@@ -2,6 +2,9 @@
 
 Vanilla Web Component SSR adapter for [openElement](https://github.com/open-element/openelement).
 
+> v0.39 surface: advanced adapter ecosystem. First-run apps should use
+> `@openelement/app` and `@openelement/runtime` before direct adapter imports.
+
 ## Overview
 
 SSR adapter for plain/vanilla Web Components whose `render()` returns a
