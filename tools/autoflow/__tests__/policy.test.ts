@@ -1,0 +1,89 @@
+import { assert, assertEquals, assertFalse } from 'jsr:@std/assert@^1.0.0';
+import { addPaths, parseArgs } from '../mod3.ts';
+import { evaluatePatchEligibility, evaluateVersionAuthority, selectGates } from '../policy.ts';
+import { createPatchReleasePlan, evidenceFile, nextPatchVersion, releaseTag } from '../release.ts';
+
+Deno.test('policy: patch docs fix can be automated', () => {
+  const decision = evaluatePatchEligibility({
+    changedPaths: ['docs/guide/example.md'],
+  });
+  assert(decision.allowed);
+});
+
+Deno.test('policy: public package source changes require review for patch release', () => {
+  const decision = evaluatePatchEligibility({
+    changedPaths: ['packages/core/src/index.ts'],
+  });
+  assertFalse(decision.allowed);
+  assert(decision.reason.includes('public API impact'));
+});
+
+Deno.test('policy: package topology changes require human review', () => {
+  const decision = evaluatePatchEligibility({
+    changedPaths: ['packages/core/deno.json'],
+  });
+  assertFalse(decision.allowed);
+  assert(decision.reason.includes('package topology'));
+});
+
+Deno.test('policy: minor release without approved plan is blocked', () => {
+  const decision = evaluateVersionAuthority('minor');
+  assertFalse(decision.allowed);
+  assertEquals(decision.requiredEvidence, ['ADR', 'approved version plan']);
+});
+
+Deno.test('policy: minor release with approved plan can execute', () => {
+  const decision = evaluateVersionAuthority('minor', 'ADR-0101/docs-current-v040');
+  assert(decision.allowed);
+  assert(decision.requiredEvidence.includes('approval:ADR-0101/docs-current-v040'));
+});
+
+Deno.test('policy: dev tier remains fast', () => {
+  const gates = selectGates('dev', ['packages/core/src/index.ts']).map((gate) => gate.name);
+  assertEquals(gates, ['fmt:check', 'lint']);
+});
+
+Deno.test('policy: release tier includes publish dry-run', () => {
+  const gates = selectGates('release', ['packages/core/src/index.ts']).map((gate) => gate.name);
+  assert(gates.includes('publish:dry-run'));
+});
+
+Deno.test('mod3: parse approved plan for release command', () => {
+  assertEquals(parseArgs(['release', '--approved-plan', 'ADR-0101/v0.40', '--dry-run']), {
+    command: 'release',
+    dryRun: true,
+    approvedPlan: 'ADR-0101/v0.40',
+  });
+});
+
+Deno.test('mod3: addPaths deduplicates multi-source diff output', () => {
+  const paths = new Set<string>();
+  addPaths(paths, 'README.md\npackages/core/src/index.ts\n');
+  addPaths(paths, 'README.md\r\ndocs/current/VERSION_PLAN.md\r\n');
+  assertEquals([...paths].sort(), [
+    'README.md',
+    'docs/current/VERSION_PLAN.md',
+    'packages/core/src/index.ts',
+  ]);
+});
+
+Deno.test('release: next patch version and tag are deterministic', () => {
+  assertEquals(nextPatchVersion('0.39.0'), '0.39.1');
+  assertEquals(releaseTag('0.39.1'), 'v0.39.1');
+  assertEquals(evidenceFile('0.39.1'), 'docs/release/autoflow3/v0.39.1.json');
+});
+
+Deno.test('release: patch release plan includes publish, smoke, and GitHub release', () => {
+  const commands = createPatchReleasePlan('0.39.1').map((step) => [
+    step.name,
+    step.command?.join(' ') ?? '',
+  ]);
+  assert(commands.some(([name]) => name === 'run release gates after bump'));
+  assert(
+    commands.some(([, command]) => command.includes('tools/run-package-graph-task.ts publish')),
+  );
+  assert(
+    commands.some(([, command]) => command.includes('tools/consumer-smoke.ts --version 0.39.1')),
+  );
+  assert(commands.some(([, command]) => command.includes('gh release create v0.39.1')));
+});

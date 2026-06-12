@@ -34,5 +34,12 @@ ADR changes that decision.
 
 ## Heavy Framework Islands
 
-The only heavy-framework island adapter proof planned for this line is Vue.
-React adapter expansion is not part of v0.39.0.
+v0.39.0 does not implement a heavy-framework island adapter. The pre-1.0 path
+now prioritizes Preact for v0.40 because of the Fresh/Deno lineage, while Vue,
+React, Svelte, and broad heavy-island compatibility remain frozen unless a
+later ADR changes scope.
+
+Preact Signals are not a migration target in v0.39. A future
+`@preact/signals-core` backed engine must first pass
+`@openelement/protocols/signals` conformance and release-gate evidence before
+it can become the default.

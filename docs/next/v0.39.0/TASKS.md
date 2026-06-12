@@ -25,7 +25,7 @@
 - [x] Add migration notes for intentional 0.x behavior changes.
 - [x] Keep archived/internal packages out of first-run guides.
 
-## D. Elements And Vue Adapter Planning
+## D. Elements And Preact Island Planning
 
 - [x] Record `@openelement/elements` and `OpenElement` as the future Elements
       product direction.
@@ -33,7 +33,10 @@
       is not promised as a long-term compatibility alias.
 - [x] Record Web Awesome as out of current product strategy and implementation
       scope.
-- [x] Plan Vue as the only heavy-framework island adapter proof.
+- [x] Hand off heavy-framework island work to v0.40 with Preact as the only
+      planned priority before v1.0.
+- [x] Record `@preact/signals-core` as a signal engine candidate that requires
+      protocol conformance before any default-engine decision.
 
 ## E. Gates
 

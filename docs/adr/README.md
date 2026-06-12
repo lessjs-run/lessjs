@@ -88,8 +88,9 @@ architectural decision, its context, and consequences.
 | 0096 | Protocol-First Vite + Nitro Runtime Architecture         | Accepted                                         |
 | 0097 | JSR Best-Effort Release Gate                             | Accepted                                         |
 | 0098 | EntryDescriptor Route Manifest Contract                  | Accepted                                         |
-| 0099 | Four-Product Matrix and Elements Reset                   | Accepted                                         |
+| 0099 | Four-Product Matrix and Elements Reset                   | Accepted; heavy-island scope superseded by 0101  |
 | 0100 | JSR Publish Exit Gate Restored                           | Accepted; supersedes 0097 for current releases   |
+| 0101 | Product-Line Reset and AutoFlow3 Governance Boundary     | Accepted                                         |
 
 ## Superseded / Historical
 

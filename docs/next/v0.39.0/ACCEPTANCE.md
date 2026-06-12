@@ -17,8 +17,9 @@ CI, and release evidence.
       `v0.39.0`.
 - [x] README.zh.md contains no mojibake/replacement text.
 - [x] Web Awesome is not presented as a current target.
-- [x] Vue is the only documented heavy-framework island adapter proof for this
-      line.
+- [x] Preact is documented as the v0.40 heavy-framework island priority; Vue,
+      React, Svelte, and broad heavy-island expansion remain frozen before
+      v1.0 unless a later ADR changes scope.
 
 ## Runtime Surface
 

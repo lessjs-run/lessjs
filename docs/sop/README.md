@@ -1,8 +1,12 @@
 # SOP Index
 
-This directory is the execution map for openElement releases. SOPs are
-step-by-step implementation plans, not vision documents. Each active or planned
-version should have one SOP with:
+This directory contains historical and transition execution maps for
+openElement releases. ADR-0101 moves active v0.40+ planning to
+`docs/current/VERSION_PLAN.md` so SOP and NextVersion dossiers no longer grow as
+parallel active governance surfaces.
+
+Historical SOPs are step-by-step implementation plans, not vision documents.
+Each historical version should have one SOP with:
 
 - entry criteria: what must be true before work starts
 - step-by-step execution: exact implementation order
@@ -10,14 +14,13 @@ version should have one SOP with:
 - exit criteria: what must be true before the version can be called complete
 - non-goals: what must not be expanded into the release
 
-Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Every active minor
-also has an execution package under `docs/next/<version>/`. Each SOP must map
-to its governing ADRs, NextVersion package, verification commands, and exit
-criteria.
+Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. For v0.40 and later,
+the active execution package is `docs/current/VERSION_PLAN.md`. Historical SOPs
+remain release evidence until a dedicated archive cleanup moves them.
 
 ## Current Execution Ladder
 
-| Version | SOP                                                                                          | Status   | Purpose                             |
+| Version | SOP / plan                                                                                   | Status   | Purpose                             |
 | ------- | -------------------------------------------------------------------------------------------- | -------- | ----------------------------------- |
 | v0.15.1 | [v0.15.1-audit-gates.md](./v0.15.1-audit-gates.md)                                           | Done     | Release gates                       |
 | v0.15.2 | [v0.15.2-render-output-hooks.md](./v0.15.2-render-output-hooks.md)                           | Done     | Structured output hooks             |
@@ -77,18 +80,19 @@ criteria.
 | v0.37.5 | [v0.37.5/](./v0.37.5/)                                                                       | Done     | Protocol-first runtime architecture |
 | v0.37.6 | [v0.37.6/](./v0.37.6/)                                                                       | Done     | Vite + Nitro runtime proof          |
 | v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Done     | Product surface reset               |
-| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Active   | Full-stack framework RC             |
+| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Evidence | Full-stack framework RC             |
+| v0.40.0 | [current Version Plan](../current/VERSION_PLAN.md)                                           | Planned  | Elements + Preact island priority   |
 | v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable four-product platform        |
 
 ## Operator Rules
 
 1. Read `docs/status/STATUS.md` first.
 2. Read `docs/governance/PROJECT_WORKFLOW.md`.
-3. Read the current version SOP.
-4. Read the active NextVersion package.
-5. Do not start a later version until the current SOP exit criteria are met.
-6. Do not broaden scope beyond the SOP non-goals.
-7. If a command fails, update the SOP or changelog with the exact blocker
+3. Read `docs/current/VERSION_PLAN.md` for active v0.40+ work.
+4. Read historical SOP/NextVersion files only when auditing their release line.
+5. Do not start a later version until the current version-plan exit criteria are met.
+6. Do not broaden scope beyond the active version-plan non-goals.
+7. If a command fails, update the active version plan, release evidence, or changelog with the exact blocker
    before moving on.
 8. For third-party packages, default to client-only unless validation proves
    SSR capability.

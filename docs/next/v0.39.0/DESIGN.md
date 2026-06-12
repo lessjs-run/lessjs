@@ -22,7 +22,11 @@ before new code abstractions.
 - Breaking changes are allowed in 0.x only when recorded in migration notes and
   backed by tests.
 - Web Awesome is out of scope for the current UI target.
-- Vue is the only heavy-framework island adapter proof planned for this line.
+- Preact is the v0.40 heavy-framework island priority; Vue, React, Svelte, and
+  broad heavy-island expansion are frozen before v1.0 unless a later ADR
+  changes scope.
+- `@preact/signals-core` may be evaluated only as a protocol-conforming
+  `SignalEngine` candidate; it is not an immediate default engine swap.
 
 ## Evidence To Record
 

@@ -16,7 +16,7 @@ Mandatory project workflow:
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-@openelement/core-blue)](https://jsr.io/@openelement/core)
-[![CI](https://github.com/open-element/openelement/actions/workflows/test.yml/badge.svg)](https://github.com/open-element/openelement/actions/workflows/test.yml)
+[![CI](https://github.com/open-element/openelement/actions/workflows/autoflow-ci.yml/badge.svg)](https://github.com/open-element/openelement/actions/workflows/autoflow-ci.yml)
 
 ## Quick Start
 
@@ -86,7 +86,8 @@ closure.
 
 v0.39.0 validates the generated Framework RC surface and records ADR-0099's
 four-product matrix reset. It also keeps Web Awesome out of the current UI
-target and limits heavy-framework island planning to a Vue adapter proof.
+target. ADR-0101 freezes broad heavy-framework island expansion and hands the
+pre-1.0 proof to a bounded v0.40 Preact island priority.
 
 The v1.0 target is a stable four-product platform with frozen Elements, UI,
 Framework, and Protocols contracts.
@@ -101,10 +102,12 @@ Framework, and Protocols contracts.
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Architecture decisions live in
-[docs/adr/](./docs/adr/), release execution lives in [docs/sop/](./docs/sop/),
-active execution packages live in [docs/next/](./docs/next/), and current status
-lives in [docs/status/STATUS.md](./docs/status/STATUS.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Current truth lives in
+[docs/status/STATUS.md](./docs/status/STATUS.md),
+[docs/roadmap/ROADMAP.md](./docs/roadmap/ROADMAP.md), and
+[docs/current/VERSION_PLAN.md](./docs/current/VERSION_PLAN.md). Architecture
+decisions live in [docs/adr/](./docs/adr/), and historical SOP/NextVersion
+packages remain release evidence until archived by the v0.40 cleanup.
 
 ## License
 

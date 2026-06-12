@@ -66,31 +66,32 @@ export default definePage({
 ADR-0100，JSR publish 从 v0.39+ 起恢复为 release exit gate。
 
 v0.39.0 验证 generated Framework RC surface，并记录 ADR-0099 的四产品矩阵重置。
-Web Awesome 不属于当前 UI target；Vue 是本线唯一计划的 heavy-framework island
-adapter proof。
+Web Awesome 不属于当前 UI target。ADR-0101 冻结广义 heavy-framework island
+扩张，并把 pre-1.0 证明交给 v0.40 的 Preact island priority。
 
 v1.0 目标是在 Elements、UI、Framework 和 Protocols 四个产品面上冻结稳定 API，
 并用 workflow evidence 支撑发布 gate。
 
 ## 文档
 
-| 主题              | 链接                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------- |
-| 项目状态          | [docs/status/STATUS.md](./docs/status/STATUS.md)                                               |
-| 路线图            | [docs/roadmap/ROADMAP.md](./docs/roadmap/ROADMAP.md)                                           |
-| ADR               | [docs/adr/](./docs/adr/)                                                                       |
-| v0.39 SOP         | [docs/sop/v0.39.0/README.md](./docs/sop/v0.39.0/README.md)                                     |
-| v0.39 NextVersion | [docs/next/v0.39.0/](./docs/next/v0.39.0/)                                                     |
-| 网站文档          | [openelement.org/docs](https://openelement.org/docs)                                           |
-| API               | [openelement.org/guide/api](https://openelement.org/guide/api)                                 |
-| 架构              | [openelement.org/architecture/architecture](https://openelement.org/architecture/architecture) |
+| 主题         | 链接                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| 项目状态     | [docs/status/STATUS.md](./docs/status/STATUS.md)                                               |
+| 路线图       | [docs/roadmap/ROADMAP.md](./docs/roadmap/ROADMAP.md)                                           |
+| ADR          | [docs/adr/](./docs/adr/)                                                                       |
+| 当前版本计划 | [docs/current/VERSION_PLAN.md](./docs/current/VERSION_PLAN.md)                                 |
+| 网站文档     | [openelement.org/docs](https://openelement.org/docs)                                           |
+| API          | [openelement.org/guide/api](https://openelement.org/guide/api)                                 |
+| 架构         | [openelement.org/architecture/architecture](https://openelement.org/architecture/architecture) |
 
 ## 贡献
 
-参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。架构决策在
-[docs/adr/](./docs/adr/)，版本执行在 [docs/sop/](./docs/sop/)，活动执行包在
-[docs/next/](./docs/next/)，当前状态在
-[docs/status/STATUS.md](./docs/status/STATUS.md)。
+参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。当前事实在
+[docs/status/STATUS.md](./docs/status/STATUS.md)、
+[docs/roadmap/ROADMAP.md](./docs/roadmap/ROADMAP.md) 和
+[docs/current/VERSION_PLAN.md](./docs/current/VERSION_PLAN.md)。架构决策在
+[docs/adr/](./docs/adr/)，历史 SOP / NextVersion 包保留为 release evidence，
+直到 v0.40 cleanup 迁入 archive。
 
 ## 许可
 

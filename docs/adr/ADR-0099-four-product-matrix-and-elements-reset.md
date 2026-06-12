@@ -1,9 +1,10 @@
 # ADR-0099: Four-Product Matrix and Elements Reset
 
-- Status: Accepted
+- Status: Accepted; heavy-framework island scope superseded by ADR-0101
 - Date: 2026-06-12
 - Target: v0.39.0
 - Depends on: ADR-0091, ADR-0092, ADR-0096, ADR-0097
+- Superseded by: ADR-0101 for heavy-framework island priority
 
 ## Context
 
@@ -63,9 +64,11 @@ alias.
 implementation must update package count, release order, import maps, docs, and
 graph checks when the package is introduced.
 
-For heavy framework islands, v0.39 only targets a Vue adapter proof. React is
-not expanded in this line. Web Awesome is out of scope for this ADR, v0.39
-templates, and the current UI strategy.
+For heavy framework islands, ADR-0101 supersedes the earlier non-Preact
+heavy-island plan. The pre-1.0 path now prioritizes a bounded Preact island
+proof in v0.40. Vue, React, Svelte, and broad heavy-framework island expansion
+remain frozen unless a later ADR reopens them. Web Awesome is out of scope for
+this ADR, v0.39 templates, and the current UI strategy.
 
 ## Consequences
 
@@ -91,8 +94,8 @@ templates, and the current UI strategy.
 
 ### Negative
 
-- The package graph grows when `@openelement/elements` and
-  `@openelement/adapter-vue` are implemented.
+- The package graph grows when `@openelement/elements` and a future
+  heavy-island adapter package are implemented.
 - A breaking rename from `DsdElement` to `OpenElement` requires careful
   migration notes and release evidence.
 - Public docs and automation must guard against stale package-line and active
@@ -101,7 +104,7 @@ templates, and the current UI strategy.
 ## Non-Goals
 
 - Do not implement `@openelement/elements` in this ADR-only update.
-- Do not implement `@openelement/adapter-vue` in this ADR-only update.
+- Do not implement a heavy-framework island adapter in this ADR-only update.
 - Do not introduce Web Awesome as a default or recommended UI substrate.
 - Do not expand the React adapter in v0.39.
 - Do not rename `@openelement/protocols` to `@openelement/protocol`.
@@ -114,4 +117,5 @@ templates, and the current UI strategy.
 - ADR-0096: Protocol-First Vite + Nitro Runtime Architecture.
 - ADR-0097: historical JSR Best-Effort Release Gate.
 - ADR-0100: JSR Publish Exit Gate Restored.
+- ADR-0101: Product-Line Reset and AutoFlow3 Governance Boundary.
 - `docs/next/v0.39.0/`

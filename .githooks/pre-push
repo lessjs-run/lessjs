@@ -1,7 +1,8 @@
 #!/bin/sh
 #
-# openElement pre-push hook
-# autoflow:gate:push is the full gate controller — impact-driven + publish extras.
+# openElement pre-push hook.
+# AutoFlow3 owns the push tier gate selection.
+#
 # Install: deno task hooks:install
 
 set -e
@@ -11,11 +12,11 @@ if [ "$BRANCH" != "dev" ] && [ "$BRANCH" != "main" ]; then
   exit 0
 fi
 
-echo "=== pre-push: autoflow:gate for '$BRANCH' ==="
+echo "=== pre-push: autoflow:push for '$BRANCH' ==="
 
-deno run --allow-read --allow-run --allow-write tools/autoflow/mod-gate.ts --push || {
+deno task autoflow:push || {
   echo ""
-  echo "❌ autoflow:gate FAILED."
+  echo "autoflow:push FAILED."
   exit 1
 }
 

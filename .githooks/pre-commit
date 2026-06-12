@@ -1,22 +1,19 @@
 #!/bin/sh
 #
-# openElement pre-commit hook
-# autoflow:gate is the single controller — it reads git diff, determines
-# the impact surface, runs all required checks, and prints an LLM-facing
-# impact report.
+# openElement pre-commit hook.
+# AutoFlow3 is the single local gate controller; this tier stays fast and
+# delegates gate policy to tools/autoflow/policy.ts.
 #
 # Install: deno task hooks:install
 
 set -e
 
-echo "[autoflow:gate] pre-commit"
-deno run --allow-read --allow-run --allow-write tools/autoflow/mod-gate.ts --staged || {
+echo "[autoflow:dev] pre-commit"
+deno task autoflow:dev || {
   echo ""
-  echo "❌ autoflow:gate FAILED. Fix the issues above and retry."
-  echo "   The AI assistant is expected to read the impact report"
-  echo "   and verify all LLM directives before retrying."
+  echo "autoflow:dev FAILED. Fix the issues above and retry."
   exit 1
 }
 
 echo ""
-echo "✅ autoflow:gate PASSED — commit allowed."
+echo "autoflow:dev PASSED; commit allowed."

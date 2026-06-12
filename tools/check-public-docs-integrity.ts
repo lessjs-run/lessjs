@@ -9,6 +9,7 @@ const currentPublicDocs = [
   'README.md',
   'README.zh.md',
   'docs/governance/PROJECT_WORKFLOW.md',
+  'docs/current/VERSION_PLAN.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
 ];
@@ -36,6 +37,9 @@ const staleCurrentClaims: RegExp[] = [
   /not (?:a )?(?:version-)?exit gate/i,
   /do not block version\s+exit/i,
   /distribution telemetry/i,
+  /Vue adapter proof/i,
+  /Vue is .*heavy-framework island/i,
+  /Vue 是.*heavy-framework island/i,
 ];
 
 const failures: Failure[] = [];

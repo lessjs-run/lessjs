@@ -2,8 +2,8 @@
 
 > Source of truth for forward version planning.\
 > Current package line: v0.39.0 Framework RC + Four-Product Matrix Reset.\
-> Active execution package: v0.39.0 Framework RC + Four-Product Matrix Reset.\
-> Updated: 2026-06-12.
+> Active version plan: docs/current/VERSION_PLAN.md.\
+> Updated: 2026-06-13.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -56,7 +56,9 @@ feature packages support the four products without replacing them.
 | v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
-| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, Vue adapter plan, starter/deploy/consumer gates                 | Active                   |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Active                   |
+| v0.40.0 | Elements + Preact Island Priority                  | Productize `OpenElement`, freeze Hub and broad island expansion, prove Preact islands and Preact signal candidate    | Planned                  |
+| v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
@@ -338,8 +340,44 @@ first-run surface end to end: app authoring, pages, layouts, islands, API
 routes, static/SSR/ISR intent, Vite + Nitro build/runtime output, docs, deploy
 guidance, consumer smoke, and release gates. It also records ADR-0099,
 establishes Elements as the Lit/FAST-facing product direction, excludes Web
-Awesome from the current target, and limits heavy-framework island planning to
-a Vue adapter proof.
+Awesome from the current target, and hands heavy-framework island planning to a
+Preact-first v0.40 proof. The earlier Vue adapter plan is superseded for the
+pre-1.0 path; Vue, React, Svelte, and other heavy island adapters stay frozen
+unless a later ADR reopens them.
+
+## v0.40.0 - Elements + Preact Island Priority
+
+Productize the four-product matrix while keeping scope narrow enough for a
+credible v1.0 path.
+
+ADR-0101 also makes v0.40 the product-line reset. The previous v0.39
+architecture state is frozen on `arch/v0.39-line`; `dev` continues as the
+focused product-line branch. Active planning moves from separate SOP and
+NextVersion dossiers to `docs/current/VERSION_PLAN.md`.
+
+v0.40.0 has three jobs:
+
+- create the real Elements product surface around `@openelement/elements` and
+  `OpenElement`, with migration notes instead of a long-term public
+  `DsdElement` alias;
+- add Preact as the only heavy-framework island priority, reflecting the
+  Fresh/Deno lineage without making Preact the identity of openElement;
+- evaluate `@preact/signals-core` as a `SignalEngine` implementation candidate
+  behind `@openelement/signals` and `@openelement/protocols/signals`
+  conformance, not as an immediate default-engine swap.
+
+The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
+expansion stays out of scope, Web Awesome remains out of the current UI
+strategy, and no Preact runtime may leak into `@openelement/core` or Elements
+as a required public dependency.
+
+## v0.41.0 - v1.0 Freeze Candidate
+
+Turn the v0.40 productized surface into a release candidate for v1.0. The line
+must complete protocol conformance coverage, freeze the supported UI component
+scope, verify Preact island behavior through consumer smoke, decide whether
+the Preact signal engine candidate becomes default or remains optional, and
+finish migration docs for Elements, Framework, UI, and Protocols.
 
 ## v1.0.0 - Stable Four-Product Platform
 
@@ -362,10 +400,11 @@ release, and publish decisions.
 
 ## Document Cross-Reference
 
-| Document Type | Rhythm          | Location                |
-| ------------- | --------------- | ----------------------- |
-| SOP           | per version     | `docs/sop/`             |
-| ADR           | decision-driven | `docs/adr/`             |
-| Changelog     | per release     | `docs/changelog/`       |
-| Status        | always current  | `docs/status/STATUS.md` |
-| Release Note  | per version     | `docs/release/`         |
+| Document Type    | Rhythm          | Location                       |
+| ---------------- | --------------- | ------------------------------ |
+| Current plan     | active version  | `docs/current/VERSION_PLAN.md` |
+| ADR              | decision-driven | `docs/adr/`                    |
+| Changelog        | per release     | `docs/changelog/`              |
+| Status           | always current  | `docs/status/STATUS.md`        |
+| Release evidence | per version     | `docs/release/`                |
+| Historical plans | archived        | `docs/sop/`, `docs/next/`      |

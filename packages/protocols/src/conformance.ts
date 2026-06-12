@@ -11,6 +11,7 @@ import type { ComponentAdapter } from './components.ts';
 import type { DataAdapter } from './data.ts';
 import type { RendererConformanceFixture, RendererProtocol } from './renderer.ts';
 import type { RuntimeAdapter } from './runtime.ts';
+import type { SignalEngine } from './signals.ts';
 
 export interface ConformanceResult {
   name: string;
@@ -146,4 +147,83 @@ export async function runDataAdapterConformance<T>(
     );
   }
   return results;
+}
+
+export async function runSignalEngineConformance(
+  engine: SignalEngine,
+): Promise<ConformanceResult[]> {
+  const results: ConformanceResult[] = [];
+
+  const count = engine.signal(1);
+  results.push(
+    count.value === 1
+      ? pass('signals.signal.initial')
+      : fail('signals.signal.initial', 'signal() must expose the initial value'),
+  );
+
+  count.value = 2;
+  results.push(
+    count.value === 2
+      ? pass('signals.signal.write')
+      : fail('signals.signal.write', 'writable signal value did not update'),
+  );
+
+  const doubled = engine.computed(() => count.value * 2);
+  results.push(
+    doubled.value === 4
+      ? pass('signals.computed.initial')
+      : fail('signals.computed.initial', 'computed() did not derive the current value'),
+  );
+
+  let observed = 0;
+  const unsubscribe = count.subscribe((value) => {
+    observed = value;
+  });
+  results.push(
+    observed === 2 ? pass('signals.subscribe.initial') : fail(
+      'signals.subscribe.initial',
+      'subscribe() must synchronously publish the current value',
+    ),
+  );
+  count.value = 3;
+  await tick();
+  results.push(
+    observed === 3
+      ? pass('signals.subscribe.update')
+      : fail('signals.subscribe.update', 'subscriber did not observe a value update'),
+  );
+  unsubscribe();
+  count.value = 4;
+  await tick();
+  results.push(
+    observed === 3
+      ? pass('signals.subscribe.unsubscribe')
+      : fail('signals.subscribe.unsubscribe', 'unsubscribe() did not stop updates'),
+  );
+
+  let effectRuns = 0;
+  const dispose = engine.effect(() => {
+    count.value;
+    effectRuns++;
+  });
+  results.push(
+    effectRuns >= 1
+      ? pass('signals.effect.initial')
+      : fail('signals.effect.initial', 'effect() did not run initially'),
+  );
+  const beforeDispose = effectRuns;
+  dispose();
+  count.value = 5;
+  await tick();
+  results.push(
+    effectRuns === beforeDispose
+      ? pass('signals.effect.dispose')
+      : fail('signals.effect.dispose', 'disposed effect ran after disposal'),
+  );
+
+  return results;
+}
+
+async function tick(): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 0));
 }

@@ -23,6 +23,8 @@
 - Do not present Hub, RPC, direct SSG, CEM, or compat-check as first-run product
   APIs unless an ADR changes their status.
 - Do not present Web Awesome as a current target.
-- Do not expand React as part of v0.39 docs.
-- Keep Vue as the only current heavy-framework island adapter proof.
+- Do not expand Vue, React, Svelte, or generic heavy-framework islands as part
+  of v0.39 docs.
+- Document Preact as the v0.40 heavy-framework island priority and keep
+  `@preact/signals-core` framed as a candidate engine pending conformance.
 - Keep JSR publish documented as a v0.39+ release exit gate under ADR-0100.

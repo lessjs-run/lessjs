@@ -16,6 +16,7 @@ type Failure = {
 const publicDocs = [
   'README.md',
   'README.zh.md',
+  'docs/current/VERSION_PLAN.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
   'docs/changelog/README.md',
@@ -51,6 +52,7 @@ const currentDocs = [
   'README.md',
   'README.zh.md',
   'docs/governance/PROJECT_WORKFLOW.md',
+  'docs/current/VERSION_PLAN.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
   'www/app/routes/index/index.tsx',
@@ -113,6 +115,9 @@ const checks: Check[] = [
       /active execution target is\s+v0\.38\.0/i,
       /JSR publish is a best-effort distribution step/i,
       /JSR package visibility and post-publish JSR consumer smoke do not block version\s+exit/i,
+      /Vue adapter proof/i,
+      /Vue is .*heavy-framework island/i,
+      /Vue 是.*heavy-framework island/i,
     ],
   },
   {

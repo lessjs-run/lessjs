@@ -2,17 +2,17 @@
 
 > AI assistant: read this file first on every session start.
 
-Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.39.0/` (Framework RC + Four-Product Matrix Reset).
+Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active version plan:
+`docs/current/VERSION_PLAN.md`.
 
 ## Current Version Line: v0.39.0 (Framework RC + Four-Product Matrix Reset)
 
-v0.39.0 is the active release-candidate framework line and product-matrix
-reset. Its job is to prove that the v0.38 product map works as a generated,
-deployable, consumer-verified openElement app while ADR-0099 resets the public
-target to `openElement = Elements + UI + Framework + Protocols`. The active SOP
-is `docs/sop/v0.39.0/README.md`; the active NextVersion package is
-`docs/next/v0.39.0/`.
+v0.39.0 is the release-candidate framework line and product-matrix reset. Its
+job is to prove that the v0.38 product map works as a generated, deployable,
+consumer-verified openElement app while ADR-0099 resets the public target to
+`openElement = Elements + UI + Framework + Protocols`. ADR-0101 now moves the
+active product-line reset planning to `docs/current/VERSION_PLAN.md` for v0.40
+and later while v0.39 SOP/NextVersion files remain historical release evidence.
 
 v0.39.0 now owns package version `0.39.0` after local implementation gates
 passed. ADR-0100 restores JSR publish as a release exit gate for v0.39+
@@ -22,13 +22,14 @@ The local v0.39.0 RC proof now validates generated starter behavior from
 `@openelement/create`, proves pages/layouts/islands/API routes/static output,
 assets, SSR/ISR intent, and Nitro runtime behavior through `consumer:local`,
 aligns docs/templates with the four-product matrix, adds public README
-integrity gates, excludes Web Awesome from the current target, and records Vue
-as the only heavy-framework island adapter proof. The package bump to `0.39.0`
-is complete, post-bump local gates passed, `dev` and `main` CI passed, JSR
+integrity gates, excludes Web Awesome from the current target, and records
+Preact as the v0.40 heavy-framework island priority. The package bump to
+`0.39.0` is complete, post-bump local gates passed, `dev` and `main` CI passed, JSR
 publish evidence passed in `Publish to JSR` run `27425438225`, and package
 test CI coverage is guarded by `deno task ci:check-package-tests`. Core signal
 protocol types now resolve through `@openelement/protocols/signals`, guarded by
-`deno task signals:check-protocol-boundary`.
+`deno task signals:check-protocol-boundary`. The old v0.39 architecture state
+is frozen on `arch/v0.39-line`; `dev` is the product-line reset branch.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
@@ -131,6 +132,7 @@ Governing docs:
 
 - `docs/sop/v0.39.0/README.md`
 - `docs/next/v0.39.0/`
+- `docs/current/VERSION_PLAN.md`
 - `docs/sop/v0.38.0/README.md`
 - `docs/next/v0.38.0/`
 - `docs/sop/v0.37.6/README.md`
@@ -142,6 +144,7 @@ Governing docs:
 - `docs/adr/ADR-0098-entry-descriptor-route-manifest-contract.md`
 - `docs/adr/ADR-0099-four-product-matrix-and-elements-reset.md`
 - `docs/adr/ADR-0100-jsr-publish-exit-gate-restored.md`
+- `docs/adr/ADR-0101-product-line-reset-autoflow3-governance.md`
 - `docs/sop/v0.37.4/README.md`
 - `docs/next/v0.37.4/`
 - `docs/sop/v0.37.3/README.md`
@@ -215,7 +218,9 @@ built-in cell generation.
 | v0.37.5 | Protocol-First Runtime Architecture                | Done                        | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Done                        | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
 | v0.38.0 | Product Surface Reset and Hardening                | Done                        | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
-| v0.39.0 | Framework RC + Four-Product Matrix Reset           | Active / local gates passed | ADR-0099, public docs integrity, Elements direction, Vue adapter plan, starter/deploy/consumer gates           |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | Active / local gates passed | ADR-0099, public docs integrity, Elements direction, Preact handoff, starter/deploy/consumer gates             |
+| v0.40.0 | Elements + Preact Island Priority                  | Planned                     | Productize `OpenElement`, freeze Hub/broad islands, prove Preact islands and Preact signal candidate           |
+| v0.41.0 | v1.0 Freeze Candidate                              | Planned                     | API freeze candidate, protocol conformance, UI hardening, migration docs, and release-gate proof               |
 | v1.0.0  | Stable Four-Product Platform                       | Vision                      | API freeze for Elements, UI, Framework, and Protocols with workflow evidence in release gates                  |
 
 ## Current Product Center
@@ -265,8 +270,9 @@ The active execution package is **v0.39.0**.
 Package governance for v0.39:
 
 - do not add a new top-level package without an ADR;
-- ADR-0099 approves future `@openelement/elements` and Vue adapter work, but
-  implementation must update package count, release order, import maps, graph
+- ADR-0099 approves future `@openelement/elements`; the v0.40 roadmap now
+  prioritizes Preact island proof over the earlier Vue adapter plan, but any
+  new package must update package count, release order, import maps, graph
   checks, docs, and migration notes;
 - keep protocol contracts small and runtime-free;
 - keep UI independent from framework routing;
@@ -310,8 +316,8 @@ Package governance for v0.39:
   abstraction rewrites.
 - UI remains first-party and Elements-based. Web Awesome is not part of the
   current target.
-- Heavy-framework island expansion is limited to a Vue adapter proof in the
-  current plan.
+- Heavy-framework island expansion is frozen except for the planned v0.40
+  Preact island proof.
 - Database work belongs in data/database adapter contracts and recipes. It must
   not become a built-in ORM, auth platform, or migration system.
 - A Vite + Nitro runtime proof should compose openElement routes, rendering,
@@ -349,9 +355,12 @@ Package governance for v0.39:
   line and are not split into a fifth product.
 - **Light DOM is opt-in.** Shadow/DSD remains the default Elements render mode.
   Light DOM support requires explicit API, tests, docs, and ADR coverage.
-- **Current heavy island target.** Vue is the only planned heavy-framework
-  island adapter proof for v0.39; React is not expanded and Web Awesome is out
-  of scope.
+- **Current heavy island target.** Preact is the only planned heavy-framework
+  island adapter proof for the pre-1.0 path; Vue, React, Svelte, and generic
+  heavy-island expansion are frozen, and Web Awesome is out of scope.
+- **Signal engine default.** `@preact/signals-core` is only a candidate
+  `SignalEngine` implementation until protocol conformance, bundle, SSR/CSR,
+  and consumer-smoke evidence justify an ADR-backed default change.
 - **No DOM diff.** Signal writes trigger scoped rerender behavior; complex
   subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions,
@@ -365,6 +374,12 @@ Package governance for v0.39:
 - **AutoFlow2 boundary.** AutoFlow2 may report state, evidence, blockers, and
   allowed actions. It must not merge, tag, bump, publish, or replace human review
   for ADRs, public API resets, package removal, release tags, or publishing.
+- **AutoFlow3 boundary.** AutoFlow3 is the single workflow, gate, and evidence
+  control plane. It may automate patch-level mechanical changes only when
+  policy checks prove no public API, package topology, release-policy,
+  runtime-default, security, auth, database, or minor/major roadmap impact.
+  Minor, major, and v1 decisions require human ADR plus approved version-plan
+  evidence.
 - **Protocol first-class.** Core rendering, adapter, island/hydration, signal,
   data, route-manifest, runtime, cache, storage, and component-adapter contracts
   live in `@openelement/protocols` with conformance tests.

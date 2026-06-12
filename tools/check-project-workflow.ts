@@ -7,6 +7,7 @@ type Failure = {
 
 const requiredFiles = [
   'docs/governance/PROJECT_WORKFLOW.md',
+  'docs/current/VERSION_PLAN.md',
   'CONTRIBUTING.md',
   '.github/PULL_REQUEST_TEMPLATE.md',
   '.github/ISSUE_TEMPLATE/bug.yml',
@@ -18,22 +19,21 @@ const requiredFiles = [
   '.github/agents/adr-reviewer.agent.md',
   '.github/agents/sop-gate.agent.md',
   '.github/agents/test-quality.agent.md',
-  `docs/next/${ACTIVE_VERSION}/README.md`,
-  `docs/next/${ACTIVE_VERSION}/DESIGN.md`,
-  `docs/next/${ACTIVE_VERSION}/TASKS.md`,
-  `docs/next/${ACTIVE_VERSION}/ACCEPTANCE.md`,
-  `docs/next/${ACTIVE_VERSION}/TEST_MATRIX.md`,
-  `docs/next/${ACTIVE_VERSION}/DOCS_PLAN.md`,
-  `docs/next/${ACTIVE_VERSION}/RISK_REGISTER.md`,
-  `docs/next/${ACTIVE_VERSION}/RELEASE_CHECKLIST.md`,
 ];
 
 const requiredAnchors: Record<string, string[]> = {
   'README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'CONTRIBUTING.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', `docs/next/${ACTIVE_VERSION}/`],
+  'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', 'docs/current/VERSION_PLAN.md'],
   'docs/roadmap/ROADMAP.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
+  'docs/current/VERSION_PLAN.md': [
+    'openElement = Elements + UI + Framework + Protocols',
+    'ADR-0101',
+    'AutoFlow3',
+    'Preact',
+    'Test Matrix',
+  ],
   [`docs/sop/${ACTIVE_VERSION}/README.md`]: [
     `docs/next/${ACTIVE_VERSION}/`,
     'ADR-0093',

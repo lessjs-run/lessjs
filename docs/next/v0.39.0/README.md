@@ -43,7 +43,8 @@ public target to `openElement = Elements + UI + Framework + Protocols`.
 - [x] Record that `DsdElement` is superseded as public product terminology and
       that v0.39 does not promise a long-term compatibility alias.
 - [x] Keep Web Awesome out of the current UI target.
-- [x] Plan Vue as the only heavy-framework island adapter proof for this line.
+- [x] Hand off heavy-framework island work to v0.40 with Preact as the only
+      planned priority before v1.0.
 
 ## Current Evidence
 

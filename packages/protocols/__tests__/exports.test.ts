@@ -18,6 +18,7 @@ Deno.test('@openelement/protocols exports runtime validators and type-only contr
     'runDataAdapterConformance',
     'runRendererConformance',
     'runRuntimeAdapterConformance',
+    'runSignalEngineConformance',
     'unwrapSignalLike',
   ]);
 });

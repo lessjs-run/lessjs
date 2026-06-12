@@ -43,7 +43,7 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - Align website, docs, package READMEs, and migration guidance with the RC
   surface.
 - Add public docs integrity checks for README version truth and mojibake.
-- Plan Vue as the only current heavy-framework island adapter proof.
+- Hand off heavy-framework island work to a Preact-first v0.40 proof.
 - Keep Hub, RPC, direct SSG, CEM, and compat-check out of first-run product
   docs unless an ADR changes their disposition.
 
@@ -54,7 +54,9 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - No hidden compatibility shims for removed or archived 0.x surfaces.
 - No package version bump until implementation gates pass.
 - No Web Awesome implementation, preset, or current UI strategy.
-- No React adapter expansion in this line.
+- No Preact, Vue, React, or Svelte adapter implementation in this line.
+- No default signal engine swap in this line; Preact Signals must first pass
+  protocol conformance as a v0.40 candidate.
 - No long-term public `DsdElement` compatibility alias commitment.
 
 ## Required Gates
@@ -84,3 +86,6 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - `dev` non-JSR CI passes before merge or sync to `main`.
 - `main` non-JSR CI passes before tag/release.
 - JSR publish succeeds locally or in CI before release closure.
+- v0.40 handoff is documented as Elements productization plus Preact island
+  priority, with Hub and broad island compatibility frozen until after v1.0
+  unless a later ADR changes the scope.
