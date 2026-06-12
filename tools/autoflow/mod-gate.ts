@@ -31,6 +31,12 @@ const CHECK_GROUPS: CheckGroup[] = [
     triggers: [],
     command: ['deno', 'task', 'docs:check-public'],
   },
+  {
+    name: 'ci:check-package-tests',
+    always: true,
+    triggers: [],
+    command: ['deno', 'task', 'ci:check-package-tests'],
+  },
 
   // Conditional checks — only run when affected paths change
   {

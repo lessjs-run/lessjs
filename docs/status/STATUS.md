@@ -24,8 +24,9 @@ assets, SSR/ISR intent, and Nitro runtime behavior through `consumer:local`,
 aligns docs/templates with the four-product matrix, adds public README
 integrity gates, excludes Web Awesome from the current target, and records Vue
 as the only heavy-framework island adapter proof. The package bump to `0.39.0`
-is complete, post-bump local gates passed, `dev` and `main` CI passed, and JSR
-publish evidence passed in `Publish to JSR` run `27425438225`.
+is complete, post-bump local gates passed, `dev` and `main` CI passed, JSR
+publish evidence passed in `Publish to JSR` run `27425438225`, and package
+test CI coverage is guarded by `deno task ci:check-package-tests`.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
@@ -373,6 +374,7 @@ deno task workflow:check
 deno task docs:check-public
 deno task arch:check
 deno task graph:check
+deno task ci:check-package-tests
 deno task docs:check-current
 deno task docs:check-strategy
 deno task fmt:check

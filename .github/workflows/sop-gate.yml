@@ -147,6 +147,16 @@ jobs:
           deno-version: '2'
       - run: deno task verify:configs
 
+  ci-package-tests:
+    name: 'ci:check-package-tests'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - run: deno task ci:check-package-tests
+
   test-e2e:
     name: 'test:e2e'
     runs-on: ubuntu-latest
@@ -181,6 +191,7 @@ jobs:
         hub-check-index,
         docs-check,
         config-validate,
+        ci-package-tests,
         test-e2e,
       ]
     if: always()
@@ -213,6 +224,7 @@ jobs:
             check "${{ needs.hub-check-index.result }}"  "hub:check-index"
             check "${{ needs.docs-check.result }}"       "docs:check-strategy"
             check "${{ needs.config-validate.result }}"  "verify:configs"
+            check "${{ needs.ci-package-tests.result }}" "ci:check-package-tests"
             check "${{ needs.test-e2e.result }}"         "test:e2e"
             echo ""
             if [ "$ALL_PASS" = "true" ]; then

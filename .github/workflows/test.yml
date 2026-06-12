@@ -136,6 +136,94 @@ jobs:
       - name: Run adapter-lit tests
         run: deno test packages/adapter-lit/__tests__/ --coverage --allow-read --allow-write --allow-env
 
+  test-adapter-react:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run adapter-react tests
+        run: deno test packages/adapter-react/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-adapter-vanilla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run adapter-vanilla tests
+        run: deno test packages/adapter-vanilla/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run app tests
+        run: deno test packages/app/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-cem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run cem tests
+        run: deno test packages/cem/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-compat-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run compat-check tests
+        run: deno test packages/compat-check/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-protocols:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run protocols tests
+        run: deno test packages/protocols/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-router:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run router tests
+        run: deno test packages/router/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run runtime tests
+        run: deno test packages/runtime/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-signals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run signals tests
+        run: deno test packages/signals/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-ssg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run ssg tests
+        run: deno test packages/ssg/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
+  test-style-sheet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: Run style-sheet tests
+        run: deno test packages/style-sheet/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run --allow-ffi
+
   build-www:
     runs-on: ubuntu-latest
     steps:
@@ -168,6 +256,17 @@ jobs:
       test-content,
       test-hub,
       test-adapter-lit,
+      test-adapter-react,
+      test-adapter-vanilla,
+      test-app,
+      test-cem,
+      test-compat-check,
+      test-protocols,
+      test-router,
+      test-runtime,
+      test-signals,
+      test-ssg,
+      test-style-sheet,
     ]
     steps:
       - uses: actions/checkout@v4
