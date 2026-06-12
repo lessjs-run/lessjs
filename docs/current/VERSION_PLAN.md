@@ -109,10 +109,11 @@ openElement = Elements + UI + Framework + Protocols
 
 ### E. Hub Physical Freeze
 
-- [ ] Decide whether `hub-index` is archived release evidence, generated data,
+- [x] Decide whether `hub-index` is archived release evidence, generated data,
       or removed from the active product line.
-- [ ] Remove `hub-index` from active root product shape unless a human ADR
-      reopens Hub.
+- [x] Remove `hub-index` from active root product shape unless a human ADR
+      reopens Hub by guarding all write/update tasks behind
+      `OPEN_ELEMENT_ALLOW_ARCHIVED_HUB_WRITE=1`.
 - [x] Disable, delete, or manual-scope `hub-ci.yml` while Hub remains frozen.
 - [ ] Keep `packages/hub` publishable only if release graph compatibility
       requires it; otherwise prepare a package removal or merge ADR.

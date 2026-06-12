@@ -53,3 +53,11 @@ ADR-0101.
 ADR-0102 approves `@openelement/elements` as a real v0.40 package. The package
 currently acts as a narrow facade over `@openelement/core` while implementation
 migration remains deferred.
+
+## Archive Guardrails
+
+`@openelement/hub` remains publishable for release graph compatibility, but Hub
+write/update tasks are no longer active product entry points. `hub:scan` and
+`hub:index:update` require `OPEN_ELEMENT_ALLOW_ARCHIVED_HUB_WRITE=1`, so
+`hub-index` is treated as archived registry evidence unless a later ADR reopens
+Hub.

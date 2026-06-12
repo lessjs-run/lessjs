@@ -35,6 +35,14 @@ if (hubCi.includes('gh pr merge')) {
   failures.push('hub-ci.yml must not auto-merge archived Hub submissions.');
 }
 
+const denoJson = await Deno.readTextFile('deno.json');
+for (const task of ['hub:scan', 'hub:index:update']) {
+  const pattern = new RegExp(`"${task}"\\s*:\\s*"[^"]*require-hub-archive-approval\\.ts`);
+  if (!pattern.test(denoJson)) {
+    failures.push(`${task} must require archived Hub write approval.`);
+  }
+}
+
 if (failures.length > 0) {
   console.error('Workflow slimming check failed:');
   for (const failure of failures) console.error(`- ${failure}`);
