@@ -62,9 +62,8 @@ export default definePage({
 ## 当前版本线
 
 全部 20 个 workspace 包已经统一到 **0.39.0**（`v0.39.0`），命名空间为
-[`@openelement`](https://jsr.io/@openelement)。活动执行线也是 **v0.39.0**。JSR
-publish 和 live registry visibility 根据 ADR-0097 作为 best-effort distribution
-telemetry，不作为版本退出 gate。
+[`@openelement`](https://jsr.io/@openelement)。活动执行线也是 **v0.39.0**。根据
+ADR-0100，JSR publish 从 v0.39+ 起恢复为 release exit gate。
 
 v0.39.0 验证 generated Framework RC surface，并记录 ADR-0099 的四产品矩阵重置。
 Web Awesome 不属于当前 UI target；Vue 是本线唯一计划的 heavy-framework island

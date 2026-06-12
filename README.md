@@ -81,8 +81,8 @@ export default defineIsland(
 
 All 20 workspace packages are aligned at **0.39.0** (`v0.39.0`) under
 [`@openelement`](https://jsr.io/@openelement). The active execution line is
-**v0.39.0**. JSR publish and live registry visibility are best-effort
-distribution telemetry under ADR-0097, not version-exit gates.
+**v0.39.0**. ADR-0100 restores JSR publish as a release exit gate for v0.39+
+closure.
 
 v0.39.0 validates the generated Framework RC surface and records ADR-0099's
 four-product matrix reset. It also keeps Web Awesome out of the current UI

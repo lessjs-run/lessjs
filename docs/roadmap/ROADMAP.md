@@ -208,15 +208,16 @@ Implemented as a bounded hygiene and foundation release:
 - supplement tests across ssg, router, and protocols.
 
 Release-truth note: v0.37.4 implementation, tag, and GitHub release exist.
-ADR-0097 makes live JSR visibility a best-effort distribution concern rather
-than a version-exit gate. JSR state must still be recorded honestly; release
-notes must not claim JSR availability unless direct resolver checks prove it.
+ADR-0097-era policy treated live JSR visibility as an external distribution
+concern rather than a version-exit gate. JSR state still had to be recorded
+honestly; release notes could not claim JSR availability unless direct resolver
+checks proved it.
 
 Distribution note: failed 2026-06-11 recovery attempts proved a 5-minute
 package timeout and then a 20-minute package timeout are both too short for
-JSR's current publish behavior. Publishing may continue through local or CI
-best-effort attempts, but roadmap execution should continue after local gates,
-AutoFlow evidence, and non-JSR CI are correct.
+JSR's then-current publish behavior. Publishing continued through local or CI
+attempts under ADR-0097-era caveats, while roadmap execution continued after
+local gates, AutoFlow evidence, and non-JSR CI were correct.
 
 ## v0.37.5 - Protocol-First Runtime Architecture
 
@@ -282,8 +283,8 @@ Complete daisyUI interactive component coverage and migrate protocol types.
 Prove the new default engine with a narrow real application. v0.37.6 is
 released at tag `v0.37.6` and GitHub release
 `https://github.com/open-element/openelement/releases/tag/v0.37.6`. Local,
-`dev`, and `main` non-JSR gates passed; JSR publish ran as best-effort
-distribution telemetry under ADR-0097.
+`dev`, and `main` non-JSR gates passed; JSR publish ran under the ADR-0097-era
+distribution policy.
 
 - generate an openElement universal request handler and mount it in Nitro;
 - prove Node output and Cloudflare Workers output;
@@ -319,7 +320,7 @@ Governance convergence before v0.38 exit:
   generate, or autonomous capabilities;
 - Hub scope deferral to post-v1.0; Hub remains internal tooling through v0.38.
 - JSR release instability mitigation: keep direct registry visibility checks,
-  best-effort publish attempts, release-note caveats, and fallback
+  ADR-0097-era publish attempts, release-note caveats, and fallback
   publishing/distribution options in the release design.
 
 ADR-0099 supersedes the v0.38 candidate package-name deferral for future work.

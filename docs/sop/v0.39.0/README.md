@@ -19,15 +19,16 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - All 20 workspace packages are aligned to `0.38.0`.
 - v0.38.0 product, advanced, internal, and archived package classifications are
   recorded.
-- JSR publish/visibility state is telemetry only under ADR-0097.
+- ADR-0100 restores JSR publish as a v0.39+ release exit gate.
 
 ## Workflow Anchors
 
 - NextVersion package: `docs/next/v0.39.0/`
 - ADR-0093: SSR/ISR runtime contract
 - ADR-0096: protocol-first Vite + Nitro runtime
-- ADR-0097: JSR best-effort release gate
+- ADR-0097: historical JSR best-effort release gate
 - ADR-0099: four-product matrix and Elements reset
+- ADR-0100: JSR publish exit gate restored
 
 ## Scope
 
@@ -73,6 +74,7 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - `deno task dsd:check-report`
 - generated consumer smoke
 - publish dry-run
+- live or CI JSR publish success
 
 ## Exit Criteria
 
@@ -81,4 +83,4 @@ guidance, consumer smoke, and release gates. It must also align public docs on
 - Local gates pass after implementation and again after package bump.
 - `dev` non-JSR CI passes before merge or sync to `main`.
 - `main` non-JSR CI passes before tag/release.
-- JSR publish is attempted locally or in CI as best-effort telemetry.
+- JSR publish succeeds locally or in CI before release closure.

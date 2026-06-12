@@ -34,5 +34,5 @@ CI, and release evidence.
 - [x] Post-bump local release gates pass after package version `0.39.0`.
 - [x] `deno task docs:check-public` passes.
 - [ ] Package versions are bumped only after implementation gates pass.
-- [ ] `dev` and `main` non-JSR CI pass before tag/release.
-- [ ] JSR publish is attempted as best-effort telemetry only.
+- [x] `dev` and `main` non-JSR CI pass before tag/release.
+- [ ] JSR publish succeeds locally or in CI before release closure.

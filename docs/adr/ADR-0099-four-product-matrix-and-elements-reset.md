@@ -112,5 +112,6 @@ templates, and the current UI strategy.
 - ADR-0091: Four-Product Platform Roadmap.
 - ADR-0092: DsdElement Render Mode Contract.
 - ADR-0096: Protocol-First Vite + Nitro Runtime Architecture.
-- ADR-0097: JSR Best-Effort Release Gate.
+- ADR-0097: historical JSR Best-Effort Release Gate.
+- ADR-0100: JSR Publish Exit Gate Restored.
 - `docs/next/v0.39.0/`

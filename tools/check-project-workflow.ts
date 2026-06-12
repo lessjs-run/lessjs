@@ -40,6 +40,7 @@ const requiredAnchors: Record<string, string[]> = {
     'ADR-0096',
     'ADR-0097',
     'ADR-0099',
+    'ADR-0100',
   ],
   'docs/next/v0.37.2/README.md': [
     'docs/sop/v0.37.2/README.md',

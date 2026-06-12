@@ -30,6 +30,9 @@ const staleCurrentClaims: RegExp[] = [
   /v0\.37\.6 is the current workspace package line/i,
   /All 20 workspace packages are currently aligned together at\s+\*\*v0\.37\.6\*\*/i,
   /活动执行目标是\s+v0\.38\.0/i,
+  /JSR publish .*best-effort/i,
+  /JSR publish .*telemetry/i,
+  /not (?:a )?(?:version-)?exit gate/i,
 ];
 
 const failures: Failure[] = [];

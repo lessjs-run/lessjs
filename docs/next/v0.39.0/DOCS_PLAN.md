@@ -25,4 +25,4 @@
 - Do not present Web Awesome as a current target.
 - Do not expand React as part of v0.39 docs.
 - Keep Vue as the only current heavy-framework island adapter proof.
-- Keep JSR publish state documented as telemetry, not a release blocker.
+- Keep JSR publish documented as a v0.39+ release exit gate under ADR-0100.

@@ -54,7 +54,7 @@ public target to `openElement = Elements + UI + Framework + Protocols`.
   surfaces.
 - ADR-0099 supersedes the v0.38 package-name deferral for future work and
   approves the four-product matrix.
-- JSR publish is telemetry only under ADR-0097.
+- ADR-0100 restores JSR publish as a release exit gate for v0.39+ closure.
 - `deno task consumer:local` now generates a starter app from local
   `@openelement/create`, patches imports to workspace source packages, builds
   through the generated Vite + openElement path, and verifies the generated
@@ -74,6 +74,7 @@ public target to `openElement = Elements + UI + Framework + Protocols`.
   `/freshness`, `/api/health`, and `/openelement-mark.svg`.
 - Migration notes for the ADR-0099 terminology reset are recorded in
   `docs/next/v0.39.0/MIGRATION.md`.
+- ADR-0100 records the JSR publish policy reset after JSR recovery.
 - Local v0.39 release-shape gates now pass: workflow, graph, architecture,
   public/current/strategy docs, format, lint, typecheck, test, Chromium E2E,
   build, DSD report, generated consumer, and publish dry-run.

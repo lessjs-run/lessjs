@@ -15,8 +15,8 @@ is `docs/sop/v0.39.0/README.md`; the active NextVersion package is
 `docs/next/v0.39.0/`.
 
 v0.39.0 now owns package version `0.39.0` after local implementation gates
-passed. JSR publish remains best-effort telemetry and is not an exit gate under
-ADR-0097.
+passed. ADR-0100 restores JSR publish as a release exit gate for v0.39+
+closure.
 
 The local v0.39.0 RC proof now validates generated starter behavior from
 `@openelement/create`, proves pages/layouts/islands/API routes/static output,
@@ -24,15 +24,15 @@ assets, SSR/ISR intent, and Nitro runtime behavior through `consumer:local`,
 aligns docs/templates with the four-product matrix, adds public README
 integrity gates, excludes Web Awesome from the current target, and records Vue
 as the only heavy-framework island adapter proof. The package bump to `0.39.0`
-is complete and post-bump local gates passed. Remaining release work is
-`dev` / `main` non-JSR CI, merge/sync, and best-effort JSR publish telemetry.
+is complete, post-bump local gates passed, `dev` and `main` CI passed, and JSR
+publish evidence is required for release closure.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
 v0.38.0 is released. Tag `v0.38.0` and the GitHub release exist at commit
 `e729bee4`. All 20 `@openelement/*` workspace packages are aligned to
 `0.38.0`. Local implementation and post-bump release gates passed; `dev` and
-`main` non-JSR CI passed before tag/release. Local JSR publish telemetry ran
+`main` non-JSR CI passed before tag/release. Local JSR publish evidence ran
 after release and confirmed all 20 package versions already existed on JSR, so
 the publish task skipped immutable versions successfully.
 
@@ -63,8 +63,8 @@ routes, and Nitro-owned cache-control for `/isr`. `deno task
 nitro:proof:workers` builds Nitro `cloudflare-module` output and verifies the
 generated Workers server entry, wrangler config, public asset, openElement
 route/render markers, and route-rule cache markers. Local, `dev`, and `main`
-non-JSR release gates passed. JSR publish ran locally and in CI as best-effort
-distribution telemetry.
+non-JSR release gates passed. JSR publish ran locally and in CI under the
+ADR-0097-era distribution policy.
 
 ## Prior Version Line: v0.37.5 (Protocol-First Runtime Architecture)
 
@@ -77,11 +77,11 @@ replacement boundary for renderer, component, runtime, route, island, cache,
 signal, and data contracts while positioning Vite + Nitro as the default base
 engine for the v0.37.6 runtime proof.
 
-ADR-0097 changes the release policy: JSR package visibility is no longer a
-version-exit gate. JSR publish remains best-effort distribution telemetry and a
-release-note caveat when the registry is unhealthy.
+ADR-0097 changed the release policy for that historical line: JSR package
+visibility was no longer a version-exit gate, and registry health became a
+release-note caveat.
 
-## Prior Version Line: v0.37.4 (Hygiene + Pure CSS UI + Architecture Decoupling) - JSR Best-Effort Distribution
+## Prior Version Line: v0.37.4 (Hygiene + Pure CSS UI + Architecture Decoupling) - JSR Distribution Caveat
 
 v0.37.4 implementation is complete. All 20 `@openelement/*` workspace packages
 were aligned to `0.37.4`, tag `v0.37.4` exists, and the GitHub release exists.
@@ -137,6 +137,7 @@ Governing docs:
 - `docs/adr/ADR-0097-jsr-best-effort-release-gate.md`
 - `docs/adr/ADR-0098-entry-descriptor-route-manifest-contract.md`
 - `docs/adr/ADR-0099-four-product-matrix-and-elements-reset.md`
+- `docs/adr/ADR-0100-jsr-publish-exit-gate-restored.md`
 - `docs/sop/v0.37.4/README.md`
 - `docs/next/v0.37.4/`
 - `docs/sop/v0.37.3/README.md`
@@ -206,7 +207,7 @@ built-in cell generation.
 | v0.37.1 | DsdElement Shadow + Light Contract                 | Done                        | Explicit `DsdElement.renderMode = 'light'` opt-in with SSR/CSR proof                                           |
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                        | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                 |
 | v0.37.3 | Data / Database Boundary                           | Done                        | Data/database adapter contracts and recipes without built-in ORM ownership                                     |
-| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Done / JSR caveat           | Implementation complete; JSR distribution is best-effort under ADR-0097                                        |
+| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Done / JSR caveat           | Implementation complete; JSR distribution followed ADR-0097-era caveats                                        |
 | v0.37.5 | Protocol-First Runtime Architecture                | Done                        | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Done                        | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
 | v0.38.0 | Product Surface Reset and Hardening                | Done                        | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
@@ -314,9 +315,8 @@ Package governance for v0.39:
 - Governance convergence before v1.0: gate tiers (fast dev gate for PRs,
   full release gate for publishing), AutoFlow feature scope freeze, Hub scope
   deferred to post-v1.0. See `docs/roadmap/ROADMAP.md` v0.38.x for details.
-- JSR publish is best-effort distribution telemetry, not a version-exit gate.
-  Release notes must not claim JSR availability unless direct resolver checks
-  prove it.
+- JSR publish is a v0.39+ release exit gate under ADR-0100. Release notes must
+  not claim closure unless publish evidence or an ADR-approved exception exists.
 
 ## Key Decisions
 
@@ -352,9 +352,9 @@ Package governance for v0.39:
   subtrees stay in Islands.
 - **Package graph gate.** `graph:check` verifies zero cycles, unified versions,
   and declared imports.
-- **JSR best-effort distribution.** `publish:dry-run` remains a release gate,
-  but live JSR visibility and post-publish JSR consumer smoke no longer block
-  version exit. See ADR-0097.
+- **JSR publish exit gate restored.** `publish:dry-run` remains a local release
+  gate, and live or CI JSR publish evidence is required for v0.39+ version
+  closure. See ADR-0100.
 - **SSG ownership.** `@openelement/ssg` owns SSG render, postprocess, route
   scanning, entry generation, generated data resolution, and SSG-specific Vite
   plugin logic.
@@ -387,6 +387,7 @@ deno task publish:dry-run
 deno task test:e2e
 ```
 
-Live JSR publish and post-publish JSR consumer smoke are attempted after
-repository-controlled gates, dev/main CI, merge, and tag/release work. They are
-not required for version exit while JSR remains externally unreliable.
+Live JSR publish and post-publish JSR consumer smoke run after
+repository-controlled gates, dev/main CI, merge, and tag/release work. For
+v0.39+ release closure, JSR publish evidence is required unless a later ADR
+approves an explicit exception.
