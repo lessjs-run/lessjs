@@ -102,7 +102,7 @@ ADR-0104 keeps the default signal engine unchanged and requires any
 
 - [x] Move or re-home `fixtures/nitro-proof` so the root no longer carries a
       one-off v0.37.6 proof fixture as active product shape.
-- [ ] Keep `nitro:proof:node` and `nitro:proof:workers` working after the move,
+- [x] Keep `nitro:proof:node` and `nitro:proof:workers` working after the move,
       or archive those tasks as historical release evidence with an ADR-backed
       replacement.
 - [ ] Audit root-level generated or local-output directories and ensure tracked

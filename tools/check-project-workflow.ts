@@ -38,6 +38,8 @@ const requiredAnchors: Record<string, string[]> = {
     'SignalEngine',
     'Repository Slimming',
     'fixtures/nitro-proof',
+    'nitro:proof:node',
+    'nitro:proof:workers',
     'hub-index',
     'Package Graph Rationalization',
     'Test Matrix',
