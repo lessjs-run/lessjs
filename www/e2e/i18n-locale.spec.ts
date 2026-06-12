@@ -139,6 +139,23 @@ test.describe('Locale Switcher', () => {
       link?.click();
     });
     await page.waitForURL(/\/zh\/?$/);
+    await page.waitForFunction(() => {
+      const visit = (root: Document | ShadowRoot | Element): Element | null => {
+        const direct = root.querySelector?.('open-layout');
+        if (direct) return direct;
+        const all = root.querySelectorAll?.('*') ?? [];
+        for (const el of Array.from(all)) {
+          if (el.shadowRoot) {
+            const found = visit(el.shadowRoot);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const layout = visit(document);
+      return document.documentElement.lang === 'zh' &&
+        layout?.getAttribute('locale') === 'zh';
+    });
     const after = await readDeepLayoutState(page);
 
     expect(after.htmlLang).toBe('zh');
