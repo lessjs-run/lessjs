@@ -1,8 +1,8 @@
 # v0.39.0 Release Checklist
 
-- [ ] All `TASKS.md` required implementation items are complete or explicitly
+- [x] All `TASKS.md` required implementation items are complete or explicitly
       deferred by ADR/SOP update.
-- [ ] All `ACCEPTANCE.md` product, runtime, docs, consumer, and gate criteria
+- [x] All `ACCEPTANCE.md` product, runtime, docs, consumer, and gate criteria
       are met.
 - [x] Generated app smoke evidence is recorded.
 - [x] Deployment/runtime evidence is recorded.
@@ -33,4 +33,4 @@
 - [x] `dev` is pushed and non-JSR CI is green.
 - [x] `dev` is merged or synced to `main`.
 - [x] `main` non-JSR CI is green before tag/release.
-- [ ] JSR publish succeeds locally or in CI before tag/release.
+- [x] JSR publish succeeds locally or in CI before tag/release.
