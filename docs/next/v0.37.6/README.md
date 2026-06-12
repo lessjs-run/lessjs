@@ -16,10 +16,10 @@ contracts.
 - [x] generate or expose an openElement universal request handler;
 - [x] add the first Nitro mount boundary for converting a Nitro-like event to a
       Web `Request` and returning Web `Response` data;
-- [ ] mount that handler in a real Nitro server entry;
-- build a minimal proof application through Vite + Nitro;
-- prove Node output;
-- prove Cloudflare Workers output.
+- [x] mount that handler in a real Nitro server entry;
+- [x] build a minimal proof application through Nitro;
+- [x] prove Node output;
+- [x] prove Cloudflare Workers output.
 
 ### openElement Semantics to Preserve
 
@@ -51,9 +51,21 @@ contracts.
 - `@openelement/adapter-vite/nitro-mount` exposes
   `createOpenElementNitroHandler`, which preserves the Web Request/Response
   boundary and passes runtime context through the protocol.
-- `deno task nitro:proof:node` and `deno task nitro:proof:workers` currently
-  prove the mount boundary. They are not yet a substitute for real Nitro output
-  proof.
+- `fixtures/nitro-proof/` contains a minimal Nitro proof app that mounts the
+  openElement handler in a real Nitro server route and exposes a public asset.
+- `deno task nitro:proof:node` builds Nitro `node-server` output, starts the
+  generated server, smokes the openElement Web `Response`, and verifies public
+  asset serving.
+- `deno task nitro:proof:workers` builds Nitro `cloudflare-module` output and
+  verifies the generated server entry, wrangler config, public asset, and
+  openElement proof markers.
+- The proof app now covers static asset serving, island chunk assets, static
+  zero-JS output, explicit-island JavaScript minimality, `load()` evidence,
+  layout composition, redirect, not-found, error, API route behavior, and a
+  cache-intent header emitted through the Nitro-mounted handler.
+- ISR/cache intent is mapped to a Nitro `/isr` route rule. The Node proof
+  verifies Nitro-owned cache-control output, and the Workers proof verifies the
+  generated Cloudflare module contains the same route-rule markers.
 
 ## Non-Goals
 

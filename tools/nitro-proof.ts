@@ -1,5 +1,3 @@
-import { createOpenElementNitroHandler } from '../packages/adapter-vite/src/nitro-mount.ts';
-
 const preset = Deno.args[0];
 
 if (preset !== 'node' && preset !== 'workers') {
@@ -7,44 +5,303 @@ if (preset !== 'node' && preset !== 'workers') {
   Deno.exit(2);
 }
 
-const mount = createOpenElementNitroHandler({
-  baseUrl: preset === 'workers' ? 'https://worker.example' : 'http://localhost',
-  env: { OPEN_ELEMENT_PRESET: preset },
-  platform: { preset },
-  handler: (request, context) => {
-    const url = new URL(request.url);
-    return Response.json({
-      ok: true,
-      preset,
-      path: url.pathname,
-      envPreset: context?.env?.OPEN_ELEMENT_PRESET,
-      platformPreset: (context?.platform as { preset?: string } | undefined)?.preset,
-    });
-  },
+const root = new URL('../', import.meta.url);
+const fixture = new URL('fixtures/nitro-proof/', root);
+const outputName = preset === 'workers' ? '.output-workers' : '.output-node';
+const output = new URL(`${outputName}/`, fixture);
+const nitroPreset = preset === 'workers' ? 'cloudflare_module' : 'node';
+
+async function exists(url: URL): Promise<boolean> {
+  try {
+    await Deno.stat(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function removeIfExists(url: URL): Promise<void> {
+  if (await exists(url)) {
+    await Deno.remove(url, { recursive: true });
+  }
+}
+
+async function run(command: string[], env: Record<string, string> = {}): Promise<void> {
+  const child = new Deno.Command(command[0], {
+    args: command.slice(1),
+    cwd: fixture,
+    env,
+    stdout: 'piped',
+    stderr: 'piped',
+  });
+  const result = await child.output();
+  if (result.code !== 0) {
+    console.error(new TextDecoder().decode(result.stdout));
+    console.error(new TextDecoder().decode(result.stderr));
+    Deno.exit(result.code);
+  }
+}
+
+async function readJson<T>(url: URL): Promise<T> {
+  return JSON.parse(await Deno.readTextFile(url)) as T;
+}
+
+async function assertFile(url: URL, label: string): Promise<void> {
+  if (!(await exists(url))) {
+    console.error(`${label} missing: ${url.pathname}`);
+    Deno.exit(1);
+  }
+}
+
+function assertIncludes(text: string, expected: string, label: string): void {
+  if (!text.includes(expected)) {
+    console.error(`${label} missing expected text: ${expected}`);
+    Deno.exit(1);
+  }
+}
+
+function assertNotIncludes(text: string, unexpected: string, label: string): void {
+  if (text.includes(unexpected)) {
+    console.error(`${label} included unexpected text: ${unexpected}`);
+    Deno.exit(1);
+  }
+}
+
+async function readTextFiles(dir: URL, suffix: string): Promise<string> {
+  let content = '';
+  for await (const entry of Deno.readDir(dir)) {
+    const child = new URL(entry.name, dir);
+    if (entry.isDirectory) {
+      content += await readTextFiles(new URL(`${entry.name}/`, dir), suffix);
+    } else if (entry.isFile && entry.name.endsWith(suffix)) {
+      content += await Deno.readTextFile(child);
+    }
+  }
+  return content;
+}
+
+async function fetchText(baseUrl: string, path: string, expectedStatus: number): Promise<string> {
+  const response = await fetch(`${baseUrl}${path}`, { redirect: 'manual' });
+  const text = await response.text();
+  if (response.status !== expectedStatus) {
+    console.error(JSON.stringify({ path, expectedStatus, status: response.status, text }, null, 2));
+    Deno.exit(1);
+  }
+  return text;
+}
+
+async function smokeNode(serverEntry: URL): Promise<void> {
+  const port = 47937;
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const server = new Deno.Command('deno', {
+    args: [
+      'run',
+      '-A',
+      '--node-modules-dir=auto',
+      serverEntry.pathname,
+    ],
+    env: {
+      PORT: String(port),
+      HOST: '127.0.0.1',
+    },
+    stdout: 'null',
+    stderr: 'null',
+  }).spawn();
+
+  try {
+    let response: Response | undefined;
+    for (let attempt = 0; attempt < 50; attempt++) {
+      try {
+        response = await fetch(`${baseUrl}/api/proof`);
+        break;
+      } catch {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    if (!response) {
+      console.error('node smoke failed: server did not accept connections');
+      Deno.exit(1);
+    }
+
+    const payload = await response.json() as {
+      ok?: boolean;
+      framework?: string;
+      runtime?: string;
+      path?: string;
+      env?: string;
+    };
+    if (
+      response.status !== 200 ||
+      payload.ok !== true ||
+      payload.framework !== 'openElement' ||
+      payload.runtime !== 'nitro' ||
+      payload.path !== '/api/proof' ||
+      payload.env !== 'nitro'
+    ) {
+      console.error(JSON.stringify({ status: response.status, payload }, null, 2));
+      Deno.exit(1);
+    }
+
+    await assertPublicAsset(baseUrl, '/open-element-proof.txt', 'openElement Nitro public asset');
+    await assertPublicAsset(baseUrl, '/open-element-island-visible.js', 'open-proof-island');
+    await assertPublicAsset(baseUrl, '/open-element-client-only.js', 'open-proof-client-only');
+
+    const staticHtml = await fetchText(baseUrl, '/static', 200);
+    assertIncludes(staticHtml, 'data-route="static"', 'static route');
+    assertNotIncludes(staticHtml, '<script', 'static zero-JS route');
+    assertNotIncludes(staticHtml, 'open-element-island-visible.js', 'static zero-JS route');
+    assertNotIncludes(staticHtml, 'open-element-client-only.js', 'static zero-JS route');
+
+    const loadHtml = await fetchText(baseUrl, '/load', 200);
+    assertIncludes(loadHtml, 'data-load="nitro-data"', 'load route');
+
+    const layoutHtml = await fetchText(baseUrl, '/layout', 200);
+    assertIncludes(layoutHtml, 'data-layout="shell"', 'layout route');
+    assertIncludes(layoutHtml, 'data-route="layout"', 'layout route');
+
+    const redirect = await fetch(`${baseUrl}/redirect`, { redirect: 'manual' });
+    if (redirect.status !== 302 || redirect.headers.get('location') !== '/static') {
+      console.error(
+        JSON.stringify(
+          { status: redirect.status, location: redirect.headers.get('location') },
+          null,
+          2,
+        ),
+      );
+      Deno.exit(1);
+    }
+
+    const notFoundHtml = await fetchText(baseUrl, '/not-found', 404);
+    assertIncludes(notFoundHtml, 'data-route="not-found"', 'not-found route');
+
+    const errorHtml = await fetchText(baseUrl, '/error', 500);
+    assertIncludes(errorHtml, 'data-route="error"', 'error route');
+
+    const islandHtml = await fetchText(baseUrl, '/island', 200);
+    assertIncludes(islandHtml, 'data-hydrate="visible"', 'explicit island route');
+    assertIncludes(islandHtml, 'open-element-island-visible.js', 'explicit island route');
+    assertNotIncludes(islandHtml, 'open-element-client-only.js', 'explicit island route');
+
+    const clientOnlyHtml = await fetchText(baseUrl, '/client-only', 200);
+    assertIncludes(clientOnlyHtml, 'data-hydrate="only"', 'client-only route');
+    assertIncludes(clientOnlyHtml, 'open-element-client-only.js', 'client-only route');
+    assertNotIncludes(clientOnlyHtml, 'open-element-island-visible.js', 'client-only route');
+
+    const isr = await fetch(`${baseUrl}/isr`);
+    const isrText = await isr.text();
+    if (
+      isr.status !== 200 ||
+      !isrText.includes('data-route="isr"') ||
+      isr.headers.get('x-open-element-cache-intent') !== 'isr; revalidate=60' ||
+      isr.headers.get('cache-control') !== 'public, max-age=60, s-maxage=60'
+    ) {
+      console.error(
+        JSON.stringify(
+          {
+            status: isr.status,
+            cacheIntent: isr.headers.get('x-open-element-cache-intent'),
+            cacheControl: isr.headers.get('cache-control'),
+            body: isrText,
+          },
+          null,
+          2,
+        ),
+      );
+      Deno.exit(1);
+    }
+  } finally {
+    server.kill('SIGTERM');
+    await server.status.catch(() => undefined);
+  }
+}
+
+async function assertPublicAsset(baseUrl: string, path: string, marker: string): Promise<void> {
+  const asset = await fetch(`${baseUrl}${path}`);
+  const text = await asset.text();
+  if (asset.status !== 200 || !text.includes(marker)) {
+    console.error(JSON.stringify({ path, status: asset.status, text }, null, 2));
+    Deno.exit(1);
+  }
+}
+
+await removeIfExists(output);
+await run(['deno', 'run', '--node-modules-dir=auto', '-A', 'npm:nitro', 'build'], {
+  OPEN_ELEMENT_NITRO_PRESET: nitroPreset,
 });
 
-const response = await mount({
-  method: 'GET',
-  path: '/__openelement_nitro_proof',
-});
-const payload = await response.response.json() as {
-  ok?: boolean;
+type NitroManifest = {
   preset?: string;
-  path?: string;
-  envPreset?: string;
-  platformPreset?: string;
+  serverEntry?: string;
+  publicDir?: string;
 };
 
-if (
-  response.status !== 200 ||
-  payload.ok !== true ||
-  payload.preset !== preset ||
-  payload.path !== '/__openelement_nitro_proof' ||
-  payload.envPreset !== preset ||
-  payload.platformPreset !== preset
-) {
-  console.error(JSON.stringify({ preset, status: response.status, payload }, null, 2));
+const manifest = await readJson<NitroManifest>(new URL('nitro.json', output));
+const expectedPreset = preset === 'workers' ? 'cloudflare-module' : 'node-server';
+
+if (manifest.preset !== expectedPreset) {
+  console.error(JSON.stringify({ expectedPreset, manifest }, null, 2));
   Deno.exit(1);
 }
 
-console.log(`nitro proof ${preset}: openElement handler bridge passed`);
+const serverEntry = new URL(manifest.serverEntry || 'server/index.mjs', output);
+await assertFile(serverEntry, 'Nitro server entry');
+await assertFile(
+  new URL(`${manifest.publicDir || 'public'}/open-element-proof.txt`, output),
+  'Nitro public asset',
+);
+await assertFile(
+  new URL(`${manifest.publicDir || 'public'}/open-element-island-visible.js`, output),
+  'Nitro visible island chunk',
+);
+await assertFile(
+  new URL(`${manifest.publicDir || 'public'}/open-element-client-only.js`, output),
+  'Nitro client-only island chunk',
+);
+
+const outputServerCode = (await readTextFiles(new URL('server/', output), '.mjs')).replaceAll(
+  '\\"',
+  '"',
+);
+assertNitroIsrRouteRule(outputServerCode);
+
+if (preset === 'node') {
+  await smokeNode(serverEntry);
+} else {
+  await assertFile(new URL('server/wrangler.json', output), 'Cloudflare Workers wrangler config');
+  for (
+    const marker of [
+      'openElement',
+      'nitro',
+      'data-route="static"',
+      'data-load="nitro-data"',
+      'data-layout="shell"',
+      'data-hydrate="visible"',
+      'data-hydrate="only"',
+      'x-open-element-cache-intent',
+    ]
+  ) {
+    if (!outputServerCode.includes(marker)) {
+      console.error(`Cloudflare Workers output does not contain proof marker: ${marker}`);
+      Deno.exit(1);
+    }
+  }
+}
+
+console.log(`nitro proof ${preset}: real Nitro ${expectedPreset} output passed`);
+
+function assertNitroIsrRouteRule(serverCode: string): void {
+  for (
+    const marker of [
+      'name: "cache"',
+      'route: "/isr"',
+      '"maxAge": 60',
+      '"swr": true',
+    ]
+  ) {
+    if (!serverCode.includes(marker)) {
+      console.error(`Nitro ISR route rule missing marker: ${marker}`);
+      Deno.exit(1);
+    }
+  }
+}

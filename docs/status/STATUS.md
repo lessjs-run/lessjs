@@ -7,19 +7,29 @@ package: `docs/next/v0.37.6/` (Vite + Nitro Runtime Proof).
 
 ## Current Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
 
-v0.37.6 is active on `dev`. The first implementation slice exposes the
-openElement universal request handler from the generated route pipeline and
-adds a Nitro mount boundary in `@openelement/adapter-vite` that converts a
-Nitro-like event into a Web `Request`, passes runtime context through the
-protocol layer, and returns Web `Response` data without making Nitro the
-authoring API. Local evidence for this slice: targeted Nitro mount tests,
-`deno task graph:check`, `deno task typecheck`, `deno task fmt:check`,
-`deno task arch:check`, and `deno task test` passed. Remote `dev` CI for the
-handler contract slice passed Lint & Format, CodeQL, Test, and SOP Gate.
+v0.37.6 is active on `dev`. The implementation now exposes the openElement
+universal request handler from the generated route pipeline, keeps the
+Nitro boundary in `@openelement/adapter-vite`, and proves that boundary through
+a real Nitro fixture under `fixtures/nitro-proof/`.
 
-The next v0.37.6 slices must replace the mount-level proof with real Nitro
-Node and Cloudflare Workers output evidence, static asset/island chunk checks,
-route behavior checks, and ISR/cache mapping evidence.
+Current local evidence: `deno task nitro:proof:node` builds Nitro
+`node-server` output and verifies the mounted openElement Web `Response`,
+public asset serving, route/render behavior, explicit island minimality,
+static zero-JS output, API routes, and Nitro-owned cache-control for `/isr`.
+`deno task nitro:proof:workers` builds Nitro `cloudflare-module` output and
+verifies the generated Workers server entry, wrangler config, public asset,
+openElement route/render markers, and route-rule cache markers. Local release
+gates have passed for workflow, graph, architecture, docs current/strategy,
+format, lint, typecheck, unit tests, Chromium E2E, build, DSD report, publish
+dry-run, and AutoFlow check. The post-bump Chromium E2E full suite exited 0
+with 101 passed and one retry-passing flaky DSD assertion; the targeted flaky
+case passed on rerun. The Chromium E2E gate is intentionally single-worker
+locally and in CI to avoid Windows worker-spawn instability.
+
+Release truth is not closed yet: all 20 workspace packages and internal
+JSR ranges now report `0.37.6`, but v0.37.6 has not been pushed through `dev`
+and `main` non-JSR CI, and JSR publish remains best-effort telemetry only under
+ADR-0097.
 
 ## Prior Version Line: v0.37.5 (Protocol-First Runtime Architecture)
 

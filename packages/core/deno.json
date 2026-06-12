@@ -1,6 +1,6 @@
 {
   "name": "@openelement/core",
-  "version": "0.37.5",
+  "version": "0.37.6",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -17,12 +17,12 @@
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@openelement/protocols/conformance": "jsr:@openelement/protocols@^0.37.5/conformance",
-    "@openelement/protocols/data": "jsr:@openelement/protocols@^0.37.5/data",
-    "@openelement/protocols/renderer": "jsr:@openelement/protocols@^0.37.5/renderer",
-    "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.37.5/signals",
-    "@openelement/signals": "jsr:@openelement/signals@^0.37.5",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.37.5"
+    "@openelement/protocols/conformance": "jsr:@openelement/protocols@^0.37.6/conformance",
+    "@openelement/protocols/data": "jsr:@openelement/protocols@^0.37.6/data",
+    "@openelement/protocols/renderer": "jsr:@openelement/protocols@^0.37.6/renderer",
+    "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.37.6/signals",
+    "@openelement/signals": "jsr:@openelement/signals@^0.37.6",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.37.6"
   },
   "publish": {
     "include": [

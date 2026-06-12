@@ -20,3 +20,23 @@
 | Build                  | `deno task build`                             | passes                                        |
 | Publish dry run        | `deno task publish:dry-run`                   | passes before release closure                 |
 | Distribution telemetry | JSR publish/visibility attempt                | recorded, not an exit gate                    |
+
+## Current Local Evidence
+
+- `deno task nitro:proof:node` passed on 2026-06-12. It builds real Nitro
+  `node-server` output, starts the generated server, verifies the mounted
+  openElement Web `Response`, and checks Nitro public asset serving.
+- `deno task nitro:proof:workers` passed on 2026-06-12. It builds real Nitro
+  `cloudflare-module` output and verifies the server entry, wrangler config,
+  public asset, and openElement proof markers.
+- The Node proof now verifies public assets, island chunk assets, static
+  zero-JS output, explicit-island JavaScript minimality, client-only island
+  separation, `load()` evidence, layout composition, redirect, not-found,
+  error, API route behavior, and ISR/cache intent headers through the
+  Nitro-mounted handler.
+- The Workers proof inspects generated Cloudflare module output for the same
+  route/render/cache-intent markers and required asset files.
+- The proof fixture maps `/isr` to a Nitro route rule with `cache.maxAge = 60`
+  and `cache.swr = true`. The Node proof verifies Nitro-owned `cache-control`
+  output, and both Node and Workers proof commands verify the generated route
+  rule markers in Nitro output.

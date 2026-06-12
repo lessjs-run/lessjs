@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**JSX-first、DSD-first Web Components 应用框架 (v0.37.5 current，Protocol-First Runtime Architecture)。**
+**JSX-first、DSD-first Web Components 应用框架 (v0.37.6 current，Vite + Nitro Runtime Proof)。**
 openElement 用 Declarative Shadow DOM、JSX/VNode 渲染、渐进式 islands、Hono 路由和可证明的发布门禁，构建静态优先应用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -49,7 +49,7 @@ export default defineIsland(
 );
 ```
 
-v0.37.5 当前公开线的契约分层很明确：
+v0.37.6 当前公开线的契约分层很明确：
 
 - 应用编写：`definePage({ route, head, renderIntent, load, render, error })`、`defineIslandConfig()`、`defineIsland()`、`defineElement()`、`defineLayout()`
 - 构建配置：从 `@openelement/app/vite` 导入 `openElement()`
@@ -61,7 +61,7 @@ v0.37.5 当前公开线的契约分层很明确：
 ## 包
 
 20 个包统一对齐到 [`@openelement`](https://jsr.io/@openelement)，当前包线为
-**v0.37.5**。本仓库的活动执行目标是 v0.37.5 (Protocol-First Runtime Architecture)。
+**v0.37.6**。本仓库的活动执行目标是 v0.37.6 (Vite + Nitro Runtime Proof)。
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -86,7 +86,7 @@ v0.37.5 当前公开线的契约分层很明确：
 
 ## 当前版本
 
-v0.37.5 当前包线聚焦 protocol-first runtime architecture：`@openelement/protocols`
+v0.37.6 当前包线聚焦 Vite + Nitro runtime proof：`@openelement/protocols`
 成为 renderer、routes、runtime、cache、data、signals、islands 等协议替换边界，
 Vite + Nitro 成为默认 build/runtime/deployment 底座；shadow/DSD 仍是默认渲染模式，
 light DOM 仍是显式 opt-in，

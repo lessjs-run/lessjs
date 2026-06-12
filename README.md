@@ -2,7 +2,7 @@
 
 English | [简体中文](./README.zh.md)
 
-**JSX-first, DSD-first Web Components application framework (v0.37.4 package
+**JSX-first, DSD-first Web Components application framework (v0.37.6 package
 line current).**
 openElement builds static-first applications with Declarative Shadow DOM,
 JSX/VNode rendering, progressive islands, Hono routes, and release gates that
@@ -57,7 +57,7 @@ export default defineIsland(
 ```
 
 The current application contract (v0.33.0+ API foundation, current through
-v0.37.4 Hygiene + CSS UI Foundation) is intentionally layered:
+v0.37.6 Vite + Nitro Runtime Proof) is intentionally layered:
 
 - application authoring: `definePage({ route, head, renderIntent, load, render, error })`, `defineIslandConfig()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
 - build configuration: `openElement()` from `@openelement/app/vite`;
@@ -70,10 +70,10 @@ v0.37.4 Hygiene + CSS UI Foundation) is intentionally layered:
 
 ## Packages
 
-All 20 workspace packages are currently aligned together at **v0.37.4** under
+All 20 workspace packages are currently aligned together at **v0.37.6** under
 [`@openelement`](https://jsr.io/@openelement). The active release-truth target is
-v0.37.4 JSR publish recovery; v0.37.5 protocol/UI work starts after release
-closure.
+v0.37.6 dev/main non-JSR CI closure; JSR publish and registry visibility remain
+best-effort distribution telemetry under ADR-0097.
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
@@ -98,14 +98,12 @@ closure.
 
 ## Current Line
 
-v0.37.4 is the current workspace package line. It delivers code-quality hygiene
-(authoring.ts fix, logger unification, deprecated shell removal),
-architecture decoupling (ui/router separation, dsd-hydration consolidation),
-a Pure CSS UI Foundation (forked daisyUI class set as DSD-compatible
-CSSStyleSheet with Open Props token engine, 3 interactive thin-shell
-components), and test supplementation (ssg/router/protocols +113 tests).
-JSR publish recovery remains open until all 20 packages are visible at
-`0.37.4` and post-publish consumer smoke passes.
+v0.37.6 is the current workspace package line. It proves real Nitro Node and
+Cloudflare Workers output for the openElement universal request handler while
+preserving openElement ownership of application, route, render, island,
+DSD/shadow, light DOM opt-in, and cache intent semantics. Static routes keep
+the zero-framework-JS default, explicit islands emit only their expected client
+assets, and `/isr` cache intent maps to Nitro route rules through the adapter.
 
 v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
 v0.37.0 resets product doctrine and rendering contracts before implementation

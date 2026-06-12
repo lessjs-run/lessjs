@@ -74,6 +74,13 @@ ISR/cache proof must stay adapter-based:
   not hidden behind a generic "SSR works" claim;
 - no database, auth, ORM, Redis, KV, or R2 default is introduced.
 
+Current evidence: `deno task nitro:proof:node` verifies that an ISR/cache
+intent can pass through the Nitro-mounted openElement handler as
+`x-open-element-cache-intent`, and that Nitro route rules for `/isr` take over
+the runtime `cache-control` header as `public, max-age=60, s-maxage=60`.
+`deno task nitro:proof:workers` verifies the same `/isr` route-rule markers in
+Cloudflare module output.
+
 ## Runtime Outputs
 
 Minimum output proof:
@@ -129,6 +136,7 @@ v0.37.6 can exit only when:
   SOP;
 - static zero-JS and explicit-island JS checks pass;
 - `load()`, layout, redirect, not-found, error, and API route behavior pass;
-- ISR/cache mapping has tests or a documented caveat;
+- ISR/cache mapping has route-rule/storage tests or an accepted documented
+  caveat;
 - graph, architecture, test, and build gates pass;
 - JSR state is recorded but not treated as an exit gate.

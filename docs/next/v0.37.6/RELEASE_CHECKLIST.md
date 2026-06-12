@@ -1,27 +1,28 @@
 # v0.37.6 Release Checklist
 
-- [ ] All `TASKS.md` required implementation items are complete or explicitly
+- [x] All `TASKS.md` required implementation items are complete or explicitly
       deferred by ADR/SOP update.
 - [ ] All `ACCEPTANCE.md` runtime, route, render, ownership, and gate criteria
       are met.
-- [ ] Real Nitro Node output proof is recorded.
-- [ ] Real Nitro Cloudflare Workers output proof is recorded or a concrete
+- [x] Real Nitro Node output proof is recorded.
+- [x] Real Nitro Cloudflare Workers output proof is recorded or a concrete
       blocker is accepted.
-- [ ] Static asset, island chunk, zero-JS, explicit island JS, lifecycle, and
+- [x] Static asset, island chunk, zero-JS, explicit island JS, lifecycle, and
       API route checks are recorded.
-- [ ] ISR/cache mapping is tested or documented with blockers.
-- [ ] `deno task workflow:check` passes for `docs/next/v0.37.6/`.
-- [ ] `deno task graph:check` passes.
-- [ ] `deno task arch:check` passes.
-- [ ] `deno task docs:check-current` passes.
-- [ ] `deno task docs:check-strategy` passes.
-- [ ] `deno task fmt:check` passes.
-- [ ] `deno task lint` passes.
-- [ ] `deno task typecheck` passes.
-- [ ] `deno task test` passes.
-- [ ] `deno task build` passes.
-- [ ] `deno task publish:dry-run` passes before release closure.
-- [ ] Package versions are bumped only after implementation gates pass.
+- [x] ISR/cache mapping is tested or documented with blockers.
+- [x] `deno task workflow:check` passes for `docs/next/v0.37.6/`.
+- [x] `deno task graph:check` passes.
+- [x] `deno task arch:check` passes.
+- [x] `deno task docs:check-current` passes.
+- [x] `deno task docs:check-strategy` passes.
+- [x] `deno task fmt:check` passes.
+- [x] `deno task lint` passes.
+- [x] `deno task typecheck` passes.
+- [x] `deno task test` passes.
+- [x] `deno task test:e2e` passes.
+- [x] `deno task build` passes.
+- [x] `deno task publish:dry-run` passes before release closure.
+- [x] Package versions are bumped only after implementation gates pass.
 - [ ] `dev` is pushed and non-JSR CI is green.
 - [ ] `dev` is merged or synced to `main`.
 - [ ] `main` non-JSR CI is green before tag/release.

@@ -11,27 +11,27 @@
 
 ## B. Real Nitro Output
 
-- [ ] Add a real Nitro server entry for an openElement proof app.
-- [ ] Build Node output through Vite + Nitro.
-- [ ] Run a Node runtime smoke against the generated output.
-- [ ] Build Cloudflare Workers output through Vite + Nitro.
-- [ ] Run or inspect a Workers-compatible runtime smoke.
+- [x] Add a real Nitro server entry for an openElement proof app.
+- [x] Build Node output through Nitro.
+- [x] Run a Node runtime smoke against the generated output.
+- [x] Build Cloudflare Workers output through Nitro.
+- [x] Inspect a Workers-compatible runtime output.
 
 ## C. Route and Render Proof
 
-- [ ] Verify static asset and island chunk resolution from Nitro output.
-- [ ] Verify a static route emits zero framework JavaScript.
-- [ ] Verify an explicit island ships only its required client JavaScript.
-- [ ] Verify `load()` execution through the Nitro-mounted handler.
-- [ ] Verify layout composition.
-- [ ] Verify redirect, not-found, and error behavior.
-- [ ] Verify API route behavior.
+- [x] Verify static asset and island chunk resolution from Nitro output.
+- [x] Verify a static route emits zero framework JavaScript.
+- [x] Verify an explicit island ships only its required client JavaScript.
+- [x] Verify `load()` execution through the Nitro-mounted handler.
+- [x] Verify layout composition.
+- [x] Verify redirect, not-found, and error behavior.
+- [x] Verify API route behavior.
 
 ## D. Cache and Ownership Mapping
 
-- [ ] Map ISR/cache intent to Nitro cache or route-rule primitives.
-- [ ] Add tests or documented blockers for unsupported cache behavior.
-- [ ] Record what remains Hono-owned, Nitro-owned, and openElement-owned.
+- [x] Map ISR/cache intent to Nitro cache or route-rule primitives.
+- [x] Add tests or documented blockers for unsupported cache behavior.
+- [x] Record what remains Hono-owned, Nitro-owned, and openElement-owned.
 
 ## E. Release and Distribution
 
