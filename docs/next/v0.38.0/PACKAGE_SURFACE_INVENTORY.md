@@ -115,18 +115,36 @@ the primary documentation path.
 - authoring: `@openelement/app`, `@openelement/app/vite`,
   `@openelement/runtime`, `@openelement/core`,
   `@openelement/core/jsx-runtime`;
-- contracts: `@openelement/protocols`,
-  `@openelement/protocols/conformance`, `@openelement/protocols/data`,
-  `@openelement/protocols/islands`, `@openelement/protocols/renderer`,
-  `@openelement/protocols/routes`, `@openelement/protocols/signals`;
 - UI: `@openelement/ui` and generated component subpath aliases;
 - build tasks: `jsr:@openelement/adapter-vite/cli/build`,
   `jsr:@openelement/adapter-vite/cli/build-client`, and
   `jsr:@openelement/adapter-vite/cli/build-ssg`.
 
-The template therefore leaks protocol subpaths and build package ownership into
-new user projects. v0.38.0 should either bless this as the advanced-product
-surface or hide it behind a smaller generated import map.
+The v0.38.0 starter import map no longer predeclares protocol package or
+protocol subpath aliases. The build tasks still invoke adapter-vite CLIs because
+they are the current proven generated build path.
+
+## Website Exposure
+
+The `www/` source tree uses the primary product surface in guides and runtime
+configuration:
+
+- `@openelement/app`
+- `@openelement/app/vite`
+- `@openelement/runtime`
+- `@openelement/core`
+- `@openelement/ui`
+
+The website also contains advanced, historical, or test-only references:
+
+- `@openelement/ssg` in site tests and older roadmap copy;
+- `@openelement/content` and `@openelement/i18n` in historical blog posts and
+  site data infrastructure;
+- `@openelement/adapter-react` and `@openelement/adapter-vanilla` in
+  `www/vite.config.ts` SSR bundling config.
+
+v0.38.0 docs work should distinguish live guide/API pages from historical blog
+content before removing references.
 
 ## Immediate Classification Questions
 

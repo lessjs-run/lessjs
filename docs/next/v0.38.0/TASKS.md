@@ -4,7 +4,7 @@
 
 - [x] Generate a package and subpath inventory for all 20 workspace packages.
 - [x] Record package roles, exports, internal dependencies, and docs exposure.
-- [ ] Record create-template and website import paths.
+- [x] Record create-template and website import paths.
 
 ## B. Classification
 

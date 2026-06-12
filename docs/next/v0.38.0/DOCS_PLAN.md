@@ -2,11 +2,12 @@
 
 ## Public Docs
 
-- Update root README and README.zh with the reset product surface.
+- Root README and README.zh now present the reset product surface.
 - Update website overview, getting started, architecture, roadmap, and package
   docs.
 - Update package READMEs so internal surfaces are not recommended as products.
-- Update create-template docs and generated comments.
+- Create-template import maps now hide protocol subpaths from generated starter
+  projects; adapter-vite CLI tasks remain the proven build path.
 
 ## Migration Docs
 

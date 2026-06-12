@@ -87,12 +87,12 @@ Deno.test('create-open: deno.json build:ssg uses @openelement/adapter-vite', () 
 
 Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtime facade)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  // v0.37.5: generated apps must carry protocol imports used by source packages.
+  // v0.38.0: generated apps expose only starter authoring imports.
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    18,
-    `Expected 18 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    11,
+    `Expected 11 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
   // v0.23.6: external SSR dependencies declared in consumer import map
   assertEquals(denoJson.imports['alien-signals'], 'npm:alien-signals@^3.2.0');
@@ -106,34 +106,13 @@ Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtim
     denoJson.imports['@openelement/core/jsx-runtime'],
     'jsr:@openelement/core@^${v.core}/jsx-runtime',
   );
-  assertEquals(
-    denoJson.imports['@openelement/protocols'],
-    'jsr:@openelement/protocols@^${v.protocols}',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/conformance'],
-    'jsr:@openelement/protocols@^${v.protocols}/conformance',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/data'],
-    'jsr:@openelement/protocols@^${v.protocols}/data',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/islands'],
-    'jsr:@openelement/protocols@^${v.protocols}/islands',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/renderer'],
-    'jsr:@openelement/protocols@^${v.protocols}/renderer',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/routes'],
-    'jsr:@openelement/protocols@^${v.protocols}/routes',
-  );
-  assertEquals(
-    denoJson.imports['@openelement/protocols/signals'],
-    'jsr:@openelement/protocols@^${v.protocols}/signals',
-  );
+  assertFalse('@openelement/protocols' in denoJson.imports);
+  assertFalse('@openelement/protocols/conformance' in denoJson.imports);
+  assertFalse('@openelement/protocols/data' in denoJson.imports);
+  assertFalse('@openelement/protocols/islands' in denoJson.imports);
+  assertFalse('@openelement/protocols/renderer' in denoJson.imports);
+  assertFalse('@openelement/protocols/routes' in denoJson.imports);
+  assertFalse('@openelement/protocols/signals' in denoJson.imports);
   assertEquals(denoJson.imports['@openelement/runtime'], 'jsr:@openelement/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@openelement/ui'], 'jsr:@openelement/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');

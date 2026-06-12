@@ -15,10 +15,14 @@ deno task dev
 
 ## What It Creates
 
-- `deno.json` — workspace configuration with openElement imports
-- `vite.config.ts` — Vite build configuration with openElement plugin
-- `app/` — application directory with starter pages and islands
-- `www/` — website output directory
+- `deno.json` - starter authoring imports and build tasks
+- `vite.config.ts` - Vite build configuration with the openElement plugin
+- `app/` - application directory with starter pages and islands
+- `www/` - website output directory
+
+The generated import map intentionally keeps protocol and build internals out of
+the starter surface. Advanced contracts remain available through the published
+workspace packages when a project needs them.
 
 ## License
 

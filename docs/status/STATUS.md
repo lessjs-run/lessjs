@@ -20,8 +20,9 @@ inventory, a product-surface classification, and a product map under
 classifies Hub as archived for the v1 public product map, and moves internal
 build/tooling packages out of first-run documentation. Root README, README.zh,
 and `docs/arch/current-architecture.md` have been aligned to that product map;
-package READMEs and create templates remain the next docs/template alignment
-surface.
+`@openelement/create` starter import maps now hide protocol subpaths from new
+projects while keeping the proven adapter-vite build tasks. Package READMEs and
+website live guide/API pages remain the next docs/template alignment surface.
 
 Do not bump package versions for v0.38.0 until implementation gates pass.
 JSR publish remains best-effort telemetry and is not an exit gate under
