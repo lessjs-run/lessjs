@@ -67,6 +67,12 @@ interface TemplateResultLike {
 }
 
 type BindingType = 'content' | 'attribute' | 'boolean' | 'event' | 'property';
+type BindingContext = {
+  type: BindingType;
+  name: string;
+  start: number;
+  removableStart: number;
+};
 
 // ─── Template Interpolation ────────────────────────────────────
 
@@ -80,15 +86,82 @@ type BindingType = 'content' | 'attribute' | 'boolean' | 'event' | 'property';
  *   class="${val}"      ->  regular attribute
  *   ${val}              ->  text content
  */
-function detectBindingType(precedingStr: string): BindingType {
-  const match = precedingStr.match(/([?@.]?)([\w-]+)="\s*$/);
-  if (!match) return 'content';
+function isAttributeNameChar(char: string): boolean {
+  const code = char.charCodeAt(0);
+  return (
+    (code >= 65 && code <= 90) ||
+    (code >= 97 && code <= 122) ||
+    (code >= 48 && code <= 57) ||
+    char === '_' ||
+    char === '-'
+  );
+}
 
-  const prefix = match[1];
-  if (prefix === '?') return 'boolean';
-  if (prefix === '@') return 'event';
-  if (prefix === '.') return 'property';
-  return 'attribute';
+function isAsciiWhitespace(char: string): boolean {
+  return char === ' ' || char === '\n' || char === '\r' || char === '\t' || char === '\f';
+}
+
+function detectBindingContext(precedingStr: string): BindingContext {
+  let index = precedingStr.length - 1;
+  while (index >= 0 && isAsciiWhitespace(precedingStr[index])) index--;
+  if (precedingStr[index] !== '"') {
+    return {
+      type: 'content',
+      name: '',
+      start: precedingStr.length,
+      removableStart: precedingStr.length,
+    };
+  }
+
+  index--;
+  while (index >= 0 && isAsciiWhitespace(precedingStr[index])) index--;
+  if (precedingStr[index] !== '=') {
+    return {
+      type: 'content',
+      name: '',
+      start: precedingStr.length,
+      removableStart: precedingStr.length,
+    };
+  }
+
+  index--;
+  while (index >= 0 && isAsciiWhitespace(precedingStr[index])) index--;
+
+  const nameEnd = index + 1;
+  while (index >= 0 && isAttributeNameChar(precedingStr[index])) index--;
+  const nameStart = index + 1;
+  const name = precedingStr.slice(nameStart, nameEnd);
+  if (!name) {
+    return {
+      type: 'content',
+      name: '',
+      start: precedingStr.length,
+      removableStart: precedingStr.length,
+    };
+  }
+
+  const prefix = precedingStr[index];
+  const hasBindingPrefix = prefix === '?' || prefix === '@' || prefix === '.';
+  const start = hasBindingPrefix ? index : nameStart;
+  let removableStart = start;
+  while (removableStart > 0 && isAsciiWhitespace(precedingStr[removableStart - 1])) {
+    removableStart--;
+  }
+
+  if (prefix === '?') return { type: 'boolean', name, start, removableStart };
+  if (prefix === '@') return { type: 'event', name, start, removableStart };
+  if (prefix === '.') return { type: 'property', name, start, removableStart };
+  return { type: 'attribute', name, start, removableStart };
+}
+
+function replaceTrailingBinding(
+  output: string,
+  precedingStr: string,
+  start: number,
+  replacement: string,
+): string {
+  const baseLength = output.length - precedingStr.length;
+  return output.slice(0, baseLength + start) + replacement;
 }
 
 /**
@@ -120,7 +193,50 @@ const log = createLogger('core');
  *  Custom element names MUST contain a hyphen: [a-z][a-z0-9]*-[a-z0-9-]+
  */
 function startsWithCustomElement(html: string): boolean {
-  return /^<[a-z][a-z0-9]*-[a-z0-9-]+[\s>]/.test(html.trimStart());
+  return extractOpeningCustomElementTag(html.trimStart()) !== undefined;
+}
+
+function isCustomElementName(name: string): boolean {
+  if (!name.includes('-')) return false;
+  const first = name.charCodeAt(0);
+  if (first < 97 || first > 122) return false;
+  for (const char of name) {
+    const code = char.charCodeAt(0);
+    const valid = (code >= 97 && code <= 122) || (code >= 48 && code <= 57) || char === '-';
+    if (!valid) return false;
+  }
+  return true;
+}
+
+function extractOpeningCustomElementTag(html: string): string | undefined {
+  if (!html.startsWith('<') || html.startsWith('</')) return undefined;
+  const end = html.indexOf('>');
+  if (end === -1) return undefined;
+  const rawTag = html.slice(1, end).trim();
+  let nameEnd = rawTag.length;
+  for (let index = 0; index < rawTag.length; index++) {
+    if (isAsciiWhitespace(rawTag[index]) || rawTag[index] === '/') {
+      nameEnd = index;
+      break;
+    }
+  }
+  const name = rawTag.slice(0, nameEnd);
+  if (!isCustomElementName(name)) return undefined;
+  return html.slice(0, end + 1);
+}
+
+function extractClosingCustomElementTag(
+  html: string,
+  start: number,
+): { tag: string; end: number } | undefined {
+  let index = start;
+  while (index < html.length && isAsciiWhitespace(html[index])) index++;
+  if (!html.startsWith('</', index)) return undefined;
+  const end = html.indexOf('>', index);
+  if (end === -1) return undefined;
+  const name = html.slice(index + 2, end).trim();
+  if (!isCustomElementName(name)) return undefined;
+  return { tag: html.slice(index, end + 1), end: end + 1 };
 }
 
 /** Unwrap DSD for nested custom elements.
@@ -145,22 +261,24 @@ function unwrapDsdForNestedCe(html: string): string {
   const trimmed = html.trimStart();
   // Case 1: starts with a CE tag -> extract just the CE tag
   if (startsWithCustomElement(trimmed)) {
-    // Find the first CE tag in the HTML
-    const ceTagMatch = trimmed.match(/^<([a-z][a-z0-9]*-[a-z0-9-]+)[^>]*>/);
-    if (ceTagMatch) {
+    const ceTag = extractOpeningCustomElementTag(trimmed);
+    if (ceTag) {
       // Return just the CE tag (strip the DSD wrapper)
       // The CE's shadow DOM content will be processed by renderDsdTree
-      return ceTagMatch[0];
+      return ceTag;
     }
     // If no CE tag found, fall through to case 2
   }
   // Case 2: static content + CE DSD -> replace CE's DSD with just CE tag
   // Pattern: anything before <template shadowrootmode>, then the DSD template, then anything after
   // This handles: `<style>...</style>\n<counter-island><template shadowrootmode="open">...</template></counter-island>`
-  return html.replace(
-    /(<template\s+shadowrootmode="open">)[\s\S]*?(<\/template>)(\s*<\/[a-z][a-z0-9]*-[a-z0-9-]+>)/,
-    '$3',
-  );
+  const templateStart = html.indexOf('<template shadowrootmode="open">');
+  if (templateStart === -1) return html;
+  const templateEnd = html.indexOf('</template>', templateStart);
+  if (templateEnd === -1) return html;
+  const closing = extractClosingCustomElementTag(html, templateEnd + '</template>'.length);
+  if (!closing) return html;
+  return html.slice(0, templateStart) + closing.tag + html.slice(closing.end);
 }
 
 /** Convert a template value for safe text-content insertion.
@@ -264,17 +382,17 @@ function interpolate(result: unknown): string {
 
     if (i < values.length) {
       const value = values[i];
-      const bindingType = detectBindingType(str);
+      const binding = detectBindingContext(str);
 
-      switch (bindingType) {
+      switch (binding.type) {
         case 'boolean': {
           // ?disabled="${val}"
           //   truthy -> output just "disabled" (no value)
           //   falsy  -> remove the entire attribute
           if (value && !isNothing(value)) {
-            output = output.replace(/\?([\w-]+)="\s*$/, '$1');
+            output = replaceTrailingBinding(output, str, binding.start, binding.name);
           } else {
-            output = output.replace(/\s?\?([\w-]+)="\s*$/, '');
+            output = replaceTrailingBinding(output, str, binding.removableStart, '');
           }
           skipNextQuote = true;
           break;
@@ -282,7 +400,7 @@ function interpolate(result: unknown): string {
 
         case 'event': {
           // @click="${handler}" - cannot work in static HTML, strip entirely.
-          output = output.replace(/\s?@[\w-]+="\s*$/, '');
+          output = replaceTrailingBinding(output, str, binding.removableStart, '');
           skipNextQuote = true;
           break;
         }
@@ -300,12 +418,9 @@ function interpolate(result: unknown): string {
           // Now: .navItems="${arr}" -> nav-items="[{...}]" (JSON-encoded)
           // The DSD render path parses JSON attribute values back to JS
           // objects/arrays for SSR component props.
-          const propMatch = str.match(/\.([\w-]+)="\s*$/);
-          if (propMatch) {
-            const propName = propMatch[1];
-            const attrName = camelToKebab(propName);
-            // Replace .propName=" with attrName="
-            output = output.replace(/\s?\.([\w-]+)="\s*$/, ` ${attrName}="`);
+          if (binding.name) {
+            const attrName = camelToKebab(binding.name);
+            output = replaceTrailingBinding(output, str, binding.removableStart, ` ${attrName}="`);
             // Serialize value: JSON for objects/arrays, string for primitives
             if (value != null && typeof value === 'object' && !isNothing(value)) {
               output += stringifyAttributeValue(JSON.stringify(value));
@@ -316,7 +431,7 @@ function interpolate(result: unknown): string {
             // segment is needed to close the attribute value.
           } else {
             // Fallback: strip if we can't parse the property name
-            output = output.replace(/\s?\.([\w-]+)="\s*$/, '');
+            output = replaceTrailingBinding(output, str, binding.removableStart, '');
             skipNextQuote = true;
           }
           break;
@@ -326,12 +441,23 @@ function interpolate(result: unknown): string {
           // Regular attribute: class="${val}"
           // Lit's `nothing` sentinel means "remove the attribute".
           if (isNothing(value)) {
-            output = output.replace(/\s?([\w-]+)="\s*$/, '');
+            output = replaceTrailingBinding(output, str, binding.removableStart, '');
             skipNextQuote = true;
           } else if (value == null) {
             // null/undefined -> empty attribute value (attr="")
-            output += '';
+            output = replaceTrailingBinding(
+              output,
+              str,
+              binding.removableStart,
+              ` ${binding.name}="`,
+            );
           } else {
+            output = replaceTrailingBinding(
+              output,
+              str,
+              binding.removableStart,
+              ` ${binding.name}="`,
+            );
             output += stringifyAttributeValue(value);
           }
           break;

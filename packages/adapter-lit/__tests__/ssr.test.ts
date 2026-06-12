@@ -52,6 +52,30 @@ Deno.test('renderLitToString supports boolean attributes', () => {
   );
 });
 
+Deno.test('renderLitToString handles spaced binding syntax without regex parsing', () => {
+  const result = compactHtml(renderLitToString({
+    _$litType$: 1,
+    strings: [
+      '<button ?disabled = "',
+      '" @click = "',
+      '" .navItems = "',
+      '" title = "',
+      '">Open</button>',
+    ],
+    values: [true, () => undefined, [{ label: 'Docs' }], '<Docs>'],
+  }));
+
+  assertStringIncludes(
+    result,
+    '<button disabled nav-items="[{&quot;label&quot;:&quot;Docs&quot;}]"',
+  );
+  assertStringIncludes(result, 'title="&lt;Docs&gt;"');
+  assertStringIncludes(result, '>Open</button>');
+  assertEquals(result.includes('@click'), false);
+  assertEquals(result.includes('.navItems'), false);
+  assertEquals(result.includes('?disabled'), false);
+});
+
 Deno.test('renderLitToString strips event bindings, preserves property bindings as attributes', () => {
   const rendered = renderLitToString(
     html`
