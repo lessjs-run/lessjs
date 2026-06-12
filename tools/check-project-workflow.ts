@@ -71,6 +71,20 @@ const requiredAnchors: Record<string, string[]> = {
 
 const failures: Failure[] = [];
 
+async function tracked(path: string): Promise<boolean> {
+  const command = new Deno.Command('git', {
+    args: ['ls-files', path],
+    stdout: 'piped',
+    stderr: 'piped',
+  });
+  const output = await command.output();
+  if (!output.success) {
+    failures.push({ file: path, message: 'could not inspect git tracking state' });
+    return false;
+  }
+  return new TextDecoder().decode(output.stdout).trim().length > 0;
+}
+
 async function read(file: string): Promise<string | undefined> {
   try {
     return await Deno.readTextFile(file);
@@ -82,6 +96,15 @@ async function read(file: string): Promise<string | undefined> {
 
 for (const file of requiredFiles) {
   await read(file);
+}
+
+for (const forbidden of ['docs/sop/v0.40.0', 'docs/next/v0.40.0']) {
+  if (await tracked(forbidden)) {
+    failures.push({
+      file: forbidden,
+      message: 'v0.40 must use docs/current/VERSION_PLAN.md instead of SOP/NextVersion docs',
+    });
+  }
 }
 
 for (const [file, anchors] of Object.entries(requiredAnchors)) {

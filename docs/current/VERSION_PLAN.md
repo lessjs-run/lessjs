@@ -126,7 +126,7 @@ ADR-0104 keeps the default signal engine unchanged and requires any
 
 - [ ] Keep active docs to four categories: current truth, ADR, release
       evidence, and archive.
-- [ ] Treat `docs/current/VERSION_PLAN.md` as the only active v0.40 execution
+- [x] Treat `docs/current/VERSION_PLAN.md` as the only active v0.40 execution
       plan; do not add `docs/sop/v0.40.0/` or `docs/next/v0.40.0/`.
 - [ ] Move historical SOP, NextVersion, conversation, review, and old
       governance materials into archive batches.

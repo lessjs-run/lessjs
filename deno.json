@@ -86,7 +86,7 @@
     "hub:check-index": "deno run --allow-read packages/hub/src/cli/check-index.ts",
     "hub:index:update": "deno run --allow-env=OPEN_ELEMENT_ALLOW_ARCHIVED_HUB_WRITE tools/require-hub-archive-approval.ts && deno run --allow-read --allow-write packages/hub/src/cli/update-index.ts",
     "dsd:check-report": "deno run --allow-read --allow-env packages/hub/src/cli/dsd-report-gate.ts",
-    "workflow:check": "deno run --allow-read tools/check-project-workflow.ts",
+    "workflow:check": "deno run --allow-read --allow-run=git tools/check-project-workflow.ts",
     "workflow:check-slimming": "deno run --allow-read tools/check-workflow-slimming.ts",
     "docs:check-public": "deno run --allow-read tools/check-public-docs-integrity.ts",
     "docs:check-strategy": "deno run --allow-read tools/check-strategic-docs.ts",
