@@ -2,17 +2,16 @@
 
 Small Fetch API RPC helpers for openElement applications and Web Components.
 
+> v0.38 surface: archived/advanced. The package remains published and tested,
+> but ordinary API route docs should start from Hono plus platform
+> Request/Response APIs. New v1 product positioning for RPC requires a refreshed
+> product story.
+
 `@openelement/rpc` is intentionally framework-light: it owns request state,
 retry, cancellation, and typed call helpers, but it does not own routing,
 database access, or application auth.
 
-## Install
-
-```bash
-deno add jsr:@openelement/rpc
-```
-
-## Usage
+## Advanced Usage
 
 Application code should normally use `@openelement/app` for pages and islands.
 Use `RpcController` inside a low-level element when a client request needs

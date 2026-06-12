@@ -170,8 +170,8 @@ export default defineConfig({
       <div class='alert alert-info'>
         <p>
           The v1.0 target is a stable application engine. {OPENELEMENT_VERSION} keeps the
-          Application API structured and AI-readable while @openelement/ssg owns
-          the static-generation pipeline.
+          Application API structured and AI-readable while static generation
+          remains proven build infrastructure behind the app/create surface.
         </p>
       </div>
 

@@ -35,7 +35,7 @@ export class GuideArchitecturePage extends DsdElement {
             : 'The architecture documentation has moved to the new <a href="/architecture">Architecture section</a>.'}</p>
           <p>{isZh
             ? `openElement ${OPENELEMENT_VERSION} 的当前架构有 20 个分层：protocols、runtime kernel、product facades、SSG engine、build adapters 和 feature packages。@openelement/ssg 拥有 route scanning、entry generation 和 generated data resolution；adapter-vite 只负责 Vite orchestration。`
-            : `openElement ${OPENELEMENT_VERSION} is a 20-package layered architecture: protocols, runtime kernel, product facades, SSG engine, build adapters, and feature packages. @openelement/ssg owns route scanning, entry generation, and generated data resolution; adapter-vite keeps Vite orchestration.`}</p>
+            : `openElement ${OPENELEMENT_VERSION} is a 20-package layered architecture with a smaller public product surface: app/create, runtime/core, UI, and protocols. SSG and adapter-vite remain advanced build infrastructure rather than first-run product packages.`}</p>
         </div>
       
     );

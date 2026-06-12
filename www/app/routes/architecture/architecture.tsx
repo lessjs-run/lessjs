@@ -253,8 +253,9 @@ export class ArchitecturePage extends DsdElement {
               <p class="lede">
                 openElement is organized around explicit package ownership:
                 protocols own shared contracts, core stays the runtime kernel,
-                runtime owns authoring imports, app owns configuration, ssg owns
-                static generation, and adapter-vite owns Vite orchestration.
+                runtime owns authoring imports, app owns configuration,
+                protocols own contracts, and adapter-vite/ssg stay in the
+                advanced build infrastructure.
               </p>
             </div>
             <div class="artifact">
@@ -300,12 +301,12 @@ hub ──────────────────────? compat-c
             </div>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product facades</strong><span>@openelement/core, @openelement/app</span><p>Separate authoring imports from configuration assembly.</p></div>
-              <div class="layer"><strong>SSG engine</strong><span>@openelement/ssg</span><p>Own route scanning, generated entries, generated data resolution, render, and postprocess phases.</p></div>
-              <div class="layer"><strong>build adapters</strong><span>@openelement/adapter-vite</span><p>Own Vite plugin assembly and build orchestration glue.</p></div>
-              <div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
+              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/runtime, @openelement/ui, @openelement/protocols</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
+              <div class="layer"><strong>advanced build infrastructure</strong><span>@openelement/adapter-vite, @openelement/ssg</span><p>Own Vite plugin assembly, route scanning, generated entries, rendering, and postprocess phases.</p></div>
+              <div class="layer"><strong>advanced feature packages</strong><span>content, i18n, router, signals, style-sheet, adapter packages</span><p>Remain public where guides need them, but are not first-run product rows.</p></div>
+              <div class="layer"><strong>internal and archived packages</strong><span>cem, compat-check, hub, rpc</span><p>Stay in the package graph for tooling, compatibility, or historical evidence without being presented as v1 products.</p></div>
               <div class="layer"><strong>runtime kernel</strong><span>@openelement/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
-              <div class="layer"><strong>protocols</strong><span>@openelement/protocols</span><p>Own dependency-light shared build contracts and virtual ids.</p></div>
+              <div class="layer"><strong>protocols</strong><span>@openelement/protocols</span><p>Own runtime-free shared contracts and conformance shapes.</p></div>
             </div>
           </section>
 

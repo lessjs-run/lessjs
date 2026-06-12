@@ -11,8 +11,9 @@
 
 ## Migration Docs
 
-- Add migration notes for renamed, archived, internal, or removed imports.
-- Explain advanced subpaths separately from primary product surfaces.
+- Migration notes now cover starter protocol aliases, archived RPC, internal
+  SSG, and the product/advanced/internal/archived split.
+- Advanced subpaths are explained separately from primary product surfaces.
 - Keep JSR status as distribution telemetry, not release evidence.
 
 ## Release Docs

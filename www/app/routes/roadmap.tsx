@@ -338,7 +338,7 @@ export class RoadmapPage extends DsdElement {
               <ul>
                 <li>v0.37.2 SSR / ISR runtime contract</li>
                 <li>DsdElement shadow/light contract implemented</li>
-                <li>SSG ownership lives in @openelement/ssg</li>
+                <li>SSG pipeline is proven as internal build infrastructure</li>
                 <li>AutoFlow2 evidence and workflow gates</li>
                 <li>20-package aligned monorepo</li>
               </ul>

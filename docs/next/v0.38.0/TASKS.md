@@ -21,10 +21,10 @@
 
 ## D. Docs And Templates
 
-- [ ] Align root README, README.zh, website docs, package READMEs, and create
+- [x] Align root README, README.zh, website docs, package READMEs, and create
       templates with the product map.
-- [ ] Remove internal implementation details from public docs.
-- [ ] Add migration notes for intentional breaking changes.
+- [x] Remove internal implementation details from public docs.
+- [x] Add migration notes for intentional breaking changes.
 
 ## E. Gates
 

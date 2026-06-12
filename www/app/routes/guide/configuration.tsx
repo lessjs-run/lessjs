@@ -33,9 +33,9 @@ export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           <p>
             使用 <span class='inline-code'>openElement()</span>{' '}
             是推荐方式--它组合了核心插件、内容管线和
-            i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用{' '}
-            <span class='inline-code'>openPipeline()</span> from{' '}
-            <span class='inline-code'>@openelement/adapter-vite</span>。
+            i18n，一个调用包含所有功能。高级构建参考可以讨论{' '}
+            <span class='inline-code'>@openelement/adapter-vite</span>，但常规项目应从{' '}
+            <span class='inline-code'>@openelement/app/vite</span> 开始。
           </p>
           <h2>Main Options</h2>
           <table>
@@ -146,9 +146,9 @@ export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           <p>
             Use <span class='inline-code'>openElement()</span>{' '}
             as the recommended entry - it combines the core plugin, content pipeline, and i18n in a
-            single call. If you only need core routing and island functionality, you can use{' '}
-            <span class='inline-code'>openPipeline()</span> from{' '}
-            <span class='inline-code'>@openelement/adapter-vite</span> directly.
+            single call. Advanced build references may discuss{' '}
+            <span class='inline-code'>@openelement/adapter-vite</span>, but ordinary projects
+            should start from <span class='inline-code'>@openelement/app/vite</span>.
           </p>
           <h2>Options Reference</h2>
           <table>

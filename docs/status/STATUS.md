@@ -22,7 +22,9 @@ build/tooling packages out of first-run documentation. Root README, README.zh,
 and `docs/arch/current-architecture.md` have been aligned to that product map;
 `@openelement/create` starter import maps now hide protocol subpaths from new
 projects while keeping the proven adapter-vite build tasks. Package READMEs and
-website live guide/API pages remain the next docs/template alignment surface.
+website live guide/API pages now separate product, advanced, internal, and
+archived surfaces. Migration notes record the starter import-map change,
+archived RPC status, and internal SSG status.
 
 Do not bump package versions for v0.38.0 until implementation gates pass.
 JSR publish remains best-effort telemetry and is not an exit gate under

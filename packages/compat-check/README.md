@@ -3,15 +3,13 @@
 Compatibility checking utilities for openElement Web Components and custom
 elements.
 
+> v0.38 surface: internal tooling. This package remains published for framework
+> admission checks and Hub evidence, but first-run application docs should not
+> recommend direct imports.
+
 `@openelement/compat-check` validates that custom element definitions conform
 to the openElement rendering contract and the Custom Elements Manifest (CEM)
 specification.
-
-## Install
-
-```bash
-deno add jsr:@openelement/compat-check
-```
 
 ## Exports
 
@@ -21,8 +19,8 @@ deno add jsr:@openelement/compat-check
 
 ## Dependencies
 
-- `@openelement/core` — core types and rendering contract
-- `@openelement/cem` — Custom Elements Manifest types
+- `@openelement/core` - core types and rendering contract
+- `@openelement/cem` - Custom Elements Manifest types
 
 ## License
 

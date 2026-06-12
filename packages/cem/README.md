@@ -2,14 +2,13 @@
 
 Custom Elements Manifest (CEM) types and utilities for openElement.
 
-`@openelement/cem` provides TypeScript types for the [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/) specification and
-helpers for reading and validating CEM data.
+> v0.38 surface: internal tooling. This package remains published for framework
+> tooling and compatibility checks, but first-run application docs should not
+> recommend direct imports.
 
-## Install
-
-```bash
-deno add jsr:@openelement/cem
-```
+`@openelement/cem` provides TypeScript types for the
+[Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/)
+specification and helpers for reading and validating CEM data.
 
 ## Exports
 
@@ -20,7 +19,7 @@ deno add jsr:@openelement/cem
 
 ## Dependencies
 
-- `@openelement/core` — core types
+- `@openelement/core` - core types
 
 ## License
 

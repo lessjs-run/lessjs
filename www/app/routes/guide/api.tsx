@@ -52,7 +52,7 @@ export class ApiPage extends DsdElement {
           </div>
           <h2>Create API Routes</h2>
           <p>API routes 放在 app/routes/api。模块默认导出一个 Hono app。</p>
-          <h2>Type-Safe RPC</h2>
+          <h2>Advanced RPC</h2>
           <p>
             @openelement/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
             <a href='/api/reference'>RPC 远程调用</a>。
@@ -129,11 +129,11 @@ export default function GET(ctx: OpenElementApiContext) {'{'}
             openElement does not mandate a validation library. Zod with{' '}
             <span class='inline-code'>@hono/zod-validator</span> is a practical default.
           </p>
-          <h2>Type-Safe RPC</h2>
+          <h2>Advanced RPC</h2>
           <p>
             <span class='inline-code'>@openelement/rpc</span>{' '}
-            provides type-safe client/server calling conventions. See{' '}
-            <a href='/api/reference'>RPC Guide</a>.
+            is archived/advanced in the v0.38 product map. Start with Hono and
+            platform Request/Response APIs for ordinary API routes.
           </p>
           <h2>Static Build Boundary</h2>
           <p>

@@ -56,6 +56,7 @@ framework surface.
 - Surface classification:
   `docs/next/v0.38.0/PRODUCT_SURFACE_CLASSIFICATION.md`
 - Product map: `docs/next/v0.38.0/PRODUCT_MAP.md`
+- Migration notes: `docs/next/v0.38.0/MIGRATION_NOTES.md`
 - Roadmap: `docs/roadmap/ROADMAP.md`
 - Status: `docs/status/STATUS.md`
 - Prior line: `docs/next/v0.37.6/`
