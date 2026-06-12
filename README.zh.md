@@ -61,20 +61,23 @@ v0.37.6 当前公开线的契约分层很明确：
 ## 包
 
 20 个包统一对齐到 [`@openelement`](https://jsr.io/@openelement)，当前包线为
-**v0.37.6**。本仓库的活动执行目标是 v0.37.6 (Vite + Nitro Runtime Proof)。
+**v0.37.6**。本仓库的活动执行目标是 v0.38.0 产品表面重置。
 
-| Package                     | Role                                      |
-| --------------------------- | ----------------------------------------- |
-| `@openelement/app`          | JSX-first 应用编写 API                    |
-| `@openelement/app/vite`     | `openElement()` Vite 配置入口             |
-| `@openelement/core`         | DSD renderer、DsdElement、JSX runtime     |
-| `@openelement/adapter-vite` | Vite adapter 和构建编排                   |
-| `@openelement/ssg`          | SSG engine、route scanning、data resolver |
-| `@openelement/runtime`      | runtime convenience facade                |
-| `@openelement/ui`           | `open-*` DSD 组件                         |
-| `@openelement/content`      | Markdown、MDX、nav、blog、sitemap         |
-| `@openelement/i18n`         | 多语言数据和静态路径助手                  |
-| `@openelement/hub`          | registry metadata 和验证                  |
+| Package                  | Role                                   |
+| ------------------------ | -------------------------------------- |
+| `@openelement/create`    | 生成项目契约                           |
+| `@openelement/app`       | JSX-first 应用编写 API                 |
+| `@openelement/app/vite`  | `openElement()` Vite 配置入口          |
+| `@openelement/runtime`   | component-authoring convenience facade |
+| `@openelement/core`      | advanced DSD renderer 和 JSX kernel    |
+| `@openelement/ui`        | `open-*` DSD 组件                      |
+| `@openelement/protocols` | runtime-free protocol contracts        |
+
+高级和内部包仍保留在 workspace graph 中。v0.38.0 产品地图把
+`@openelement/adapter-vite`、`@openelement/content`、`@openelement/i18n`、
+router、adapter、styling/signal 包放入高级参考文档；`@openelement/hub`、
+`@openelement/ssg`、`@openelement/cem`、`@openelement/compat-check` 和
+`@openelement/rpc` 不再作为主要 v1 产品表面。
 
 ## 文档
 
@@ -86,11 +89,9 @@ v0.37.6 当前公开线的契约分层很明确：
 
 ## 当前版本
 
-v0.37.6 当前包线聚焦 Vite + Nitro runtime proof：`@openelement/protocols`
-成为 renderer、routes、runtime、cache、data、signals、islands 等协议替换边界，
-Vite + Nitro 成为默认 build/runtime/deployment 底座；shadow/DSD 仍是默认渲染模式，
-light DOM 仍是显式 opt-in，
-以及测试补充（ssg/router/protocols +113 测试）。
+v0.37.6 是当前 workspace 包线。v0.38.0 是活动执行线，目标是公开产品表面重置：
+除非 ADR 批准新包名，否则保留现有包名；Hub 从主要 v1 产品地图中归档；
+内部 build/tooling 包不再出现在 first-run 文档中。
 
 ## 贡献
 

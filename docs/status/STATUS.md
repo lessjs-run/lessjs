@@ -14,10 +14,14 @@ NextVersion package is `docs/next/v0.38.0/`.
 
 Entry evidence for v0.38.0: v0.37.6 is released, all 20 packages and internal
 JSR ranges are aligned to `0.37.6`, and the current package graph has no
-repository-controlled release-truth drift. The first v0.38.0 work is an
-inventory of every `@openelement/*` package and public subpath, followed by a
-classification of each surface as product, advanced subpath, internal,
-archived, or removed.
+repository-controlled release-truth drift. v0.38.0 now has a package/subpath
+inventory, a product-surface classification, and a product map under
+`docs/next/v0.38.0/`. The current product map retains existing package names,
+classifies Hub as archived for the v1 public product map, and moves internal
+build/tooling packages out of first-run documentation. Root README, README.zh,
+and `docs/arch/current-architecture.md` have been aligned to that product map;
+package READMEs and create templates remain the next docs/template alignment
+surface.
 
 Do not bump package versions for v0.38.0 until implementation gates pass.
 JSR publish remains best-effort telemetry and is not an exit gate under

@@ -71,22 +71,26 @@ v0.37.6 Vite + Nitro Runtime Proof) is intentionally layered:
 ## Packages
 
 All 20 workspace packages are currently aligned together at **v0.37.6** under
-[`@openelement`](https://jsr.io/@openelement). The active release-truth target is
-v0.37.6 dev/main non-JSR CI closure; JSR publish and registry visibility remain
+[`@openelement`](https://jsr.io/@openelement). The active execution target is
+v0.38.0 product surface reset; JSR publish and registry visibility remain
 best-effort distribution telemetry under ADR-0097.
 
-| Package                     | Role                                      |
-| --------------------------- | ----------------------------------------- |
-| `@openelement/app`          | JSX-first application authoring API       |
-| `@openelement/app/vite`     | `openElement()` Vite configuration facade |
-| `@openelement/core`         | DSD renderer, DsdElement, JSX runtime     |
-| `@openelement/adapter-vite` | Vite adapter and build orchestration      |
-| `@openelement/ssg`          | SSG engine, route scanning, data resolver |
-| `@openelement/runtime`      | runtime convenience facade                |
-| `@openelement/ui`           | `open-*` DSD component library            |
-| `@openelement/content`      | Markdown, MDX, nav, blog, sitemap         |
-| `@openelement/i18n`         | locale data and static path helpers       |
-| `@openelement/hub`          | registry metadata and validation          |
+| Package                  | Role                                      |
+| ------------------------ | ----------------------------------------- |
+| `@openelement/create`    | generated project contract                |
+| `@openelement/app`       | JSX-first application authoring API       |
+| `@openelement/app/vite`  | `openElement()` Vite configuration facade |
+| `@openelement/runtime`   | component-authoring convenience facade    |
+| `@openelement/core`      | advanced DSD renderer and JSX kernel      |
+| `@openelement/ui`        | `open-*` DSD component library            |
+| `@openelement/protocols` | runtime-free protocol contracts           |
+
+Advanced and internal packages remain published in the workspace graph. The
+v0.38.0 product map keeps `@openelement/adapter-vite`, `@openelement/content`,
+`@openelement/i18n`, router, adapter, and styling/signal packages in advanced
+reference docs, while `@openelement/hub`, `@openelement/ssg`,
+`@openelement/cem`, `@openelement/compat-check`, and `@openelement/rpc` are not
+primary v1 product surfaces.
 
 ## Documentation
 
@@ -98,12 +102,10 @@ best-effort distribution telemetry under ADR-0097.
 
 ## Current Line
 
-v0.37.6 is the current workspace package line. It proves real Nitro Node and
-Cloudflare Workers output for the openElement universal request handler while
-preserving openElement ownership of application, route, render, island,
-DSD/shadow, light DOM opt-in, and cache intent semantics. Static routes keep
-the zero-framework-JS default, explicit islands emit only their expected client
-assets, and `/isr` cache intent maps to Nitro route rules through the adapter.
+v0.37.6 is the current workspace package line. v0.38.0 is the active execution
+line for the public product surface reset: package names are retained unless an
+ADR approves a new name, Hub is archived from the primary v1 product map, and
+internal build/tooling packages are moved out of first-run documentation.
 
 v0.36.5 closed release truth and AutoFlow drift without changing product APIs.
 v0.37.0 resets product doctrine and rendering contracts before implementation

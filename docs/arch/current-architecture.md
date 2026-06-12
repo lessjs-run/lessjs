@@ -42,12 +42,15 @@ build configuration
 framework adapters
   @openelement/adapter-lit, @openelement/adapter-react, @openelement/adapter-vanilla
 
-feature packages
-  @openelement/content, @openelement/i18n, @openelement/hub, @openelement/ui,
-  @openelement/cem, @openelement/compat-check
+product packages
+  @openelement/create, @openelement/app, @openelement/runtime,
+  @openelement/ui, @openelement/protocols
 
-implementation packages
-  @openelement/signals, @openelement/style-sheet, @openelement/router, @openelement/rpc
+advanced and implementation packages
+  @openelement/adapter-vite, @openelement/content, @openelement/i18n,
+  @openelement/signals, @openelement/style-sheet, @openelement/router,
+  @openelement/ssg, @openelement/cem, @openelement/compat-check,
+  @openelement/rpc
 
 runtime kernel
   @openelement/core: DsdElement, JSX runtime, renderDsd, renderer IR,
@@ -63,10 +66,11 @@ kernel must not import a concrete build adapter.
 
 ## Public Surface Governance
 
-The current 19-package graph is intentionally not reorganized immediately after
-v0.32.0. ADR-0083 defers physical package migration, and ADR-0086 keeps the
-reset at v0.38 after v0.33-v0.37 validate API readability, AutoFlow evidence,
-product behavior, and pruning evidence.
+The current 20-package graph is intentionally not reorganized physically during
+v0.38.0 unless an ADR approves a package-name or removal decision. ADR-0083
+deferred the public surface reset, and `docs/next/v0.38.0/PRODUCT_MAP.md` now
+keeps the existing package names while separating product, advanced, internal,
+and archived surfaces.
 
 New work must still follow the target direction:
 
@@ -79,39 +83,40 @@ New work must still follow the target direction:
 - adapters live at the edge, never in the renderer or Elements core.
 
 The v0.38 review target is a smaller public product surface centered on
-protocol, Elements authoring, UI, Framework, and create scaffolding. That is a
-future migration target, not the current import contract.
+protocols, Elements authoring, UI, Framework, and create scaffolding. It is a
+documentation and template contract first; physical package moves require ADR
+coverage.
 
-## Current Packages (19 total)
+## Current Package Surfaces
 
-| Package                        | Role                                | Key fact                           |
-| ------------------------------ | ----------------------------------- | ---------------------------------- |
-| `@openelement/app`             | application authoring facade        | JSX-first pages, islands, layouts  |
-| `@openelement/app/vite`        | build configuration subpath         | `openElement()` Vite facade        |
-| `@openelement/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime        |
-| `@openelement/protocols`       | shared build contracts              | zero-dependency pure types         |
-| `@openelement/signals`         | signal facade over `alien-signals`  | owns public signal contract        |
-| `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim    |
-| `@openelement/router`          | client and route helpers            | URLPattern-based routing           |
-| `@openelement/rpc`             | RPC primitives                      | zero-dependency utility            |
-| `@openelement/runtime`         | runtime convenience facade          | authoring-friendly runtime exports |
-| `@openelement/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline                |
-| `@openelement/content`         | content feature                     | markdown, MDX, nav, blog, sitemap  |
-| `@openelement/i18n`            | i18n feature                        | locale data + static path helpers  |
-| `@openelement/ui`              | DSD component library               | JSX components                     |
-| `@openelement/cem`             | CEM parser                          | CEM shape extraction               |
-| `@openelement/compat-check`    | compatibility classifier            | admission decisions                |
-| `@openelement/hub`             | registry + trust evidence           | Playwright real-browser snapshots  |
-| `@openelement/create`          | project scaffolding                 | generated project contract         |
-| `@openelement/adapter-lit`     | Lit interop                         | adapter-boundary conversion        |
-| `@openelement/adapter-react`   | React interop                       | adapter-boundary conversion        |
-| `@openelement/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction  |
+| Package                        | Role                                | v0.38 surface                 |
+| ------------------------------ | ----------------------------------- | ----------------------------- |
+| `@openelement/create`          | project scaffolding                 | product tooling               |
+| `@openelement/app`             | application authoring facade        | product framework             |
+| `@openelement/app/vite`        | build configuration subpath         | product framework             |
+| `@openelement/runtime`         | runtime convenience facade          | product elements              |
+| `@openelement/core`            | runtime kernel                      | advanced kernel               |
+| `@openelement/protocols`       | shared build contracts              | product protocols             |
+| `@openelement/ui`              | DSD component library               | product UI                    |
+| `@openelement/signals`         | signal facade over `alien-signals`  | advanced                      |
+| `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | advanced                      |
+| `@openelement/router`          | client and route helpers            | advanced                      |
+| `@openelement/adapter-vite`    | Vite adapter + SSG                  | advanced build infrastructure |
+| `@openelement/content`         | content feature                     | advanced framework feature    |
+| `@openelement/i18n`            | i18n feature                        | advanced framework feature    |
+| `@openelement/ssg`             | SSG engine                          | internal build infrastructure |
+| `@openelement/cem`             | CEM parser                          | internal tooling              |
+| `@openelement/compat-check`    | compatibility classifier            | internal tooling              |
+| `@openelement/rpc`             | RPC primitives                      | archived                      |
+| `@openelement/hub`             | registry + trust evidence           | archived                      |
+| `@openelement/adapter-lit`     | Lit interop                         | advanced adapter ecosystem    |
+| `@openelement/adapter-react`   | React interop                       | advanced adapter ecosystem    |
+| `@openelement/adapter-vanilla` | vanilla WC interop                  | advanced adapter ecosystem    |
 
-`@openelement/hub` remains in the current package graph, but ADR-0084 requires
-v0.37 to decide whether it remains public product, becomes internal tooling, is
-deferred, is archived, or is removed before the v0.38 public surface reset.
-ADR-0086 keeps that disposition requirement and places it under AutoFlow2
-evidence.
+There are 20 workspace packages; `@openelement/app/vite` is a product subpath,
+not an additional package. `@openelement/hub` remains in the current package
+graph, but v0.38.0 classifies it as archived for the v1 public product map. New
+Hub product work requires a fresh roadmap entry and ADR.
 
 ## Public Application Contract
 
