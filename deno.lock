@@ -2225,6 +2225,7 @@
       "jsr:@openelement/compat-check@0.39",
       "jsr:@openelement/content@0.39",
       "jsr:@openelement/core@0.39",
+      "jsr:@openelement/elements@0.39",
       "jsr:@openelement/i18n@0.39",
       "jsr:@openelement/protocols@0.39",
       "jsr:@openelement/router@0.39",
@@ -2334,6 +2335,12 @@
         "dependencies": [
           "jsr:@openelement/protocols@0.39",
           "jsr:@openelement/signals@0.39",
+          "jsr:@openelement/style-sheet@0.39"
+        ]
+      },
+      "packages/elements": {
+        "dependencies": [
+          "jsr:@openelement/core@0.39",
           "jsr:@openelement/style-sheet@0.39"
         ]
       },

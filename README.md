@@ -32,21 +32,21 @@ deno task dev
 openElement = Elements + UI + Framework + Protocols
 ```
 
-| Product   | Surface                                       | Role                                                                    |
-| --------- | --------------------------------------------- | ----------------------------------------------------------------------- |
-| Elements  | future `@openelement/elements`, `OpenElement` | Native Web Components authoring layer, competing with Lit and FAST.     |
-| UI        | `@openelement/ui`                             | First-party `open-*` components built on the Elements model.            |
-| Framework | `@openelement/app`, `@openelement/create`     | Pages, layouts, islands, API routes, Vite + Nitro build/runtime output. |
-| Protocols | `@openelement/protocols`                      | Runtime-free replacement boundaries and conformance contracts.          |
+| Product   | Surface                                   | Role                                                                    |
+| --------- | ----------------------------------------- | ----------------------------------------------------------------------- |
+| Elements  | `@openelement/elements`, `OpenElement`    | Native Web Components authoring layer, competing with Lit and FAST.     |
+| UI        | `@openelement/ui`                         | First-party `open-*` components built on the Elements model.            |
+| Framework | `@openelement/app`, `@openelement/create` | Pages, layouts, islands, API routes, Vite + Nitro build/runtime output. |
+| Protocols | `@openelement/protocols`                  | Runtime-free replacement boundaries and conformance contracts.          |
 
 Supporting packages such as `@openelement/runtime`, `@openelement/core`,
 adapters, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
 advanced or implementation surfaces. They support the four products; they are
 not separate first-class product lines.
 
-In v0.40 planning, `OpenElement` is exposed from `@openelement/core` as the
-product-facing Elements base class while the future `@openelement/elements`
-package remains an ADR-governed package graph change.
+In v0.40, `@openelement/elements` is the product-facing Elements package.
+`OpenElement` also remains available from `@openelement/core` as a compatibility
+bridge while implementation internals are still consolidated.
 
 ## Why openElement
 
@@ -83,7 +83,7 @@ export default defineIsland(
 
 ## Current Line
 
-All 20 workspace packages are aligned at **0.39.0** (`v0.39.0`) under
+All 21 workspace packages are aligned at **0.39.0** (`v0.39.0`) under
 [`@openelement`](https://jsr.io/@openelement). The active execution line is
 **v0.39.0**. ADR-0100 restores JSR publish as a release exit gate for v0.39+
 closure.

@@ -28,6 +28,7 @@ ADR-0101.
 | ------------------------------ | ----------------- | ------------------------------------------------------------------- |
 | `@openelement/app`             | product-facing    | Framework authoring API; keep first-run.                            |
 | `@openelement/create`          | product-facing    | Starter and consumer entry; keep first-run.                         |
+| `@openelement/elements`        | product-facing    | Elements authoring API; keep first-run.                             |
 | `@openelement/protocols`       | product-facing    | Runtime-free replacement boundary; keep first-run.                  |
 | `@openelement/ui`              | product-facing    | First-party `open-*` component library; keep first-run.             |
 | `@openelement/core`            | foundation        | Low-level implementation kernel; demote from first-run docs.        |
@@ -47,8 +48,8 @@ ADR-0101.
 | `@openelement/compat-check`    | archive-candidate | Tooling candidate; decide retain, merge, or remove by ADR.          |
 | `@openelement/rpc`             | archive-candidate | Archived feature candidate; decide retain, merge, or remove by ADR. |
 
-## Future Package
+## Package Graph Note
 
-| Package                 | Class          | v0.40 decision                                                                                         |
-| ----------------------- | -------------- | ------------------------------------------------------------------------------------------------------ |
-| `@openelement/elements` | product-facing | ADR-0099-approved Elements direction. Adding the package still requires the full package graph update. |
+ADR-0102 approves `@openelement/elements` as a real v0.40 package. The package
+currently acts as a narrow facade over `@openelement/core` while implementation
+migration remains deferred.

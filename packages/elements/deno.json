@@ -1,0 +1,34 @@
+{
+  "name": "@openelement/elements",
+  "version": "0.39.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "imports": {
+    "@openelement/core": "jsr:@openelement/core@^0.39.0",
+    "@openelement/core/open-element": "jsr:@openelement/core@^0.39.0/open-element",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.39.0"
+  },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
+  "tasks": {
+    "build": "deno check src/index.ts",
+    "lint": "deno lint src/ __tests__/",
+    "typecheck": "deno check src/index.ts",
+    "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run __tests__/",
+    "test:ci": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run --coverage --junit-path=test-results.xml __tests__/"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

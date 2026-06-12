@@ -16,6 +16,10 @@ const surface: Record<string, SurfaceRecord> = {
     className: 'product-facing',
     decision: 'Starter and consumer entry; keep first-run.',
   },
+  '@openelement/elements': {
+    className: 'product-facing',
+    decision: 'Elements authoring API; keep first-run.',
+  },
   '@openelement/protocols': {
     className: 'product-facing',
     decision: 'Runtime-free replacement boundary; keep first-run.',
@@ -123,6 +127,7 @@ for (
     'archive-candidate',
     '@openelement/elements',
     'ADR-0101',
+    'ADR-0102',
   ]
 ) {
   if (!docs.includes(required)) {

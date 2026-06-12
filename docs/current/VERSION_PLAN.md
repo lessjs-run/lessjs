@@ -64,8 +64,8 @@ openElement = Elements + UI + Framework + Protocols
 
 ### A. Elements Product Surface
 
-- [ ] Create the `@openelement/elements` implementation plan against ADR-0099
-      and ADR-0101.
+- [x] Create the `@openelement/elements` implementation plan against ADR-0099,
+      ADR-0101, and ADR-0102.
 - [x] Implement or map the `OpenElement` base class as the Elements-facing
       authoring surface.
 - [ ] Decide the `DsdElement` compatibility story: alias, migration path, or
@@ -133,12 +133,12 @@ openElement = Elements + UI + Framework + Protocols
 
 ### G. Package Graph Rationalization
 
-v0.40 must classify every package and stop presenting all 20 packages as equal
+v0.40 must classify every package and stop presenting all 21 packages as equal
 product surfaces.
 
 | Group                       | Packages                                                                                        | v0.40 decision                                                        |
 | --------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Product-facing              | future `elements`, `ui`, `app`, `create`, `protocols`                                           | Keep and document as first-run surfaces.                              |
+| Product-facing              | `elements`, `ui`, `app`, `create`, `protocols`                                                  | Keep and document as first-run surfaces.                              |
 | Foundation / implementation | `core`, `runtime`, `router`, `signals`, `style-sheet`, `ssg`, `content`, `i18n`, `adapter-vite` | Keep if needed, but demote from first-run product docs.               |
 | Adapter / interop           | `adapter-lit`, `adapter-vanilla`, `adapter-react`                                               | Freeze or keep as compatibility surfaces; no broad adapter expansion. |
 | Archive / merge candidates  | `hub`, `cem`, `compat-check`, `rpc`                                                             | Prepare ADR-backed freeze, merge, or removal decisions.               |
@@ -146,7 +146,7 @@ product surfaces.
 - [x] Add a current package-surface inventory with product, foundation,
       adapter, tool, and archive-candidate classifications in
       `docs/current/PACKAGE_SURFACE.md`.
-- [ ] Decide whether v0.40 physically reduces the workspace package count or
+- [x] Decide whether v0.40 physically reduces the workspace package count or
       records ADR-approved deferrals for each retained archive candidate.
 - [ ] If an ADR approves removal or merge, update `PACKAGE_COUNT`,
       `RELEASE_PACKAGE_ORDER`, import maps, package READMEs, release gates, and

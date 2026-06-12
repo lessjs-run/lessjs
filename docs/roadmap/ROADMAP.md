@@ -15,8 +15,8 @@ openElement is a four-product Web Components platform:
 openElement = Elements + UI + Framework + Protocols
 ```
 
-Elements is the native Web Components authoring surface. Its public direction
-is `@openelement/elements` and `OpenElement`, competing with Lit and FAST while
+Elements is the native Web Components authoring surface. Its public surface is
+`@openelement/elements` and `OpenElement`, competing with Lit and FAST while
 keeping shadow/DSD as the default render mode and explicit light DOM opt-in.
 UI is the first-party `open-*` component library built on the Elements model.
 Framework is the application layer powered by Vite + Nitro. Protocols is the
@@ -379,7 +379,7 @@ The Repository Slimming jobs are:
   `packages/hub` active-product status;
 - shrink active docs to current truth, ADR, release evidence, and archive, with
   `docs/current/VERSION_PLAN.md` as the only active v0.40 execution plan;
-- classify all 20 workspace packages as product-facing, foundation,
+- classify all 21 workspace packages as product-facing, foundation,
   adapter/interop, or archive/merge candidates before any v1 freeze;
 - reduce hook and CI orchestration to AutoFlow3 entry points while keeping JSR
   publish and post-publish smoke as release evidence.
@@ -387,7 +387,8 @@ The Repository Slimming jobs are:
 Initial implementation has re-homed the Nitro proof fixture under
 `packages/adapter-vite/__fixtures__/nitro-proof/`, manual-scoped the archived
 Hub submission workflow, and added `docs/current/PACKAGE_SURFACE.md` plus
-`deno task package-surface:check` for the 20-package classification.
+`deno task package-surface:check` for the package classification. ADR-0102
+also adds `@openelement/elements` as the first-class Elements package.
 
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
 expansion stays out of scope, Web Awesome remains out of the current UI

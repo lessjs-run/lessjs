@@ -229,12 +229,12 @@ built-in cell generation.
 
 ADR-0099 defines the current product matrix:
 
-| Product   | Current/future primary surface                | Status                                         |
-| --------- | --------------------------------------------- | ---------------------------------------------- |
-| Elements  | future `@openelement/elements`, `OpenElement` | Product direction; implementation follow-up    |
-| UI        | `@openelement/ui`                             | First-party `open-*` component library         |
-| Framework | `@openelement/app`, `@openelement/create`     | Active v0.39 RC proof                          |
-| Protocols | `@openelement/protocols`                      | Replacement boundary and conformance contracts |
+| Product   | Current/future primary surface            | Status                                         |
+| --------- | ----------------------------------------- | ---------------------------------------------- |
+| Elements  | `@openelement/elements`, `OpenElement`    | v0.40 product package facade over core         |
+| UI        | `@openelement/ui`                         | First-party `open-*` component library         |
+| Framework | `@openelement/app`, `@openelement/create` | Active v0.39 RC proof                          |
+| Protocols | `@openelement/protocols`                  | Replacement boundary and conformance contracts |
 
 Historical positioning note: earlier ADRs used the phrase DSD-first to protect
 shadow/DSD output as the default. ADR-0096 refines that into Web Components
@@ -264,15 +264,15 @@ DSD/shadow is a default Elements render mode, not the product name.
 
 ## Package Version State
 
-All 20 workspace packages are aligned to **0.39.0** under `@openelement/*`.
+All 21 workspace packages are aligned to **0.39.0** under `@openelement/*`.
 The active execution package is **v0.39.0**.
 
 Package governance for v0.39:
 
 - do not add a new top-level package without an ADR;
-- ADR-0099 approves future `@openelement/elements`; the v0.40 roadmap now
-  prioritizes Preact island proof over the earlier Vue adapter plan, but any
-  new package must update package count, release order, import maps, graph
+- ADR-0102 approves `@openelement/elements`; the v0.40 roadmap now prioritizes
+  Preact island proof over the earlier Vue adapter plan, and any later package
+  topology change must update package count, release order, import maps, graph
   checks, docs, and migration notes;
 - keep protocol contracts small and runtime-free;
 - keep UI independent from framework routing;
@@ -291,6 +291,10 @@ The active package classification now lives in
 proof fixture under `packages/adapter-vite/__fixtures__/nitro-proof/` and
 manual-scoped the archived Hub submission workflow so Hub no longer behaves as
 an active PR product path.
+
+ADR-0102 approves `@openelement/elements` as the first-class Elements package.
+The workspace package count is now 21; archive-candidate package reduction is
+governed by ADR-0103.
 
 ## Architecture Positioning
 

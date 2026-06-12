@@ -11,6 +11,7 @@ export const RELEASE_PACKAGE_ORDER: ReleasePackageStep[] = [
   { pkg: '@openelement/create', dir: 'packages/create' },
   { pkg: '@openelement/signals', dir: 'packages/signals' },
   { pkg: '@openelement/core', dir: 'packages/core' },
+  { pkg: '@openelement/elements', dir: 'packages/elements' },
   { pkg: '@openelement/runtime', dir: 'packages/runtime' },
   { pkg: '@openelement/cem', dir: 'packages/cem' },
   { pkg: '@openelement/compat-check', dir: 'packages/compat-check' },

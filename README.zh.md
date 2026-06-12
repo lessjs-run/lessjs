@@ -22,7 +22,7 @@ openElement = Elements + UI + Framework + Protocols
 
 | 产品      | 公开方向                                                           | 当前状态                                                                                                         |
 | --------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Elements  | 未来 `@openelement/elements` 与 `OpenElement`                      | 面向 Lit/FAST 的原生 Web Components authoring surface；当前实现仍在 `@openelement/core` / `@openelement/runtime` |
+| Elements  | `@openelement/elements` 与 `OpenElement`                           | 面向 Lit/FAST 的原生 Web Components authoring surface；`@openelement/core` / `@openelement/runtime` 作为底层实现 |
 | UI        | `@openelement/ui`                                                  | 第一方 `open-*` 组件库，基于 Elements 模型                                                                       |
 | Framework | `@openelement/app`、`@openelement/app/vite`、`@openelement/create` | Vite + Nitro 应用层、routes、layouts、islands、API routes、SSG/SSR/ISR intent                                    |
 | Protocols | `@openelement/protocols`                                           | Runtime-free contracts：renderers、routes、islands、cache、data、signals、validators                             |
