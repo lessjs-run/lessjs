@@ -25,7 +25,7 @@ aligns docs/templates with the four-product matrix, adds public README
 integrity gates, excludes Web Awesome from the current target, and records Vue
 as the only heavy-framework island adapter proof. The package bump to `0.39.0`
 is complete, post-bump local gates passed, `dev` and `main` CI passed, and JSR
-publish evidence passed in `Publish to JSR` run `27424405040`.
+publish evidence passed in `Publish to JSR` run `27425438225`.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
