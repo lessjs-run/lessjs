@@ -2,10 +2,10 @@
 
 ## A. Generated App RC
 
-- [ ] Generate or refresh a starter app from the current create-template path.
+- [x] Generate or refresh a starter app from the current create-template path.
 - [ ] Verify app authoring, pages, layouts, islands, API routes, static output,
       SSR/ISR intent, and assets.
-- [ ] Verify generated imports use product surfaces by default.
+- [x] Verify generated imports use product surfaces by default.
 
 ## B. Runtime And Deployment
 
@@ -24,4 +24,4 @@
 
 - [ ] Run workflow, graph, architecture, docs, format, lint, typecheck, test,
       build, E2E, generated consumer, and publish dry-run gates.
-- [ ] Record AutoFlow evidence and release-truth state.
+- [x] Record AutoFlow evidence and release-truth state.

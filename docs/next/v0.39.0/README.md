@@ -10,11 +10,11 @@ without silently expanding package scope before v1.0.
 
 ### Generated App Proof
 
-- [ ] Generate or refresh the starter app path using the v0.38 first-run
+- [x] Generate or refresh the starter app path using the v0.38 first-run
       surface.
 - [ ] Prove pages, layouts, islands, API routes, static output, SSR/ISR intent,
       assets, and zero-JS defaults through a repeatable smoke.
-- [ ] Verify starter import maps and tasks do not expose archived/internal
+- [x] Verify starter import maps and tasks do not expose archived/internal
       surfaces as first-run APIs.
 
 ### Deployment Proof
@@ -38,6 +38,12 @@ without silently expanding package scope before v1.0.
 - The v0.38 product map defines product, advanced, internal, and archived
   surfaces.
 - JSR publish is telemetry only under ADR-0097.
+- `deno task consumer:local` now generates a starter app from local
+  `@openelement/create`, patches imports to workspace source packages, builds
+  through the generated Vite + openElement path, and verifies the generated
+  home page contains the expected starter output.
+- The generated consumer smoke exposed and fixed a missing workspace alias for
+  `@openelement/protocols/*` subpaths during client island build.
 
 ## Related
 

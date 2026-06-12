@@ -4,7 +4,7 @@
       deferred by ADR/SOP update.
 - [ ] All `ACCEPTANCE.md` product, runtime, docs, consumer, and gate criteria
       are met.
-- [ ] Generated app smoke evidence is recorded.
+- [x] Generated app smoke evidence is recorded.
 - [ ] Deployment/runtime evidence is recorded.
 - [ ] Root README, README.zh, website docs, package READMEs, and generated
       templates agree.

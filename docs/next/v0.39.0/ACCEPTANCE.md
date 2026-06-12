@@ -5,9 +5,9 @@ generated app, local gates, CI, and release evidence.
 
 ## Product Surface
 
-- [ ] Generated app code uses the v0.38 product map as the first-run public
+- [x] Generated app code uses the v0.38 product map as the first-run public
       surface.
-- [ ] Archived/internal packages are not introduced as first-run dependencies.
+- [x] Archived/internal packages are not introduced as first-run dependencies.
 - [ ] Any new package, removed surface, or public contract reset has ADR
       coverage.
 

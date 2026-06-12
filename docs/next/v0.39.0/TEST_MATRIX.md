@@ -14,6 +14,6 @@
 | Browser E2E            | `deno task test:e2e`              | Yes       |
 | Build                  | `deno task build`                 | Yes       |
 | DSD report             | `deno task dsd:check-report`      | Yes       |
-| Generated consumer     | generated app smoke evidence      | Yes       |
+| Generated consumer     | `deno task consumer:local`        | Yes       |
 | Publish dry-run        | `deno task publish:dry-run`       | Yes       |
 | JSR publish            | local or CI best-effort telemetry | Telemetry |

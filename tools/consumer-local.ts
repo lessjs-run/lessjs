@@ -78,6 +78,28 @@ denoJson.imports['@openelement/core/jsx-runtime'] = pathToFileURL(
 denoJson.imports['@openelement/core/jsx-dev-runtime'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
 ).href;
+denoJson.imports['@openelement/protocols'] = pathToFileURL(
+  join(repoRoot, 'packages', 'protocols', 'src', 'index.ts'),
+).href;
+for (
+  const subpath of [
+    'build-types',
+    'cache',
+    'components',
+    'conformance',
+    'data',
+    'islands',
+    'renderer',
+    'routes',
+    'runtime',
+    'signals',
+    'validators',
+  ]
+) {
+  denoJson.imports[`@openelement/protocols/${subpath}`] = pathToFileURL(
+    join(repoRoot, 'packages', 'protocols', 'src', `${subpath}.ts`),
+  ).href;
+}
 denoJson.imports['@openelement/adapter-vite/build-context'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
 ).href;
@@ -167,6 +189,28 @@ const aliases = [
   {
     find: '@openelement/core',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
+  },
+  ...[
+    'build-types',
+    'cache',
+    'components',
+    'conformance',
+    'data',
+    'islands',
+    'renderer',
+    'routes',
+    'runtime',
+    'signals',
+    'validators',
+  ].map((subpath) => ({
+    find: `@openelement/protocols/${subpath}`,
+    replacement: vitePath(
+      join(repoRoot, 'packages', 'protocols', 'src', `${subpath}.ts`),
+    ),
+  })),
+  {
+    find: '@openelement/protocols',
+    replacement: vitePath(join(repoRoot, 'packages', 'protocols', 'src', 'index.ts')),
   },
   {
     find: '@openelement/signals/framework',
