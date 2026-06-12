@@ -41,6 +41,10 @@ framework surface.
 - `@openelement/protocols` owns runtime-free protocol boundaries from v0.37.5.
 - `fixtures/nitro-proof/` proves the Nitro runtime path from v0.37.6.
 - `docs/sop/v0.38.0/README.md` defines the product surface reset contract.
+- v0.38.0 implementation gates passed locally on 2026-06-12, including
+  workflow, graph, architecture, docs, format, lint, typecheck, test, build,
+  Chromium E2E, generated consumer smoke, DSD report, and publish dry-run.
+- `dev` non-JSR CI passed for `ef072a7b` on 2026-06-12.
 
 ## Non-Goals
 

@@ -28,6 +28,6 @@
 
 ## E. Gates
 
-- [ ] Run workflow, graph, architecture, docs, format, lint, typecheck, test,
+- [x] Run workflow, graph, architecture, docs, format, lint, typecheck, test,
       build, E2E, generated consumer, and publish dry-run gates.
-- [ ] Record AutoFlow evidence and release-truth state.
+- [x] Record AutoFlow evidence and release-truth state.

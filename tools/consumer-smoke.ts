@@ -64,6 +64,7 @@ async function main(): Promise<void> {
         compilerOptions: {
           jsx: 'react-jsx',
           jsxImportSource: '@openelement/core',
+          lib: ['ES2022', 'DOM', 'DOM.Iterable', 'deno.ns'],
         },
         unstable: ['sloppy-imports'],
       }
@@ -74,6 +75,7 @@ async function main(): Promise<void> {
         compilerOptions: {
           jsx: 'react-jsx',
           jsxImportSource: '@openelement/core',
+          lib: ['ES2022', 'DOM', 'DOM.Iterable', 'deno.ns'],
         },
       };
 
