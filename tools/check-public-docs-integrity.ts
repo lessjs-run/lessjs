@@ -8,6 +8,7 @@ type Failure = {
 const currentPublicDocs = [
   'README.md',
   'README.zh.md',
+  'docs/governance/PROJECT_WORKFLOW.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
 ];
@@ -33,6 +34,8 @@ const staleCurrentClaims: RegExp[] = [
   /JSR publish .*best-effort/i,
   /JSR publish .*telemetry/i,
   /not (?:a )?(?:version-)?exit gate/i,
+  /do not block version\s+exit/i,
+  /distribution telemetry/i,
 ];
 
 const failures: Failure[] = [];

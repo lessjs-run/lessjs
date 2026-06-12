@@ -121,7 +121,8 @@ unhealthy, but ADR-0097 prevents that external state from blocking roadmap
 execution.
 
 The active implementation line is now v0.39.0. It proceeds from v0.38.0 product
-surface evidence; JSR visibility does not block it.
+surface evidence while restoring JSR publish evidence as a release exit gate
+under ADR-0100.
 
 Governing docs:
 

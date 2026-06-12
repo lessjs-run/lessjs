@@ -11,6 +11,10 @@ complete because an issue, chat message, or SOP says it is complete. It is
 complete only when the repository contains the decision, the execution package,
 the implementation, and the gates that prove the claim.
 
+Current execution anchor: package line `v0.39.0`, active execution line
+`v0.39.0`, and product formula
+`openElement = Elements + UI + Framework + Protocols`.
+
 ## Required Reading Order
 
 Read these files before starting work:
@@ -63,8 +67,8 @@ Required files:
 - Do not claim a SOP item is complete without a code, docs, test, or gate proof.
 - Do not bump packages until local gates for the version pass.
 - Do not claim JSR availability unless direct registry checks prove it.
-- JSR publish is a best-effort distribution step, not a version-exit gate. See
-  ADR-0097.
+- For v0.39.0 and later, JSR publish is a release exit gate. See ADR-0100.
+- ADR-0097 only describes the historical v0.37/v0.38 exception period.
 - Do not merge `dev` to `main` until `dev` CI is green.
 - Do not tag until `main` CI is green.
 
@@ -98,12 +102,14 @@ Use this order for a minor release:
 10. wait for all `main` CI jobs;
 11. create and push the release tag;
 12. publish the GitHub release note;
-13. let the JSR publish workflow run, or trigger local/CI publish manually, and
-    record any registry failure as external distribution state.
+13. let the JSR publish workflow run, or trigger local/CI publish manually;
+14. close the version only after JSR publish and post-publish consumer smoke
+    evidence pass, unless a new ADR records an explicit exception.
 
-JSR package visibility and post-publish JSR consumer smoke do not block version
-exit when repository-controlled evidence is complete. They remain distribution
-telemetry and release-note caveats.
+For v0.39.0 and later, JSR package visibility and post-publish JSR consumer
+smoke are release evidence, not telemetry. A version line is not closed until
+the status, roadmap, release checklist, release note, and public README files
+record the JSR outcome truthfully.
 
 ## Automation Gates
 

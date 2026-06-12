@@ -50,6 +50,7 @@ const publicDocs = [
 const currentDocs = [
   'README.md',
   'README.zh.md',
+  'docs/governance/PROJECT_WORKFLOW.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
   'www/app/routes/index/index.tsx',
@@ -110,6 +111,8 @@ const checks: Check[] = [
       /v0\.37\.0\s*\|\s*Server\/Data\/UI Product Closure/i,
       /v0\.37\.6 package\s+line current/i,
       /active execution target is\s+v0\.38\.0/i,
+      /JSR publish is a best-effort distribution step/i,
+      /JSR package visibility and post-publish JSR consumer smoke do not block version\s+exit/i,
     ],
   },
   {
