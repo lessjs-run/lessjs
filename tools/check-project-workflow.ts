@@ -32,6 +32,10 @@ const requiredAnchors: Record<string, string[]> = {
     'ADR-0101',
     'AutoFlow3',
     'Preact',
+    'Repository Slimming',
+    'fixtures/nitro-proof',
+    'hub-index',
+    'Package Graph Rationalization',
     'Test Matrix',
   ],
   [`docs/sop/${ACTIVE_VERSION}/README.md`]: [

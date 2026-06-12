@@ -57,7 +57,7 @@ feature packages support the four products without replacing them.
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
 | v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Active                   |
-| v0.40.0 | Elements + Preact Island Priority                  | Productize `OpenElement`, freeze Hub and broad island expansion, prove Preact islands and Preact signal candidate    | Planned                  |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for the v1 path            | Planned                  |
 | v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
@@ -345,7 +345,7 @@ Preact-first v0.40 proof. The earlier Vue adapter plan is superseded for the
 pre-1.0 path; Vue, React, Svelte, and other heavy island adapters stay frozen
 unless a later ADR reopens them.
 
-## v0.40.0 - Elements + Preact Island Priority
+## v0.40.0 - Elements + Preact + Repository Slimming
 
 Productize the four-product matrix while keeping scope narrow enough for a
 credible v1.0 path.
@@ -355,7 +355,12 @@ architecture state is frozen on `arch/v0.39-line`; `dev` continues as the
 focused product-line branch. Active planning moves from separate SOP and
 NextVersion dossiers to `docs/current/VERSION_PLAN.md`.
 
-v0.40.0 has three jobs:
+v0.40.0 has two equal exit requirements:
+
+- the product surface becomes real and narrow;
+- the repository shape stops contradicting that product story.
+
+The product-surface jobs are:
 
 - create the real Elements product surface around `@openelement/elements` and
   `OpenElement`, with migration notes instead of a long-term public
@@ -366,10 +371,25 @@ v0.40.0 has three jobs:
   behind `@openelement/signals` and `@openelement/protocols/signals`
   conformance, not as an immediate default-engine swap.
 
+The Repository Slimming jobs are:
+
+- move or archive root one-off proof fixtures such as `fixtures/nitro-proof`
+  so historical v0.37.6 evidence no longer looks like an active product root;
+- physically freeze Hub by resolving `hub-index`, `hub-ci.yml`, and
+  `packages/hub` active-product status;
+- shrink active docs to current truth, ADR, release evidence, and archive, with
+  `docs/current/VERSION_PLAN.md` as the only active v0.40 execution plan;
+- classify all 20 workspace packages as product-facing, foundation,
+  adapter/interop, or archive/merge candidates before any v1 freeze;
+- reduce hook and CI orchestration to AutoFlow3 entry points while keeping JSR
+  publish and post-publish smoke as release evidence.
+
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
 expansion stays out of scope, Web Awesome remains out of the current UI
 strategy, and no Preact runtime may leak into `@openelement/core` or Elements
-as a required public dependency.
+as a required public dependency. Physical package deletion, package merges,
+new packages, default runtime changes, and default signal-engine changes still
+require ADR-backed human approval.
 
 ## v0.41.0 - v1.0 Freeze Candidate
 

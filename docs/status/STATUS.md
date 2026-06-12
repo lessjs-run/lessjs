@@ -219,7 +219,7 @@ built-in cell generation.
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Done                        | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
 | v0.38.0 | Product Surface Reset and Hardening                | Done                        | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
 | v0.39.0 | Framework RC + Four-Product Matrix Reset           | Active / local gates passed | ADR-0099, public docs integrity, Elements direction, Preact handoff, starter/deploy/consumer gates             |
-| v0.40.0 | Elements + Preact Island Priority                  | Planned                     | Productize `OpenElement`, freeze Hub/broad islands, prove Preact islands and Preact signal candidate           |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Planned                     | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for v1               |
 | v0.41.0 | v1.0 Freeze Candidate                              | Planned                     | API freeze candidate, protocol conformance, UI hardening, migration docs, and release-gate proof               |
 | v1.0.0  | Stable Four-Product Platform                       | Vision                      | API freeze for Elements, UI, Framework, and Protocols with workflow evidence in release gates                  |
 
@@ -279,6 +279,13 @@ Package governance for v0.39:
 - keep database, ORM, auth, backend, runtime, cache, storage, and deployment
   choices at protocol, adapter, or recipe boundaries.
 
+v0.40 package governance adds Repository Slimming as active scope. The current
+20-package workspace must be classified before v1 as product-facing,
+foundation, adapter/interop, or archive/merge candidate. Physical package
+deletion, package merge, new package creation, package graph topology changes,
+default runtime changes, and default signal-engine changes still require
+ADR-backed human approval under ADR-0101.
+
 ## Architecture Positioning
 
 1. **Elements** - native Web Components authoring with JSX, signals, styles,
@@ -318,6 +325,10 @@ Package governance for v0.39:
   current target.
 - Heavy-framework island expansion is frozen except for the planned v0.40
   Preact island proof.
+- v0.40 also owns the physical repository slimming work: root proof fixtures
+  such as `fixtures/nitro-proof`, Hub root data such as `hub-index`, active
+  docs categories, 20-package surface classification, and duplicate gate
+  orchestration must stop contradicting the four-product matrix.
 - Database work belongs in data/database adapter contracts and recipes. It must
   not become a built-in ORM, auth platform, or migration system.
 - A Vite + Nitro runtime proof should compose openElement routes, rendering,
