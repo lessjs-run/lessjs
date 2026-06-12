@@ -8,16 +8,16 @@
 
 ## B. Classification
 
-- [ ] Classify every package as product, advanced subpath, internal, archived,
+- [x] Classify every package as product, advanced subpath, internal, archived,
       or removed.
-- [ ] Classify every public subpath with the same taxonomy.
-- [ ] Identify package-name decisions that require ADR approval.
+- [x] Classify every public subpath with the same taxonomy.
+- [x] Identify package-name decisions that require ADR approval.
 
 ## C. Product Map
 
-- [ ] Define the v0.38 product map for elements, UI, protocols, and framework.
-- [ ] Decide whether existing package names are retained or changed.
-- [ ] Document Hub disposition through v0.38 and v1.0.
+- [x] Define the v0.38 product map for elements, UI, protocols, and framework.
+- [x] Decide whether existing package names are retained or changed.
+- [x] Document Hub disposition through v0.38 and v1.0.
 
 ## D. Docs And Templates
 

@@ -53,6 +53,9 @@ framework surface.
 
 - SOP: `docs/sop/v0.38.0/README.md`
 - Surface inventory: `docs/next/v0.38.0/PACKAGE_SURFACE_INVENTORY.md`
+- Surface classification:
+  `docs/next/v0.38.0/PRODUCT_SURFACE_CLASSIFICATION.md`
+- Product map: `docs/next/v0.38.0/PRODUCT_MAP.md`
 - Roadmap: `docs/roadmap/ROADMAP.md`
 - Status: `docs/status/STATUS.md`
 - Prior line: `docs/next/v0.37.6/`
