@@ -1,8 +1,8 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.37.6 Vite + Nitro Runtime Proof.\
-> Active execution package: v0.38.0 Product Surface Reset.\
+> Current package line: v0.38.0 Product Surface Reset.\
+> Active execution package: v0.39.0 Full-Stack Framework RC.\
 > Updated: 2026-06-12.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -50,8 +50,8 @@ Protocol-First Web Components Platform target.
 | v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate | Done / JSR caveat        |
 | v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
-| v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Active                   |
-| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                                        | Planned                  |
+| v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
+| v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                                        | Active                   |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
@@ -331,8 +331,13 @@ Candidate product split to evaluate:
 
 ## v0.39.0 - Full-Stack Framework RC
 
-Validate final APIs, docs, starters, deploy smoke, publish gates, and consumer
-proof before v1.0.
+Validate the release-candidate framework surface on top of the v0.38 product
+map before v1.0 API freeze work begins.
+
+The line proves that a generated openElement app can use the documented
+first-run surface end to end: app authoring, pages, layouts, islands, API
+routes, static/SSR/ISR intent, Vite + Nitro build/runtime output, docs, deploy
+guidance, consumer smoke, and release gates.
 
 ## v1.0.0 - Stable Four-Product Platform
 

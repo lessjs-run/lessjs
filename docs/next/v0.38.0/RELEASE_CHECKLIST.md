@@ -25,6 +25,6 @@
 - [x] `deno task publish:dry-run` passes before release closure.
 - [x] Package versions are bumped only after implementation gates pass.
 - [x] `dev` is pushed and non-JSR CI is green.
-- [ ] `dev` is merged or synced to `main`.
-- [ ] `main` non-JSR CI is green before tag/release.
-- [ ] JSR publish runs locally or in CI as best-effort telemetry only.
+- [x] `dev` is merged or synced to `main`.
+- [x] `main` non-JSR CI is green before tag/release.
+- [x] JSR publish runs locally or in CI as best-effort telemetry only.

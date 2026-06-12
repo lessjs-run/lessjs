@@ -76,8 +76,8 @@ criteria.
 | v0.37.4 | [v0.37.4/](./v0.37.4/)                                                                       | Done     | Hygiene + CSS UI + architecture     |
 | v0.37.5 | [v0.37.5/](./v0.37.5/)                                                                       | Done     | Protocol-first runtime architecture |
 | v0.37.6 | [v0.37.6/](./v0.37.6/)                                                                       | Done     | Vite + Nitro runtime proof          |
-| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Active   | Product surface reset               |
-| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | Full-stack framework RC             |
+| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Done     | Product surface reset               |
+| v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Active   | Full-stack framework RC             |
 | v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable four-product platform        |
 
 ## Operator Rules

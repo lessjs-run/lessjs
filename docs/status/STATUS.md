@@ -3,33 +3,44 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.38.0/` (Product Surface Reset).
+package: `docs/next/v0.39.0/` (Full-Stack Framework RC).
 
-## Current Version Line: v0.38.0 (Product Surface Reset)
+## Current Version Line: v0.39.0 (Full-Stack Framework RC)
 
-v0.38.0 is in release closure. Its job is to turn the v0.37.x protocol and
-Nitro evidence into a documented public product/package surface before the
-v0.39 release candidate. The active SOP is `docs/sop/v0.38.0/README.md`; the
-active NextVersion package is `docs/next/v0.38.0/`.
+v0.39.0 is the active release-candidate framework line. Its job is to prove
+that the v0.38 product map works as a generated, deployable,
+consumer-verified openElement app before v1.0 API freeze work begins. The
+active SOP is `docs/sop/v0.39.0/README.md`; the active NextVersion package is
+`docs/next/v0.39.0/`.
 
-Release-closure evidence for v0.38.0: v0.37.6 is released, the v0.38.0
-implementation gates passed locally, `dev` non-JSR CI passed at `9152e46b`, and
-all 20 packages and internal JSR ranges are now aligned to `0.38.0`.
-v0.38.0 has a package/subpath inventory, a product-surface classification, and
-a product map under `docs/next/v0.38.0/`. The product map retains existing
-package names, classifies Hub as archived for the v1 public product map, and
-moves internal build/tooling packages out of first-run documentation. Root
-README, README.zh, and `docs/arch/current-architecture.md` have been aligned to
-that product map; `@openelement/create` starter import maps now hide protocol
-subpaths from new projects while keeping the proven adapter-vite build tasks.
-Package READMEs and website live guide/API pages now separate product,
-advanced, internal, and archived surfaces. Migration notes record the starter
-import-map change, archived RPC status, and internal SSG status.
+v0.39.0 starts from package version `0.38.0`; package versions must not be
+bumped until implementation gates pass. JSR publish remains best-effort
+telemetry and is not an exit gate under ADR-0097.
 
-Release closure still requires pushed bump CI on `dev`, merge or sync to
-`main`, `main` non-JSR CI, tag/GitHub release, and best-effort JSR publish
-telemetry. JSR publish remains best-effort telemetry and is not an exit gate
-under ADR-0097.
+The active work is to validate generated starter behavior from
+`@openelement/create`, prove pages/layouts/islands/API routes/static output and
+SSR/ISR intent through the documented Vite + Nitro path, align docs/templates
+with the RC surface, and record consumer/deploy/release evidence.
+
+## Prior Version Line: v0.38.0 (Product Surface Reset)
+
+v0.38.0 is released. Tag `v0.38.0` and the GitHub release exist at commit
+`e729bee4`. All 20 `@openelement/*` workspace packages are aligned to
+`0.38.0`. Local implementation and post-bump release gates passed; `dev` and
+`main` non-JSR CI passed before tag/release. Local JSR publish telemetry ran
+after release and confirmed all 20 package versions already existed on JSR, so
+the publish task skipped immutable versions successfully.
+
+v0.38.0 turned the v0.37.x protocol and Nitro evidence into a documented public
+product/package surface. It recorded a package/subpath inventory,
+product-surface classification, and product map under `docs/next/v0.38.0/`.
+The product map retains existing package names, classifies Hub as archived for
+the v1 public product map, and moves internal build/tooling packages out of
+first-run documentation. Root README, README.zh,
+`docs/arch/current-architecture.md`, package READMEs, website guide/API pages,
+and `@openelement/create` templates now separate product, advanced, internal,
+and archived surfaces. Migration notes record the starter import-map change,
+archived RPC status, and internal SSG status.
 
 ## Prior Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
 
@@ -104,11 +115,13 @@ closed for the prior package line. v0.37.4 JSR distribution remains externally
 unhealthy, but ADR-0097 prevents that external state from blocking roadmap
 execution.
 
-The active implementation line is now v0.38.0. It proceeds from v0.37.6 Nitro
-runtime evidence; JSR visibility does not block it.
+The active implementation line is now v0.39.0. It proceeds from v0.38.0 product
+surface evidence; JSR visibility does not block it.
 
 Governing docs:
 
+- `docs/sop/v0.39.0/README.md`
+- `docs/next/v0.39.0/`
 - `docs/sop/v0.38.0/README.md`
 - `docs/next/v0.38.0/`
 - `docs/sop/v0.37.6/README.md`
@@ -188,10 +201,10 @@ built-in cell generation.
 | v0.37.2 | SSR / ISR Server Runtime Contract                  | Done                | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                 |
 | v0.37.3 | Data / Database Boundary                           | Done                | Data/database adapter contracts and recipes without built-in ORM ownership                                     |
 | v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Done / JSR caveat   | Implementation complete; JSR distribution is best-effort under ADR-0097                                        |
-| v0.37.5 | Protocol-First Runtime Architecture                | Implemented locally | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
-| v0.37.6 | Vite + Nitro Runtime Proof                         | Planned             | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
-| v0.38.x | Product Surface Reset and Hardening                | Planned             | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
-| v0.39.0 | Full-Stack Framework RC                            | Planned             | Final API, docs, starter, deploy, consumer, and publish gates                                                  |
+| v0.37.5 | Protocol-First Runtime Architecture                | Done                | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
+| v0.37.6 | Vite + Nitro Runtime Proof                         | Done                | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
+| v0.38.0 | Product Surface Reset and Hardening                | Done                | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
+| v0.39.0 | Full-Stack Framework RC                            | Active              | Final API, docs, starter, deploy, consumer, and publish gates                                                  |
 | v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                   |
 
 ## Current Product Center

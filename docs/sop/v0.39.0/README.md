@@ -1,64 +1,70 @@
-# v0.39.0 SOP: Full-Stack Framework Release Candidate
+# SOP v0.39.0 - Full-Stack Framework RC
 
-> Status: Planned\
-> Roadmap: Full-Stack Framework RC\
-> ADR: ADR-0091
+## Objective
 
-## Goal
+Validate the release-candidate framework surface on top of the v0.38 product
+map before v1.0 API freeze work begins.
 
-Validate the v1 candidate as a full-stack framework platform after the product
-surface reset.
+v0.39.0 must prove that a generated openElement app can use the documented
+first-run surface end to end: app authoring, pages, layouts, islands, API
+routes, static/SSR/ISR intent, Vite + Nitro build/runtime output, docs, deploy
+guidance, consumer smoke, and release gates.
 
 ## Entry Criteria
 
-- v0.38 product surface reset is complete.
-- Public package names and import paths are frozen for RC.
-- Create templates use the final public surface.
-- Full local gates pass on the reset package graph.
+- v0.38.0 is tagged, released, and merged to `main`.
+- All 20 workspace packages are aligned to `0.38.0`.
+- v0.38.0 product, advanced, internal, and archived package classifications are
+  recorded.
+- JSR publish/visibility state is telemetry only under ADR-0097.
 
-## ADR Links
+## Workflow Anchors
 
-- ADR-0091: Four-Product Platform Roadmap.
-- ADR-0083: Deferred Public Surface Reset.
+- NextVersion package: `docs/next/v0.39.0/`
+- ADR-0093: SSR/ISR runtime contract
+- ADR-0096: protocol-first Vite + Nitro runtime
+- ADR-0097: JSR best-effort release gate
 
-## Step-by-Step Tasks
+## Scope
 
-1. Freeze the RC public API list.
-2. Mark every experimental API explicitly.
-3. Finalize migration guide from v0.30-v0.38.
-4. Run generated project matrix from a clean checkout.
-5. Run consumer smoke against the package graph.
-6. Run deploy smoke for documented runtime targets.
-7. Verify static zero-JS, explicit island JS, DsdElement shadow/light,
-   pure CSS UI, SSR/ISR, and data recipe paths.
-8. Fix release-candidate bugs without broadening feature scope.
-9. Prepare v1.0 release checklist.
-
-## Verification
-
-- full local gate ladder.
-- AutoFlow evidence report.
-- generated project matrix.
-- consumer smoke.
-- deploy smoke.
-- publish dry-run.
-- GitHub Actions on dev and main.
+- Use the v0.38 first-run product surface as the default public API.
+- Validate generated starter app behavior from `@openelement/create`.
+- Validate deployment/runtime evidence through the documented Vite + Nitro
+  path.
+- Align website, docs, package READMEs, and migration guidance with the RC
+  surface.
+- Keep Hub, RPC, direct SSG, CEM, and compat-check out of first-run product
+  docs unless an ADR changes their disposition.
 
 ## Non-Goals
 
-- No new framework feature scope.
-- No package map redesign after v0.38 unless a blocker ADR requires it.
-- No ORM, auth, database, or backend ownership.
-- No silent compatibility shims for intentionally removed APIs.
+- No new package name without ADR approval.
+- No ORM, auth, database, or backend platform ownership.
+- No hidden compatibility shims for removed or archived 0.x surfaces.
+- No package version bump until implementation gates pass.
+
+## Required Gates
+
+- `deno task workflow:check`
+- `deno task graph:check`
+- `deno task arch:check`
+- `deno task docs:check-current`
+- `deno task docs:check-strategy`
+- `deno task fmt:check`
+- `deno task lint`
+- `deno task typecheck`
+- `deno task test`
+- `deno task test:e2e`
+- `deno task build`
+- `deno task dsd:check-report`
+- generated consumer smoke
+- publish dry-run
 
 ## Exit Criteria
 
-- The v1 public API candidate is frozen.
-- All documented product surfaces pass their gates.
-- AutoFlow reports no hard workflow contradictions.
-- v1.0 can be published as a release decision, not another feature release.
-
-## AutoFlow Boundary
-
-AutoFlow may prove RC evidence and hard contradictions. It must not approve the
-v1 release by itself.
+- v0.39.0 NextVersion package records implementation, docs, risk, test, and
+  release evidence.
+- Local gates pass after implementation and again after package bump.
+- `dev` non-JSR CI passes before merge or sync to `main`.
+- `main` non-JSR CI passes before tag/release.
+- JSR publish is attempted locally or in CI as best-effort telemetry.
