@@ -6,6 +6,10 @@ This package exposes `OpenElement`, the product-facing base class for native Web
 Components built on openElement's existing shadow/DSD implementation. Shadow/DSD
 is the default render mode; light DOM remains explicit opt-in.
 
+`DsdElement` remains available as a v0.40 compatibility export from
+`@openelement/core` and `@openelement/elements`, but new Elements docs and
+starters should use `OpenElement`.
+
 ## Install
 
 ```bash

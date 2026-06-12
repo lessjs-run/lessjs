@@ -2,9 +2,9 @@
 
 Advanced openElement runtime kernel.
 
-Most users should start from `@openelement/app`, `@openelement/ui`, or the
-future Elements product surface. `@openelement/core` owns low-level primitives
-used by those products:
+Most users should start from `@openelement/app`, `@openelement/elements`, or
+`@openelement/ui`. `@openelement/core` owns low-level primitives used by those
+products:
 
 - JSX and VNode runtime primitives.
 - DSD rendering through `renderDsd()` and `renderDsdStream()`.
@@ -13,9 +13,10 @@ used by those products:
 - Static props, event hydration, island metadata, and SSR context helpers.
 - Unified errors, signal-like utilities, and DOM rendering helpers.
 
-ADR-0099 defines the public Elements direction as `@openelement/elements` and
-`OpenElement`. v0.40 exposes `OpenElement` as the product-facing authoring name
-while the implementation remains compatible with `DsdElement`.
+ADR-0102 defines `@openelement/elements` and `OpenElement` as the first-run
+Elements package and authoring name. v0.40 keeps `DsdElement` and the
+`@openelement/core` `OpenElement` export for compatibility while new component
+authoring docs should start from `@openelement/elements`.
 
 This package does not contain Vite, CLI, or build orchestration logic.
 
@@ -25,10 +26,13 @@ This package does not contain Vite, CLI, or build orchestration logic.
 deno add jsr:@openelement/core
 ```
 
-## Component Authoring
+## Low-Level Component Authoring
+
+Prefer `@openelement/elements` for new components. This core import path remains
+available for compatibility and framework internals.
 
 ```tsx
-import { OpenElement } from '@openelement/core';
+import { OpenElement } from '@openelement/elements';
 import { signal } from '@openelement/signals';
 
 class MyButton extends OpenElement {
@@ -50,6 +54,8 @@ class MyButton extends OpenElement {
 ```
 
 ## Public API
+
+`DsdElement` is a v0.40 compatibility export, not the first-run Elements name.
 
 ```ts
 import {

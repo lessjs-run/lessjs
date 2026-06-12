@@ -68,9 +68,9 @@ openElement = Elements + UI + Framework + Protocols
       ADR-0101, and ADR-0102.
 - [x] Implement or map the `OpenElement` base class as the Elements-facing
       authoring surface.
-- [ ] Decide the `DsdElement` compatibility story: alias, migration path, or
+- [x] Decide the `DsdElement` compatibility story: alias, migration path, or
       deprecation schedule.
-- [ ] Add shadow/DSD default tests and explicit light DOM opt-in tests for the
+- [x] Add shadow/DSD default tests and explicit light DOM opt-in tests for the
       new Elements surface.
 - [ ] Update starter, README, package README, and website docs to teach
       `OpenElement` without making lower-level internals first-run concepts.

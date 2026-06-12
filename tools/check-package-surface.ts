@@ -142,6 +142,22 @@ for (const pkgDir of ['cem', 'compat-check', 'rpc']) {
   }
 }
 
+const elementsReadme = await Deno.readTextFile('packages/elements/README.md');
+for (
+  const required of ['OpenElement', 'DsdElement', 'v0.40 compatibility export']
+) {
+  if (!elementsReadme.includes(required)) {
+    failures.push(`packages/elements/README.md missing Elements compatibility anchor: ${required}`);
+  }
+}
+
+const coreReadme = await Deno.readTextFile('packages/core/README.md');
+for (const required of ['@openelement/elements', 'DsdElement', 'v0.40 compatibility export']) {
+  if (!coreReadme.includes(required)) {
+    failures.push(`packages/core/README.md missing core compatibility anchor: ${required}`);
+  }
+}
+
 if (failures.length > 0) {
   console.error('Package surface check failed:');
   for (const failure of failures) console.error(`- ${failure}`);
