@@ -1,21 +1,21 @@
 # @openelement/rpc
 
-Small Fetch API RPC helpers for openElement applications and Web Components.
+Small Fetch API RPC helpers for archived/advanced openElement use cases.
 
-> v0.38 surface: archived/advanced. The package remains published and tested,
-> but ordinary API route docs should start from Hono plus platform
-> Request/Response APIs. New v1 product positioning for RPC requires a refreshed
-> product story.
+> v0.40 surface: archive-candidate. The package remains published and tested,
+> but ordinary API route docs start from Hono plus platform Request/Response
+> APIs. Reopening RPC as a v1 product requires a later ADR.
 
 `@openelement/rpc` is intentionally framework-light: it owns request state,
 retry, cancellation, and typed call helpers, but it does not own routing,
 database access, or application auth.
 
-## Advanced Usage
+## Archived Advanced Usage
 
-Application code should normally use `@openelement/app` for pages and islands.
-Use `RpcController` inside a low-level element when a client request needs
-loading/error state tied to the host lifecycle.
+New application code should normally use `@openelement/app` for pages and
+islands, and Hono or platform Request/Response APIs for API routes. Existing
+advanced consumers may keep using `RpcController` inside a low-level element
+when a client request needs loading/error state tied to the host lifecycle.
 
 ```tsx
 import { RpcController, RpcError } from '@openelement/rpc';

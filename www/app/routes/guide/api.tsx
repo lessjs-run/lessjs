@@ -132,8 +132,9 @@ export default function GET(ctx: OpenElementApiContext) {'{'}
           <h2>Advanced RPC</h2>
           <p>
             <span class='inline-code'>@openelement/rpc</span>{' '}
-            is archived/advanced in the v0.38 product map. Start with Hono and
-            platform Request/Response APIs for ordinary API routes.
+            is an archive-candidate package in the v0.40 product map. Start
+            with Hono and platform Request/Response APIs for ordinary API
+            routes; reopening RPC as a product requires a later ADR.
           </p>
           <h2>Static Build Boundary</h2>
           <p>
@@ -142,7 +143,6 @@ export default function GET(ctx: OpenElementApiContext) {'{'}
             functions when runtime behavior is needed.
           </p>
           <div class='nav-row'>
-            <a href='/api/reference' class='btn btn-ghost'>← RPC</a>
             <a href='/guide/configuration' class='btn btn-ghost'>Configuration →</a>
           </div>
         </div>

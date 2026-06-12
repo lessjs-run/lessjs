@@ -135,6 +135,13 @@ for (
   }
 }
 
+for (const pkgDir of ['cem', 'compat-check', 'rpc']) {
+  const readme = await Deno.readTextFile(`packages/${pkgDir}/README.md`);
+  if (!readme.includes('v0.40 surface: archive-candidate')) {
+    failures.push(`packages/${pkgDir}/README.md must mark v0.40 archive-candidate surface.`);
+  }
+}
+
 if (failures.length > 0) {
   console.error('Package surface check failed:');
   for (const failure of failures) console.error(`- ${failure}`);

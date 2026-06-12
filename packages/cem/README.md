@@ -2,9 +2,10 @@
 
 Custom Elements Manifest (CEM) types and utilities for openElement.
 
-> v0.38 surface: internal tooling. This package remains published for framework
-> tooling and compatibility checks, but first-run application docs should not
-> recommend direct imports.
+> v0.40 surface: archive-candidate tooling. This package remains published for
+> framework tooling and compatibility checks while ADR-0103 decides whether it
+> merges into release tooling or stays as a package. First-run application docs
+> should not recommend direct imports.
 
 `@openelement/cem` provides TypeScript types for the
 [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/)
