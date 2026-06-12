@@ -81,16 +81,19 @@ openElement = Elements + UI + Framework + Protocols
       identity.
 - [ ] Prove SSR output, client upgrade, explicit hydration strategy, asset
       loading, and consumer starter behavior.
-- [ ] Keep Preact out of `@openelement/core` and `@openelement/elements`
+- [x] Keep Preact out of `@openelement/core` and `@openelement/elements`
       required runtime dependencies.
 - [x] Document Vue, React, Svelte, and generic heavy-island expansion as frozen
       until a later ADR reopens them.
 
 ### C. Signal Engine Candidate
 
+ADR-0104 keeps the default signal engine unchanged and requires any
+`@preact/signals-core` work to stay behind the `SignalEngine` protocol.
+
 - [ ] Add `@preact/signals-core` as a candidate only behind the existing
       `SignalEngine` and `@openelement/protocols/signals` boundary.
-- [ ] Run conformance tests against the existing signal behavior.
+- [x] Run conformance tests against the existing signal behavior.
 - [ ] Measure bundle and SSR/CSR behavior before any default-engine proposal.
 - [ ] Keep the current signal default unless a later ADR explicitly approves a
       default change.
