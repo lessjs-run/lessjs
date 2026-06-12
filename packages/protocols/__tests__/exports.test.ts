@@ -4,8 +4,11 @@ import * as protocols from '../src/index.ts';
 Deno.test('@openelement/protocols exports runtime validators and type-only contracts', () => {
   assertEquals(Object.keys(protocols).sort(), [
     'MemoryDataAdapter',
+    'V040_ISLAND_FRAMEWORK_PLAN',
+    'assertIslandFrameworkAllowed',
     'createPluginMeta',
     'createRuntimeAdapter',
+    'getIslandFrameworkPlan',
     'isOpenBlogOptions',
     'isOpenBuildContextLike',
     'isOpenHeaderNavLink',
