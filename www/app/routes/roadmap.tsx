@@ -1,7 +1,7 @@
 export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.37.2, v0.37.6, v1.0.
+// ADR-0037 anchors: DSD-first. Version: v0.37.2, v0.37.6, v0.38.0, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -301,9 +301,9 @@ export class RoadmapPage extends DsdElement {
               <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
-              <div class="version">v0.37.6</div>
-              <div><h3>Full-Stack Preset Smoke</h3><p>Compose elements, CSS UI, protocol ports, and framework/create into a repeatable full-stack smoke app.</p></div>
-              <span class="badge badge-warning status">Planned</span>
+              <div class="version">v0.38.0</div>
+              <div><h3>Product Surface Reset</h3><p>Classify product, advanced, internal, and archived packages before the v0.39 framework release-candidate surface.</p></div>
+              <span class="badge badge-success status">Done</span>
             </div>
             <div class="phase">
               <div class="version">v0.38.x</div>

@@ -23,7 +23,7 @@
 - [x] `deno task build` passes.
 - [x] `deno task dsd:check-report` passes.
 - [x] `deno task publish:dry-run` passes before release closure.
-- [ ] Package versions are bumped only after implementation gates pass.
+- [x] Package versions are bumped only after implementation gates pass.
 - [x] `dev` is pushed and non-JSR CI is green.
 - [ ] `dev` is merged or synced to `main`.
 - [ ] `main` non-JSR CI is green before tag/release.

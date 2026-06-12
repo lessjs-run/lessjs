@@ -401,3 +401,48 @@ Combines Harness Gate, Cell Execution, and Evolution Loop into one version.
 - export default defineIslandConfig({ tagName: "my-island" });
 + export const openElement = defineIslandConfig({ tagName: "my-island" });
 ```
+
+## v0.38.0 (2026-06-12) - Product Surface Reset
+
+### Breaking / Surface Reset
+
+- Public docs and starter templates now present a narrower first-run product
+  surface: `@openelement/create`, `@openelement/app`, `@openelement/app/vite`,
+  `@openelement/runtime`, advanced `@openelement/core`, `@openelement/ui`, and
+  `@openelement/protocols`.
+- Generated starter import maps no longer predeclare protocol subpath aliases.
+  Existing projects can keep aliases they use; new projects should import
+  through the documented product surface.
+- `@openelement/rpc` is classified as archived/advanced for v0.38 instead of a
+  first-run product API.
+- `@openelement/ssg`, `@openelement/cem`, and `@openelement/compat-check` are
+  documented as internal build/tooling surfaces, not first-run app APIs.
+- `@openelement/hub` remains in the package graph but is archived for the v1
+  public product map until a new roadmap entry and ADR revive the product
+  scope.
+
+### Changed
+
+- Root README, README.zh, architecture docs, website guide/API pages, package
+  READMEs, and create templates now agree on product, advanced, internal, and
+  archived package roles.
+- `@openelement/create` starter projects keep the authoring import surface
+  small while retaining the proven `@openelement/app/vite` build path.
+- Migration notes for v0.38.0 record the starter import-map change, archived
+  RPC status, internal SSG status, and package surface taxonomy.
+- Consumer smoke now checks generated projects with the DOM and Deno type libs
+  expected by the documented core package surface.
+- The i18n SPA locale-switch E2E assertion now waits for document and layout
+  locale state to synchronize after client-side navigation.
+
+### Release Evidence
+
+- All 20 `@openelement/*` workspace packages are version-aligned at `0.38.0`.
+- Local gates passed: workflow, graph, architecture, docs, format, lint,
+  typecheck, test, build, Chromium E2E, generated consumer smoke, DSD report,
+  AutoFlow health/check, and publish dry-run.
+- `dev` non-JSR CI passed for the implementation line before the release bump.
+- JSR publish remains best-effort distribution telemetry under ADR-0097 and is
+  not a version-exit gate.
+
+---

@@ -7,28 +7,29 @@ package: `docs/next/v0.38.0/` (Product Surface Reset).
 
 ## Current Version Line: v0.38.0 (Product Surface Reset)
 
-v0.38.0 is active. Its job is to turn the v0.37.x protocol and Nitro evidence
-into a documented public product/package surface before the v0.39 release
-candidate. The active SOP is `docs/sop/v0.38.0/README.md`; the active
-NextVersion package is `docs/next/v0.38.0/`.
+v0.38.0 is in release closure. Its job is to turn the v0.37.x protocol and
+Nitro evidence into a documented public product/package surface before the
+v0.39 release candidate. The active SOP is `docs/sop/v0.38.0/README.md`; the
+active NextVersion package is `docs/next/v0.38.0/`.
 
-Entry evidence for v0.38.0: v0.37.6 is released, all 20 packages and internal
-JSR ranges are aligned to `0.37.6`, and the current package graph has no
-repository-controlled release-truth drift. v0.38.0 now has a package/subpath
-inventory, a product-surface classification, and a product map under
-`docs/next/v0.38.0/`. The current product map retains existing package names,
-classifies Hub as archived for the v1 public product map, and moves internal
-build/tooling packages out of first-run documentation. Root README, README.zh,
-and `docs/arch/current-architecture.md` have been aligned to that product map;
-`@openelement/create` starter import maps now hide protocol subpaths from new
-projects while keeping the proven adapter-vite build tasks. Package READMEs and
-website live guide/API pages now separate product, advanced, internal, and
-archived surfaces. Migration notes record the starter import-map change,
-archived RPC status, and internal SSG status.
+Release-closure evidence for v0.38.0: v0.37.6 is released, the v0.38.0
+implementation gates passed locally, `dev` non-JSR CI passed at `9152e46b`, and
+all 20 packages and internal JSR ranges are now aligned to `0.38.0`.
+v0.38.0 has a package/subpath inventory, a product-surface classification, and
+a product map under `docs/next/v0.38.0/`. The product map retains existing
+package names, classifies Hub as archived for the v1 public product map, and
+moves internal build/tooling packages out of first-run documentation. Root
+README, README.zh, and `docs/arch/current-architecture.md` have been aligned to
+that product map; `@openelement/create` starter import maps now hide protocol
+subpaths from new projects while keeping the proven adapter-vite build tasks.
+Package READMEs and website live guide/API pages now separate product,
+advanced, internal, and archived surfaces. Migration notes record the starter
+import-map change, archived RPC status, and internal SSG status.
 
-Do not bump package versions for v0.38.0 until implementation gates pass.
-JSR publish remains best-effort telemetry and is not an exit gate under
-ADR-0097.
+Release closure still requires pushed bump CI on `dev`, merge or sync to
+`main`, `main` non-JSR CI, tag/GitHub release, and best-effort JSR publish
+telemetry. JSR publish remains best-effort telemetry and is not an exit gate
+under ADR-0097.
 
 ## Prior Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
 
