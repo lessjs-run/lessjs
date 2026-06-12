@@ -41,9 +41,12 @@ without silently expanding package scope before v1.0.
 - `deno task consumer:local` now generates a starter app from local
   `@openelement/create`, patches imports to workspace source packages, builds
   through the generated Vite + openElement path, and verifies the generated
-  home page contains the expected starter output.
+  home page, app shell layout marker, and API route scan evidence.
 - The generated consumer smoke exposed and fixed a missing workspace alias for
   `@openelement/protocols/*` subpaths during client island build.
+- `@openelement/create` now emits `app/components/app-shell.tsx` and
+  `app/routes/api/health.ts` so generated apps exercise layout and API route
+  surfaces by default.
 
 ## Related
 

@@ -325,6 +325,14 @@ if (buildResult.code !== 0) {
   Deno.exit(1);
 }
 
+if (!stdout.includes('Routes: 1 page(s), 1 API route(s)')) {
+  console.error('Consumer build did not scan the expected page/API route surface.');
+  console.error(stdout);
+  console.error(stderr);
+  cleanup();
+  Deno.exit(1);
+}
+
 // Step 6: Verify output
 const indexHtmlPath = join(appDir, 'dist', 'index.html');
 if (!existsSync(indexHtmlPath)) {
@@ -343,7 +351,16 @@ if (!indexHtml.includes('Hello from openElement')) {
   Deno.exit(1);
 }
 
-console.log('Local consumer build passed; dist/index.html contains expected output.');
+if (!indexHtml.includes('data-open-layout="app-shell"')) {
+  console.error('dist/index.html does not contain expected app shell marker');
+  console.error('Last 300 chars:', indexHtml.substring(indexHtml.length - 300));
+  cleanup();
+  Deno.exit(1);
+}
+
+console.log(
+  'Local consumer build passed; generated page, app shell, and API route surface verified.',
+);
 
 // Cleanup
 cleanup();
