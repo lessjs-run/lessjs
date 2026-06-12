@@ -1,6 +1,6 @@
 # v0.37.6 SOP: Vite + Nitro Runtime Proof
 
-> Status: Planned\
+> Status: Done\
 > Roadmap: Protocol-First Runtime Architecture\
 > Depends on: v0.37.5, ADR-0096, ADR-0098
 

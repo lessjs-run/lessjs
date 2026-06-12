@@ -29,7 +29,8 @@ function main(): void {
   const root = Deno.cwd();
   const status = readStatus(root);
   const version = status.currentVersion || 'unknown';
-  const pg = readPackageGraph(root, version);
+  const packageVersion = status.packageVersion || version;
+  const pg = readPackageGraph(root, packageVersion);
   const sop = readSop(root, version);
 
   const drift: string[] = [];
@@ -37,7 +38,9 @@ function main(): void {
 
   // Detect drift
   if (!pg.allAligned && pg.mismatched.length > 0) {
-    drift.push(`version: ${pg.mismatched.length} packages mismatched (expected ${version})`);
+    drift.push(
+      `version: ${pg.mismatched.length} packages mismatched (expected ${packageVersion})`,
+    );
     nextActions.push('deno task autoflow:evolve --dry-run  # detect + plan fix');
   }
   if (!sop.sopFileFound) {

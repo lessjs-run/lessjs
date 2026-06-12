@@ -2,7 +2,7 @@
 
 - [x] All `TASKS.md` required implementation items are complete or explicitly
       deferred by ADR/SOP update.
-- [ ] All `ACCEPTANCE.md` runtime, route, render, ownership, and gate criteria
+- [x] All `ACCEPTANCE.md` runtime, route, render, ownership, and gate criteria
       are met.
 - [x] Real Nitro Node output proof is recorded.
 - [x] Real Nitro Cloudflare Workers output proof is recorded or a concrete
@@ -23,7 +23,7 @@
 - [x] `deno task build` passes.
 - [x] `deno task publish:dry-run` passes before release closure.
 - [x] Package versions are bumped only after implementation gates pass.
-- [ ] `dev` is pushed and non-JSR CI is green.
-- [ ] `dev` is merged or synced to `main`.
-- [ ] `main` non-JSR CI is green before tag/release.
-- [ ] JSR publish runs locally or in CI as best-effort telemetry only.
+- [x] `dev` is pushed and non-JSR CI is green.
+- [x] `dev` is merged or synced to `main`.
+- [x] `main` non-JSR CI is green before tag/release.
+- [x] JSR publish runs locally or in CI as best-effort telemetry only.

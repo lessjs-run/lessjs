@@ -73,10 +73,10 @@ criteria.
 | v0.37.1 | [v0.37.1/](./v0.37.1/)                                                                       | Done     | DsdElement shadow/light contract    |
 | v0.37.2 | [v0.37.2/](./v0.37.2/)                                                                       | Done     | SSR/ISR server runtime contract     |
 | v0.37.3 | [v0.37.3/](./v0.37.3/)                                                                       | Done     | Data/database boundary              |
-| v0.37.4 | [v0.37.4/](./v0.37.4/)                                                                       | Recovery | Hygiene + CSS UI + architecture     |
-| v0.37.5 | [v0.37.5/](./v0.37.5/)                                                                       | Planned  | Protocol-first runtime architecture |
-| v0.37.6 | [v0.37.6/](./v0.37.6/)                                                                       | Planned  | Vite + Nitro runtime proof          |
-| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Planned  | Product surface reset               |
+| v0.37.4 | [v0.37.4/](./v0.37.4/)                                                                       | Done     | Hygiene + CSS UI + architecture     |
+| v0.37.5 | [v0.37.5/](./v0.37.5/)                                                                       | Done     | Protocol-first runtime architecture |
+| v0.37.6 | [v0.37.6/](./v0.37.6/)                                                                       | Done     | Vite + Nitro runtime proof          |
+| v0.38.0 | [v0.38.0/](./v0.38.0/)                                                                       | Active   | Product surface reset               |
 | v0.39.0 | [v0.39.0/](./v0.39.0/)                                                                       | Planned  | Full-stack framework RC             |
 | v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable four-product platform        |
 

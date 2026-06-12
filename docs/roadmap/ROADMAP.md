@@ -1,8 +1,8 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.37.5 Protocol-First Runtime Architecture.\
-> Active execution package: v0.37.6 Vite + Nitro Runtime Proof.\
+> Current package line: v0.37.6 Vite + Nitro Runtime Proof.\
+> Active execution package: v0.38.0 Product Surface Reset.\
 > Updated: 2026-06-12.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
@@ -49,8 +49,8 @@ Protocol-First Web Components Platform target.
 | v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                                           | Done                     |
 | v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate | Done / JSR caveat        |
 | v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
-| v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Local gates passing      |
-| v0.38.x | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Planned                  |
+| v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
+| v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Active                   |
 | v0.39.0 | Full-Stack Framework RC                            | Final API, docs, starter, deploy, consumer, and publish gates                                                        | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
@@ -274,10 +274,11 @@ Complete daisyUI interactive component coverage and migrate protocol types.
 
 ## v0.37.6 - Vite + Nitro Runtime Proof
 
-Prove the new default engine with a narrow real application. Local proof is in
-place through `fixtures/nitro-proof/`; v0.37.6 release truth still needs the
-package version bump, `dev` and `main` non-JSR CI, and best-effort JSR publish
-telemetry under ADR-0097.
+Prove the new default engine with a narrow real application. v0.37.6 is
+released at tag `v0.37.6` and GitHub release
+`https://github.com/open-element/openelement/releases/tag/v0.37.6`. Local,
+`dev`, and `main` non-JSR gates passed; JSR publish ran as best-effort
+distribution telemetry under ADR-0097.
 
 - generate an openElement universal request handler and mount it in Nitro;
 - prove Node output and Cloudflare Workers output;

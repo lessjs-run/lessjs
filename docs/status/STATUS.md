@@ -3,33 +3,44 @@
 > AI assistant: read this file first on every session start.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active execution
-package: `docs/next/v0.37.6/` (Vite + Nitro Runtime Proof).
+package: `docs/next/v0.38.0/` (Product Surface Reset).
 
-## Current Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
+## Current Version Line: v0.38.0 (Product Surface Reset)
 
-v0.37.6 is active on `dev`. The implementation now exposes the openElement
-universal request handler from the generated route pipeline, keeps the
-Nitro boundary in `@openelement/adapter-vite`, and proves that boundary through
-a real Nitro fixture under `fixtures/nitro-proof/`.
+v0.38.0 is active. Its job is to turn the v0.37.x protocol and Nitro evidence
+into a documented public product/package surface before the v0.39 release
+candidate. The active SOP is `docs/sop/v0.38.0/README.md`; the active
+NextVersion package is `docs/next/v0.38.0/`.
 
-Current local evidence: `deno task nitro:proof:node` builds Nitro
-`node-server` output and verifies the mounted openElement Web `Response`,
-public asset serving, route/render behavior, explicit island minimality,
-static zero-JS output, API routes, and Nitro-owned cache-control for `/isr`.
-`deno task nitro:proof:workers` builds Nitro `cloudflare-module` output and
-verifies the generated Workers server entry, wrangler config, public asset,
-openElement route/render markers, and route-rule cache markers. Local release
-gates have passed for workflow, graph, architecture, docs current/strategy,
-format, lint, typecheck, unit tests, Chromium E2E, build, DSD report, publish
-dry-run, and AutoFlow check. The post-bump Chromium E2E full suite exited 0
-with 101 passed and one retry-passing flaky DSD assertion; the targeted flaky
-case passed on rerun. The Chromium E2E gate is intentionally single-worker
-locally and in CI to avoid Windows worker-spawn instability.
+Entry evidence for v0.38.0: v0.37.6 is released, all 20 packages and internal
+JSR ranges are aligned to `0.37.6`, and the current package graph has no
+repository-controlled release-truth drift. The first v0.38.0 work is an
+inventory of every `@openelement/*` package and public subpath, followed by a
+classification of each surface as product, advanced subpath, internal,
+archived, or removed.
 
-Release truth is not closed yet: all 20 workspace packages and internal
-JSR ranges now report `0.37.6`, but v0.37.6 has not been pushed through `dev`
-and `main` non-JSR CI, and JSR publish remains best-effort telemetry only under
+Do not bump package versions for v0.38.0 until implementation gates pass.
+JSR publish remains best-effort telemetry and is not an exit gate under
 ADR-0097.
+
+## Prior Version Line: v0.37.6 (Vite + Nitro Runtime Proof)
+
+v0.37.6 is released. Tag `v0.37.6` and the GitHub release exist at commit
+`19d77dee`. All 20 `@openelement/*` workspace packages are aligned to
+`0.37.6`. The implementation exposes the openElement universal request handler
+from the generated route pipeline, keeps the Nitro boundary in
+`@openelement/adapter-vite`, and proves that boundary through a real Nitro
+fixture under `fixtures/nitro-proof/`.
+
+Local evidence: `deno task nitro:proof:node` builds Nitro `node-server` output
+and verifies the mounted openElement Web `Response`, public asset serving,
+route/render behavior, explicit island minimality, static zero-JS output, API
+routes, and Nitro-owned cache-control for `/isr`. `deno task
+nitro:proof:workers` builds Nitro `cloudflare-module` output and verifies the
+generated Workers server entry, wrangler config, public asset, openElement
+route/render markers, and route-rule cache markers. Local, `dev`, and `main`
+non-JSR release gates passed. JSR publish ran locally and in CI as best-effort
+distribution telemetry.
 
 ## Prior Version Line: v0.37.5 (Protocol-First Runtime Architecture)
 
@@ -85,11 +96,13 @@ closed for the prior package line. v0.37.4 JSR distribution remains externally
 unhealthy, but ADR-0097 prevents that external state from blocking roadmap
 execution.
 
-The active implementation line is now v0.37.6. It proceeds from v0.37.5
-protocol evidence; JSR visibility does not block it.
+The active implementation line is now v0.38.0. It proceeds from v0.37.6 Nitro
+runtime evidence; JSR visibility does not block it.
 
 Governing docs:
 
+- `docs/sop/v0.38.0/README.md`
+- `docs/next/v0.38.0/`
 - `docs/sop/v0.37.6/README.md`
 - `docs/next/v0.37.6/`
 - `docs/sop/v0.37.5/README.md`

@@ -4,6 +4,8 @@
 > Roadmap: Product Surface Reset and Hardening\
 > ADR: ADR-0083, ADR-0091
 
+Execution dossier: `docs/next/v0.38.0/`.
+
 ## Goal
 
 Reset the public product and package surface after the v0.37.x validation train
@@ -20,6 +22,7 @@ has produced evidence.
 
 - ADR-0091: Four-Product Platform Roadmap.
 - ADR-0083: Deferred Public Surface Reset.
+- ADR-0093: SSR / ISR Runtime Contract.
 - Any package-surface ADRs created during v0.37.x.
 
 ## Step-by-Step Tasks
