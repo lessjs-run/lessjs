@@ -66,7 +66,7 @@ openElement = Elements + UI + Framework + Protocols
 
 - [ ] Create the `@openelement/elements` implementation plan against ADR-0099
       and ADR-0101.
-- [ ] Implement or map the `OpenElement` base class as the Elements-facing
+- [x] Implement or map the `OpenElement` base class as the Elements-facing
       authoring surface.
 - [ ] Decide the `DsdElement` compatibility story: alias, migration path, or
       deprecation schedule.
@@ -77,13 +77,13 @@ openElement = Elements + UI + Framework + Protocols
 
 ### B. Preact Island Proof
 
-- [ ] Add a narrow Preact island proof without making Preact the product
+- [x] Add a narrow Preact island proof without making Preact the product
       identity.
 - [ ] Prove SSR output, client upgrade, explicit hydration strategy, asset
       loading, and consumer starter behavior.
 - [ ] Keep Preact out of `@openelement/core` and `@openelement/elements`
       required runtime dependencies.
-- [ ] Document Vue, React, Svelte, and generic heavy-island expansion as frozen
+- [x] Document Vue, React, Svelte, and generic heavy-island expansion as frozen
       until a later ADR reopens them.
 
 ### C. Signal Engine Candidate
@@ -97,7 +97,7 @@ openElement = Elements + UI + Framework + Protocols
 
 ### D. Root Cleanup
 
-- [ ] Move or re-home `fixtures/nitro-proof` so the root no longer carries a
+- [x] Move or re-home `fixtures/nitro-proof` so the root no longer carries a
       one-off v0.37.6 proof fixture as active product shape.
 - [ ] Keep `nitro:proof:node` and `nitro:proof:workers` working after the move,
       or archive those tasks as historical release evidence with an ADR-backed
@@ -113,7 +113,7 @@ openElement = Elements + UI + Framework + Protocols
       or removed from the active product line.
 - [ ] Remove `hub-index` from active root product shape unless a human ADR
       reopens Hub.
-- [ ] Disable, delete, or manual-scope `hub-ci.yml` while Hub remains frozen.
+- [x] Disable, delete, or manual-scope `hub-ci.yml` while Hub remains frozen.
 - [ ] Keep `packages/hub` publishable only if release graph compatibility
       requires it; otherwise prepare a package removal or merge ADR.
 - [ ] Remove Hub from first-run docs, current gates, and starter narratives.
@@ -128,7 +128,7 @@ openElement = Elements + UI + Framework + Protocols
       governance materials into archive batches.
 - [ ] Make docs gates scan current truth and ADR/release indexes, not every
       historical planning directory.
-- [ ] Add an archive index so old evidence remains discoverable without being
+- [x] Add an archive index so old evidence remains discoverable without being
       treated as current truth.
 
 ### G. Package Graph Rationalization
@@ -143,8 +143,9 @@ product surfaces.
 | Adapter / interop           | `adapter-lit`, `adapter-vanilla`, `adapter-react`                                               | Freeze or keep as compatibility surfaces; no broad adapter expansion. |
 | Archive / merge candidates  | `hub`, `cem`, `compat-check`, `rpc`                                                             | Prepare ADR-backed freeze, merge, or removal decisions.               |
 
-- [ ] Add a current package-surface inventory with product, foundation,
-      adapter, tool, and archive-candidate classifications.
+- [x] Add a current package-surface inventory with product, foundation,
+      adapter, tool, and archive-candidate classifications in
+      `docs/current/PACKAGE_SURFACE.md`.
 - [ ] Decide whether v0.40 physically reduces the workspace package count or
       records ADR-approved deferrals for each retained archive candidate.
 - [ ] If an ADR approves removal or merge, update `PACKAGE_COUNT`,
@@ -156,7 +157,7 @@ product surfaces.
 
 - [ ] Keep AutoFlow3 as the single workflow/gate/evidence control plane.
 - [ ] Reduce local hook entry points to `autoflow:dev` and `autoflow:push`.
-- [ ] Reduce CI gate entry to `autoflow-ci.yml`; legacy `fast-gate.yml`,
+- [x] Reduce CI gate entry to `autoflow-ci.yml`; legacy `fast-gate.yml`,
       `sop-gate.yml`, duplicate lint/test workflows, and Hub-specific workflows
       must be removed, disabled, or manual-scoped.
 - [ ] Keep JSR publish and post-publish smoke as release evidence, not generic
@@ -200,11 +201,13 @@ product surfaces.
 
 ```bash
 deno task workflow:check
+deno task workflow:check-slimming
 deno task docs:check-public
 deno task docs:check-current
 deno task docs:check-strategy
 deno task graph:check
 deno task ci:check-package-tests
+deno task package-surface:check
 deno task signals:check-protocol-boundary
 deno task fmt:check
 deno task lint

@@ -10,6 +10,7 @@ export * from './components.js';
 export * from './conformance.js';
 export * from './data.js';
 export * from './islands.js';
+export * from './island-frameworks.js';
 export * from './renderer.js';
 export * from './routes.js';
 export * from './runtime.js';

@@ -8,13 +8,14 @@ used by those products:
 
 - JSX and VNode runtime primitives.
 - DSD rendering through `renderDsd()` and `renderDsdStream()`.
-- The existing `DsdElement` implementation API.
+- The `OpenElement` Elements authoring API, backed by the existing
+  `DsdElement` implementation.
 - Static props, event hydration, island metadata, and SSR context helpers.
 - Unified errors, signal-like utilities, and DOM rendering helpers.
 
 ADR-0099 defines the public Elements direction as `@openelement/elements` and
-`OpenElement`. Until that package is implemented, `DsdElement` remains the
-current low-level implementation API, not the long-term product name.
+`OpenElement`. v0.40 exposes `OpenElement` as the product-facing authoring name
+while the implementation remains compatible with `DsdElement`.
 
 This package does not contain Vite, CLI, or build orchestration logic.
 
@@ -27,10 +28,10 @@ deno add jsr:@openelement/core
 ## Component Authoring
 
 ```tsx
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/core';
 import { signal } from '@openelement/signals';
 
-class MyButton extends DsdElement {
+class MyButton extends OpenElement {
   static props = { variant: String, disabled: Boolean };
   #clicks = signal(0);
 
@@ -60,6 +61,7 @@ import {
   getSsrProps,
   isSignalLike,
   isVNode,
+  OpenElement,
   OpenElementError,
   renderDsd,
   renderDsdStream,

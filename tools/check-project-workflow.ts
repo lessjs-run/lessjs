@@ -8,6 +8,7 @@ type Failure = {
 const requiredFiles = [
   'docs/governance/PROJECT_WORKFLOW.md',
   'docs/current/VERSION_PLAN.md',
+  'docs/current/PACKAGE_SURFACE.md',
   'CONTRIBUTING.md',
   '.github/PULL_REQUEST_TEMPLATE.md',
   '.github/ISSUE_TEMPLATE/bug.yml',
@@ -29,6 +30,7 @@ const requiredAnchors: Record<string, string[]> = {
   'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/current/VERSION_PLAN.md': [
     'openElement = Elements + UI + Framework + Protocols',
+    'docs/current/PACKAGE_SURFACE.md',
     'ADR-0101',
     'AutoFlow3',
     'Preact',
@@ -37,6 +39,15 @@ const requiredAnchors: Record<string, string[]> = {
     'hub-index',
     'Package Graph Rationalization',
     'Test Matrix',
+  ],
+  'docs/current/PACKAGE_SURFACE.md': [
+    'openElement = Elements + UI + Framework + Protocols',
+    'product-facing',
+    'foundation',
+    'adapter',
+    'archive-candidate',
+    '@openelement/elements',
+    'ADR-0101',
   ],
   [`docs/sop/${ACTIVE_VERSION}/README.md`]: [
     `docs/next/${ACTIVE_VERSION}/`,

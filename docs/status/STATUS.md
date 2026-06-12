@@ -286,6 +286,12 @@ deletion, package merge, new package creation, package graph topology changes,
 default runtime changes, and default signal-engine changes still require
 ADR-backed human approval under ADR-0101.
 
+The active package classification now lives in
+`docs/current/PACKAGE_SURFACE.md`. The v0.40 reset has also re-homed the Nitro
+proof fixture under `packages/adapter-vite/__fixtures__/nitro-proof/` and
+manual-scoped the archived Hub submission workflow so Hub no longer behaves as
+an active PR product path.
+
 ## Architecture Positioning
 
 1. **Elements** - native Web Components authoring with JSX, signals, styles,

@@ -8,6 +8,7 @@
     "./components": "./src/components.ts",
     "./conformance": "./src/conformance.ts",
     "./data": "./src/data.ts",
+    "./island-frameworks": "./src/island-frameworks.ts",
     "./islands": "./src/islands.ts",
     "./renderer": "./src/renderer.ts",
     "./routes": "./src/routes.ts",

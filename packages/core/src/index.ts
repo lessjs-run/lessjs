@@ -67,6 +67,7 @@ export type {
   IsrRuntimeState,
 } from './isr-runtime.js';
 export { DsdElement } from './dsd-element.js';
+export { OpenElement } from './open-element.js';
 export { bindHydrateEvents } from './dsd-hydration-events.js';
 export type { Constructor, DsdHydration } from './dsd-hydration.js';
 export { createRenderDsdStreamMetrics, renderDsd, renderDsdStream } from './render-dsd.js';

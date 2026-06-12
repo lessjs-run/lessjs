@@ -44,6 +44,10 @@ adapters, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
 advanced or implementation surfaces. They support the four products; they are
 not separate first-class product lines.
 
+In v0.40 planning, `OpenElement` is exposed from `@openelement/core` as the
+product-facing Elements base class while the future `@openelement/elements`
+package remains an ADR-governed package graph change.
+
 ## Why openElement
 
 openElement renders Web Components on the server through Declarative Shadow DOM

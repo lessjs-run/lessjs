@@ -9,8 +9,8 @@ vendor/
 dist/
 custom-dist/
 npm/
-fixtures/nitro-proof/.output-*/
-fixtures/nitro-proof/.wrangler/
+packages/adapter-vite/__fixtures__/nitro-proof/.output-*/
+packages/adapter-vite/__fixtures__/nitro-proof/.wrangler/
 *.tsbuildinfo
 .tsbuildinfo
 

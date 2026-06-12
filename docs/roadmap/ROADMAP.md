@@ -384,6 +384,11 @@ The Repository Slimming jobs are:
 - reduce hook and CI orchestration to AutoFlow3 entry points while keeping JSR
   publish and post-publish smoke as release evidence.
 
+Initial implementation has re-homed the Nitro proof fixture under
+`packages/adapter-vite/__fixtures__/nitro-proof/`, manual-scoped the archived
+Hub submission workflow, and added `docs/current/PACKAGE_SURFACE.md` plus
+`deno task package-surface:check` for the 20-package classification.
+
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
 expansion stays out of scope, Web Awesome remains out of the current UI
 strategy, and no Preact runtime may leak into `@openelement/core` or Elements

@@ -1,4 +1,4 @@
-import { createOpenElementNitroHandler } from '../../../../packages/adapter-vite/src/nitro-mount.ts';
+import { createOpenElementNitroHandler } from '../../../../src/nitro-mount.ts';
 import { eventHandler, getMethod, getRequestHeaders, getRequestURL } from 'npm:h3@2.0.1-rc.22';
 
 const openElementHandler = createOpenElementNitroHandler({
