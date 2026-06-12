@@ -91,7 +91,7 @@
     "dist:check-object-object": "deno run --allow-read tools/check-dist-no-object-object.ts",
     "graph:check": "deno run --allow-read tools/check-package-graph.ts",
     "graph:check-imports": "deno run --allow-read --allow-write --allow-run tools/check-import-map.ts",
-    "consumer:local": "deno run --allow-read --allow-write --allow-run --allow-env tools/consumer-local.ts",
+    "consumer:local": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net tools/consumer-local.ts",
     "publish:core": "cd packages/core && deno publish",
     "publish:rpc": "cd packages/rpc && deno publish",
     "publish:protocols": "cd packages/protocols && deno publish",

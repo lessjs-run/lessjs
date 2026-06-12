@@ -5,7 +5,7 @@
 - [ ] All `ACCEPTANCE.md` product, runtime, docs, consumer, and gate criteria
       are met.
 - [x] Generated app smoke evidence is recorded.
-- [ ] Deployment/runtime evidence is recorded.
+- [x] Deployment/runtime evidence is recorded.
 - [ ] Root README, README.zh, website docs, package READMEs, and generated
       templates agree.
 - [ ] Migration notes are recorded for intentional 0.x behavior changes.

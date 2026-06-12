@@ -9,7 +9,7 @@
 
 ## B. Runtime And Deployment
 
-- [ ] Validate the Vite + Nitro runtime path with the generated app.
+- [x] Validate the Vite + Nitro runtime path with the generated app.
 - [ ] Record request, asset, API route, cache, and island chunk boundaries.
 - [ ] Record provider-specific deployment notes outside the framework core.
 

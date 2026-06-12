@@ -19,7 +19,7 @@ without silently expanding package scope before v1.0.
 
 ### Deployment Proof
 
-- [ ] Validate the documented Vite + Nitro runtime/deploy path.
+- [x] Validate the documented Vite + Nitro runtime/deploy path.
 - [ ] Record platform boundaries for request/response, assets, cache intent,
       API routes, and island chunks.
 - [ ] Keep provider-specific behavior in recipes or adapter boundaries.
@@ -47,6 +47,10 @@ without silently expanding package scope before v1.0.
 - `@openelement/create` now emits `app/components/app-shell.tsx` and
   `app/routes/api/health.ts` so generated apps exercise layout and API route
   surfaces by default.
+- `deno task consumer:local` also writes a temporary Nitro catch-all, mounts
+  the generated `dist/server/entry.js` through `createOpenElementNitroHandler`,
+  builds Nitro `node-server` output, starts it with Node, and verifies both `/`
+  and `/api/health`.
 
 ## Related
 

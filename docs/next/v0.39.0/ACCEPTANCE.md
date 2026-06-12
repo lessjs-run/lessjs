@@ -15,7 +15,7 @@ generated app, local gates, CI, and release evidence.
 
 - [ ] Pages, layouts, islands, API routes, assets, static output, SSR intent,
       and ISR/cache intent are proven in a repeatable smoke.
-- [ ] Vite and Nitro remain the documented build/runtime base engine.
+- [x] Vite and Nitro remain the documented build/runtime base engine.
 - [ ] Provider-specific deployment behavior is documented as recipes or adapter
       boundaries.
 

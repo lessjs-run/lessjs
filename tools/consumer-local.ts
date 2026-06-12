@@ -24,6 +24,7 @@ function vitePath(path: string): string {
 const tmpRoot = Deno.makeTempDirSync({ prefix: 'openelement-consumer-local-' });
 const projectName = 'consumer-test-app';
 const keepTemp = Deno.env.get('OPEN_ELEMENT_KEEP_CONSUMER_LOCAL') === '1';
+let exitCode = 0;
 
 function cleanup(): void {
   if (keepTemp) {
@@ -33,19 +34,38 @@ function cleanup(): void {
   rmSync(tmpRoot, { recursive: true, force: true });
 }
 
+async function runCommand(
+  args: string[],
+  cwd: string,
+  env: Record<string, string> = {},
+): Promise<{ code: number; stdout: string; stderr: string }> {
+  const result = await new Deno.Command(Deno.execPath(), {
+    args,
+    cwd,
+    env,
+    stdout: 'piped',
+    stderr: 'piped',
+  }).output();
+  return {
+    code: result.code,
+    stdout: new TextDecoder().decode(result.stdout),
+    stderr: new TextDecoder().decode(result.stderr),
+  };
+}
+
 console.log(`Generating test project from local workspace...`);
 
 // Step 1: Generate project using local create package
-const createResult = await new Deno.Command(Deno.execPath(), {
-  args: ['run', '-A', join(repoRoot, 'packages', 'create', 'cli.ts'), projectName],
-  cwd: tmpRoot,
-  stdout: 'piped',
-  stderr: 'piped',
-}).output();
+const createResult = await runCommand([
+  'run',
+  '-A',
+  join(repoRoot, 'packages', 'create', 'cli.ts'),
+  projectName,
+], tmpRoot);
 
 if (createResult.code !== 0) {
   console.error('Failed to generate consumer project:');
-  console.error(new TextDecoder().decode(createResult.stderr));
+  console.error(createResult.stderr);
   cleanup();
   Deno.exit(1);
 }
@@ -307,15 +327,10 @@ try {
 
 // Step 5: Build the project
 console.log('Building consumer project...');
-const buildResult = await new Deno.Command(Deno.execPath(), {
-  args: ['task', 'build'],
-  cwd: appDir,
-  stdout: 'piped',
-  stderr: 'piped',
-}).output();
+const buildResult = await runCommand(['task', 'build'], appDir);
 
-const stdout = new TextDecoder().decode(buildResult.stdout);
-const stderr = new TextDecoder().decode(buildResult.stderr);
+const stdout = buildResult.stdout;
+const stderr = buildResult.stderr;
 
 if (buildResult.code !== 0) {
   console.error('Consumer build FAILED:');
@@ -362,5 +377,146 @@ console.log(
   'Local consumer build passed; generated page, app shell, and API route surface verified.',
 );
 
+// Step 7: Mount the generated server entry in a real Nitro node output.
+console.log('Building generated app through Nitro node preset...');
+writeFileSync(
+  join(appDir, 'nitro.config.ts'),
+  `export default defineNitroConfig({
+  serverDir: 'server',
+  preset: 'node',
+  output: { dir: '.output-node' },
+  compatibilityDate: '2026-06-12',
+});
+`,
+);
+
+const nitroRouteDir = join(appDir, 'server', 'routes');
+await Deno.mkdir(nitroRouteDir, { recursive: true });
+writeFileSync(
+  join(nitroRouteDir, '[...path].ts'),
+  `import { createOpenElementNitroHandler } from '${
+    pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'nitro-mount.ts')).href
+  }';
+import { eventHandler, getMethod, getRequestHeaders, getRequestURL } from 'h3';
+import { openElementHandler } from '../../dist/server/entry.js';
+
+const handler = createOpenElementNitroHandler({
+  baseUrl: 'http://localhost',
+  handler: openElementHandler,
+});
+
+export default eventHandler(async (event) => {
+  const url = getRequestURL(event);
+  const result = await handler({
+    method: getMethod(event),
+    path: url.pathname,
+    headers: getRequestHeaders(event),
+    platform: {
+      waitUntil() {},
+      passThroughOnException() {},
+    },
+  });
+  return result.response;
+});
+`,
+);
+
+const nitroResult = await runCommand([
+  'run',
+  '--node-modules-dir=auto',
+  '-A',
+  'npm:nitro',
+  'build',
+], appDir);
+
+if (nitroResult.code !== 0) {
+  console.error('Generated app Nitro build FAILED:');
+  console.error(nitroResult.stdout);
+  console.error(nitroResult.stderr);
+  cleanup();
+  Deno.exit(1);
+}
+
+const nitroServerEntry = join(appDir, '.output-node', 'server', 'index.mjs');
+if (!existsSync(nitroServerEntry)) {
+  console.error(`Nitro node server entry missing: ${nitroServerEntry}`);
+  console.error(nitroResult.stdout);
+  console.error(nitroResult.stderr);
+  cleanup();
+  Deno.exit(1);
+}
+
+const port = 48000 + Math.floor(Math.random() * 1000);
+const server = new Deno.Command('node', {
+  args: [nitroServerEntry],
+  cwd: appDir,
+  env: {
+    HOST: '127.0.0.1',
+    PORT: String(port),
+  },
+  stdout: 'null',
+  stderr: 'null',
+}).spawn();
+
+let nitroSmokeFailed = false;
+try {
+  const baseUrl = `http://127.0.0.1:${port}`;
+  let ready = false;
+  for (let attempt = 0; attempt < 50; attempt++) {
+    try {
+      const response = await fetch(`${baseUrl}/api/health`);
+      if (response.status === 200) {
+        ready = true;
+        break;
+      }
+    } catch {
+      // wait below
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  if (!ready) {
+    console.error('Generated app Nitro smoke failed: server did not become ready.');
+    nitroSmokeFailed = true;
+  }
+
+  if (!nitroSmokeFailed) {
+    const health = await fetch(`${baseUrl}/api/health`);
+    const healthPayload = await health.json() as {
+      ok?: boolean;
+      framework?: string;
+      route?: string;
+    };
+    if (
+      health.status !== 200 ||
+      healthPayload.ok !== true ||
+      healthPayload.framework !== 'openElement' ||
+      healthPayload.route !== '/api/health'
+    ) {
+      console.error(JSON.stringify({ status: health.status, healthPayload }, null, 2));
+      nitroSmokeFailed = true;
+    }
+  }
+
+  if (!nitroSmokeFailed) {
+    const home = await fetch(`${baseUrl}/`);
+    const homeHtml = await home.text();
+    if (
+      home.status !== 200 ||
+      !homeHtml.includes('Hello from openElement') ||
+      !homeHtml.includes('data-open-layout="app-shell"')
+    ) {
+      console.error(JSON.stringify({ status: home.status, body: homeHtml.slice(-500) }, null, 2));
+      nitroSmokeFailed = true;
+    }
+  }
+} finally {
+  server.kill('SIGTERM');
+  await server.status.catch(() => undefined);
+}
+
+if (nitroSmokeFailed) exitCode = 1;
+else console.log('Generated app Nitro node smoke passed.');
+
 // Cleanup
 cleanup();
+if (exitCode !== 0) Deno.exit(exitCode);
