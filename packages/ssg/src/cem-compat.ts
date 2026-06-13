@@ -79,6 +79,30 @@ function isCemCustomElement(declaration: CemBase): declaration is CemCustomEleme
   return declaration.kind === 'custom-element';
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function toCemBaseArray(value: unknown): CemBase[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.filter(isRecord);
+}
+
+function toCemExports(value: unknown): { declaration?: unknown }[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.filter(isRecord).map((entry) => ({ declaration: entry.declaration }));
+}
+
+function toCemModule(value: unknown): CemModule | undefined {
+  if (!isRecord(value)) return undefined;
+  return {
+    kind: typeof value.kind === 'string' ? value.kind : undefined,
+    path: typeof value.path === 'string' ? value.path : '',
+    declarations: toCemBaseArray(value.declarations),
+    exports: toCemExports(value.exports),
+  };
+}
+
 export function parseCem(json: string): CemParseResult {
   const errors: CemParseError[] = [];
   const warnings: CemParseWarning[] = [];
@@ -94,12 +118,12 @@ export function parseCem(json: string): CemParseResult {
     return { success: false, errors, warnings };
   }
 
-  if (!parsed || typeof parsed !== 'object') {
+  if (!isRecord(parsed)) {
     errors.push({ code: 'CEM_INVALID_ROOT', message: 'Manifest root must be an object' });
     return { success: false, errors, warnings };
   }
 
-  const root = parsed as Record<string, unknown>;
+  const root = parsed;
   if (!root.schemaVersion) {
     warnings.push({
       code: 'CEM_NO_SCHEMA_VERSION',
@@ -111,7 +135,17 @@ export function parseCem(json: string): CemParseResult {
     return { success: false, errors, warnings };
   }
 
-  const manifest = root as unknown as CustomElementsManifest;
+  const manifest: CustomElementsManifest = {
+    ...root,
+    schemaVersion: typeof root.schemaVersion === 'string' ? root.schemaVersion : undefined,
+    packageName: typeof root.packageName === 'string' ? root.packageName : undefined,
+    version: typeof root.version === 'string' ? root.version : undefined,
+    modules: root.modules.map((module) =>
+      toCemModule(module) ?? {
+        path: '',
+      }
+    ),
+  };
   const seenTagNames = new Set<string>();
 
   for (let i = 0; i < manifest.modules.length; i++) {
