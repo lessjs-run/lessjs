@@ -39,41 +39,6 @@ const TEXT_EXTENSIONS = new Set([
 
 const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
   {
-    file: 'packages/adapter-lit/src/dsd-hydration.ts',
-    fragment: 'return WithDsdHydrationClass as unknown as T & Constructor<DsdHydrationMixin>;',
-    reason: 'TypeScript mixin constructor intersection limitation.',
-  },
-  {
-    file: 'packages/adapter-lit/src/dsd-hydration.ts',
-    fragment: 'WithDsdHydration(LitElement) as unknown as',
-    reason: 'Pre-composed LitElement mixin constructor type.',
-  },
-  {
-    file: 'packages/adapter-lit/src/ssr.ts',
-    fragment: 'directiveCtor as unknown as Record<string, unknown>',
-    reason: 'External Lit directive constructor metadata is private.',
-  },
-  {
-    file: 'packages/adapter-react/src/dsd-hydration.ts',
-    fragment: 'return WithDsdHydrationClass as unknown as T & Constructor<DsdHydrationMixin>;',
-    reason: 'TypeScript mixin constructor intersection limitation.',
-  },
-  {
-    file: 'packages/adapter-react/src/dsd-hydration.ts',
-    fragment: 'WithDsdHydration(globalThis.HTMLElement) as unknown as',
-    reason: 'Lazy DOM constructor proxy type.',
-  },
-  {
-    file: 'packages/adapter-vanilla/src/dsd-hydration.ts',
-    fragment: 'return WithDsdHydrationClass as unknown as T & Constructor<DsdHydrationMixin>;',
-    reason: 'TypeScript mixin constructor intersection limitation.',
-  },
-  {
-    file: 'packages/adapter-vanilla/src/dsd-hydration.ts',
-    fragment: 'WithDsdHydration(globalThis.HTMLElement) as unknown as',
-    reason: 'Lazy DOM constructor proxy type.',
-  },
-  {
     file: 'packages/content/src/index.ts',
     fragment: 'sitemapOpts as unknown as Record<string, unknown>',
     reason: 'Plugin option bag crosses a protocol boundary.',
@@ -269,19 +234,6 @@ function assertDuplicateCounts(files: TextFile[]): void {
       );
     }
   }
-
-  failMatches(
-    'duplicate-helper',
-    files.filter((f) => f.path.startsWith('packages/hub/src/')),
-    /\bfunction\s+loadRecords\b/,
-    'use loadHubPackageRecords() from packages/hub/src/cli/shared.ts',
-  );
-  failMatches(
-    'duplicate-helper',
-    files.filter((f) => f.path.startsWith('packages/hub/src/')),
-    /\bfunction\s+renderPlaceholder\b/,
-    'use renderSnapshotPlaceholderHtml() from packages/hub/src/snapshot-placeholder.ts',
-  );
 }
 
 function assertStructuredMetadata(files: TextFile[]): void {
@@ -335,12 +287,15 @@ async function main(): Promise<void> {
 
   for (const path of files) {
     try {
+      const stat = await Deno.stat(path);
+      if (!stat.isFile) continue;
       const bytes = await Deno.readFile(path);
       totalBytes += bytes.byteLength;
       if (isTextPath(path)) {
         textFiles.push({ path, text: new TextDecoder('utf-8').decode(bytes) });
       }
     } catch (error) {
+      if (error instanceof Deno.errors.NotFound) continue;
       readFailures++;
       addIssue(
         'byte-read',

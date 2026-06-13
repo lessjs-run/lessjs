@@ -33,7 +33,6 @@ import { createGeneratedDataResolverPlugin } from '@openelement/ssg';
 import { createOpenJsrPackageResolverPlugin } from '@openelement/ssg';
 import { generateSsrPolyfillBanner, resolveExternalManifest } from '@openelement/ssg';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
-import { loadHubClientOnlyTags } from '@openelement/ssg';
 
 const log = createLogger('ssg');
 
@@ -198,11 +197,6 @@ async function buildSSG(
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
   const { buildEntryDescriptor } = await import('@openelement/ssg');
 
-  const { tags: hubClientOnlyTags } = await loadHubClientOnlyTags(root, {
-    onError: 'throw',
-    logger: log,
-  });
-
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,
     islandsDir,
@@ -211,7 +205,7 @@ async function buildSSG(
     islandFiles: ssgIslandFiles,
     islandMeta: ssgIslandMeta,
     packageManifests,
-    hubClientOnlyTags,
+    hubClientOnlyTags: [],
     appShell,
     layouts,
   }).ssrAdmissionPlan;
@@ -229,7 +223,7 @@ async function buildSSG(
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
     upgradeStrategy: options.upgradeStrategy || 'idle',
-    hubClientOnlyTags,
+    hubClientOnlyTags: [],
     appShell,
     layouts,
   });
@@ -430,9 +424,9 @@ if (typeof globalThis.customElements === 'undefined') {
             if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
           },
         },
-        // ADR 0008 Phase C: Provide stubs for optional packages.
-        // The generated entry code statically imports @openelement/adapter-lit,
-        // @openelement/content, @openelement/i18n - but these may not be installed.
+        // ADR 0008 Phase C: Provide stubs for retained optional packages.
+        // The generated entry code can import @openelement/content and
+        // @openelement/i18n, but these may not be installed.
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),

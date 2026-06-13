@@ -1,4 +1,4 @@
-export const PACKAGE_VERSION = '0.39.0';
+export const PACKAGE_VERSION = '0.40.0';
 export const PACKAGE_VERSION_TAG = `v${PACKAGE_VERSION}`;
-export const ACTIVE_VERSION = 'v0.39.0';
-export const PACKAGE_COUNT = 21;
+export const ACTIVE_VERSION = 'v0.40.0';
+export const PACKAGE_COUNT = 14;

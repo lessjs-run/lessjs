@@ -63,6 +63,7 @@ import { createLogger } from '@openelement/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
 import * as ts from 'typescript';
+import { classifyCemManifest, parseCem } from './cem-compat.ts';
 
 const log = createLogger('core');
 
@@ -761,9 +762,6 @@ export async function detectAndClassifyCemPackages(
 ): Promise<CompatibilityClassification[]> {
   const cemResults = await scanCemManifests(nodeModulesDir);
   if (cemResults.length === 0) return [];
-
-  const { parseCem } = await import('@openelement/cem');
-  const { classifyCemManifest } = await import('@openelement/compat-check');
 
   const allClassifications: CompatibilityClassification[] = [];
 

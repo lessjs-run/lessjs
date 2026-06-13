@@ -144,12 +144,6 @@ denoJson.imports['@openelement/content'] = pathToFileURL(
 denoJson.imports['@openelement/i18n'] = pathToFileURL(
   join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@openelement/adapter-lit'] = pathToFileURL(
-  join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
-).href;
-denoJson.imports['@openelement/adapter-lit/ssr'] = pathToFileURL(
-  join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts'),
-).href;
 denoJson.imports['@openelement/ui'] = pathToFileURL(
   join(repoRoot, 'packages', 'ui', 'src', 'index.ts'),
 ).href;
@@ -243,14 +237,6 @@ const aliases = [
   {
     find: '@openelement/style-sheet',
     replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
-  },
-  {
-    find: '@openelement/adapter-lit/ssr',
-    replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts')),
-  },
-  {
-    find: '@openelement/adapter-lit',
-    replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
   },
   {
     find: '@openelement/ui/open-props-tokens',

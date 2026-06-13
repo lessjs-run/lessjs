@@ -1,7 +1,7 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.39.0 Framework RC + Four-Product Matrix Reset.\
+> Current package line: v0.40.0 Elements + Preact + Repository Slimming.\
 > Active version plan: docs/current/VERSION_PLAN.md.\
 > Updated: 2026-06-13.
 
@@ -56,8 +56,8 @@ feature packages support the four products without replacing them.
 | v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
-| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Active                   |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for the v1 path            | Planned                  |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Done                     |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for the v1 path            | Active                   |
 | v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
@@ -259,8 +259,8 @@ Complete daisyUI interactive component coverage and migrate protocol types.
 - navbar: DsdElement thin shell, responsive collapse menu
 - footer: pure CSS component (no interaction, just layout)
 - indicator: pure CSS component (badge positioning on avatars/icons)
-- skeleton: already in v0.37.4 daisy-classes.css — no additional work
-- loading: already in v0.37.4 daisy-classes.css — no additional work
+- skeleton: already in v0.37.4 daisy-classes.css 鈥?no additional work
+- loading: already in v0.37.4 daisy-classes.css 鈥?no additional work
 - chat bubble: pure CSS component
 - toggle (theme switch wrapper): DsdElement thin shell
 
@@ -348,7 +348,7 @@ unless a later ADR reopens them.
 ## v0.40.0 - Elements + Preact + Repository Slimming
 
 Productize the four-product matrix while keeping scope narrow enough for a
-credible v1.0 path.
+credible v1.0 path. The local package line is now `0.40.0`.
 
 ADR-0101 also makes v0.40 the product-line reset. The previous v0.39
 architecture state is frozen on `arch/v0.39-line`; `dev` continues as the
@@ -373,28 +373,31 @@ The product-surface jobs are:
 
 The Repository Slimming jobs are:
 
-- move or archive root one-off proof fixtures such as `fixtures/nitro-proof`
-  so historical v0.37.6 evidence no longer looks like an active product root;
-- physically freeze Hub by resolving `hub-index`, `hub-ci.yml`, and
-  `packages/hub` active-product status;
-- shrink active docs to current truth, ADR, release evidence, and archive, with
-  `docs/current/VERSION_PLAN.md` as the only active v0.40 execution plan;
-- classify all 21 workspace packages as product-facing, foundation,
-  adapter/interop, or archive/merge candidates before any v1 freeze;
+- keep root free of generated output and Hub registry data;
+- remove Hub from the active product line, including `packages/hub`, root Hub
+  index data, Hub routes, and Hub-specific workflow/tasks;
+- shrink active docs to current truth, ADR, release evidence, roadmap/status,
+  and archive index, with `docs/current/VERSION_PLAN.md` as the only active
+  v0.40 execution plan;
+- reduce the workspace package graph from 21 packages to the 14-package current
+  surface in `docs/current/PACKAGE_SURFACE.md`;
 - reduce hook and CI orchestration to AutoFlow3 entry points while keeping JSR
   publish and post-publish smoke as release evidence.
 
-Initial implementation has re-homed the Nitro proof fixture under
-`packages/adapter-vite/__fixtures__/nitro-proof/`, manual-scoped the archived
-Hub submission workflow, and added `docs/current/PACKAGE_SURFACE.md` plus
-`deno task package-surface:check` for the package classification. ADR-0102
-also adds `@openelement/elements` as the first-class Elements package.
+Current implementation removed Hub/RPC/CEM/compat-check/interop adapter
+packages from the workspace, reduced workflows to four active files, removed
+Hub routes and registry data, slimmed active docs to current truth plus ADR,
+roadmap/status, release evidence, and archive index, and added
+`docs/current/PACKAGE_SURFACE.md` plus `deno task package-surface:check` for the
+14-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
+matrix. ADR-0102 also adds `@openelement/elements` as the first-class Elements
+package.
 
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
 expansion stays out of scope, Web Awesome remains out of the current UI
 strategy, and no Preact runtime may leak into `@openelement/core` or Elements
-as a required public dependency. Physical package deletion, package merges,
-new packages, default runtime changes, and default signal-engine changes still
+as a required public dependency. Further package deletion, package merges, new
+packages, default runtime changes, and default signal-engine changes still
 require ADR-backed human approval.
 
 ## v0.41.0 - v1.0 Freeze Candidate

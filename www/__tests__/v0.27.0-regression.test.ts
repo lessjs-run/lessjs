@@ -21,6 +21,7 @@ import { join } from 'node:path';
 const DIST = join(import.meta.dirname ?? '.', '..', 'dist');
 const DOCS_PAGE = join(DIST, 'zh', 'guide', 'getting-started', 'index.html');
 const HOME_PAGE = join(DIST, 'index.html');
+const ARCHITECTURE_PAGE = join(DIST, 'zh', 'architecture', 'islands', 'index.html');
 const REGISTRY_PAGE = join(DIST, 'zh', 'registry', 'index.html');
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -45,14 +46,14 @@ Deno.test('v0.27.0 regression: open-layout has DSD template', () => {
 });
 
 Deno.test('v0.27.0 regression: open-search is present in output', () => {
-  for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
+  for (const page of [DOCS_PAGE, HOME_PAGE, ARCHITECTURE_PAGE]) {
     const html = readPage(page);
     assert(html.includes('<open-search'), `open-search missing in ${page}`);
   }
 });
 
 Deno.test('v0.27.0 regression: open-theme-toggle is present in output', () => {
-  for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
+  for (const page of [DOCS_PAGE, HOME_PAGE, ARCHITECTURE_PAGE]) {
     const html = readPage(page);
     assert(html.includes('<open-theme-toggle'), `open-theme-toggle missing in ${page}`);
   }
@@ -61,14 +62,14 @@ Deno.test('v0.27.0 regression: open-theme-toggle is present in output', () => {
 // ─── Bug 2: No [object Object] or [object Promise] ──────────────────
 
 Deno.test('v0.27.0 regression: no [object Object] in rendered HTML', () => {
-  for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
+  for (const page of [DOCS_PAGE, HOME_PAGE, ARCHITECTURE_PAGE]) {
     const html = readPage(page);
     assertFalse(html.includes('[object Object]'), `[object Object] found in ${page}`);
   }
 });
 
 Deno.test('v0.27.0 regression: no [object Promise] in rendered HTML', () => {
-  for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
+  for (const page of [DOCS_PAGE, HOME_PAGE, ARCHITECTURE_PAGE]) {
     const html = readPage(page);
     assertFalse(html.includes('[object Promise]'), `[object Promise] found in ${page}`);
   }
@@ -77,7 +78,7 @@ Deno.test('v0.27.0 regression: no [object Promise] in rendered HTML', () => {
 // ─── Bug 3: No <dialog> in output ────────────────────────────────────
 
 Deno.test('v0.27.0 regression: no <dialog> in rendered HTML', () => {
-  for (const page of [DOCS_PAGE, HOME_PAGE, REGISTRY_PAGE]) {
+  for (const page of [DOCS_PAGE, HOME_PAGE, ARCHITECTURE_PAGE]) {
     const html = readPage(page);
     assertFalse(html.includes('<dialog'), `<dialog> found in ${page}`);
   }
@@ -122,11 +123,13 @@ Deno.test('v0.27.0 regression: parse5 not in core deno.json', () => {
 
 // ─── Registry Hub iframe ─────────────────────────────────────────────
 
-Deno.test('v0.27.0 regression: Registry iframe has data-srcdoc', () => {
-  const page = join(DIST, 'en', 'registry', '@openelement~ui', 'open-card', 'index.html');
-  if (!existsSync(page)) return; // skip if not built
-  const html = readPage(page);
-  assert(html.includes('data-srcdoc'), 'data-srcdoc missing from registry component page');
+Deno.test('v0.40.0 cleanup: registry output is not built', () => {
+  assertFalse(existsSync(REGISTRY_PAGE), 'registry page should not be generated in v0.40');
+  const componentPage = join(DIST, 'en', 'registry', '@openelement~ui', 'open-card', 'index.html');
+  assertFalse(
+    existsSync(componentPage),
+    'registry component page should not be generated in v0.40',
+  );
 });
 
 // ─── Custom element count sanity ─────────────────────────────────────

@@ -160,14 +160,14 @@ Deno.test('renderEntry: generated code has no process.env references', () => {
   );
 });
 
-Deno.test('renderEntry: adapter auto-install code present in SSG mode', () => {
+Deno.test('renderEntry: removed interop adapters are not auto-installed in SSG mode', () => {
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, '__installOptionalAdapter');
-  assertStringIncludes(code, '@openelement/adapter-lit/ssr');
-  assertStringIncludes(code, '@openelement/adapter-vanilla/ssr');
-  assertStringIncludes(code, '@openelement/adapter-react/ssr');
+  assertFalse(code.includes('__installOptionalAdapter'));
+  assertFalse(code.includes('@openelement/adapter-lit/ssr'));
+  assertFalse(code.includes('@openelement/adapter-vanilla/ssr'));
+  assertFalse(code.includes('@openelement/adapter-react/ssr'));
 });
 
 Deno.test('renderEntry: SSG mode exports routeInfo with correct shape', () => {

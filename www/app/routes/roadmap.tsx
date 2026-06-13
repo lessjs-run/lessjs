@@ -2,7 +2,7 @@ export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
 // Strategic anchors: openElement = Elements + UI + Framework + Protocols.
-// Version: v0.37.2, v0.37.6, v0.38.0, v0.39.0, v1.0.
+// Version: v0.37.2, v0.37.6, v0.38.0, v0.39.0, v0.40.0, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -199,14 +199,14 @@ export class RoadmapPage extends DsdElement {
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                package line is v0.37.4: Hygiene + Pure CSS UI + Architecture
-                Decoupling. Publish recovery remains open until JSR reaches 20/20 and consumer smoke passes.
+                package line is v0.40.0: Elements + Preact + Repository
+                Slimming. The active workspace is the 14-package product line.
               </p>
             </div>
             <aside class="card card-bordered p-4">
               <span class='badge badge-outline'>current line</span>
-              <h2>v0.37.4 Publish Recovery</h2>
-              <p>Implementation, tag, and GitHub release exist; publish recovery now uses a 20-minute provenance-preserving JSR metadata watcher before release closure.</p>
+              <h2>v0.40.0 Product-Line Cleanup</h2>
+              <p>Hub/RPC/CEM/compat-check and interop adapters are out of the current package graph; AutoFlow3 owns gates.</p>
             </aside>
           </section>
 
@@ -313,8 +313,18 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v0.39.0</div>
-              <div><h3>Framework RC + Four-Product Matrix Reset</h3><p>Validate generated framework apps, public docs integrity, Elements direction, Vue adapter planning, and release gates.</p></div>
+              <div><h3>Framework RC + Four-Product Matrix Reset</h3><p>Validate generated framework apps, public docs integrity, Elements direction, Preact handoff, and release gates.</p></div>
+              <span class="badge badge-success status">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.40.0</div>
+              <div><h3>Elements + Preact + Repository Slimming</h3><p>Productize the 14-package current surface, remove Hub and archived packages, and keep Nitro proof plus AutoFlow3 gates green.</p></div>
               <span class="badge badge-info status">Active</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.41.0</div>
+              <div><h3>v1.0 Freeze Candidate</h3><p>Freeze public APIs, complete protocol conformance, and harden the product surface before stable release.</p></div>
+              <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">
               <div class="version">v1.0.0</div>

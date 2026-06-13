@@ -456,56 +456,6 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
   lines.push('');
 
-  // --- SSG: Auto-install all available adapters ---
-  // v0.17.3: Multi-adapter support - install Lit, Vanilla, and React adapters.
-  // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
-  // Installing at module load time ensures the default adapter registry is populated before any
-  // renderDsd() call. Missing optional packages are fine; package/internal failures are logged.
-  // Both SSG and dev mode need adapters to render framework-specific results.
-  {
-    lines.push('// v0.17.3: Auto-install all available SSR adapters');
-    lines.push('function __isMissingOptionalAdapter(error, spec) {');
-    lines.push('  const message = String(error?.message || error || "");');
-    lines.push('  const code = error?.code;');
-    lines.push(
-      '  return (code === "ERR_MODULE_NOT_FOUND" || code === "MODULE_NOT_FOUND" || message.includes("Could not resolve") || message.includes("Cannot find")) && message.includes(spec);',
-    );
-    lines.push('}');
-    lines.push('');
-    lines.push('async function __installOptionalAdapter(spec, loader, exportName) {');
-    lines.push('  try {');
-    lines.push('    const mod = await loader();');
-    lines.push('    const install = mod?.[exportName];');
-    lines.push('    if (typeof install !== "function") {');
-    lines.push(
-      '      log.warn("[openElement] Optional SSR adapter " + spec + " does not export " + exportName);',
-    );
-    lines.push('      return;');
-    lines.push('    }');
-    lines.push('    install();');
-    lines.push('  } catch (error) {');
-    lines.push('    if (__isMissingOptionalAdapter(error, spec)) {');
-    lines.push('      log.debug("[openElement] Optional SSR adapter not installed: " + spec);');
-    lines.push('      return;');
-    lines.push('    }');
-    lines.push(
-      '    log.warn("[openElement] Optional SSR adapter failed: " + spec + " - " + String(error?.stack || error?.message || error));',
-    );
-    lines.push('  }');
-    lines.push('}');
-    lines.push('');
-    lines.push(
-      "await __installOptionalAdapter('@openelement/adapter-lit/ssr', () => import('@openelement/adapter-lit/ssr'), 'installLitAdapter');",
-    );
-    lines.push(
-      "await __installOptionalAdapter('@openelement/adapter-vanilla/ssr', () => import('@openelement/adapter-vanilla/ssr'), 'installVanillaAdapter');",
-    );
-    lines.push(
-      "await __installOptionalAdapter('@openelement/adapter-react/ssr', () => import('@openelement/adapter-react/ssr'), 'installReactAdapter');",
-    );
-    lines.push('');
-  }
-
   // --- Register page components in SSR customElements registry ---
   // This is essential for renderDsd() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
@@ -743,7 +693,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // rest of the bundle (e.g., _adapter in types.ts, _posts in blog-data.ts).
   // This eliminates the globalThis[Symbol.for()] bridges from Phase B.
   //
-  // Optional packages (@openelement/adapter-lit, @openelement/content, @openelement/i18n)
+  // Optional packages (@openelement/content, @openelement/i18n)
   // are resolved by the optionalPackageStubsPlugin in build-ssg.ts, which
   // provides empty stubs when the real package is not installed.
   if (desc.isSSG) {
@@ -758,11 +708,6 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('');
     lines.push(
       'export { getDefaultRegistry, renderDsd, renderDsdTree, wrapInDocument } from "@openelement/core"',
-    );
-    lines.push(
-      'export { installLitAdapter, uninstallLitAdapter } from "@openelement/adapter-lit/ssr"',
-      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@openelement/adapter-vanilla/ssr"',
-      'export { installReactAdapter, uninstallReactAdapter } from "@openelement/adapter-react/ssr"',
     );
     lines.push(
       'export { posts, getPostBySlug, getBlogOptions } from "@openelement/generated/blog-data"',

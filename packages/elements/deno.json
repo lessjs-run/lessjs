@@ -1,13 +1,13 @@
 {
   "name": "@openelement/elements",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.39.0",
-    "@openelement/core/open-element": "jsr:@openelement/core@^0.39.0/open-element",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.39.0"
+    "@openelement/core": "jsr:@openelement/core@^0.40.0",
+    "@openelement/core/open-element": "jsr:@openelement/core@^0.40.0/open-element",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.40.0"
   },
   "publish": {
     "include": [

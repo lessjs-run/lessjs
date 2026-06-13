@@ -1,18 +1,21 @@
 # Archive
 
-Historical evidence and superseded planning material lives here when it no
-longer represents current project truth.
+This directory is an index for legacy docs that no longer represent current
+project truth.
 
 Active truth is limited to:
 
+- `docs/current/`
+- `docs/adr/`
+- `docs/roadmap/`
 - `docs/status/STATUS.md`
-- `docs/roadmap/ROADMAP.md`
-- `docs/current/VERSION_PLAN.md`
-- `docs/current/PACKAGE_SURFACE.md`
-- accepted ADRs in `docs/adr/`
-- release evidence in `docs/release/`
+- `docs/release/`
+- `docs/archive/README.md`
 
-Historical SOP, NextVersion, conversation, review, and old governance material
-may remain in their legacy locations until moved in batches. Once moved here,
-archive material must not be treated as an active release gate input unless a
-current plan or ADR explicitly references it.
+v0.40 removed legacy docs from the active repo surface instead of moving
+hundreds of old SOP, NextVersion, conversation, review, reference, design,
+mockup, and AutoFlow files into a second archive tree. Complete legacy docs
+remain available through git history.
+
+Legacy docs are not release gates unless a current ADR, Version Plan, or release
+evidence file explicitly references them.

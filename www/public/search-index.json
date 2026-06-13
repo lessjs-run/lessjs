@@ -150,15 +150,9 @@
     "text": "Testing Production"
   },
   {
-    "path": "/hub",
-    "title": "Hub",
-    "section": "Registry",
-    "text": "Hub Registry"
-  },
-  {
     "path": "/registry",
-    "title": "Package Registry",
-    "section": "Registry",
-    "text": "Package Registry Registry"
+    "title": "Hub",
+    "section": "Hub",
+    "text": "Hub"
   }
 ]

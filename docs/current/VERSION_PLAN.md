@@ -1,230 +1,123 @@
-# v0.40.0 Version Plan - Product-Line Reset + Repository Slimming
+# v0.40.0 Version Plan - Product-Line Reset
 
 ## Objective
 
-Make `dev` the focused product-line branch for the v1 path while keeping the
-old v0.39 architecture evidence frozen on `arch/v0.39-line`.
-
-Current package and release-gate truth remains `v0.39.0`; this plan is the
-active execution bridge toward the `v0.40.0` product-line reset.
-
-v0.40 has two equal exit requirements:
-
-1. the product surface becomes real and narrow;
-2. the repository shape stops contradicting that product story.
-
-The product target remains:
+Make `dev` the focused v0.40 product-line branch and keep the project aligned to:
 
 ```text
 openElement = Elements + UI + Framework + Protocols
 ```
 
+v0.40 is a breaking Repository Slimming release. It narrows the package graph, removes Hub
+from the active product, makes AutoFlow3 the only gate control plane, and keeps
+Vite + Nitro as the Framework base while protocols remain replaceable.
+
+The current local package line is `v0.40.0`. Publish closure still requires
+release evidence and JSR/post-publish smoke before v0.40 is marked released.
+
 ## Scope
 
-- Treat Elements, UI, Framework, and Protocols as the only first-class product
-  lines.
-- Productize the Elements line around `@openelement/elements` and
-  `OpenElement`.
-- Keep Vite + Nitro as the Framework base engine while keeping route,
-  renderer, runtime, cache, data, island, and signal contracts replaceable
-  through Protocols.
-- Record Preact as the v0.40 heavy-framework island priority.
-- Treat `@preact/signals-core` only as a `SignalEngine` candidate pending
-  protocol conformance, bundle, SSR/CSR, and consumer-smoke evidence.
-- Make Repository Slimming a first-class v0.40 workstream covering root
-  fixtures, Hub, active docs, package graph shape, workflows, and gates.
-- Collapse active planning into this version plan instead of adding another
-  SOP plus NextVersion dossier.
-- Keep AutoFlow3 as the single gate and evidence control plane.
-
-## Non-Goals
-
-- No uncontrolled physical package deletion without ADR approval.
-- No Hub revival.
-- No Vue, React, Svelte, or generic heavy-island expansion.
-- No Web Awesome implementation or default UI strategy change.
-- No default signal-engine swap.
-- No v1 API freeze.
-- No release-policy change.
-- No AutoFlow authority over minor, major, or v1 scope decisions.
+- Keep a 14-package current graph documented in `docs/current/PACKAGE_SURFACE.md`.
+- Remove historical `rpc`, `hub`, `cem`, `compat-check`, `adapter-lit`,
+  `adapter-react`, and `adapter-vanilla` packages from the current workspace.
+- Keep Preact as the v0.40 heavy-island priority without making it the product
+  identity.
+- Keep `@preact/signals-core` only as a `SignalEngine` candidate pending
+  conformance, SSR/CSR, bundle, and consumer evidence.
+- Keep current docs to current truth, ADR, roadmap/status, release evidence, and
+  archive index.
+- Keep AutoFlow3 as the single workflow/gate/evidence control plane.
 
 ## Governance Rules
 
-- ADR-0101 is the governance boundary for this reset.
-- New packages, package removals, package merges, package graph topology
-  changes, default runtime changes, default signal-engine changes, and public
-  API resets require human-approved ADR evidence.
-- Mechanical moves of historical fixtures, archived docs, and inactive gate
-  wiring may proceed inside v0.40 when the existing public API and package graph
-  remain stable.
-- Any v0.40 task that violates patch eligibility must downgrade AutoFlow3 from
-  automation to `requires human review`.
+- ADR-0101 is the authority boundary for this reset.
+- ADR-0104 keeps the signal engine candidate work behind protocol conformance.
+- AutoFlow3 may execute mechanical patch work only; minor/major scope, public
+  API, package graph, default runtime, default signal engine, release policy,
+  security, auth, and database ownership changes require human-approved ADR or
+  version-plan evidence.
+- v0.40 package removals are human-approved as part of this Version Plan and
+  must be reflected in release evidence before closure.
 
 ## Workstreams
 
-### A. Elements Product Surface
+### Elements Product Surface
 
-- [x] Create the `@openelement/elements` implementation plan against ADR-0099,
-      ADR-0101, and ADR-0102.
-- [x] Implement or map the `OpenElement` base class as the Elements-facing
-      authoring surface.
-- [x] Decide the `DsdElement` compatibility story: alias, migration path, or
-      deprecation schedule.
-- [x] Add shadow/DSD default tests and explicit light DOM opt-in tests for the
-      new Elements surface.
+- [x] Create `@openelement/elements`.
+- [x] Provide `OpenElement` and `DsdElement` compatibility exports.
+- [x] Add Elements shadow/DSD and light DOM opt-in tests.
 - [ ] Update starter, README, package README, and website docs to teach
-      `OpenElement` without making lower-level internals first-run concepts.
+      `OpenElement` as the first-run authoring surface.
 
-### B. Preact Island Proof
+### Framework and Nitro Base
 
-- [x] Add a narrow Preact island proof without making Preact the product
-      identity.
-- [ ] Prove SSR output, client upgrade, explicit hydration strategy, asset
-      loading, and consumer starter behavior.
-- [x] Keep Preact out of `@openelement/core` and `@openelement/elements`
-      required runtime dependencies.
-- [x] Document Vue, React, Svelte, and generic heavy-island expansion as frozen
-      until a later ADR reopens them.
+- [x] Keep Vite + Nitro proof tasks as Framework evidence.
+- [x] Keep protocols as the runtime-free replacement boundary.
+- [ ] Prove Preact island SSR output, client upgrade, explicit hydration
+      strategy, asset loading, and consumer starter behavior.
 
-### C. Signal Engine Candidate
+### Package Graph Rationalization
 
-ADR-0104 keeps the default signal engine unchanged and requires any
-`@preact/signals-core` work to stay behind the `SignalEngine` protocol.
+- [x] Reduce the workspace package graph from 21 to 14 packages.
+- [x] Inline CEM compatibility needed by `@openelement/ssg`.
+- [x] Remove Hub, RPC, CEM, compat-check, and interop adapter packages.
+- [x] Update package count, release order, workspace imports, and package
+      surface checks.
+- [x] Add v0.40 migration/release evidence for removed packages.
 
-- [ ] Add `@preact/signals-core` as a candidate only behind the existing
-      `SignalEngine` and `@openelement/protocols/signals` boundary.
-- [x] Run conformance tests against the existing signal behavior.
-- [ ] Measure bundle and SSR/CSR behavior before any default-engine proposal.
-- [ ] Keep the current signal default unless a later ADR explicitly approves a
-      default change.
+### Docs Slimming
 
-### D. Root Cleanup
+- [x] Keep active docs to current truth, ADR, release evidence, roadmap/status,
+      and archive index.
+- [x] Remove historical SOP, NextVersion, conversation, review, reference,
+      design, mockup, and old AutoFlow docs from active repo truth.
+- [x] Use `docs/archive/README.md` as the archive index; complete history remains
+      available through git history.
+- [x] Ensure docs checks ignore removed historical locations.
 
-- [x] Move or re-home `fixtures/nitro-proof` so the root no longer carries a
-      one-off v0.37.6 proof fixture as active product shape.
-- [x] Keep `nitro:proof:node` and `nitro:proof:workers` working after the move,
-      or archive those tasks as historical release evidence with an ADR-backed
-      replacement.
-- [ ] Audit root-level generated or local-output directories and ensure tracked
-      root entries are active product, active tooling, or archived evidence.
-- [ ] Update `.gitignore`, task paths, and docs references after any root
-      cleanup.
+### Gate and Workflow Slimming
 
-### E. Hub Physical Freeze
-
-- [x] Decide whether `hub-index` is archived release evidence, generated data,
-      or removed from the active product line.
-- [x] Remove `hub-index` from active root product shape unless a human ADR
-      reopens Hub by guarding all write/update tasks behind
-      `OPEN_ELEMENT_ALLOW_ARCHIVED_HUB_WRITE=1`.
-- [x] Disable, delete, or manual-scope `hub-ci.yml` while Hub remains frozen.
-- [ ] Keep `packages/hub` publishable only if release graph compatibility
-      requires it; otherwise prepare a package removal or merge ADR.
-- [ ] Remove Hub from first-run docs, current gates, and starter narratives.
-
-### F. Docs Slimming
-
-- [ ] Keep active docs to four categories: current truth, ADR, release
-      evidence, and archive.
-- [x] Treat `docs/current/VERSION_PLAN.md` as the only active v0.40 execution
-      plan; do not add `docs/sop/v0.40.0/` or `docs/next/v0.40.0/`.
-- [ ] Move historical SOP, NextVersion, conversation, review, and old
-      governance materials into archive batches.
-- [ ] Make docs gates scan current truth and ADR/release indexes, not every
-      historical planning directory.
-- [x] Add an archive index so old evidence remains discoverable without being
-      treated as current truth.
-
-### G. Package Graph Rationalization
-
-v0.40 must classify every package and stop presenting all 21 packages as equal
-product surfaces.
-
-| Group                       | Packages                                                                                        | v0.40 decision                                                        |
-| --------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Product-facing              | `elements`, `ui`, `app`, `create`, `protocols`                                                  | Keep and document as first-run surfaces.                              |
-| Foundation / implementation | `core`, `runtime`, `router`, `signals`, `style-sheet`, `ssg`, `content`, `i18n`, `adapter-vite` | Keep if needed, but demote from first-run product docs.               |
-| Adapter / interop           | `adapter-lit`, `adapter-vanilla`, `adapter-react`                                               | Freeze or keep as compatibility surfaces; no broad adapter expansion. |
-| Archive / merge candidates  | `hub`, `cem`, `compat-check`, `rpc`                                                             | Prepare ADR-backed freeze, merge, or removal decisions.               |
-
-- [x] Add a current package-surface inventory with product, foundation,
-      adapter, tool, and archive-candidate classifications in
-      `docs/current/PACKAGE_SURFACE.md`.
-- [x] Decide whether v0.40 physically reduces the workspace package count or
-      records ADR-approved deferrals for each retained archive candidate.
-- [ ] If an ADR approves removal or merge, update `PACKAGE_COUNT`,
-      `RELEASE_PACKAGE_ORDER`, import maps, package READMEs, release gates, and
-      migration notes in the same change.
-- [ ] Keep `graph:check` as the hard gate for any package topology change.
-
-### H. Gate and Workflow Slimming
-
-- [ ] Keep AutoFlow3 as the single workflow/gate/evidence control plane.
-- [ ] Reduce local hook entry points to `autoflow:dev` and `autoflow:push`.
-- [x] Reduce CI gate entry to `autoflow-ci.yml`; legacy `fast-gate.yml`,
-      `sop-gate.yml`, duplicate lint/test workflows, and Hub-specific workflows
-      must be removed, disabled, or manual-scoped.
-- [ ] Keep JSR publish and post-publish smoke as release evidence, not generic
-      repeated PR gates.
-- [ ] Remove old SOP Gate and AutoFlow2-era wording from current governance
-      docs after the active gate path is stable.
-
-### I. Release Evidence and Migration
-
-- [ ] Record v0.40 release evidence under `docs/release/`.
-- [ ] Keep v0.39 SOP/NextVersion as historical evidence until the archive move
-      is complete.
-- [ ] Add migration notes for Elements naming, package-surface classification,
-      Hub freeze, docs layout, and gate entry changes.
-- [ ] Ensure JSR publish and post-publish smoke evidence are present before
-      declaring v0.40 closure.
+- [x] Keep workflows to `autoflow-ci.yml`, `codeql.yml`, `publish-jsr.yml`, and
+      `jsr-consumer-monitor.yml`.
+- [x] Remove duplicate `test.yml`, Hub CI, manual publish, and deploy API
+      workflows.
+- [x] Make `publish-jsr.yml` call `deno task autoflow:ci` directly.
+- [x] Remove old AutoFlow2 and duplicate gate tasks from `deno.json`.
+- [x] Run and fix AutoFlow3 local, push, and CI gates.
 
 ## Acceptance
 
-- Public docs agree that Preact, not Vue, is the v0.40 heavy-island priority.
-- `@openelement/elements` and `OpenElement` have implementation, tests, and
-  migration docs or an ADR-backed deferral.
-- Repository Slimming is complete enough that root fixtures, Hub, docs,
-  package graph, and gate shape no longer contradict the four-product model.
-- `fixtures/nitro-proof` no longer exists as an unexplained root proof fixture.
-- `hub-index` is archived, generated-only, or removed from active product and
-  gate paths.
-- Active docs no longer require parallel SOP plus NextVersion planning for the
-  current version.
-- Every workspace package has a v0.40 classification and each archive/merge
-  candidate has either an accepted ADR action or an explicit deferral.
-- CI and hooks enter through AutoFlow3, with duplicate gate orchestration
-  removed, disabled, or manual-scoped.
-- AutoFlow3 policy tests prove patch automation is allowed only for bounded
-  mechanical changes.
-- Minor and major release commands fail without approved ADR and version-plan
-  evidence.
-- JSR publish and post-publish smoke evidence exist before v0.40 closure.
+- The workspace has exactly 14 current packages.
+- `graph:check`, `package-surface:check`, and release order agree on the same
+  14-package graph.
+- Active workflows are at most 4 and all CI gate orchestration enters through
+  AutoFlow3.
+- Root has no tracked Hub index or generated output.
+- Active docs no longer depend on SOP/NextVersion/conversation/review trees.
+- `nitro:proof:node` and `nitro:proof:workers` still pass.
+- Release evidence records package removals, Hub removal, docs slimming, and
+  workflow slimming before v0.40 closure.
 
 ## Test Matrix
 
 ```bash
+deno task fmt:check
+deno task lint
+deno task typecheck
+deno task test
+deno task build
+deno task graph:check
 deno task workflow:check
 deno task workflow:check-slimming
 deno task docs:check-public
 deno task docs:check-current
 deno task docs:check-strategy
-deno task graph:check
-deno task ci:check-package-tests
 deno task package-surface:check
 deno task signals:check-protocol-boundary
-deno task fmt:check
-deno task lint
-deno task typecheck
 deno task autoflow:test
-deno task autoflow:dev --dry-run
-deno task autoflow:push --dry-run
-deno task autoflow:ci --dry-run
-deno task autoflow:patch-release --dry-run
-deno task test
-deno task build
-deno task publish:dry-run
+deno task autoflow:dev
+deno task autoflow:push
+deno task autoflow:ci
+deno task nitro:proof:node
+deno task nitro:proof:workers
 ```
-
-Release work still requires the full repository gate list, dev/main CI, JSR
-publish, post-publish smoke, and release evidence before closure.

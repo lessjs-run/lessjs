@@ -31,12 +31,10 @@
     "npm:lit@^3.2.0": "3.3.3",
     "npm:marked@15": "15.0.4",
     "npm:marked@15.0.4": "15.0.4",
-    "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.6",
+    "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.7",
     "npm:nitro@*": "3.0.260610-beta_vite@8.0.10__@types+node@22.19.19__esbuild@0.25.12",
-    "npm:react-dom@19": "19.2.6_react@19.2.6",
-    "npm:react-dom@^19.1.0": "19.2.6_react@19.2.6",
-    "npm:react@19": "19.2.6",
-    "npm:react@^19.1.0": "19.2.6",
+    "npm:react-dom@^19.1.0": "19.2.7_react@19.2.7",
+    "npm:react@^19.1.0": "19.2.7",
     "npm:sanitize-html@^2.17.4": "2.17.4",
     "npm:section-matter@1": "1.0.0",
     "npm:typescript@^5.9.0": "5.9.3",
@@ -752,7 +750,7 @@
     "ccount@2.0.1": {
       "integrity": "sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg=="
     },
-    "ce-la-react@0.3.2_react@19.2.6": {
+    "ce-la-react@0.3.2_react@19.2.7": {
       "integrity": "sha512-QJ6k4lOD/btI08xG8jBPxRCGXvCnusGGkTsiXk0u3NqUu/W+BXRnFD4PYjwtqh8AWmGa5LDbGk0fLQsqr0nSMA==",
       "dependencies": [
         "react"
@@ -1359,7 +1357,7 @@
         "@types/mdast"
       ]
     },
-    "media-chrome@4.19.0_react@19.2.6": {
+    "media-chrome@4.19.0_react@19.2.7": {
       "integrity": "sha512-HWhDTwts+BSbdPkkB1VsJXp5kvL0IxY7xFT5tBwliM2+89kTPVTnHnev+9it2f9PweANjT/C8/C/S0PW9oyZbA==",
       "dependencies": [
         "ce-la-react"
@@ -1725,15 +1723,15 @@
     "qr-creator@1.0.0": {
       "integrity": "sha512-C0cqfbS1P5hfqN4NhsYsUXePlk9BO+a45bAQ3xLYjBL3bOIFzoVEjs79Fado9u9BPBD3buHi3+vY+C8tHh4qMQ=="
     },
-    "react-dom@19.2.6_react@19.2.6": {
-      "integrity": "sha512-0prMI+hvBbPjsWnxDLxlCGyM8PN6UuWjEUCYmZhO67xIV9Xasa/r/vDnq+Xyq4Lo27g8QSbO5YzARu0D1Sps3g==",
+    "react-dom@19.2.7_react@19.2.7": {
+      "integrity": "sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==",
       "dependencies": [
         "react",
         "scheduler"
       ]
     },
-    "react@19.2.6": {
-      "integrity": "sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q=="
+    "react@19.2.7": {
+      "integrity": "sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ=="
     },
     "recma-build-jsx@1.0.0": {
       "integrity": "sha512-8GtdyqaBcDfva+GUKDr3nev3VpKAhup1+RvkMvUxURHpW7QyIvk9F5wz7Vzo06CEMSilw6uArgRqhpiUcWp8ew==",
@@ -2216,25 +2214,19 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@openelement/adapter-lit@0.39",
-      "jsr:@openelement/adapter-react@0.39",
-      "jsr:@openelement/adapter-vanilla@0.39",
-      "jsr:@openelement/adapter-vite@0.39",
-      "jsr:@openelement/app@0.39",
-      "jsr:@openelement/cem@0.39",
-      "jsr:@openelement/compat-check@0.39",
-      "jsr:@openelement/content@0.39",
-      "jsr:@openelement/core@0.39",
-      "jsr:@openelement/elements@0.39",
-      "jsr:@openelement/i18n@0.39",
-      "jsr:@openelement/protocols@0.39",
-      "jsr:@openelement/router@0.39",
-      "jsr:@openelement/rpc@0.39",
-      "jsr:@openelement/runtime@0.39",
-      "jsr:@openelement/signals@0.39",
-      "jsr:@openelement/ssg@0.39",
-      "jsr:@openelement/style-sheet@0.39",
-      "jsr:@openelement/ui@0.39",
+      "jsr:@openelement/adapter-vite@0.40",
+      "jsr:@openelement/app@0.40",
+      "jsr:@openelement/content@0.40",
+      "jsr:@openelement/core@0.40",
+      "jsr:@openelement/elements@0.40",
+      "jsr:@openelement/i18n@0.40",
+      "jsr:@openelement/protocols@0.40",
+      "jsr:@openelement/router@0.40",
+      "jsr:@openelement/runtime@0.40",
+      "jsr:@openelement/signals@0.40",
+      "jsr:@openelement/ssg@0.40",
+      "jsr:@openelement/style-sheet@0.40",
+      "jsr:@openelement/ui@0.40",
       "npm:@hono/vite-dev-server@~0.25.3",
       "npm:@lit-labs/ssr-dom-shim@^1.5.0",
       "npm:@lit/reactive-element@2",
@@ -2263,33 +2255,13 @@
       "npm:ws@^8.20.1"
     ],
     "members": {
-      "packages/adapter-lit": {
-        "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "npm:lit@^3.2.0"
-        ]
-      },
-      "packages/adapter-react": {
-        "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "npm:react-dom@19",
-          "npm:react@19"
-        ]
-      },
-      "packages/adapter-vanilla": {
-        "dependencies": [
-          "jsr:@openelement/core@0.39"
-        ]
-      },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@openelement/cem@0.39",
-          "jsr:@openelement/compat-check@0.39",
-          "jsr:@openelement/content@0.39",
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/protocols@0.39",
-          "jsr:@openelement/ssg@0.39",
-          "jsr:@openelement/style-sheet@0.39",
+          "jsr:@openelement/content@0.40",
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/protocols@0.40",
+          "jsr:@openelement/ssg@0.40",
+          "jsr:@openelement/style-sheet@0.40",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:@mdx-js/rollup@^3.1.1",
           "npm:esbuild@0.25",
@@ -2300,29 +2272,18 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@openelement/adapter-vite@0.39",
-          "jsr:@openelement/content@0.39",
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/i18n@0.39",
-          "jsr:@openelement/protocols@0.39",
+          "jsr:@openelement/adapter-vite@0.40",
+          "jsr:@openelement/content@0.40",
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/i18n@0.40",
+          "jsr:@openelement/protocols@0.40",
           "npm:vite@8.0.10"
-        ]
-      },
-      "packages/cem": {
-        "dependencies": [
-          "jsr:@openelement/core@0.39"
-        ]
-      },
-      "packages/compat-check": {
-        "dependencies": [
-          "jsr:@openelement/cem@0.39",
-          "jsr:@openelement/core@0.39"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/protocols@0.39",
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/protocols@0.40",
           "npm:@mdx-js/mdx@^3.1.1",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -2333,28 +2294,21 @@
       },
       "packages/core": {
         "dependencies": [
-          "jsr:@openelement/protocols@0.39",
-          "jsr:@openelement/signals@0.39",
-          "jsr:@openelement/style-sheet@0.39"
+          "jsr:@openelement/protocols@0.40",
+          "jsr:@openelement/signals@0.40",
+          "jsr:@openelement/style-sheet@0.40"
         ]
       },
       "packages/elements": {
         "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/style-sheet@0.39"
-        ]
-      },
-      "packages/hub": {
-        "dependencies": [
-          "jsr:@openelement/compat-check@0.39",
-          "jsr:@openelement/core@0.39",
-          "npm:typescript@^5.9.0"
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/style-sheet@0.40"
         ]
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/protocols@0.39",
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/protocols@0.40",
           "npm:vite@8.0.10"
         ]
       },
@@ -2365,24 +2319,22 @@
       },
       "packages/runtime": {
         "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/signals@0.39",
-          "jsr:@openelement/style-sheet@0.39"
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/signals@0.40",
+          "jsr:@openelement/style-sheet@0.40"
         ]
       },
       "packages/signals": {
         "dependencies": [
-          "jsr:@openelement/protocols@0.39",
+          "jsr:@openelement/protocols@0.40",
           "npm:alien-signals@^3.2.0"
         ]
       },
       "packages/ssg": {
         "dependencies": [
-          "jsr:@openelement/cem@0.39",
-          "jsr:@openelement/compat-check@0.39",
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/protocols@0.39",
-          "jsr:@openelement/style-sheet@0.39",
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/protocols@0.40",
+          "jsr:@openelement/style-sheet@0.40",
           "npm:hono@^4.12.0",
           "npm:typescript@^5.9.0",
           "npm:vite@8.0.10"
@@ -2390,9 +2342,9 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@openelement/core@0.39",
-          "jsr:@openelement/signals@0.39",
-          "jsr:@openelement/style-sheet@0.39"
+          "jsr:@openelement/core@0.40",
+          "jsr:@openelement/signals@0.40",
+          "jsr:@openelement/style-sheet@0.40"
         ]
       }
     }

@@ -186,25 +186,5 @@ export const navSections = [
         "order": 40
       }
     ]
-  },
-  {
-    "section": "Registry",
-    "items": [
-      {
-        "path": "/hub",
-        "label": "Hub",
-        "order": 0
-      },
-      {
-        "path": "/registry",
-        "label": "Package Registry",
-        "order": 5
-      },
-      {
-        "path": "/registry/:package/:component",
-        "label": "Component Detail",
-        "order": 6
-      }
-    ]
   }
 ];

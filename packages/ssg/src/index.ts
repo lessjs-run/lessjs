@@ -205,14 +205,6 @@ export type {
 export { generateHonoEntryCode, renderEntry } from './entry-renderer.ts';
 export type { HonoEntryOptions } from './entry-renderer.ts';
 
-export { extractHubClientOnlyTags, loadHubClientOnlyTags } from './hub-client-only-tags.ts';
-export type {
-  HubClientOnlyRecord,
-  HubClientOnlyTag,
-  HubClientOnlyTagsOptions,
-  HubClientOnlyTagsResult,
-} from './hub-client-only-tags.ts';
-
 export {
   createGeneratedDataResolverPlugin,
   GENERATED_BLOG_DATA_ID,

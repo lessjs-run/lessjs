@@ -32,7 +32,6 @@ import { buildHeadExtras } from './head-injection.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { optionalPackageStubsPlugin } from './optional-package-stubs.js';
 import { createGeneratedDataResolverPlugin } from '@openelement/ssg';
-import { loadHubClientOnlyTags } from '@openelement/ssg';
 import {
   detectAndClassifyCemPackages,
   fileToTagName,
@@ -124,14 +123,6 @@ export function createOpenPlugin(
   const VIRTUAL_BUILD_TRIGGER_ID = 'virtual:open-build-trigger';
   const RESOLVED_BUILD_TRIGGER_ID = '\0' + VIRTUAL_BUILD_TRIGGER_ID;
 
-  let _cachedHubClientOnlyTags: string[] | null = null;
-  async function discoverHubClientOnlyTags(root: string, _routesDir: string): Promise<string[]> {
-    if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
-    const result = await loadHubClientOnlyTags(root, { onError: 'warn', logger: log });
-    _cachedHubClientOnlyTags = result.tags;
-    return result.tags;
-  }
-
   function generateEntry(
     routes: RouteEntry[],
     islandTagNames: string[] = [],
@@ -151,7 +142,7 @@ export function createOpenPlugin(
       allowHeadExtrasScripts,
       html: resolvedOptions.html,
       upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'idle',
-      hubClientOnlyTags: _cachedHubClientOnlyTags || [],
+      hubClientOnlyTags: [],
       appShell: resolvedOptions.appShell,
       layouts: resolvedOptions.layouts,
     });
@@ -284,10 +275,7 @@ export function createOpenPlugin(
           islandMeta: ctx.phase1.islandMeta,
           packageManifests: ctx.phase1.packageManifests,
           cemClassifications: ctx.phase1.cemClassifications,
-          hubClientOnlyTags: await discoverHubClientOnlyTags(
-            process.cwd(),
-            resolvedOptions.routesDir || 'app/routes',
-          ),
+          hubClientOnlyTags: [],
           appShell: resolvedOptions.appShell,
           layouts: resolvedOptions.layouts,
         }).ssrAdmissionPlan;

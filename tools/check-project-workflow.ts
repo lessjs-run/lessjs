@@ -1,5 +1,3 @@
-import { ACTIVE_VERSION } from './project-constants.ts';
-
 type Failure = {
   file: string;
   message: string;
@@ -9,6 +7,7 @@ const requiredFiles = [
   'docs/governance/PROJECT_WORKFLOW.md',
   'docs/current/VERSION_PLAN.md',
   'docs/current/PACKAGE_SURFACE.md',
+  'docs/archive/README.md',
   'CONTRIBUTING.md',
   '.github/PULL_REQUEST_TEMPLATE.md',
   '.github/ISSUE_TEMPLATE/bug.yml',
@@ -27,7 +26,6 @@ const requiredAnchors: Record<string, string[]> = {
   'CONTRIBUTING.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/status/STATUS.md': ['docs/governance/PROJECT_WORKFLOW.md', 'docs/current/VERSION_PLAN.md'],
   'docs/roadmap/ROADMAP.md': ['docs/governance/PROJECT_WORKFLOW.md'],
-  'docs/sop/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   'docs/current/VERSION_PLAN.md': [
     'openElement = Elements + UI + Framework + Protocols',
     'docs/current/PACKAGE_SURFACE.md',
@@ -37,10 +35,8 @@ const requiredAnchors: Record<string, string[]> = {
     'Preact',
     'SignalEngine',
     'Repository Slimming',
-    'fixtures/nitro-proof',
     'nitro:proof:node',
     'nitro:proof:workers',
-    'hub-index',
     'Package Graph Rationalization',
     'Test Matrix',
   ],
@@ -48,23 +44,11 @@ const requiredAnchors: Record<string, string[]> = {
     'openElement = Elements + UI + Framework + Protocols',
     'product-facing',
     'foundation',
-    'adapter',
-    'archive-candidate',
+    '14-package',
     '@openelement/elements',
     'ADR-0101',
   ],
-  [`docs/sop/${ACTIVE_VERSION}/README.md`]: [
-    `docs/next/${ACTIVE_VERSION}/`,
-    'ADR-0093',
-    'ADR-0096',
-    'ADR-0097',
-    'ADR-0099',
-    'ADR-0100',
-  ],
-  'docs/next/v0.37.2/README.md': [
-    'docs/sop/v0.37.2/README.md',
-    'ADR-0093',
-  ],
+  'docs/archive/README.md': ['git history', 'legacy docs'],
   '.github/PULL_REQUEST_TEMPLATE.md': ['docs/governance/PROJECT_WORKFLOW.md'],
   '.github/agents/README.md': ['docs/governance/PROJECT_WORKFLOW.md'],
 };
@@ -125,4 +109,4 @@ if (failures.length > 0) {
   Deno.exit(1);
 }
 
-console.log(`Project workflow check passed for ${ACTIVE_VERSION}.`);
+console.log('Project workflow check passed for the current Version Plan.');

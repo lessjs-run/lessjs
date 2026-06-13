@@ -1,6 +1,6 @@
 {
   "name": "@openelement/ui",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "exports": {
     ".": "./src/index.ts",
     "./open-button": "./src/open-button.tsx",
@@ -22,9 +22,9 @@
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.39.0",
-    "@openelement/signals": "jsr:@openelement/signals@^0.39.0",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.39.0"
+    "@openelement/core": "jsr:@openelement/core@^0.40.0",
+    "@openelement/signals": "jsr:@openelement/signals@^0.40.0",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.40.0"
   },
   "publish": {
     "include": [

@@ -34,16 +34,6 @@ export const STANDARD_CONFIGS = {
 
 // Package-specific exceptions
 export const CONFIG_EXCEPTIONS: Record<string, Partial<PackageConfig>> = {
-  '@openelement/hub': {
-    publish: {
-      include: ['mod.ts', 'src/**', 'deno.json', 'README.md', 'LICENSE'],
-    },
-    tasks: {
-      build:
-        'deno check mod.ts src/schema.ts src/builder.ts src/indexer.ts src/submitter.ts src/snapshot.ts',
-      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
-    },
-  },
   '@openelement/create': {
     publish: {
       include: ['cli.ts', 'deno.json', 'README.md', 'LICENSE'],
@@ -60,23 +50,6 @@ export const CONFIG_EXCEPTIONS: Record<string, Partial<PackageConfig>> = {
       test: 'deno test --allow-read --allow-write --allow-env --allow-net --allow-run __tests__/',
       'test:ci':
         'deno test --allow-read --allow-write --allow-env --allow-net --allow-run --coverage --junit-path=test-results.xml __tests__/',
-    },
-  },
-  '@openelement/adapter-lit': {
-    tasks: {
-      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
-    },
-  },
-  '@openelement/adapter-vanilla': {
-    tasks: {
-      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
-      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
-    },
-  },
-  '@openelement/adapter-react': {
-    tasks: {
-      build: 'deno check src/index.ts src/ssr.ts src/dsd-hydration.ts',
-      test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
     },
   },
   '@openelement/adapter-vite': {

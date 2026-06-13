@@ -5,31 +5,39 @@
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active version plan:
 `docs/current/VERSION_PLAN.md`.
 
-## Current Version Line: v0.39.0 (Framework RC + Four-Product Matrix Reset)
+## Current Version Line: v0.40.0 (Elements + Preact + Repository Slimming)
 
-v0.39.0 is the release-candidate framework line and product-matrix reset. Its
-job is to prove that the v0.38 product map works as a generated, deployable,
-consumer-verified openElement app while ADR-0099 resets the public target to
-`openElement = Elements + UI + Framework + Protocols`. ADR-0101 now moves the
-active product-line reset planning to `docs/current/VERSION_PLAN.md` for v0.40
-and later while v0.39 SOP/NextVersion files remain historical release evidence.
+v0.40.0 is the product-line cleanup release. It keeps the public target at
+`openElement = Elements + UI + Framework + Protocols`, makes the active package
+line `0.40.0`, and narrows the workspace to 14 packages. Hub, RPC, CEM,
+compat-check, and Lit/React/vanilla interop adapters are removed from the
+current package graph. Hub routes and registry data are also removed from the
+website output.
 
-v0.39.0 now owns package version `0.39.0` after local implementation gates
-passed. ADR-0100 restores JSR publish as a release exit gate for v0.39+
-closure.
+ADR-0101 is the governance boundary for this line: AutoFlow3 is the workflow,
+gate, evidence, and release-state control plane, but it cannot decide
+minor/major product scope, public API, package topology, default runtime,
+default signal engine, security/auth/database ownership, or release policy
+without human ADR or approved version-plan evidence.
 
-The local v0.39.0 RC proof now validates generated starter behavior from
-`@openelement/create`, proves pages/layouts/islands/API routes/static output,
-assets, SSR/ISR intent, and Nitro runtime behavior through `consumer:local`,
-aligns docs/templates with the four-product matrix, adds public README
-integrity gates, excludes Web Awesome from the current target, and records
-Preact as the v0.40 heavy-framework island priority. The package bump to
-`0.39.0` is complete, post-bump local gates passed, `dev` and `main` CI passed, JSR
-publish evidence passed in `Publish to JSR` run `27425438225`, and package
-test CI coverage is guarded by `deno task ci:check-package-tests`. Core signal
-protocol types now resolve through `@openelement/protocols/signals`, guarded by
-`deno task signals:check-protocol-boundary`. The old v0.39 architecture state
-is frozen on `arch/v0.39-line`; `dev` is the product-line reset branch.
+Local v0.40 evidence has passed: `fmt:check`, `lint`, `typecheck`, `test`,
+`build`, `graph:check`, `workflow:check`, `workflow:check-slimming`,
+`docs:check-public`, `docs:check-current`, `docs:check-strategy`,
+`package-surface:check`, `signals:check-protocol-boundary`, `autoflow:dev`,
+`autoflow:push`, `autoflow:ci`, `nitro:proof:node`, and
+`nitro:proof:workers`. Publish closure still requires JSR publish and
+post-publish smoke evidence before v0.40 is marked released.
+
+## Prior Version Line: v0.39.0 (Framework RC + Four-Product Matrix Reset)
+
+v0.39.0 is released. It proved generated starter behavior from
+`@openelement/create`, pages/layouts/islands/API routes/static output, assets,
+SSR/ISR intent, and Nitro runtime behavior through `consumer:local`, aligned
+docs/templates with the four-product matrix, excluded Web Awesome from the
+current target, and recorded Preact as the v0.40 heavy-framework island
+priority. JSR publish evidence passed in `Publish to JSR` run `27425438225`.
+The old v0.39 architecture state is frozen on `arch/v0.39-line`; `dev` is the
+product-line reset branch.
 
 ## Prior Version Line: v0.38.0 (Product Surface Reset)
 
@@ -124,46 +132,26 @@ closed for the prior package line. v0.37.4 JSR distribution remains externally
 unhealthy, but ADR-0097 prevents that external state from blocking roadmap
 execution.
 
-The active implementation line is now v0.39.0. It proceeds from v0.38.0 product
-surface evidence while restoring JSR publish evidence as a release exit gate
-under ADR-0100.
+The active implementation line is now v0.40.0. It proceeds from v0.39.0
+framework RC evidence while shrinking the current product line and gate surface.
 
 Governing docs:
 
-- `docs/sop/v0.39.0/README.md`
-- `docs/next/v0.39.0/`
 - `docs/current/VERSION_PLAN.md`
-- `docs/sop/v0.38.0/README.md`
-- `docs/next/v0.38.0/`
-- `docs/sop/v0.37.6/README.md`
-- `docs/next/v0.37.6/`
-- `docs/sop/v0.37.5/README.md`
-- `docs/next/v0.37.5/`
+- `docs/current/PACKAGE_SURFACE.md`
+- `docs/roadmap/ROADMAP.md`
+- `docs/archive/README.md`
+- `docs/release/v0.40.0-product-line-cleanup.md`
+- `docs/adr/ADR-0091-four-product-platform-roadmap.md`
+- `docs/adr/ADR-0092-dsdelement-render-mode.md`
+- `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
+- `docs/adr/ADR-0095-data-database-boundary.md`
 - `docs/adr/ADR-0096-protocol-first-vite-nitro-runtime.md`
 - `docs/adr/ADR-0097-jsr-best-effort-release-gate.md`
 - `docs/adr/ADR-0098-entry-descriptor-route-manifest-contract.md`
 - `docs/adr/ADR-0099-four-product-matrix-and-elements-reset.md`
 - `docs/adr/ADR-0100-jsr-publish-exit-gate-restored.md`
 - `docs/adr/ADR-0101-product-line-reset-autoflow3-governance.md`
-- `docs/sop/v0.37.4/README.md`
-- `docs/next/v0.37.4/`
-- `docs/sop/v0.37.3/README.md`
-- `docs/next/v0.37.3/`
-- `docs/adr/ADR-0095-data-database-boundary.md`
-- `docs/sop/v0.37.4/README.md`
-- `docs/next/v0.37.4/`
-- `docs/adr/ADR-0093-ssr-isr-runtime-contract.md`
-- `docs/sop/v0.37.1/README.md`
-- `docs/next/v0.37.1/`
-- `docs/adr/ADR-0092-dsdelement-render-mode.md`
-- `docs/sop/v0.37.0/README.md`
-- `docs/next/v0.37.0/`
-- `docs/adr/ADR-0091-four-product-platform-roadmap.md`
-- `docs/sop/v0.36.5/README.md`
-- `docs/next/v0.36.5/`
-- `docs/sop/v0.36.4/README.md`
-- `docs/next/v0.36.4/`
-- `docs/roadmap/ROADMAP.md`
 - `docs/governance/BRANCHING.md`
 
 v0.36.4 Status: **IMPLEMENTED.** It closed the Firefox/WebKit cross-browser
@@ -218,8 +206,8 @@ built-in cell generation.
 | v0.37.5 | Protocol-First Runtime Architecture                | Done                        | Make `@openelement/protocols` the real replacement boundary and define Vite + Nitro as the default base engine |
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Done                        | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro      |
 | v0.38.0 | Product Surface Reset and Hardening                | Done                        | Reset public package/API/product surface based on protocol and Nitro runtime evidence                          |
-| v0.39.0 | Framework RC + Four-Product Matrix Reset           | Active / local gates passed | ADR-0099, public docs integrity, Elements direction, Preact handoff, starter/deploy/consumer gates             |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Planned                     | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for v1               |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | Done                        | ADR-0099, public docs integrity, Elements direction, Preact handoff, starter/deploy/consumer gates             |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Active / local gates passed | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for v1               |
 | v0.41.0 | v1.0 Freeze Candidate                              | Planned                     | API freeze candidate, protocol conformance, UI hardening, migration docs, and release-gate proof               |
 | v1.0.0  | Stable Four-Product Platform                       | Vision                      | API freeze for Elements, UI, Framework, and Protocols with workflow evidence in release gates                  |
 
@@ -264,10 +252,11 @@ DSD/shadow is a default Elements render mode, not the product name.
 
 ## Package Version State
 
-All 21 workspace packages are aligned to **0.39.0** under `@openelement/*`.
-The active execution package is **v0.39.0**.
+The active v0.40 workspace contains 14 current `@openelement/*` packages aligned
+to local version **0.40.0**. Published package availability still depends on JSR
+publish and post-publish smoke evidence before release closure.
 
-Package governance for v0.39:
+Package governance for v0.40:
 
 - do not add a new top-level package without an ADR;
 - ADR-0102 approves `@openelement/elements`; the v0.40 roadmap now prioritizes
@@ -279,22 +268,19 @@ Package governance for v0.39:
 - keep database, ORM, auth, backend, runtime, cache, storage, and deployment
   choices at protocol, adapter, or recipe boundaries.
 
-v0.40 package governance adds Repository Slimming as active scope. The current
-20-package workspace must be classified before v1 as product-facing,
-foundation, adapter/interop, or archive/merge candidate. Physical package
-deletion, package merge, new package creation, package graph topology changes,
-default runtime changes, and default signal-engine changes still require
-ADR-backed human approval under ADR-0101.
+v0.40 package governance approves a breaking cleanup from 21 historical packages
+to the 14-package current surface. Future package deletion, package merge, new
+package creation, package graph topology changes, default runtime changes, and
+default signal-engine changes still require ADR-backed human approval under
+ADR-0101.
 
 The active package classification now lives in
-`docs/current/PACKAGE_SURFACE.md`. The v0.40 reset has also re-homed the Nitro
-proof fixture under `packages/adapter-vite/__fixtures__/nitro-proof/` and
-manual-scoped the archived Hub submission workflow so Hub no longer behaves as
-an active PR product path.
+`docs/current/PACKAGE_SURFACE.md`. The v0.40 reset removes Hub package, Hub
+routes, Hub registry data, and Hub-specific workflows/tasks from the active
+product path.
 
 ADR-0102 approves `@openelement/elements` as the first-class Elements package.
-The workspace package count is now 21; archive-candidate package reduction is
-governed by ADR-0103.
+The workspace package count is now 14.
 
 ## Architecture Positioning
 
@@ -335,10 +321,7 @@ governed by ADR-0103.
   current target.
 - Heavy-framework island expansion is frozen except for the planned v0.40
   Preact island proof.
-- v0.40 also owns the physical repository slimming work: root proof fixtures
-  such as `fixtures/nitro-proof`, Hub root data such as `hub-index`, active
-  docs categories, 20-package surface classification, and duplicate gate
-  orchestration must stop contradicting the four-product matrix.
+- v0.40 owns the physical repository slimming work: root generated outputs, Hub data, active docs categories, 14-package surface checks, and duplicate gate orchestration must stay aligned with the four-product matrix.
 - Database work belongs in data/database adapter contracts and recipes. It must
   not become a built-in ORM, auth platform, or migration system.
 - A Vite + Nitro runtime proof should compose openElement routes, rendering,
@@ -412,7 +395,6 @@ deno task workflow:check
 deno task docs:check-public
 deno task arch:check
 deno task graph:check
-deno task ci:check-package-tests
 deno task signals:check-protocol-boundary
 deno task docs:check-current
 deno task docs:check-strategy
@@ -420,13 +402,14 @@ deno task fmt:check
 deno task lint
 deno task typecheck
 deno task autoflow:test
-deno task autoflow:health
-deno task autoflow:check
+deno task autoflow:dev
+deno task autoflow:push
+deno task autoflow:ci
 deno task test
 deno task build
-deno task dsd:check-report
+deno task nitro:proof:node
+deno task nitro:proof:workers
 deno task publish:dry-run
-deno task test:e2e
 ```
 
 Live JSR publish and post-publish JSR consumer smoke run after

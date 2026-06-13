@@ -4,16 +4,10 @@ import {
   optionalPackageStubsPlugin,
 } from '../src/optional-package-stubs.ts';
 
-Deno.test('OPTIONAL_PACKAGE_STUBS covers adapters and generated-data packages', () => {
+Deno.test('OPTIONAL_PACKAGE_STUBS covers retained optional generated-data packages', () => {
   assertEquals(
     Object.keys(OPTIONAL_PACKAGE_STUBS).sort(),
     [
-      '@openelement/adapter-lit',
-      '@openelement/adapter-lit/ssr',
-      '@openelement/adapter-react',
-      '@openelement/adapter-react/ssr',
-      '@openelement/adapter-vanilla',
-      '@openelement/adapter-vanilla/ssr',
       '@openelement/content',
       '@openelement/content/sitemap',
       '@openelement/i18n',

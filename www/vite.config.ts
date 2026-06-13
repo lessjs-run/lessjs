@@ -125,8 +125,6 @@ export default defineConfig({
       ssr: {
         noExternal: [
           '@openelement/ui',
-          '@openelement/adapter-react',
-          '@openelement/adapter-vanilla',
           '@shoelace-style/shoelace',
           'media-chrome',
           'react',

@@ -1,63 +1,40 @@
 # Package Surface Inventory
 
-This file is the v0.40 package-surface truth table. It classifies every
-workspace package so the repository stops presenting implementation, adapter,
-tooling, and archived packages as equal product lines.
-
-Product target:
+This is the v0.40 14-package product-line truth table.
 
 ```text
 openElement = Elements + UI + Framework + Protocols
 ```
 
-## Classification Rules
+ADR-0101 approves the product-line reset and governance boundary. v0.40 removes
+historical archive packages and interop proofs from the current package graph.
 
-- `product-facing`: first-run public product surface.
-- `foundation`: implementation package that supports product surfaces.
-- `adapter`: compatibility or framework interop surface.
-- `archive-candidate`: frozen, merge-candidate, or removal-candidate package
-  that requires ADR approval before topology changes.
+## Current 14-package surface
+
+| Package                     | Class          | v0.40 decision                            |
+| --------------------------- | -------------- | ----------------------------------------- |
+| `@openelement/app`          | product-facing | Framework authoring API.                  |
+| `@openelement/create`       | product-facing | Starter and consumer entry.               |
+| `@openelement/elements`     | product-facing | Elements authoring API.                   |
+| `@openelement/protocols`    | product-facing | Runtime-free replacement boundary.        |
+| `@openelement/ui`           | product-facing | First-party `open-*` component library.   |
+| `@openelement/core`         | foundation     | Low-level implementation kernel.          |
+| `@openelement/runtime`      | foundation     | Runtime support behind Framework.         |
+| `@openelement/router`       | foundation     | Route support behind Framework.           |
+| `@openelement/signals`      | foundation     | Signal implementation behind protocols.   |
+| `@openelement/style-sheet`  | foundation     | CSS and StyleSheet support.               |
+| `@openelement/ssg`          | foundation     | SSG implementation behind Framework.      |
+| `@openelement/content`      | foundation     | Content support behind Framework recipes. |
+| `@openelement/i18n`         | foundation     | I18n support behind Framework recipes.    |
+| `@openelement/adapter-vite` | foundation     | Vite/Nitro build bridge.                  |
+
+## Removed from current graph
+
+v0.40 removes the historical RPC, Hub, CEM, compat-check, Lit adapter, React
+adapter, and Vanilla adapter packages from the current workspace and publish
+order. CEM detection needed by `@openelement/ssg` is now an internal SSG
+implementation detail instead of a public package.
 
 Package deletion, package merge, package addition, publish-order changes, and
-package graph topology changes require ADR-backed human approval under
-ADR-0101.
-
-## Current Packages
-
-| Package                        | Class             | v0.40 decision                                                      |
-| ------------------------------ | ----------------- | ------------------------------------------------------------------- |
-| `@openelement/app`             | product-facing    | Framework authoring API; keep first-run.                            |
-| `@openelement/create`          | product-facing    | Starter and consumer entry; keep first-run.                         |
-| `@openelement/elements`        | product-facing    | Elements authoring API; keep first-run.                             |
-| `@openelement/protocols`       | product-facing    | Runtime-free replacement boundary; keep first-run.                  |
-| `@openelement/ui`              | product-facing    | First-party `open-*` component library; keep first-run.             |
-| `@openelement/core`            | foundation        | Low-level implementation kernel; demote from first-run docs.        |
-| `@openelement/runtime`         | foundation        | Runtime support; keep if Framework still requires it.               |
-| `@openelement/router`          | foundation        | Route support; keep behind Framework surface.                       |
-| `@openelement/signals`         | foundation        | Signal implementation package; default change requires ADR.         |
-| `@openelement/style-sheet`     | foundation        | CSS/StyleSheet support; keep behind Elements/UI surfaces.           |
-| `@openelement/ssg`             | foundation        | SSG implementation package; keep behind Framework surface.          |
-| `@openelement/content`         | foundation        | Content support; keep behind docs/content recipes.                  |
-| `@openelement/i18n`            | foundation        | I18n support; keep behind Framework recipes.                        |
-| `@openelement/adapter-vite`    | foundation        | Vite/Nitro build bridge; keep as Framework implementation.          |
-| `@openelement/adapter-lit`     | adapter           | Compatibility proof; freeze expansion unless ADR reopens.           |
-| `@openelement/adapter-vanilla` | adapter           | Compatibility proof; freeze expansion unless ADR reopens.           |
-| `@openelement/adapter-react`   | adapter           | Compatibility proof; freeze expansion unless ADR reopens.           |
-| `@openelement/hub`             | archive-candidate | Hub remains frozen; decide retain, merge, or remove by ADR.         |
-| `@openelement/cem`             | archive-candidate | Tooling candidate; decide retain, merge, or remove by ADR.          |
-| `@openelement/compat-check`    | archive-candidate | Tooling candidate; decide retain, merge, or remove by ADR.          |
-| `@openelement/rpc`             | archive-candidate | Archived feature candidate; decide retain, merge, or remove by ADR. |
-
-## Package Graph Note
-
-ADR-0102 approves `@openelement/elements` as a real v0.40 package. The package
-currently acts as a narrow facade over `@openelement/core` while implementation
-migration remains deferred.
-
-## Archive Guardrails
-
-`@openelement/hub` remains publishable for release graph compatibility, but Hub
-write/update tasks are no longer active product entry points. `hub:scan` and
-`hub:index:update` require `OPEN_ELEMENT_ALLOW_ARCHIVED_HUB_WRITE=1`, so
-`hub-index` is treated as archived registry evidence unless a later ADR reopens
-Hub.
+default runtime or signal-engine changes still require human-approved ADR
+evidence under ADR-0101.

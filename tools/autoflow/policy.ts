@@ -78,12 +78,6 @@ export const GATES: readonly GateDefinition[] = [
     triggers: [/^(packages|docs|tools|www)\//, /^deno\.json$/],
   },
   {
-    name: 'ci:check-package-tests',
-    command: ['deno', 'task', 'ci:check-package-tests'],
-    tiers: ['ci', 'release'],
-    triggers: [/^packages\//, /^\.github\/workflows\//],
-  },
-  {
     name: 'signals:check-protocol-boundary',
     command: ['deno', 'task', 'signals:check-protocol-boundary'],
     tiers: ['push', 'ci', 'release'],

@@ -1,152 +1,140 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
+
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
-import '@openelement/ui\/open-code-block';
+import '@openelement/ui/open-code-block';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(
   pageStyles + `
-
-      .principle {
-        padding: var(--size-4) var(--size-5);
-        background: var(--gray-1);
-        border-left: 2px solid var(--gray-4);
-        border-radius: 0 var(--radius-1) var(--radius-1) 0;
-        margin: var(--size-4) 0;
-      }
-    `,
+    .principle {
+      padding: var(--size-4) var(--size-5);
+      background: var(--gray-1);
+      border-left: 2px solid var(--gray-4);
+      border-radius: 0 var(--radius-1) var(--radius-1) 0;
+      margin: var(--size-4) 0;
+    }
+  `,
 );
 
 export class ApiPage extends DsdElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
+
   override render() {
-    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+    return this._getLocale('zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    const loc = this._getLocale('zh');
-
-
     return (
-      
-        <div class='container'>
-          <h1>API Routes</h1>
-          <p class='subtitle'>
-            openElement 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，适合部署到
-            serverless 或 edge runtime。
-          </p>
-          <h2>Design Principles</h2>
-          <div class='principle'>
-            <p>
-              <strong>使用平台原语。</strong>优先使用 Fetch、Request、Response 而非框架专有传输。
-            </p>
-            <p>
-              <strong>验证在边界完成。</strong>在业务逻辑看到数据之前，完成请求体的解析和校验。
-            </p>
-            <p>
-              <strong>运行时显式声明。</strong>静态页面可以调用 API，但 API 本身需要 serverless 或
-              edge 部署目标。
-            </p>
-          </div>
-          <h2>Create API Routes</h2>
-          <p>API routes 放在 app/routes/api。模块默认导出一个 Hono app。</p>
-          <h2>Advanced RPC</h2>
+      <div class='container'>
+        <h1>API Routes</h1>
+        <p class='subtitle'>
+          openElement 的服务端层基于 Hono。API routes 使用标准 Request/Response
+          语义，适合部署到 serverless 或 edge runtime。
+        </p>
+        <h2>Design Principles</h2>
+        <div class='principle'>
           <p>
-            @openelement/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
-            <a href='/api/reference'>RPC 远程调用</a>。
+            <strong>使用平台原语。</strong>{' '}
+            优先使用 Fetch、Request、Response，而不是框架私有传输。
           </p>
-          <h2>Static Build Boundary</h2>
           <p>
-            SSG 输出是静态文件。API routes 是生成的 Hono app
-            的一部分，但纯静态托管不会运行它们。当应用需要运行时行为时，通过 serverless adapter
-            或平台函数部署 API routes。
+            <strong>在边界验证。</strong>{' '}
+            请求体应先完成解析和校验，再进入业务逻辑。
           </p>
-          <div class='nav-row'>
-            <a href='/api/reference' class='btn btn-ghost'>← RPC 远程调用</a>
-            <a href='/guide/configuration' class='btn btn-ghost'>Configuration →</a>
-          </div>
+          <p>
+            <strong>显式声明运行时。</strong>{' '}
+            静态页面可以调用 API，但 API 本身需要 serverless 或 edge 部署目标。
+          </p>
         </div>
-      
+        <h2>Create API Routes</h2>
+        <p>
+          API routes 放在 <span class='inline-code'>app/routes/api</span>。复杂 API
+          可以默认导出 Hono app，简单端点可以导出 plain function。
+        </p>
+        <h2>Static Build Boundary</h2>
+        <p>
+          SSG 输出是静态文件。API routes 是生成的 Hono app 的一部分，但纯静态托管不会运行它们。
+          需要运行时行为时，通过 serverless adapters 或平台函数部署 API routes。
+        </p>
+        <div class='nav-row'>
+          <a href='/guide/configuration' class='btn btn-ghost'>Configuration -&gt;</a>
+        </div>
+      </div>
     );
   }
 
   private _renderEn() {
-    const loc = this._getLocale('en');
-
-
     return (
-      
-        <div class='container'>
-          <h1>API Routes</h1>
-          <p class='subtitle'>
-            openElement's server layer is Hono. API routes use standard Request/Response semantics and
-            are suitable for serverless or edge runtime deployment.
-          </p>
-          <h2>Design Principles</h2>
-          <div class='principle'>
-            <p>
-              <strong>Use platform primitives.</strong>{' '}
-              Prefer Fetch, Request, Response over framework-specific transports.
-            </p>
-            <p>
-              <strong>Validate at boundaries.</strong>{' '}
-              Parse and validate request bodies before business logic sees the data.
-            </p>
-            <p>
-              <strong>Declare runtime explicitly.</strong>{' '}
-              Static pages can call APIs, but the APIs need a serverless or edge deployment target.
-            </p>
-          </div>
-          <h2>Create API Routes</h2>
+      <div class='container'>
+        <h1>API Routes</h1>
+        <p class='subtitle'>
+          openElement's server layer is Hono. API routes use standard Request/Response semantics and
+          are suitable for serverless or edge runtime deployment.
+        </p>
+        <h2>Design Principles</h2>
+        <div class='principle'>
           <p>
-            Place API routes in{' '}
-            <span class='inline-code'>app/routes/api</span>. Default-export a Hono app for complex
-            APIs, or a plain function <span class='inline-code'>(ctx) =&gt; Response</span>{' '}
-            for simple endpoints. The context has <span class='inline-code'>request</span>,{' '}
-            <span class='inline-code'>params</span>, <span class='inline-code'>env</span>, and{' '}
-            <span class='inline-code'>platform</span>.
+            <strong>Use platform primitives.</strong>{' '}
+            Prefer Fetch, Request, Response over framework-specific transports.
           </p>
-          <open-code-block>
-            <pre><code>{'// app/routes/api/posts.ts'}
-import {'{'} Hono {'}'} from 'hono';
-const app = new Hono();
-app.get('/', (c) =&gt; c.json([{'{'} id: 1, title: 'Hello' {'}'}]));
-app.post('/', async (c) =&gt; {'{'} const body = await c.req.json(); return c.json({'{'} id: 2, ...body {'}'}, 201); {'}'});
-export default app;</code></pre>
-          </open-code-block>
-          <open-code-block>
-            <pre><code>{'// app/routes/api/health.ts — simple endpoint, no Hono needed'}
-import type {'{'} OpenElementApiContext {'}'} from '@openelement/core';
-
-export default function GET(ctx: OpenElementApiContext) {'{'}
-  return Response.json({'{'} ok: true, mode: ctx.env.MODE ?? 'production' {'}'});
-{'}'}</code></pre>
-          </open-code-block>
-          <h2>Request Validation</h2>
           <p>
-            openElement does not mandate a validation library. Zod with{' '}
-            <span class='inline-code'>@hono/zod-validator</span> is a practical default.
+            <strong>Validate at boundaries.</strong>{' '}
+            Parse and validate request bodies before business logic sees the data.
           </p>
-          <h2>Advanced RPC</h2>
           <p>
-            <span class='inline-code'>@openelement/rpc</span>{' '}
-            is an archive-candidate package in the v0.40 product map. Start
-            with Hono and platform Request/Response APIs for ordinary API
-            routes; reopening RPC as a product requires a later ADR.
+            <strong>Declare runtime explicitly.</strong>{' '}
+            Static pages can call APIs, but the APIs need a serverless or edge deployment target.
           </p>
-          <h2>Static Build Boundary</h2>
-          <p>
-            SSG output is static files. API routes are part of the generated Hono app, but static
-            hosting won't execute them. Deploy API routes via serverless adapters or platform
-            functions when runtime behavior is needed.
-          </p>
-          <div class='nav-row'>
-            <a href='/guide/configuration' class='btn btn-ghost'>Configuration →</a>
-          </div>
         </div>
-      
+        <h2>Create API Routes</h2>
+        <p>
+          Place API routes in <span class='inline-code'>app/routes/api</span>. Default-export a Hono
+          app for complex APIs, or a plain function{' '}
+          <span class='inline-code'>(ctx) =&gt; Response</span> for simple endpoints.
+        </p>
+        <open-code-block>
+          <pre>
+            <code>{`// app/routes/api/posts.ts
+import { Hono } from 'hono';
+
+const app = new Hono();
+app.get('/', (c) => c.json([{ id: 1, title: 'Hello' }]));
+app.post('/', async (c) => {
+  const body = await c.req.json();
+  return c.json({ id: 2, ...body }, 201);
+});
+
+export default app;`}</code>
+          </pre>
+        </open-code-block>
+        <open-code-block>
+          <pre>
+            <code>{`// app/routes/api/health.ts
+import type { OpenElementApiContext } from '@openelement/core';
+
+export default function GET(ctx: OpenElementApiContext) {
+  return Response.json({ ok: true, mode: ctx.env.MODE ?? 'production' });
+}`}</code>
+          </pre>
+        </open-code-block>
+        <h2>Request Validation</h2>
+        <p>
+          openElement does not mandate a validation library. Zod with{' '}
+          <span class='inline-code'>@hono/zod-validator</span> is a practical default.
+        </p>
+        <h2>Static Build Boundary</h2>
+        <p>
+          SSG output is static files. API routes are part of the generated Hono app, but static
+          hosting will not execute them. Deploy API routes via serverless adapters or platform
+          functions when runtime behavior is needed.
+        </p>
+        <div class='nav-row'>
+          <a href='/guide/configuration' class='btn btn-ghost'>Configuration -&gt;</a>
+        </div>
+      </div>
     );
   }
 }

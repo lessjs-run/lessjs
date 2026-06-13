@@ -1,7 +1,7 @@
 /**
- * Homepage - openElement v0.38.0.
+ * Homepage - openElement v0.40.0.
  * Strategic anchor: openElement = Elements + UI + Framework + Protocols.
- * Active execution: v0.39.0.
+ * Active execution: v0.40.0.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -62,7 +62,7 @@ export class DocsHome extends DsdElement {
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-left">
-              <p class="eyebrow">openElement 0.38.0 / v0.39.0 active</p>
+              <p class="eyebrow">openElement 0.40.0 / v0.40.0 active</p>
               <h1 class="giant-headline">THE OPEN<br /><span class="glow-line">ELEMENT.</span></h1>
               <p class="hero-desc">A four-product Web Components platform: Elements, UI, Framework, and Protocols. JSX pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
               <div class="terminal">
@@ -94,7 +94,7 @@ export class DocsHome extends DsdElement {
             <div class="ft-card"><span class="ft-icon">IR</span><h3>One renderer model</h3><p>JSX becomes VNode IR. SSR, CSR, signals, and events share the same structural model.</p></div>
             <div class="ft-card"><span class="ft-icon">LIFE</span><h3>App lifecycle</h3><p>Route params, load context, route metadata, redirect, not-found, and error fallback are explicit app contracts.</p></div>
             <div class="ft-card"><span class="ft-icon">SEC</span><h3>Trusted boundary</h3><p>HTML injection is explicit and reserved for pre-sanitized non-interactive content.</p></div>
-            <div class="ft-card"><span class="ft-icon">CI</span><h3>Gate-proven</h3><p>Architecture checks, DSD reports, package graph validation, and dry-run publishing prove the contract.</p></div>
+            <div class="ft-card"><span class="ft-icon">CI</span><h3>Gate-proven</h3><p>AutoFlow3, package graph validation, workflow slimming, and Nitro proofs guard the 14-package line.</p></div>
             <div class="ft-card"><span class="ft-icon">WC</span><h3>Web standards</h3><p>Custom Elements, Shadow DOM, CSSStyleSheet, URL, fetch, and Web Streams stay at the center.</p></div>
           </div>
         </section>

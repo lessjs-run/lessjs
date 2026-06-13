@@ -587,7 +587,7 @@ export class DsdElement extends _Base implements ReactiveHost {
   /**
    * ReactiveController-compatible update hook.
    *
-   * `@openelement/rpc` calls this method when async state changes. Keeping this
+   * Async state controllers call this method when state changes. Keeping this
    * tiny alias lets DsdElement host controllers without inheriting Lit or a
    * scheduler.
    */

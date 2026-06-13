@@ -1,13 +1,13 @@
 {
   "name": "@openelement/signals",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "exports": {
     ".": "./src/index.ts",
     "./framework": "./src/framework.ts",
     "./alien-engine": "./src/alien-engine.ts"
   },
   "imports": {
-    "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.39.0/signals",
+    "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.40.0/signals",
     "alien-signals": "npm:alien-signals@^3.2.0"
   },
   "publish": {

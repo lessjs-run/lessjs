@@ -1,160 +1,81 @@
 import { RELEASE_PACKAGE_ORDER } from './package-release-order.ts';
+import { PACKAGE_COUNT } from './project-constants.ts';
 
-type Classification = 'product-facing' | 'foundation' | 'adapter' | 'archive-candidate';
+const retainedPackages = [
+  '@openelement/app',
+  '@openelement/adapter-vite',
+  '@openelement/content',
+  '@openelement/core',
+  '@openelement/create',
+  '@openelement/elements',
+  '@openelement/i18n',
+  '@openelement/protocols',
+  '@openelement/router',
+  '@openelement/runtime',
+  '@openelement/signals',
+  '@openelement/ssg',
+  '@openelement/style-sheet',
+  '@openelement/ui',
+].sort();
 
-type SurfaceRecord = {
-  className: Classification;
-  decision: string;
-};
-
-const surface: Record<string, SurfaceRecord> = {
-  '@openelement/app': {
-    className: 'product-facing',
-    decision: 'Framework authoring API; keep first-run.',
-  },
-  '@openelement/create': {
-    className: 'product-facing',
-    decision: 'Starter and consumer entry; keep first-run.',
-  },
-  '@openelement/elements': {
-    className: 'product-facing',
-    decision: 'Elements authoring API; keep first-run.',
-  },
-  '@openelement/protocols': {
-    className: 'product-facing',
-    decision: 'Runtime-free replacement boundary; keep first-run.',
-  },
-  '@openelement/ui': {
-    className: 'product-facing',
-    decision: 'First-party open-* component library; keep first-run.',
-  },
-  '@openelement/core': {
-    className: 'foundation',
-    decision: 'Low-level implementation kernel; demote from first-run docs.',
-  },
-  '@openelement/runtime': {
-    className: 'foundation',
-    decision: 'Runtime support; keep if Framework still requires it.',
-  },
-  '@openelement/router': {
-    className: 'foundation',
-    decision: 'Route support; keep behind Framework surface.',
-  },
-  '@openelement/signals': {
-    className: 'foundation',
-    decision: 'Signal implementation package; default change requires ADR.',
-  },
-  '@openelement/style-sheet': {
-    className: 'foundation',
-    decision: 'CSS/StyleSheet support; keep behind Elements/UI surfaces.',
-  },
-  '@openelement/ssg': {
-    className: 'foundation',
-    decision: 'SSG implementation package; keep behind Framework surface.',
-  },
-  '@openelement/content': {
-    className: 'foundation',
-    decision: 'Content support; keep behind docs/content recipes.',
-  },
-  '@openelement/i18n': {
-    className: 'foundation',
-    decision: 'I18n support; keep behind Framework recipes.',
-  },
-  '@openelement/adapter-vite': {
-    className: 'foundation',
-    decision: 'Vite/Nitro build bridge; keep as Framework implementation.',
-  },
-  '@openelement/adapter-lit': {
-    className: 'adapter',
-    decision: 'Compatibility proof; freeze expansion unless ADR reopens.',
-  },
-  '@openelement/adapter-vanilla': {
-    className: 'adapter',
-    decision: 'Compatibility proof; freeze expansion unless ADR reopens.',
-  },
-  '@openelement/adapter-react': {
-    className: 'adapter',
-    decision: 'Compatibility proof; freeze expansion unless ADR reopens.',
-  },
-  '@openelement/hub': {
-    className: 'archive-candidate',
-    decision: 'Hub remains frozen; decide retain, merge, or remove by ADR.',
-  },
-  '@openelement/cem': {
-    className: 'archive-candidate',
-    decision: 'Tooling candidate; decide retain, merge, or remove by ADR.',
-  },
-  '@openelement/compat-check': {
-    className: 'archive-candidate',
-    decision: 'Tooling candidate; decide retain, merge, or remove by ADR.',
-  },
-  '@openelement/rpc': {
-    className: 'archive-candidate',
-    decision: 'Archived feature candidate; decide retain, merge, or remove by ADR.',
-  },
-};
+const removedPackages = [
+  '@openelement/adapter-lit',
+  '@openelement/adapter-react',
+  '@openelement/adapter-vanilla',
+  '@openelement/cem',
+  '@openelement/compat-check',
+  '@openelement/hub',
+  '@openelement/rpc',
+].sort();
 
 const failures: string[] = [];
 
 const releasePackages = RELEASE_PACKAGE_ORDER.map((step) => step.pkg).sort();
-const classifiedPackages = Object.keys(surface).sort();
-
-for (const pkg of releasePackages) {
-  if (!surface[pkg]) failures.push(`${pkg} is in RELEASE_PACKAGE_ORDER but missing surface class.`);
+if (PACKAGE_COUNT !== retainedPackages.length) {
+  failures.push(`PACKAGE_COUNT is ${PACKAGE_COUNT}, expected ${retainedPackages.length}.`);
+}
+if (JSON.stringify(releasePackages) !== JSON.stringify(retainedPackages)) {
+  failures.push(
+    `RELEASE_PACKAGE_ORDER mismatch. expected=${retainedPackages.join(', ')} actual=${
+      releasePackages.join(', ')
+    }`,
+  );
 }
 
-for (const pkg of classifiedPackages) {
-  if (!releasePackages.includes(pkg)) {
-    failures.push(`${pkg} has a surface class but is missing from RELEASE_PACKAGE_ORDER.`);
+for (const step of RELEASE_PACKAGE_ORDER) {
+  try {
+    const info = await Deno.stat(step.dir);
+    if (!info.isDirectory) failures.push(`${step.dir} is not a directory.`);
+  } catch {
+    failures.push(`${step.dir} is missing.`);
+  }
+}
+
+for (const pkg of removedPackages) {
+  const dir = `packages/${pkg.replace('@openelement/', '')}`;
+  try {
+    await Deno.stat(dir);
+    failures.push(`${dir} must be removed from the v0.40 package graph.`);
+  } catch {
+    // Expected.
   }
 }
 
 const docs = await Deno.readTextFile('docs/current/PACKAGE_SURFACE.md');
-for (const [pkg, record] of Object.entries(surface)) {
+for (const pkg of retainedPackages) {
   if (!docs.includes(`\`${pkg}\``)) {
     failures.push(`${pkg} missing from docs/current/PACKAGE_SURFACE.md.`);
   }
-  if (!docs.includes(record.className)) {
-    failures.push(`${pkg} class ${record.className} missing from docs/current/PACKAGE_SURFACE.md.`);
+}
+for (const pkg of removedPackages) {
+  if (docs.includes(`\`${pkg}\``)) {
+    failures.push(`${pkg} must not appear as a current package in PACKAGE_SURFACE.md.`);
   }
 }
 
-for (
-  const required of [
-    'product-facing',
-    'foundation',
-    'adapter',
-    'archive-candidate',
-    '@openelement/elements',
-    'ADR-0101',
-    'ADR-0102',
-  ]
-) {
+for (const required of ['14-package', 'v0.40', 'ADR-0101']) {
   if (!docs.includes(required)) {
     failures.push(`PACKAGE_SURFACE.md missing required anchor: ${required}`);
-  }
-}
-
-for (const pkgDir of ['cem', 'compat-check', 'rpc']) {
-  const readme = await Deno.readTextFile(`packages/${pkgDir}/README.md`);
-  if (!readme.includes('v0.40 surface: archive-candidate')) {
-    failures.push(`packages/${pkgDir}/README.md must mark v0.40 archive-candidate surface.`);
-  }
-}
-
-const elementsReadme = await Deno.readTextFile('packages/elements/README.md');
-for (
-  const required of ['OpenElement', 'DsdElement', 'v0.40 compatibility export']
-) {
-  if (!elementsReadme.includes(required)) {
-    failures.push(`packages/elements/README.md missing Elements compatibility anchor: ${required}`);
-  }
-}
-
-const coreReadme = await Deno.readTextFile('packages/core/README.md');
-for (const required of ['@openelement/elements', 'DsdElement', 'v0.40 compatibility export']) {
-  if (!coreReadme.includes(required)) {
-    failures.push(`packages/core/README.md missing core compatibility anchor: ${required}`);
   }
 }
 
@@ -164,4 +85,4 @@ if (failures.length > 0) {
   Deno.exit(1);
 }
 
-console.log(`Package surface check passed (${classifiedPackages.length} packages classified).`);
+console.log('Package surface check passed (14 packages retained).');

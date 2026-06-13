@@ -1,18 +1,16 @@
 {
   "name": "@openelement/ssg",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.39.0",
-    "@openelement/core/errors": "jsr:@openelement/core@^0.39.0/errors",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.39.0/logger",
-    "@openelement/protocols/routes": "jsr:@openelement/protocols@^0.39.0/routes",
-    "@openelement/protocols/runtime": "jsr:@openelement/protocols@^0.39.0/runtime",
-    "@openelement/cem": "jsr:@openelement/cem@^0.39.0",
-    "@openelement/compat-check": "jsr:@openelement/compat-check@^0.39.0",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.39.0",
+    "@openelement/core": "jsr:@openelement/core@^0.40.0",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.40.0/errors",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.40.0/logger",
+    "@openelement/protocols/routes": "jsr:@openelement/protocols@^0.40.0/routes",
+    "@openelement/protocols/runtime": "jsr:@openelement/protocols@^0.40.0/runtime",
+    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.40.0",
     "hono": "npm:hono@^4.12",
     "typescript": "npm:typescript@^5.9.0",
     "vite": "npm:vite@8.0.10"

@@ -21,7 +21,6 @@ import { fileURLToPath } from 'node:url';
 const JSR_SCOPE = '@openelement';
 const PKG_DIR_MAP: Record<string, string> = {
   core: 'core',
-  adapterLit: 'adapter-lit',
   adapterVite: 'adapter-vite',
   app: 'app',
   content: 'content',
@@ -96,7 +95,6 @@ async function resolveVersions(): Promise<Record<string, string>> {
   console.info('Resolving package versions from JSR...');
   const jsrNames: Record<string, string> = {
     core: 'core',
-    adapterLit: 'adapter-lit',
     adapterVite: 'adapter-vite', // H-13 fix: Added missing adapterVite entry
     app: 'app',
     content: 'content',

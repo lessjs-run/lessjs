@@ -2,9 +2,9 @@
 
 English | [Simplified Chinese](./README.zh.md)
 
-**JSX-first Web Components platform. Package line: `0.39.0` (`v0.39.0`
-release). Active execution: `v0.39.0` Framework RC + Four-Product Matrix
-Reset.**
+**JSX-first Web Components platform. Package line: `0.40.0` (`v0.40.0`
+release). Active execution: `v0.40.0` Elements + Preact + Repository
+Slimming.**
 
 openElement builds static-first applications with Web Components, JSX/VNode
 rendering, progressive islands, API routes, and Vite + Nitro output. Shadow/DSD
@@ -40,13 +40,14 @@ openElement = Elements + UI + Framework + Protocols
 | Protocols | `@openelement/protocols`                  | Runtime-free replacement boundaries and conformance contracts.          |
 
 Supporting packages such as `@openelement/runtime`, `@openelement/core`,
-adapters, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
+`adapter-vite`, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
 advanced or implementation surfaces. They support the four products; they are
 not separate first-class product lines.
 
-In v0.40, `@openelement/elements` is the product-facing Elements package.
-`OpenElement` also remains available from `@openelement/core` as a compatibility
-bridge while implementation internals are still consolidated.
+In v0.40, the active workspace is the 14-package product line. Hub, RPC, CEM,
+compat-check, and Lit/React/vanilla interop adapters are removed from the
+current package graph; historical details remain in git history and release
+evidence.
 
 ## Why openElement
 
@@ -83,15 +84,15 @@ export default defineIsland(
 
 ## Current Line
 
-All 21 workspace packages are aligned at **0.39.0** (`v0.39.0`) under
+All 14 current workspace packages are aligned at **0.40.0** (`v0.40.0`) under
 [`@openelement`](https://jsr.io/@openelement). The active execution line is
-**v0.39.0**. ADR-0100 restores JSR publish as a release exit gate for v0.39+
-closure.
+**v0.40.0**. ADR-0101 keeps AutoFlow3 as the single workflow/gate control plane
+while reserving minor/major product decisions for human-approved ADR and
+version-plan evidence.
 
-v0.39.0 validates the generated Framework RC surface and records ADR-0099's
-four-product matrix reset. It also keeps Web Awesome out of the current UI
-target. ADR-0101 freezes broad heavy-framework island expansion and hands the
-pre-1.0 proof to a bounded v0.40 Preact island priority.
+v0.40.0 removes Hub, RPC, CEM, compat-check, and Lit/React/vanilla interop
+adapters from the current product line, keeps Vite + Nitro as the Framework
+base, and keeps Preact island work bounded behind the v0.40 plan.
 
 The v1.0 target is a stable four-product platform with frozen Elements, UI,
 Framework, and Protocols contracts.

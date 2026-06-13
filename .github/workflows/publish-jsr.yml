@@ -22,7 +22,13 @@ concurrency:
 jobs:
   # Gate: run tests before publishing
   test:
-    uses: ./.github/workflows/test.yml
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-deno-workspace
+      - name: AutoFlow CI gate
+        run: deno task autoflow:ci
 
   publish:
     runs-on: ubuntu-latest
