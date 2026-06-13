@@ -455,7 +455,7 @@ Deno.test('SSG report: cemCompatibility with only ssr-capable components', async
     {
       tagName: 'ssr-badge',
       tier: 'ssr-capable',
-      reason: 'HTMLElement (via @openelement/adapter-vanilla) with ssr: true',
+      reason: 'Custom element package declaration with ssr: true',
       source: 'package',
       modulePath: './ssr-badge.js',
       ssr: true,

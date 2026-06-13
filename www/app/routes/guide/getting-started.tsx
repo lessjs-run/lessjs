@@ -3,7 +3,7 @@ export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1
 // openElement = Elements + UI + Framework + Protocols.
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { pageStylesSheet } from '../../components/page-styles.js';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui/open-callout';
@@ -147,7 +147,7 @@ export default definePage({
         Interactive UI should return VNodes and use JSX event handlers.
       </p>
       <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 const count = signal(0);
 
@@ -238,7 +238,7 @@ export default definePage({
 
       <h2>交互写法</h2>
       <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 const count = signal(0);
 

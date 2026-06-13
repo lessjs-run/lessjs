@@ -6,7 +6,7 @@ export const tagName = 'page-roadmap';
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '../islands/open-search.tsx';
 

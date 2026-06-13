@@ -2,24 +2,19 @@ import type { Alias, Plugin } from 'vite';
 
 const VIRTUAL_OPENELEMENT_PACKAGE_PREFIX = '\0openelement:ssg-pkg/';
 // Packages resolved by this plugin for JSR consumer SSG builds.
-// Optional packages (adapter-lit, adapter-vanilla, adapter-react, content, i18n)
-// are handled by optionalPackageStubsPlugin in build-ssg.ts instead.
-// The resolver must NOT intercept them, because it runs enforce: 'pre' and would
-// prevent the stubs plugin from providing empty stubs when packages are absent.
+// Retained optional packages (content, i18n) are handled by optionalPackageStubsPlugin
+// in build-ssg.ts instead. The resolver must NOT intercept them, because it runs
+// enforce: 'pre' and would prevent the stubs plugin from providing empty stubs
+// when packages are absent.
 const DEFAULT_OPENELEMENT_PACKAGES = new Set([
   'adapter-vite',
   'app',
-  'cem',
-  'compat-check',
   'core',
   'create',
-  'hub',
+  'elements',
   'protocols',
   'router',
-  'rpc',
-  'runtime',
   'signals',
-  'style-sheet',
   'ui',
 ]);
 
@@ -37,37 +32,44 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
     'cli/build-client': 'src/cli/build-client.ts',
     'cli/build-ssg': 'src/cli/build-ssg.ts',
   },
-  app: { '.': 'src/index.ts' },
-  cem: {
+  app: {
     '.': 'src/index.ts',
-    types: 'src/types.ts',
+    preact: 'src/preact.ts',
+    vite: 'src/vite.ts',
   },
-  'compat-check': { '.': 'src/index.ts' },
+  content: {
+    '.': 'src/index.ts',
+    'blog-data': 'src/blog/blog-data.ts',
+    mdx: 'src/mdx/index.ts',
+    nav: 'src/nav/index.ts',
+    'nav-data': 'src/nav/writer.ts',
+    sitemap: 'src/sitemap/index.ts',
+  },
   core: {
     '.': 'src/index.ts',
     context: 'src/context.ts',
     errors: 'src/errors.ts',
+    data: 'src/data.ts',
+    'dsd-hydration': 'src/dsd-hydration.ts',
     'island-transform': 'src/island-transform.ts',
     isr: 'src/isr.ts',
+    'isr-runtime': 'src/isr-runtime.ts',
     'jsx-runtime': 'src/jsx-runtime.ts',
     'jsx-dev-runtime': 'src/jsx-runtime.ts',
     logger: 'src/logger.ts',
+    'open-element': 'src/open-element.ts',
     'render-dsd-stream': 'src/render-dsd-stream.ts',
     'signal-context': 'src/signal-context.ts',
+    'style-sheet': 'src/style-sheet.ts',
     types: 'src/types.ts',
   },
   create: { '.': 'cli.ts' },
-  hub: {
-    '.': 'mod.ts',
-    builder: 'src/builder.ts',
-    'cli/check-index': 'src/cli/check-index.ts',
-    'cli/hub-submit': 'src/cli/hub-submit.ts',
-    'cli/install-guide': 'src/cli/install-guide.ts',
-    'cli/validate': 'src/cli/validate.ts',
-    indexer: 'src/indexer.ts',
-    schema: 'src/schema.ts',
-    snapshot: 'src/snapshot.ts',
-    submitter: 'src/submitter.ts',
+  elements: {
+    '.': 'src/index.ts',
+  },
+  i18n: {
+    '.': 'src/index.ts',
+    data: 'src/i18n-data.ts',
   },
   router: {
     '.': 'src/mod.ts',
@@ -90,14 +92,12 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
     signals: 'src/signals.ts',
     validators: 'src/validators.ts',
   },
-  rpc: { '.': 'src/index.ts' },
-  runtime: { '.': 'src/index.ts' },
   signals: {
     '.': 'src/index.ts',
     framework: 'src/framework.ts',
     'alien-engine': 'src/alien-engine.ts',
+    'preact-engine': 'src/preact-engine.ts',
   },
-  'style-sheet': { '.': 'src/index.ts' },
   ui: {
     '.': 'src/index.ts',
     'open-button': 'src/open-button.tsx',

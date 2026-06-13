@@ -6,7 +6,7 @@
  */
 
 Deno.test('ssg CLI - module can be imported', async () => {
-  const mod = await import('@openelement/ssg');
+  const mod = await import('../src/ssg/index.ts');
   _assert(mod !== null && typeof mod === 'object');
 });
 

@@ -1,6 +1,6 @@
 import { defineIslandConfig } from '@openelement/app';
 import { defineCustomElement, DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { signal } from '@openelement/signals';
 import { consumeContext } from '@openelement/core';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';

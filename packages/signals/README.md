@@ -3,7 +3,7 @@
 Reactive signals system for openElement, built on alien-signals.
 
 > v0.39 surface: advanced primitive. First-run examples should import signals
-> through `@openelement/runtime` unless they are documenting the primitive
+> through `@openelement/elements` unless they are documenting the primitive
 > layer directly.
 
 `@openelement/signals` provides the reactive primitive layer used by the

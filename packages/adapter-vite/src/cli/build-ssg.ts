@@ -25,13 +25,13 @@ import type {
   OpenElementPackageManifest,
 } from '@openelement/core';
 import type { OpenElementBuildContext } from '../build-context.js';
-import { ssgRender, type SsgRenderOptions } from '@openelement/ssg';
+import { ssgRender, type SsgRenderOptions } from '../ssg/index.ts';
 import { SsrRenderError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
 import { createSsgRenderEvidence } from './ssg-render.js';
-import { createGeneratedDataResolverPlugin } from '@openelement/ssg';
-import { createOpenJsrPackageResolverPlugin } from '@openelement/ssg';
-import { generateSsrPolyfillBanner, resolveExternalManifest } from '@openelement/ssg';
+import { createGeneratedDataResolverPlugin } from '../ssg/index.ts';
+import { createOpenJsrPackageResolverPlugin } from '../ssg/index.ts';
+import { generateSsrPolyfillBanner, resolveExternalManifest } from '../ssg/index.ts';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
 
 const log = createLogger('ssg');
@@ -72,21 +72,33 @@ function normalizeAliasReplacement(root: string, replacement: string): string {
 function normalizeViteAliases(
   aliases: Record<string, string> | Alias[] | null | undefined,
   root: string,
-): Record<string, string> | Alias[] | undefined {
+): Alias[] | undefined {
   if (!aliases) return undefined;
   if (Array.isArray(aliases)) {
-    return aliases.map((alias) =>
-      typeof alias.replacement === 'string'
-        ? { ...alias, replacement: normalizeAliasReplacement(root, alias.replacement) }
-        : alias
+    return sortAliasEntries(
+      aliases.map((alias) =>
+        typeof alias.replacement === 'string'
+          ? { ...alias, replacement: normalizeAliasReplacement(root, alias.replacement) }
+          : alias
+      ),
     );
   }
-  return Object.fromEntries(
-    Object.entries(aliases).map(([find, replacement]) => [
+  return sortAliasEntries(
+    Object.entries(aliases).map(([find, replacement]) => ({
       find,
-      normalizeAliasReplacement(root, replacement),
-    ]),
+      replacement: normalizeAliasReplacement(root, replacement),
+    })),
   );
+}
+
+function aliasSpecificity(find: unknown): number {
+  return typeof find === 'string' ? find.length : 0;
+}
+
+function sortAliasEntries<T extends Alias>(aliases: T[]): T[] {
+  return [...aliases].sort((a, b) => {
+    return aliasSpecificity(b.find) - aliasSpecificity(a.find);
+  });
 }
 
 interface BuildSSGOptions {
@@ -97,7 +109,7 @@ interface BuildSSGOptions {
   middleware?: FrameworkOptions['middleware'];
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
-  islandMeta?: Record<string, Partial<import('@openelement/ssg').IslandDecl>>;
+  islandMeta?: Record<string, Partial<import('../ssg/index.ts').IslandDecl>>;
   packageManifests?: OpenElementPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
@@ -122,7 +134,7 @@ interface BuildSSGOptions {
    * Enables browser prefetch/prerender of pages before the user navigates.
    * Can be a boolean (true = auto-generate from routes) or explicit rules.
    */
-  speculation?: boolean | import('@openelement/ssg').SpeculationRulesOptions;
+  speculation?: boolean | import('../ssg/index.ts').SpeculationRulesOptions;
   /** ADR-0047: Skip Deno pre-resolution, use regex fallback for external deps. */
   skipPreResolution?: boolean;
 }
@@ -173,14 +185,14 @@ async function buildSSG(
 
   // Generate SSG entry code
   const { scanRoutes, scanIslands, scanIslandMeta, fileToTagName } = await import(
-    '@openelement/ssg'
+    '../ssg/index.ts'
   );
-  const { generateHonoEntryCode } = await import('@openelement/ssg');
+  const { generateHonoEntryCode } = await import('../ssg/index.ts');
 
   const routes = await scanRoutes(routesDir);
 
   // v0.25.0: Generate type-safe route parameter declarations for `virtual:open-routes`
-  const { generateRouteTypes } = await import('@openelement/ssg');
+  const { generateRouteTypes } = await import('../ssg/index.ts');
   const routeTypeDts = generateRouteTypes(routes);
   const dotOpenElementDir = join(root, '.openElement');
   mkdirSync(dotOpenElementDir, { recursive: true });
@@ -195,7 +207,7 @@ async function buildSSG(
   const ssgIslandMeta = Object.keys(islandMeta).length > 0
     ? islandMeta
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
-  const { buildEntryDescriptor } = await import('@openelement/ssg');
+  const { buildEntryDescriptor } = await import('../ssg/index.ts');
 
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,

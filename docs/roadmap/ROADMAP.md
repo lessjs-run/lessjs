@@ -1,7 +1,7 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.40.0 Elements + Preact + Repository Slimming.\
+> Current package line: v0.40.0 Elements + Preact + Repository Slimming; v0.40.x cleanup train targets 11 packages.\
 > Active version plan: docs/current/VERSION_PLAN.md.\
 > Updated: 2026-06-13.
 
@@ -29,8 +29,8 @@ application framework identity, with shadow/DSD as the default render mode and
 light DOM as first-class opt-in.
 
 Vite + Nitro remain default Framework engines, not first-class products.
-`@openelement/runtime`, `@openelement/core`, adapter packages, and advanced
-feature packages support the four products without replacing them.
+`@openelement/core`, `@openelement/adapter-vite`, `@openelement/signals`, and
+advanced feature packages support the four products without replacing them.
 
 ## Version Ladder
 
@@ -57,7 +57,7 @@ feature packages support the four products without replacing them.
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
 | v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Done                     |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and slim root/docs/Hub/package/gate shape for the v1 path            | Active                   |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and collapse root/docs/Hub/package/gate shape toward 11 packages     | Active                   |
 | v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
 
@@ -379,24 +379,23 @@ The Repository Slimming jobs are:
 - shrink active docs to current truth, ADR, release evidence, roadmap/status,
   and archive index, with `docs/current/VERSION_PLAN.md` as the only active
   v0.40 execution plan;
-- reduce the workspace package graph from 21 packages to the 14-package current
+- reduce the workspace package graph from 21 packages to the 11-package current
   surface in `docs/current/PACKAGE_SURFACE.md`;
 - reduce hook and CI orchestration to AutoFlow3 entry points while keeping JSR
   publish and post-publish smoke as release evidence.
 
-Current implementation removed Hub/RPC/CEM/compat-check/interop adapter
-packages from the workspace, reduced workflows to four active files, removed
-Hub routes and registry data, slimmed active docs to current truth plus ADR,
-roadmap/status, release evidence, and archive index, and added
-`docs/current/PACKAGE_SURFACE.md` plus `deno task package-surface:check` for the
-14-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
+Current implementation removes Hub/RPC/CEM/compat-check/interop adapter
+packages and collapses standalone runtime/style-sheet/ssg packages into the
+11-package surface. Workflows stay at four active files, active docs stay at
+current truth plus ADR, roadmap/status, release evidence, and archive index,
+and `deno task package-surface:check` verifies the 11-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
 matrix. ADR-0102 also adds `@openelement/elements` as the first-class Elements
 package.
 
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island
 expansion stays out of scope, Web Awesome remains out of the current UI
-strategy, and no Preact runtime may leak into `@openelement/core` or Elements
-as a required public dependency. Further package deletion, package merges, new
+strategy, Fresh is not adopted as a router/server runtime, and no Preact runtime
+may leak into `@openelement/core` or Elements as a required public dependency. Further package deletion, package merges, new
 packages, default runtime changes, and default signal-engine changes still
 require ADR-backed human approval.
 

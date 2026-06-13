@@ -1,5 +1,5 @@
 /**
- * @openelement/ssg - SSG Post-Processing
+ * adapter-vite internal SSG post-processing.
  *
  * Pure Node.js fs operations for SSG output post-processing.
  * No Vite dependency - these functions only read/write files.
@@ -20,7 +20,7 @@ import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('core');
 
-// ─── Shared Directory Walker ──────────────────────────────────────────
+// Shared directory walker
 
 /**
  * Walk a directory tree and apply a visitor to each HTML file.

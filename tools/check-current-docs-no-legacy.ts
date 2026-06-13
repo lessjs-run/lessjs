@@ -75,7 +75,7 @@ for (const dir of ['www/app/routes', 'docs']) {
 for (
   const file of [
     'packages/core/README.md',
-    'packages/runtime/README.md',
+    'packages/elements/README.md',
     'README.md',
     'README.zh.md',
   ]

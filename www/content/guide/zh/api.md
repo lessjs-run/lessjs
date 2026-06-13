@@ -64,7 +64,7 @@ i18n。
 - `@openelement/ui`：第一方 UI 产品面。
 - `@openelement/protocols`：runtime-free Protocols 产品面。
 - 未来 `@openelement/elements`：带 `OpenElement` 的 Elements 产品面。
-- `@openelement/runtime`：当前底层 element、signals、stylesheet facade。
+- `@openelement/elements`：当前底层 element、signals、stylesheet facade。
 - `@openelement/core`：renderer kernel 和 JSX runtime。
 - `@openelement/signals`：signal primitives。
-- `@openelement/style-sheet`：CSSStyleSheet abstraction。
+- `@openelement/core/style-sheet`：CSSStyleSheet abstraction。

@@ -76,6 +76,8 @@ coverage/
 playwright-report/
 test-results/
 debug.log
+hub-index/
+hub-submission.json
 
 deliverables/
 lighthouse-result*.json

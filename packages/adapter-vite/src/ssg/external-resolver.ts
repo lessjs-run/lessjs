@@ -1,5 +1,5 @@
 /**
- * @openelement/ssg — Deno External Dependency Pre-Resolution (ADR-0047).
+ * adapter-vite internal SSG - Deno External Dependency Pre-Resolution (ADR-0047).
  *
  * Eliminates ESM subpath leaks into Rolldown by having Deno resolve all
  * external package transitive dependencies before the bundler sees them.
@@ -17,7 +17,7 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from '
 export interface ExternalManifest {
   /** Complete list of bare specifiers to mark as external. */
   specifiers: string[];
-  /** Redirect map (bare specifier → npm: URL) for importmap generation. */
+  /** Redirect map (bare specifier to npm: URL) for importmap generation. */
   importMap: Record<string, string>;
   /** ISO timestamp of generation. */
   generatedAt: string;

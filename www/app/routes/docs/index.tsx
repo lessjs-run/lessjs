@@ -7,7 +7,7 @@ export const meta = { section: 'Quick Start', label: 'Docs', order: 0 };
 export const tagName = 'page-docs';
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 const sheet = new StyleSheet();
 sheet.replaceSync(`

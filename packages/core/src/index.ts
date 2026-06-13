@@ -67,6 +67,8 @@ export type {
   IsrRuntimeState,
 } from './isr-runtime.js';
 export { DsdElement } from './dsd-element.js';
+export { StyleSheet } from './style-sheet.js';
+export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
 export { OpenElement } from './open-element.js';
 export { bindHydrateEvents } from './dsd-hydration-events.js';
 export type { Constructor, DsdHydration } from './dsd-hydration.js';
@@ -158,6 +160,7 @@ export {
   bindSsrProps,
   defineCustomElement,
   defineIsland,
+  getIslandMeta,
   getSsrProps,
   type IslandOptions,
 } from './island.js';

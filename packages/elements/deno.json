@@ -6,8 +6,9 @@
   },
   "imports": {
     "@openelement/core": "jsr:@openelement/core@^0.40.0",
-    "@openelement/core/open-element": "jsr:@openelement/core@^0.40.0/open-element",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.40.0"
+    "@openelement/core/jsx-runtime": "jsr:@openelement/core@^0.40.0/jsx-runtime",
+    "@openelement/core/style-sheet": "jsr:@openelement/core@^0.40.0/style-sheet",
+    "@openelement/signals": "jsr:@openelement/signals@^0.40.0"
   },
   "publish": {
     "include": [

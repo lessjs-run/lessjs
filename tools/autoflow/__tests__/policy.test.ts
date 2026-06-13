@@ -1,6 +1,11 @@
 import { assert, assertEquals, assertFalse } from 'jsr:@std/assert@^1.0.0';
 import { addPaths, parseArgs } from '../mod3.ts';
-import { evaluatePatchEligibility, evaluateVersionAuthority, selectGates } from '../policy.ts';
+import {
+  evaluatePatchEligibility,
+  evaluateVersionAuthority,
+  selectGates,
+  V040_CLEANUP_TRAIN_APPROVAL_ID,
+} from '../policy.ts';
 import { createPatchReleasePlan, evidenceFile, nextPatchVersion, releaseTag } from '../release.ts';
 
 Deno.test('policy: patch docs fix can be automated', () => {
@@ -12,7 +17,8 @@ Deno.test('policy: patch docs fix can be automated', () => {
 
 Deno.test('policy: public package source changes require review for patch release', () => {
   const decision = evaluatePatchEligibility({
-    changedPaths: ['packages/core/src/index.ts'],
+    changedPaths: ['docs/guide/example.md'],
+    publicApiChanged: true,
   });
   assertFalse(decision.allowed);
   assert(decision.reason.includes('public API impact'));
@@ -20,10 +26,28 @@ Deno.test('policy: public package source changes require review for patch releas
 
 Deno.test('policy: package topology changes require human review', () => {
   const decision = evaluatePatchEligibility({
-    changedPaths: ['packages/core/deno.json'],
+    changedPaths: ['docs/guide/example.md'],
+    packageTopologyChanged: true,
   });
   assertFalse(decision.allowed);
   assert(decision.reason.includes('package topology'));
+});
+
+Deno.test('policy: v0.40.x cleanup train patch requires approved plan id', () => {
+  const decision = evaluatePatchEligibility({
+    changedPaths: ['packages/elements/src/index.ts'],
+  });
+  assertFalse(decision.allowed);
+  assert(decision.reason.includes('v0.40.x cleanup train'));
+});
+
+Deno.test('policy: v0.40.x cleanup train patch accepts explicit human approval id', () => {
+  const decision = evaluatePatchEligibility({
+    changedPaths: ['packages/elements/src/index.ts'],
+    approvedPlanId: V040_CLEANUP_TRAIN_APPROVAL_ID,
+  });
+  assert(decision.allowed);
+  assert(decision.requiredEvidence.includes(`approval:${V040_CLEANUP_TRAIN_APPROVAL_ID}`));
 });
 
 Deno.test('policy: minor release without approved plan is blocked', () => {
@@ -41,6 +65,18 @@ Deno.test('policy: minor release with approved plan can execute', () => {
 Deno.test('policy: dev tier remains fast', () => {
   const gates = selectGates('dev', ['packages/core/src/index.ts']).map((gate) => gate.name);
   assertEquals(gates, ['fmt:check', 'lint']);
+});
+
+Deno.test('policy: push tier includes architecture check for package source changes', () => {
+  const gates = selectGates('push', ['packages/core/src/index.ts']).map((gate) => gate.name);
+  assert(gates.includes('arch:check'));
+});
+
+Deno.test('policy: push tier includes architecture check for tool and hook changes', () => {
+  const toolGates = selectGates('push', ['tools/autoflow/policy.ts']).map((gate) => gate.name);
+  const hookGates = selectGates('push', ['.githooks/pre-push']).map((gate) => gate.name);
+  assert(toolGates.includes('arch:check'));
+  assert(hookGates.includes('arch:check'));
 });
 
 Deno.test('policy: release tier includes publish dry-run', () => {

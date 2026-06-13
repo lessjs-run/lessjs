@@ -1,7 +1,7 @@
 export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 import '../../islands/reactive-showcase.js';

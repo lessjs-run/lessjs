@@ -13,7 +13,7 @@ openElement 先渲染页面，再升级交互组件。
 
 ```tsx
 import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 const count = signal(0);
 

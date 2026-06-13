@@ -5,7 +5,7 @@ import {
   resolveOpenPackageExport,
   resolveVirtualOpenPackageRelative,
   toVirtualOpenPackageId,
-} from '@openelement/ssg';
+} from '../src/ssg/index.ts';
 
 Deno.test('parseOpenPackageSpecifier parses bare openElement package ids', () => {
   assertEquals(parseOpenPackageSpecifier('@openelement/core'), {
@@ -34,10 +34,14 @@ Deno.test('parseOpenPackageSpecifier parses JSR openElement package ids', () => 
 Deno.test('resolveOpenPackageExport maps public subpaths to source files', () => {
   assertEquals(resolveOpenPackageExport('core', '.'), 'src/index.ts');
   assertEquals(resolveOpenPackageExport('core', 'logger'), 'src/logger.ts');
+  assertEquals(resolveOpenPackageExport('core', 'style-sheet'), 'src/style-sheet.ts');
   assertEquals(resolveOpenPackageExport('ui', 'open-card'), 'src/open-card.tsx');
   assertEquals(resolveOpenPackageExport('protocols', 'build-types'), 'src/build-types.ts');
   assertEquals(resolveOpenPackageExport('signals', 'framework'), 'src/framework.ts');
+  assertEquals(resolveOpenPackageExport('signals', 'preact-engine'), 'src/preact-engine.ts');
   assertEquals(resolveOpenPackageExport('app', '.'), 'src/index.ts');
+  assertEquals(resolveOpenPackageExport('app', 'preact'), 'src/preact.ts');
+  assertEquals(resolveOpenPackageExport('elements', '.'), 'src/index.ts');
 });
 
 Deno.test('resolveOpenPackageExport reports unknown openElement subpaths clearly', () => {
@@ -122,7 +126,7 @@ Deno.test('createOpenJsrPackageResolverPlugin can read local package sources bef
   );
 });
 
-Deno.test('createOpenJsrPackageResolverPlugin does not intercept optional packages', async () => {
+Deno.test('createOpenJsrPackageResolverPlugin resolves retained core packages but not optional data packages', async () => {
   const plugin = createOpenJsrPackageResolverPlugin({
     workspaceRoot: null,
     version: '0.21.9',
@@ -132,14 +136,24 @@ Deno.test('createOpenJsrPackageResolverPlugin does not intercept optional packag
     importer?: string,
   ) => string | null | Promise<string | null>;
 
-  // Optional packages are handled by optionalPackageStubsPlugin, not the resolver
-  assertEquals(await resolveId('@openelement/adapter-vanilla'), null);
-  assertEquals(await resolveId('@openelement/adapter-react'), null);
-  assertEquals(await resolveId('@openelement/adapter-lit'), null);
+  assertEquals(
+    await resolveId('@openelement/app'),
+    toVirtualOpenPackageId('app', 'src/index.ts'),
+  );
+  assertEquals(
+    await resolveId('@openelement/elements'),
+    toVirtualOpenPackageId('elements', 'src/index.ts'),
+  );
+  assertEquals(
+    await resolveId('@openelement/router'),
+    toVirtualOpenPackageId('router', 'src/mod.ts'),
+  );
+
+  // Optional retained data packages are handled by optionalPackageStubsPlugin
+  // so SSG can run when the consumer did not install them.
   assertEquals(await resolveId('@openelement/content'), null);
   assertEquals(await resolveId('@openelement/i18n'), null);
 
-  // Required packages ARE resolved by the resolver
   assertEquals(
     await resolveId('@openelement/core'),
     toVirtualOpenPackageId('core', 'src/index.ts'),
@@ -177,7 +191,7 @@ Deno.test('createOpenJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
     `const dynamic = import('npm:gray-matter@4.0.3');`,
     `const literal = 'npm:not-a-real-import@1.0.0';`,
     `export * from 'npm:@jsr/openelement__signals@0.21.10/framework';`,
-    `import { rpc } from 'npm:@jsr/openelement__rpc@0.21.10';`,
+    `import { helper } from 'npm:@scope/example-helper@0.21.10';`,
   ].join('\n');
 
   const plugin = createOpenJsrPackageResolverPlugin({
@@ -197,7 +211,7 @@ Deno.test('createOpenJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   assertEquals(result.includes("import 'marked'"), true);
   assertEquals(result.includes("import('gray-matter')"), true);
   assertEquals(result.includes("from '@jsr/openelement__signals/framework'"), true);
-  assertEquals(result.includes("from '@jsr/openelement__rpc'"), true);
+  assertEquals(result.includes("from '@scope/example-helper'"), true);
   assertEquals(result.includes("'npm:not-a-real-import@1.0.0'"), true);
 
   // npm: prefix and version should NOT remain

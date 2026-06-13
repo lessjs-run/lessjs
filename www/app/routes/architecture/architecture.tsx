@@ -2,7 +2,7 @@ export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
 import '@openelement/ui/open-code-block';
@@ -301,7 +301,7 @@ hub ──────────────────────? compat-c
             </div>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/runtime, @openelement/ui, @openelement/protocols</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
+              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/elements, @openelement/ui, @openelement/protocols</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
               <div class="layer"><strong>advanced build infrastructure</strong><span>@openelement/adapter-vite, @openelement/ssg</span><p>Own Vite plugin assembly, route scanning, generated entries, rendering, and postprocess phases.</p></div>
               <div class="layer"><strong>advanced feature packages</strong><span>content, i18n, router, signals, style-sheet, adapter packages</span><p>Remain public where guides need them, but are not first-run product rows.</p></div>
               <div class="layer"><strong>internal and archived packages</strong><span>cem, compat-check, hub, rpc</span><p>Stay in the package graph for tooling, compatibility, or historical evidence without being presented as v1 products.</p></div>

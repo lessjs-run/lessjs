@@ -23,23 +23,15 @@ interface PackageConfig {
 
 const PACKAGES = [
   'core',
-  'rpc',
   'protocols',
-  'runtime',
+  'elements',
   'signals',
-  'style-sheet',
-  'compat-check',
-  'cem',
   'ui',
   'router',
-  'adapter-lit',
-  'adapter-vanilla',
-  'adapter-react',
   'adapter-vite',
   'content',
   'i18n',
   'app',
-  'hub',
   'create',
 ];
 

@@ -17,9 +17,9 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
-import { type ClientIslandEntry, generateClientEntry } from '@openelement/ssg';
+import { type ClientIslandEntry, generateClientEntry } from '../ssg/index.ts';
 import type { OpenElementBuildContext } from '../build-context.js';
-import { createOpenJsrPackageResolverPlugin } from '@openelement/ssg';
+import { createOpenJsrPackageResolverPlugin } from '../ssg/index.ts';
 import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('ssg');
@@ -159,17 +159,22 @@ async function buildClient(ctx: OpenElementBuildContext): Promise<void> {
       : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
     : [];
 
-  // Always resolve @openelement/style-sheet from workspace (core re-exports it)
+  // Always resolve @openelement/core/style-sheet from workspace (core re-exports it)
   if (WORKSPACE_ROOT) {
     serializedAlias.push({
-      find: '@openelement/style-sheet',
-      replacement: join(WORKSPACE_ROOT, 'packages', 'style-sheet', 'src', 'index.ts'),
+      find: '@openelement/core/style-sheet',
+      replacement: join(WORKSPACE_ROOT, 'packages', 'core', 'src', 'style-sheet.ts'),
     });
     (serializedAlias as Array<{ find: string | RegExp; replacement: string }>).push({
       find: /^@openelement\/router/,
       replacement: join(WORKSPACE_ROOT, 'packages', 'router', 'src'),
     });
   }
+  serializedAlias.sort((a, b) => {
+    const findA = typeof a.find === 'string' ? a.find.length : 0;
+    const findB = typeof b.find === 'string' ? b.find.length : 0;
+    return findB - findA;
+  });
 
   if (localIslands.length === 0 && packageIslandDecls.length === 0) {
     log.info('No islands found - zero client JS output');

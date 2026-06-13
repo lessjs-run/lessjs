@@ -3,7 +3,7 @@
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { posts } from '@openelement/generated/blog-data';
 

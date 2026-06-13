@@ -2,7 +2,7 @@ export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 5
 export const tagName = 'page-islands-deep-guide';
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui/open-code-block';
 

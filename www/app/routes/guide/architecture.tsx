@@ -9,7 +9,7 @@ export const meta = { section: 'Quick Start', label: 'Architecture', order: 10 }
 export const tagName = 'guide-architecture';
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
 const sheet = new StyleSheet();

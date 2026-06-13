@@ -4,7 +4,7 @@
  * Organized by category: application API, components, rendering, islands, signals, and build.
  */
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 export const tagName = 'api-core-page';

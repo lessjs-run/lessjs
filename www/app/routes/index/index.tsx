@@ -4,7 +4,7 @@
  * Active execution: v0.40.0.
  */
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { consumeContext } from '@openelement/core/signal-context';
 import { THEME_CTX } from '@openelement/ui/open-layout';

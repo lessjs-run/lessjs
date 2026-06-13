@@ -39,15 +39,14 @@ openElement = Elements + UI + Framework + Protocols
 | Framework | `@openelement/app`, `@openelement/create` | Pages, layouts, islands, API routes, Vite + Nitro build/runtime output. |
 | Protocols | `@openelement/protocols`                  | Runtime-free replacement boundaries and conformance contracts.          |
 
-Supporting packages such as `@openelement/runtime`, `@openelement/core`,
-`adapter-vite`, `signals`, `style-sheet`, `ssg`, `router`, `content`, and `i18n` are
-advanced or implementation surfaces. They support the four products; they are
-not separate first-class product lines.
+Supporting packages such as `@openelement/core`, `adapter-vite`, `signals`,
+`router`, `content`, and `i18n` are advanced or implementation surfaces. They
+support the four products; they are not separate first-class product lines.
 
-In v0.40, the active workspace is the 14-package product line. Hub, RPC, CEM,
-compat-check, and Lit/React/vanilla interop adapters are removed from the
-current package graph; historical details remain in git history and release
-evidence.
+In v0.40.x, the active workspace is the 11-package cleanup-train product line.
+Hub, RPC, CEM, compat-check, Lit/React/vanilla interop adapters, and standalone
+runtime/style-sheet/ssg packages are removed from the current package graph;
+historical details remain in git history and release evidence.
 
 ## Why openElement
 
@@ -72,7 +71,7 @@ For browser-upgraded UI:
 
 ```tsx
 import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 const count = signal(0);
 
@@ -84,15 +83,16 @@ export default defineIsland(
 
 ## Current Line
 
-All 14 current workspace packages are aligned at **0.40.0** (`v0.40.0`) under
+All 11 current workspace packages are aligned at **0.40.0** (`v0.40.0`) under
 [`@openelement`](https://jsr.io/@openelement). The active execution line is
 **v0.40.0**. ADR-0101 keeps AutoFlow3 as the single workflow/gate control plane
 while reserving minor/major product decisions for human-approved ADR and
 version-plan evidence.
 
-v0.40.0 removes Hub, RPC, CEM, compat-check, and Lit/React/vanilla interop
-adapters from the current product line, keeps Vite + Nitro as the Framework
-base, and keeps Preact island work bounded behind the v0.40 plan.
+v0.40.x removes Hub, RPC, CEM, compat-check, Lit/React/vanilla interop
+adapters, and standalone runtime/style-sheet/ssg packages from the current
+product line, keeps Vite + Nitro as the Framework base, and keeps Preact island
+work bounded behind the v0.40 plan.
 
 The v1.0 target is a stable four-product platform with frozen Elements, UI,
 Framework, and Protocols contracts.

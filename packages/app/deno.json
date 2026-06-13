@@ -3,6 +3,7 @@
   "version": "0.40.0",
   "exports": {
     ".": "./src/index.ts",
+    "./preact": "./src/preact.ts",
     "./vite": "./src/vite.ts"
   },
   "imports": {
@@ -12,6 +13,7 @@
     "@openelement/adapter-vite": "jsr:@openelement/adapter-vite@^0.40.0",
     "@openelement/content": "jsr:@openelement/content@^0.40.0",
     "@openelement/i18n": "jsr:@openelement/i18n@^0.40.0",
+    "preact": "npm:preact@^10.28.0",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

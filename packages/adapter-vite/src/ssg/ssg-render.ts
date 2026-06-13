@@ -1,5 +1,5 @@
 /**
- * @openelement/ssg - SSG Render Pipeline (ADR 0022)
+ * adapter-vite internal SSG render pipeline (ADR 0022).
  *
  * Shared SSG rendering logic used by both:
  *   - build-ssg.ts (Vite inline mode, called from closeBundle)

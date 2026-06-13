@@ -28,8 +28,7 @@ const PKG_DIR_MAP: Record<string, string> = {
   ui: 'ui',
   signals: 'signals',
   protocols: 'protocols',
-  runtime: 'runtime',
-  styleSheet: 'style-sheet',
+  elements: 'elements',
 };
 
 function loadWorkspaceVersion(pkg: string): string {
@@ -102,8 +101,7 @@ async function resolveVersions(): Promise<Record<string, string>> {
     ui: 'ui',
     signals: 'signals',
     protocols: 'protocols',
-    runtime: 'runtime',
-    styleSheet: 'style-sheet',
+    elements: 'elements',
   };
   const entries = await Promise.all(
     keys.map(async (k) => [k, await fetchJsrVersion(jsrNames[k])]),
@@ -134,7 +132,7 @@ node_modules/
     "@openelement/app/vite": "jsr:@openelement/app@^${v.app}/vite",
     "@openelement/core": "jsr:@openelement/core@^${v.core}",
     "@openelement/core/jsx-runtime": "jsr:@openelement/core@^${v.core}/jsx-runtime",
-    "@openelement/runtime": "jsr:@openelement/runtime@^${v.runtime}",
+    "@openelement/elements": "jsr:@openelement/elements@^${v.elements}",
     "@openelement/ui": "jsr:@openelement/ui@^${v.ui}",
     "vite": "npm:vite@8.0.10"
   },
@@ -211,7 +209,7 @@ export default defineConfig({
 `,
     'app/components/app-shell.tsx': `/** @jsxImportSource @openelement/core */
 import { defineLayout } from '@openelement/app';
-import { StyleSheet } from '@openelement/runtime';
+import { StyleSheet } from '@openelement/elements';
 
 export const tagName = 'app-shell';
 
@@ -247,7 +245,7 @@ export default defineLayout(tagName, {
 `,
     'app/routes/index.tsx': `/** @jsxImportSource @openelement/core */
 import { defineElement, definePage } from '@openelement/app';
-import { StyleSheet } from '@openelement/runtime';
+import { StyleSheet } from '@openelement/elements';
 
 export const tagName = 'home-page';
 
@@ -294,7 +292,7 @@ export default definePage({
 `,
     'app/routes/freshness.tsx': `/** @jsxImportSource @openelement/core */
 import { defineElement, definePage } from '@openelement/app';
-import { StyleSheet } from '@openelement/runtime';
+import { StyleSheet } from '@openelement/elements';
 
 export const tagName = 'freshness-page';
 
@@ -342,7 +340,7 @@ export default definePage({
 `,
     'app/islands/my-counter.tsx': `/** @jsxImportSource @openelement/core */
 import { defineIsland, defineIslandConfig } from '@openelement/app';
-import { signal, StyleSheet } from '@openelement/runtime';
+import { signal, StyleSheet } from '@openelement/elements';
 
 export const tagName = 'my-counter';
 export const openElement = defineIslandConfig({ hydrate: 'idle', ssr: true, dsd: true });

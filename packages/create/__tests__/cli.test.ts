@@ -119,7 +119,10 @@ Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtim
   assertFalse('@openelement/protocols/renderer' in denoJson.imports);
   assertFalse('@openelement/protocols/routes' in denoJson.imports);
   assertFalse('@openelement/protocols/signals' in denoJson.imports);
-  assertEquals(denoJson.imports['@openelement/runtime'], 'jsr:@openelement/runtime@^${v.runtime}');
+  assertEquals(
+    denoJson.imports['@openelement/elements'],
+    'jsr:@openelement/elements@^${v.elements}',
+  );
   assertEquals(denoJson.imports['@openelement/ui'], 'jsr:@openelement/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
   assertEquals(denoJson.nodeModulesDir, 'auto');
@@ -177,7 +180,7 @@ Deno.test('create-open: route index uses JSX-first definePage API', () => {
   assert(routeIndex.includes('definePage'));
   assert(routeIndex.includes('defineElement'));
   assert(routeIndex.includes("from '@openelement/app'"));
-  assert(routeIndex.includes("from '@openelement/runtime'"));
+  assert(routeIndex.includes("from '@openelement/elements'"));
   assert(routeIndex.includes('@jsxImportSource @openelement/core'));
   assert(routeIndex.includes('StyleSheet'));
   assert(routeIndex.includes("route: { path: '/' }"));
@@ -219,7 +222,7 @@ Deno.test('create-open: island counter uses JSX-first defineIsland API', () => {
   assert(islandCounter.includes('defineIsland'));
   assert(islandCounter.includes('defineIslandConfig'));
   assert(islandCounter.includes("from '@openelement/app'"));
-  assert(islandCounter.includes("from '@openelement/runtime'"));
+  assert(islandCounter.includes("from '@openelement/elements'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
   assert(islandCounter.includes('openElement = defineIslandConfig'));
   assert(islandCounter.includes("hydrate: 'idle'"));
@@ -312,11 +315,11 @@ Deno.test('create-open: generated project builds through the one-command pipelin
     denoJson.imports['@openelement/protocols/signals'] = pathToFileURL(
       join(repoRoot, 'packages', 'protocols', 'src', 'signals.ts'),
     ).href;
-    denoJson.imports['@openelement/runtime'] = pathToFileURL(
-      join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
+    denoJson.imports['@openelement/elements'] = pathToFileURL(
+      join(repoRoot, 'packages', 'elements', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@openelement/style-sheet'] = pathToFileURL(
-      join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts'),
+    denoJson.imports['@openelement/core/style-sheet'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'style-sheet.ts'),
     ).href;
     denoJson.imports['@openelement/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
@@ -421,12 +424,12 @@ Deno.test('create-open: generated project builds through the one-command pipelin
         replacement: vitePath(join(signalsSrc, 'framework.ts')),
       },
       {
-        find: '@openelement/runtime',
-        replacement: vitePath(join(repoRoot, 'packages', 'runtime', 'src', 'index.ts')),
+        find: '@openelement/elements',
+        replacement: vitePath(join(repoRoot, 'packages', 'elements', 'src', 'index.ts')),
       },
       {
-        find: '@openelement/style-sheet',
-        replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
+        find: '@openelement/core/style-sheet',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'style-sheet.ts')),
       },
       {
         find: '@openelement/ui/open-props-tokens',

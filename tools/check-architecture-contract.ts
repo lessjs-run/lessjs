@@ -54,6 +54,12 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     reason: 'adoptedStyleSheets is not present on every typed render root.',
   },
   {
+    file: 'packages/core/src/style-sheet.ts',
+    fragment: 'globalThis.CSSStyleSheet as unknown as new () => StyleSheetLike',
+    reason:
+      'Native CSSStyleSheet has CSSRuleList while the SSR facade exposes an array-like rule contract.',
+  },
+  {
     file: 'packages/core/src/island.ts',
     fragment: 'el as unknown as Record<string, unknown>',
     reason: 'Custom element prop assignment by dynamic prop name.',
@@ -77,11 +83,6 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     file: 'packages/router/src/client-router.ts',
     fragment: 'this.#el as unknown as Record<string, unknown>',
     reason: 'Router host exposes locale/locales as dynamic element properties.',
-  },
-  {
-    file: 'packages/style-sheet/src/style-sheet.ts',
-    fragment: 'resolveStyleSheetCtor() as unknown as new () =>',
-    reason: 'Native CSSStyleSheet and SSR shim constructor unification.',
   },
   {
     file: 'packages/ui/src/open-code-block.tsx',

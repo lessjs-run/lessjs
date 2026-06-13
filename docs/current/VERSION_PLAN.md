@@ -1,102 +1,104 @@
-# v0.40.0 Version Plan - Product-Line Reset
+# v0.40.x Version Plan - Cleanup Train
 
 ## Objective
 
-Make `dev` the focused v0.40 product-line branch and keep the project aligned to:
+Make `dev` the focused v0.40 product-line branch and collapse the repository to
+the product shape:
 
 ```text
 openElement = Elements + UI + Framework + Protocols
 ```
 
-v0.40 is a breaking Repository Slimming release. It narrows the package graph, removes Hub
-from the active product, makes AutoFlow3 the only gate control plane, and keeps
-Vite + Nitro as the Framework base while protocols remain replaceable.
-
-The current local package line is `v0.40.0`. Publish closure still requires
-release evidence and JSR/post-publish smoke before v0.40 is marked released.
+The current local package line is `v0.40.0`. The v0.40.x line is a manually
+approved breaking cleanup train. It is not a normal AutoFlow patch-release
+line: AutoFlow3 may execute gates and evidence collection, but package graph and
+public API changes require the approved plan id
+`ADR-0105/v0.40.x-cleanup-train`.
 
 ## Scope
 
-- Keep a 14-package current graph documented in `docs/current/PACKAGE_SURFACE.md`.
-- Remove historical `rpc`, `hub`, `cem`, `compat-check`, `adapter-lit`,
-  `adapter-react`, and `adapter-vanilla` packages from the current workspace.
-- Keep Preact as the v0.40 heavy-island priority without making it the product
-  identity.
-- Keep `@preact/signals-core` only as a `SignalEngine` candidate pending
-  conformance, SSR/CSR, bundle, and consumer evidence.
-- Keep current docs to current truth, ADR, roadmap/status, release evidence, and
-  archive index.
+- Keep an 11-package current graph documented in `docs/current/PACKAGE_SURFACE.md`.
+- Promote `@openelement/elements` into the canonical component-authoring facade.
+- Remove standalone `@openelement/runtime`, `@openelement/style-sheet`, and
+  `@openelement/ssg` from the current package graph.
+- Move `StyleSheet` into `@openelement/core/style-sheet` and re-export it from
+  `@openelement/elements`.
+- Move SSG internals into `@openelement/adapter-vite`.
+- Keep Preact island support as optional `@openelement/app/preact`.
+- Keep `alien-signals` as the default signal engine and add
+  `@openelement/signals/preact-engine` only as a candidate.
 - Keep AutoFlow3 as the single workflow/gate/evidence control plane.
+- Keep active docs to current truth, ADR, roadmap/status, release evidence, and
+  archive index.
 
 ## Governance Rules
 
-- ADR-0101 is the authority boundary for this reset.
-- ADR-0104 keeps the signal engine candidate work behind protocol conformance.
-- AutoFlow3 may execute mechanical patch work only; minor/major scope, public
-  API, package graph, default runtime, default signal engine, release policy,
-  security, auth, and database ownership changes require human-approved ADR or
-  version-plan evidence.
-- v0.40 package removals are human-approved as part of this Version Plan and
-  must be reflected in release evidence before closure.
+- ADR-0101 is the product-line reset and AutoFlow3 authority boundary.
+- ADR-0104 keeps signal-engine changes behind protocol conformance.
+- ADR-0105 approves this v0.40.x breaking cleanup train.
+- AutoFlow3 patch automation must refuse v0.40.x cleanup-train release execution
+  unless the approved plan id is present.
+- Minor/major scope, public API, package topology, default runtime, default
+  signal engine, release policy, security, auth, and database ownership changes
+  still require human-approved ADR or version-plan evidence.
 
 ## Workstreams
 
-### Elements Product Surface
+### v0.40.1 - Governance And Repo Hygiene
 
-- [x] Create `@openelement/elements`.
-- [x] Provide `OpenElement` and `DsdElement` compatibility exports.
-- [x] Add Elements shadow/DSD and light DOM opt-in tests.
-- [ ] Update starter, README, package README, and website docs to teach
-      `OpenElement` as the first-run authoring surface.
+- [x] Add v0.40.x cleanup-train governance.
+- [x] Make pre-push run `autoflow:push` on all branches.
+- [x] Make `autoflow:push` select `arch:check` for package/tool/hook/config changes.
+- [x] Delete tracked root `bench/`.
+- [x] Add repo hygiene checks for removed package names and tracked generated root artifacts.
 
-### Framework and Nitro Base
+### v0.40.2 - Package Graph Collapse To 11
 
-- [x] Keep Vite + Nitro proof tasks as Framework evidence.
-- [x] Keep protocols as the runtime-free replacement boundary.
-- [ ] Prove Preact island SSR output, client upgrade, explicit hydration
-      strategy, asset loading, and consumer starter behavior.
+- [x] Remove standalone `@openelement/style-sheet`.
+- [x] Move `StyleSheet` into `@openelement/core/style-sheet`.
+- [x] Promote `@openelement/elements` as the authoring facade.
+- [x] Remove standalone `@openelement/runtime`.
+- [x] Move SSG internals into `@openelement/adapter-vite`.
+- [x] Remove standalone `@openelement/ssg`.
+- [x] Update workspace, import map, release order, package count, publish order, and checks.
 
-### Package Graph Rationalization
+### v0.40.3 - Preact Island Proof
 
-- [x] Reduce the workspace package graph from 21 to 14 packages.
-- [x] Inline CEM compatibility needed by `@openelement/ssg`.
-- [x] Remove Hub, RPC, CEM, compat-check, and interop adapter packages.
-- [x] Update package count, release order, workspace imports, and package
-      surface checks.
-- [x] Add v0.40 migration/release evidence for removed packages.
+- [x] Add optional `@openelement/app/preact`.
+- [x] Record island metadata and hydration strategies through the existing island protocol.
+- [x] Prove DSD opt-out metadata.
+- [ ] Add browser-level client upgrade proof in release evidence.
 
-### Docs Slimming
+### v0.40.4 - Signal Candidate And Code Clean
 
-- [x] Keep active docs to current truth, ADR, release evidence, roadmap/status,
-      and archive index.
-- [x] Remove historical SOP, NextVersion, conversation, review, reference,
-      design, mockup, and old AutoFlow docs from active repo truth.
-- [x] Use `docs/archive/README.md` as the archive index; complete history remains
-      available through git history.
-- [x] Ensure docs checks ignore removed historical locations.
+- [x] Keep `alien-signals` as default.
+- [x] Add optional `@openelement/signals/preact-engine`.
+- [x] Run shared SignalEngine conformance across alien and Preact engines.
+- [x] Guard that core and elements do not require `@preact/signals-core`.
+- [ ] Continue cleaning mojibake in active source/tools as gates expose it.
 
-### Gate and Workflow Slimming
+### v0.40.5 - Release Hardening
 
-- [x] Keep workflows to `autoflow-ci.yml`, `codeql.yml`, `publish-jsr.yml`, and
-      `jsr-consumer-monitor.yml`.
-- [x] Remove duplicate `test.yml`, Hub CI, manual publish, and deploy API
-      workflows.
-- [x] Make `publish-jsr.yml` call `deno task autoflow:ci` directly.
-- [x] Remove old AutoFlow2 and duplicate gate tasks from `deno.json`.
-- [x] Run and fix AutoFlow3 local, push, and CI gates.
+- [x] Add package graph and repo hygiene checks for the 11-package target.
+- [x] Add hook-policy coverage proving package/tool/hook changes trigger `arch:check`.
+- [x] Run full release dry-run and JSR publish dry-run in release order.
+- [x] Prepare release evidence for the cleanup train.
+- [ ] Do not claim publish closure until JSR package truth and post-publish smoke pass.
 
 ## Acceptance
 
-- The workspace has exactly 14 current packages.
+- The workspace has exactly 11 current packages.
 - `graph:check`, `package-surface:check`, and release order agree on the same
-  14-package graph.
+  11-package graph.
 - Active workflows are at most 4 and all CI gate orchestration enters through
   AutoFlow3.
-- Root has no tracked Hub index or generated output.
-- Active docs no longer depend on SOP/NextVersion/conversation/review trees.
+- Root has no tracked generated artifacts or tracked `bench/`.
+- Active code does not import removed packages.
+- Preact remains optional and does not enter `core` or `elements` as a required
+  dependency.
 - `nitro:proof:node` and `nitro:proof:workers` still pass.
-- Release evidence records package removals, Hub removal, docs slimming, and
-  workflow slimming before v0.40 closure.
+- Release evidence records package removals and the cleanup-train approval
+  before v0.40.x closure.
 
 ## Test Matrix
 
@@ -107,6 +109,8 @@ deno task typecheck
 deno task test
 deno task build
 deno task graph:check
+deno task arch:check
+deno task repo:hygiene
 deno task workflow:check
 deno task workflow:check-slimming
 deno task docs:check-public
@@ -115,9 +119,11 @@ deno task docs:check-strategy
 deno task package-surface:check
 deno task signals:check-protocol-boundary
 deno task autoflow:test
-deno task autoflow:dev
 deno task autoflow:push
 deno task autoflow:ci
 deno task nitro:proof:node
 deno task nitro:proof:workers
+deno task consumer:local
+deno task consumer:core-smoke
+deno task publish:dry-run
 ```

@@ -11,6 +11,7 @@ export interface GateDefinition {
 
 export interface PatchEligibilityInput {
   changedPaths: string[];
+  approvedPlanId?: string;
   publicApiChanged?: boolean;
   packageTopologyChanged?: boolean;
   releasePolicyChanged?: boolean;
@@ -26,6 +27,7 @@ export interface PolicyDecision {
 }
 
 export const AUTOFLOW3_POLICY_VERSION = 'autoflow3-v0';
+export const V040_CLEANUP_TRAIN_APPROVAL_ID = 'ADR-0105/v0.40.x-cleanup-train';
 
 export const GATES: readonly GateDefinition[] = [
   {
@@ -47,6 +49,12 @@ export const GATES: readonly GateDefinition[] = [
     name: 'graph:check',
     command: ['deno', 'task', 'graph:check'],
     tiers: ['push', 'ci', 'release'],
+  },
+  {
+    name: 'repo:hygiene',
+    command: ['deno', 'task', 'repo:hygiene'],
+    tiers: ['push', 'ci', 'release'],
+    triggers: [/^packages\//, /^tools\//, /^deno\.json$/, /^README/, /^docs\/current\//],
   },
   {
     name: 'workflow:check',
@@ -74,8 +82,15 @@ export const GATES: readonly GateDefinition[] = [
   {
     name: 'arch:check',
     command: ['deno', 'task', 'arch:check'],
-    tiers: ['ci', 'release'],
-    triggers: [/^(packages|docs|tools|www)\//, /^deno\.json$/],
+    tiers: ['push', 'ci', 'release'],
+    triggers: [
+      /^packages\//,
+      /^tools\//,
+      /^\.githooks\//,
+      /^\.github\/workflows\//,
+      /^deno\.json$/,
+      /^deno\.lock$/,
+    ],
   },
   {
     name: 'signals:check-protocol-boundary',
@@ -120,6 +135,30 @@ export function selectGates(tier: AutoFlowTier, changedPaths: string[]): GateDef
 
 export function evaluatePatchEligibility(input: PatchEligibilityInput): PolicyDecision {
   const requiredEvidence = ['release-state:auto-classification'];
+
+  if (isV040CleanupTrainChange(input.changedPaths) && !input.approvedPlanId) {
+    return {
+      allowed: false,
+      reason:
+        'v0.40.x cleanup train changes are manually approved breaking patches and require an approved plan id',
+      requiredEvidence: ['ADR-0105', 'approved version plan', 'approval id'],
+    };
+  }
+
+  if (
+    isV040CleanupTrainChange(input.changedPaths) &&
+    input.approvedPlanId === V040_CLEANUP_TRAIN_APPROVAL_ID
+  ) {
+    return {
+      allowed: true,
+      reason: `v0.40.x cleanup train allowed with approved plan ${input.approvedPlanId}`,
+      requiredEvidence: [
+        'ADR-0105',
+        'docs/current/VERSION_PLAN.md',
+        `approval:${input.approvedPlanId}`,
+      ],
+    };
+  }
 
   const blockers: string[] = [];
   if (
@@ -170,6 +209,19 @@ export function evaluatePatchEligibility(input: PatchEligibilityInput): PolicyDe
     reason: 'patch automation allowed for bounded mechanical change',
     requiredEvidence,
   };
+}
+
+export function isV040CleanupTrainChange(changedPaths: string[]): boolean {
+  return changedPaths.some((path) =>
+    path === 'deno.json' ||
+    path === 'deno.lock' ||
+    path === 'tools/package-release-order.ts' ||
+    path === 'tools/project-constants.ts' ||
+    path === 'tools/check-package-surface.ts' ||
+    path.startsWith('packages/') ||
+    path.startsWith('docs/adr/ADR-0105') ||
+    path === 'docs/current/VERSION_PLAN.md'
+  );
 }
 
 export function evaluateVersionAuthority(

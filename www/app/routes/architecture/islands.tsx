@@ -1,6 +1,6 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '@openelement/ui\/open-code-block';
 
@@ -112,7 +112,7 @@ export class IslandsGuidePage extends DsdElement {
           </p>
           <open-code-block><pre><code>{`// app/islands/my-counter.ts
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { signal } from '@openelement/signals';
 
 export const tagName = 'my-counter';

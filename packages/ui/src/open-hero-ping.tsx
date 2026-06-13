@@ -12,7 +12,7 @@
  * @csspart dot-animated - The animated ping button
  */
 import { DsdElement } from '@openelement/core';
-import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'open-hero-ping';
 

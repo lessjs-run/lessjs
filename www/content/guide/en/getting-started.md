@@ -53,7 +53,7 @@ the file scanner still owns route matching.
 
 ```tsx
 import { defineIsland, defineIslandConfig } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 export const openElement = defineIslandConfig({
   hydrate: 'idle',

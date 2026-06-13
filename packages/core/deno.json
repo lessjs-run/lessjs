@@ -11,6 +11,7 @@
     "./signal-context": "./src/signal-context.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
     "./open-element": "./src/open-element.ts",
+    "./style-sheet": "./src/style-sheet.ts",
     "./jsx-runtime": "./src/jsx-runtime.ts",
     "./jsx-dev-runtime": "./src/jsx-runtime.ts",
     "./island-transform": "./src/island-transform.ts",
@@ -22,8 +23,7 @@
     "@openelement/protocols/data": "jsr:@openelement/protocols@^0.40.0/data",
     "@openelement/protocols/renderer": "jsr:@openelement/protocols@^0.40.0/renderer",
     "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.40.0/signals",
-    "@openelement/signals": "jsr:@openelement/signals@^0.40.0",
-    "@openelement/style-sheet": "jsr:@openelement/style-sheet@^0.40.0"
+    "@openelement/signals": "jsr:@openelement/signals@^0.40.0"
   },
   "publish": {
     "include": [

@@ -164,9 +164,12 @@ async function executePatchRelease(dryRun: boolean): Promise<void> {
   }
 }
 
-async function runPatchRelease(dryRun: boolean): Promise<void> {
+async function runPatchRelease(
+  dryRun: boolean,
+  approvedPlan: string | undefined,
+): Promise<void> {
   const changedPaths = await gitChangedPaths('release');
-  const decision = evaluatePatchEligibility({ changedPaths });
+  const decision = evaluatePatchEligibility({ changedPaths, approvedPlanId: approvedPlan });
   console.log(`AutoFlow3 patch-release (${AUTOFLOW3_POLICY_VERSION})`);
   console.log(`Policy: ${decision.allowed ? 'allowed' : 'blocked'}`);
   console.log(`Reason: ${decision.reason}`);
@@ -220,7 +223,7 @@ export async function main(args: string[]): Promise<void> {
       await runTier('ci', options.dryRun);
       break;
     case 'patch-release':
-      await runPatchRelease(options.dryRun);
+      await runPatchRelease(options.dryRun, options.approvedPlan);
       break;
     case 'minor-plan':
       runMinorPlan();

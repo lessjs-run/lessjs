@@ -26,7 +26,7 @@ import type {
   RouteEntry,
 } from '@openelement/core';
 import type { OpenElementPluginMeta } from '@openelement/protocols/build-types';
-import type { IslandDecl, SsrAdmissionPlan } from '@openelement/ssg';
+import type { IslandDecl, SsrAdmissionPlan } from './ssg/index.ts';
 
 // These branded types ensure Phase 2 can only run after Phase 1,
 // and Phase 3 can only run after Phase 2. The compiler catches
@@ -137,7 +137,7 @@ export class Phase3Meta {
   componentsDir: string = 'app/components';
 
   /** ADR-0047: Pre-resolved external dependency manifest (auto-generated from deno info). */
-  externalManifest?: import('@openelement/ssg').ExternalManifest;
+  externalManifest?: import('./ssg/index.ts').ExternalManifest;
 
   /** Skip Deno pre-resolution, use regex fallback. */
   skipPreResolution?: boolean;

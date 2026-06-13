@@ -13,7 +13,7 @@
  *   --underline-offset:  3px     (link underline distance)
  *   --border-hairline:   0.5px   (hairline border width)
  */
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 
 export const pageStyles = `
   :host {

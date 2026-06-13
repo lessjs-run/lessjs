@@ -8,10 +8,6 @@
 set -e
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$BRANCH" != "dev" ] && [ "$BRANCH" != "main" ]; then
-  exit 0
-fi
-
 echo "=== pre-push: autoflow:push for '$BRANCH' ==="
 
 deno task autoflow:push || {

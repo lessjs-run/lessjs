@@ -8,7 +8,7 @@
 
 import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
-import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { jsx } from '../src/jsx-runtime.ts';
 import type { VNode } from '../src/vnode.ts';
 import { renderDsdTree } from '../src/render-ir.ts';

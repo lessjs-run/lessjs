@@ -1,18 +1,17 @@
 /**
- * @openelement/ssg — Static Site Generation engine.
+ * adapter-vite internal SSG engine.
  *
  * Provides parallel SSG rendering using Deno Workers.
- * Extracted from @openelement/adapter-vite as part of the v0.36.0
- * adapter decomposition (ADR-0090).
+ * Folded back into @openelement/adapter-vite for the v0.40.x cleanup train.
  *
  * Architecture:
  *   - Sequential rendering (baseline): render pages one at a time
  *   - Parallel rendering (Workers): distribute pages across workers
  *
- * @module @openelement/ssg
+ * @module @openelement/adapter-vite/ssg-internal
  */
 
-// ─── Types ─────────────────────────────────────────────────────
+// Types
 
 /** A single page to be rendered during SSG. */
 export interface SsgPageInput {

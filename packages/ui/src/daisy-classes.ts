@@ -12,7 +12,7 @@
  * - Class names preserve daisyUI semantics
  */
 
-import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 
 export const daisyClassSheet: StyleSheetLike = createDaisySheet();
 

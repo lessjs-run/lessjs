@@ -1,5 +1,5 @@
 /**
- * @openelement/ssg — Independent SSG CLI (ADR 0022)
+ * adapter-vite internal SSG CLI (ADR 0022).
  *
  * Standalone SSG entry point that loads a previously built SSR bundle
  * using its sidecar importmap.json, then runs the full SSG rendering
@@ -8,10 +8,10 @@
  *
  * Usage:
  *   deno run --import-map=dist/server/importmap.json \
- *     -A packages/ssg/src/cli/ssg.ts \
+ *     -A packages/adapter-vite/src/ssg/cli/ssg.ts \
  *     --ssr-dir ./dist/server --out-dir ./dist
  *
- *   bun run packages/ssg/src/cli/ssg.ts \
+ *   bun run packages/adapter-vite/src/ssg/cli/ssg.ts \
  *     --ssr-dir ./dist/server --out-dir ./dist
  *
  * The importmap.json is produced by build-ssg.ts during Phase 1.

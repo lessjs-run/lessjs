@@ -23,7 +23,7 @@
  */
 
 import { DsdElement } from '@openelement/core';
-import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeHtml } from '@openelement/core';
 

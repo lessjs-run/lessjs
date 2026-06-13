@@ -19,7 +19,7 @@ import { defineCustomElement, DsdElement } from '@openelement/core';
 import type { VNode } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signals';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 
 interface SearchEntry {

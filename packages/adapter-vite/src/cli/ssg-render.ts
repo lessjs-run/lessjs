@@ -1,9 +1,9 @@
 /**
  * Compatibility wrapper for the SSG render pipeline.
  *
- * The Vite-free implementation lives in @openelement/ssg as of v0.36.2.
+ * The implementation is internal to adapter-vite in v0.40.x.
  * adapter-vite keeps this module so existing imports continue to work while
- * build orchestration delegates to the new SSG package.
+ * build orchestration uses the local SSG helpers.
  */
 
 import {
@@ -13,7 +13,7 @@ import {
   type SsgRenderEvidence,
   type SsgRenderOptions,
   type SsrBundle,
-} from '@openelement/ssg';
+} from '../ssg/index.ts';
 import { printBuildManifest } from '../build-manifest.js';
 import type { OpenElementBuildContext } from '../build-context.js';
 

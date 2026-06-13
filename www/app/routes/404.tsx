@@ -2,7 +2,7 @@
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { DsdElement } from '@openelement/core';
-import { StyleSheet } from '@openelement/style-sheet';
+import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '../islands/open-search.tsx';
 

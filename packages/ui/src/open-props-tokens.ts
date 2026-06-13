@@ -8,7 +8,7 @@
  * Cleaned dead tokens; only used tokens survive.
  */
 
-import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 
 export const openPropsTokenSheet: StyleSheetLike = createTokenSheet();
 

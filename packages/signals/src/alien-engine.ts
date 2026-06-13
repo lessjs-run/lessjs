@@ -45,7 +45,9 @@ export function createAlienEngine(
           s(v);
         },
         subscribe(fn: (value: T) => void): () => void {
-          const e = alienMod.effect(() => fn(s()));
+          const e = alienMod.effect(() => {
+            fn(s());
+          });
           return () => e();
         },
       };
@@ -58,7 +60,9 @@ export function createAlienEngine(
           return c();
         },
         subscribe(fn2: (value: T) => void): () => void {
-          const e = alienMod.effect(() => fn2(c()));
+          const e = alienMod.effect(() => {
+            fn2(c());
+          });
           return () => e();
         },
       };

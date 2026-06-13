@@ -132,11 +132,11 @@ denoJson.imports['@openelement/signals'] = pathToFileURL(
 denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
   join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
 ).href;
-denoJson.imports['@openelement/runtime'] = pathToFileURL(
-  join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
+denoJson.imports['@openelement/elements'] = pathToFileURL(
+  join(repoRoot, 'packages', 'elements', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@openelement/style-sheet'] = pathToFileURL(
-  join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts'),
+denoJson.imports['@openelement/core/style-sheet'] = pathToFileURL(
+  join(repoRoot, 'packages', 'core', 'src', 'style-sheet.ts'),
 ).href;
 denoJson.imports['@openelement/content'] = pathToFileURL(
   join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
@@ -231,12 +231,12 @@ const aliases = [
     replacement: vitePath(join(signalsSrc, 'framework.ts')),
   },
   {
-    find: '@openelement/runtime',
-    replacement: vitePath(join(repoRoot, 'packages', 'runtime', 'src', 'index.ts')),
+    find: '@openelement/elements',
+    replacement: vitePath(join(repoRoot, 'packages', 'elements', 'src', 'index.ts')),
   },
   {
-    find: '@openelement/style-sheet',
-    replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
+    find: '@openelement/core/style-sheet',
+    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'style-sheet.ts')),
   },
   {
     find: '@openelement/ui/open-props-tokens',

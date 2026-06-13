@@ -13,7 +13,7 @@ openElement renders the page first, then upgrades interactive components.
 
 ```tsx
 import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/runtime';
+import { signal } from '@openelement/elements';
 
 const count = signal(0);
 

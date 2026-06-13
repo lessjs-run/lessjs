@@ -5,7 +5,7 @@ import {
   GENERATED_I18N_ID,
   GENERATED_NAV_ID,
   generatedDataPath,
-} from '@openelement/ssg';
+} from '../src/ssg/index.ts';
 
 Deno.test('generatedDataPath maps generated namespace to app data files', () => {
   const normalized = (path: string | null) => path?.replaceAll('\\', '/');

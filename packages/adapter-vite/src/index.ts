@@ -33,7 +33,7 @@ export { OpenElementBuildContext } from './build-context.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
 
-// SSG post-processing & island manifests (re-exported from @openelement/ssg)
+// SSG post-processing & island manifests (adapter-vite internal build helpers)
 export {
   buildIslandChunkMap,
   buildSpeculationRulesJson,
@@ -51,10 +51,10 @@ export {
   type PageIslandManifest,
   type SpeculationRulesOptions,
   writeIslandManifests,
-} from '@openelement/ssg';
+} from './ssg/index.ts';
 
-// External resolver types (moved to @openelement/ssg in v0.36.3)
-export type { ExternalManifest } from '@openelement/ssg';
+// External resolver types used by the adapter-vite build pipeline
+export type { ExternalManifest } from './ssg/index.ts';
 
 // Subpath resolver (public constants)
 export { CORE_SUBPATHS, VIRTUAL_CORE_PREFIX } from './subpath-resolver.js';
