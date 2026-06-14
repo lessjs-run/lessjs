@@ -18,7 +18,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { signal } from '@openelement/signal';
@@ -70,7 +70,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenThemeToggle extends DsdElement {
+export class OpenThemeToggle extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['theme'];
@@ -156,7 +156,7 @@ export class OpenThemeToggle extends DsdElement {
     super.onCsrRendered();
   }
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     // Zero signal.value reads in render (ADR-0062).
     // effect binding that updates the attribute when theme changes.
     // CSS selectors ([data-theme="light"]) handle icon visibility.

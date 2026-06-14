@@ -1,7 +1,7 @@
 /**
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import '../islands/open-search.tsx';
@@ -44,13 +44,17 @@ styles.replaceSync(`
   :host { display: block; }
 `);
 
-export default class Page404 extends DsdElement {
+export default class Page404 extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
   override render() {
     return (
       <div class='container text-center' style='max-width:700px;margin:var(--size-12) auto;'>
-        <h1 style='font-size:4rem;font-weight:var(--font-weight-7);color:var(--gray-10);margin:0;'>404</h1>
-        <p style='color:var(--gray-6);font-size:var(--font-size-4);margin:var(--size-4) 0 var(--size-8);'>Page not found. Here are some helpful links:</p>
+        <h1 style='font-size:4rem;font-weight:var(--font-weight-7);color:var(--gray-10);margin:0;'>
+          404
+        </h1>
+        <p style='color:var(--gray-6);font-size:var(--font-size-4);margin:var(--size-4) 0 var(--size-8);'>
+          Page not found. Here are some helpful links:
+        </p>
         <div class='flex flex-wrap justify-center gap-3'>
           {POPULAR_LINKS.map((l) => <a href={l.href} class='btn btn-ghost btn-sm'>{l.label}</a>)}
         </div>

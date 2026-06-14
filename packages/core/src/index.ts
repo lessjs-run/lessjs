@@ -45,7 +45,6 @@ export {
   SsrRenderError,
 } from './errors.js';
 export type { ErrorPhase, ErrorSeverity, ErrorTelemetryHook, SsrErrorEntry } from './errors.js';
-export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export type { OpenElementApiContext } from './schemas.js';
@@ -66,10 +65,8 @@ export type {
   IsrRuntimeResult,
   IsrRuntimeState,
 } from './isr-runtime.js';
-export { DsdElement } from './dsd-element.js';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
-export { OpenElement } from './open-element.js';
 export { bindHydrateEvents } from './dsd-hydration-events.js';
 export type { Constructor, DsdHydration } from './dsd-hydration.js';
 export { createRenderDsdStreamMetrics, renderDsd, renderDsdStream } from './render-dsd.js';
@@ -182,7 +179,7 @@ export {
 // VNode & jsx-runtime
 export type { VNode } from './vnode.js';
 export { isVNode } from './vnode.js';
-export { Fragment } from './jsx-runtime.js';
+export { Fragment, trustedHtml } from './jsx-runtime.js';
 // Renderers
 export { renderToDom } from './jsx-render-dom.js';
 export { renderDsdTree } from './render-ir.js';
@@ -205,6 +202,6 @@ export {
   syncStaticPropsFromAttributes,
   unwrap,
 } from './prop.js';
-export type { PropDecl, PropDeclFull, PropDeclShorthand, PropsFrom, PropType } from './prop.js';
+// Prop types moved to @openelement/element
 export { MemoryDataAdapter } from './data.js';
 export type { DataAdapter } from './data.js';

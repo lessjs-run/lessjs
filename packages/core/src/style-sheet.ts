@@ -3,7 +3,7 @@
  *
  * In browsers this delegates to the native CSSStyleSheet API. In SSR runtimes
  * it falls back to a minimal in-memory implementation that exposes the subset
- * used by DsdElement and renderDsd().
+ * used by OpenElement and renderDsd().
  */
 
 export interface StyleSheetRule {

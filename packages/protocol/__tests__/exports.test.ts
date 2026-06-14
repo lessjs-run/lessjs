@@ -16,6 +16,7 @@ Deno.test('@openelement/protocol exports runtime validators and type-only contra
     'isOpenNavSection',
     'isOpenPluginMeta',
     'isSignalLike',
+    'normalizeLocalePath',
     'runCacheAdapterConformance',
     'runComponentAdapterConformance',
     'runDataAdapterConformance',

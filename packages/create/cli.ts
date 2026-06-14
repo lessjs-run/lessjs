@@ -24,7 +24,6 @@ const PKG_DIR_MAP: Record<string, string> = {
   adapterVite: 'adapter-vite',
   app: 'app',
   content: 'content',
-  i18n: 'i18n',
   ui: 'ui',
   signal: 'signal',
   protocol: 'protocol',
@@ -97,7 +96,6 @@ async function resolveVersions(): Promise<Record<string, string>> {
     adapterVite: 'adapter-vite', // H-13 fix: Added missing adapterVite entry
     app: 'app',
     content: 'content',
-    i18n: 'i18n',
     ui: 'ui',
     signal: 'signal',
     protocol: 'protocol',

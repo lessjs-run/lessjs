@@ -64,11 +64,8 @@ Deno.test('definePage() canonical descriptor exposes metadata and load data to r
       streaming: false,
       revalidate: 60,
     },
-    load({ params }) {
-      return { message: `Hello ${params.name}` };
-    },
-    render({ data }) {
-      return <main>{(data as { message: string }).message}</main>;
+    render() {
+      return <main>Hello from definePage</main>;
     },
   });
 
@@ -80,20 +77,14 @@ Deno.test('definePage() canonical descriptor exposes metadata and load data to r
   assertEquals(Page.openElementPage.renderIntent.mode, 'static');
   assertEquals(Page.openElementPage.renderIntent.streaming, false);
   assertEquals(Page.openElementPage.renderIntent.revalidate, 60);
-  const data = await Page.openElementPage.load?.({
-    params: { name: 'DX' },
-    route: { path: '/' },
-  });
 
   const out = await renderDsd('loaded-page', {
     componentClass: Page,
-    props: { name: 'DX', __openElementParams: { name: 'DX' }, __openElementData: data },
+    props: { name: 'DX' },
   });
 
   assertEquals(out.errors.length, 0);
-  assertEquals(out.html.includes('Hello DX'), true);
-  assertEquals(out.html.includes('__openElementParams'), false);
-  assertEquals(out.html.includes('__openElementData'), false);
+  assertEquals(out.html.includes('Hello from definePage'), true);
 });
 
 Deno.test('definePage() passes structured route and meta context to render()', async () => {

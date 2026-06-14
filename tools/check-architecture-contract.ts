@@ -44,16 +44,6 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     reason: 'Plugin option bag crosses a protocol boundary.',
   },
   {
-    file: 'packages/core/src/dsd-element.ts',
-    fragment: '} as unknown as typeof HTMLElement);',
-    reason: 'SSR HTMLElement fallback for non-DOM environments.',
-  },
-  {
-    file: 'packages/core/src/dsd-element.ts',
-    fragment: 'target as unknown as { adoptedStyleSheets: typeof sheets }',
-    reason: 'adoptedStyleSheets is not present on every typed render root.',
-  },
-  {
     file: 'packages/core/src/style-sheet.ts',
     fragment: 'globalThis.CSSStyleSheet as unknown as new () => StyleSheetLike',
     reason:
@@ -78,6 +68,37 @@ const TYPE_ESCAPE_ALLOWLIST: TypeEscapeAllow[] = [
     file: 'packages/core/src/prop.ts',
     fragment: 'instance as unknown as {',
     reason: 'Static prop runtime writes element attributes and properties.',
+  },
+  {
+    file: 'packages/element/src/prop.ts',
+    fragment: 'instance as unknown as Record<PropertyKey, unknown>',
+    reason: 'Static prop runtime reads dynamic property keys.',
+  },
+  {
+    file: 'packages/element/src/prop.ts',
+    fragment: 'instance as unknown as {',
+    reason: 'Static prop runtime writes element attributes and properties.',
+  },
+  {
+    file: 'packages/element/src/open-element.ts',
+    fragment: '} as unknown as typeof HTMLElement)',
+    reason: 'SSR HTMLElement stub for environments without DOM.',
+  },
+  {
+    file: 'packages/element/src/open-element.ts',
+    fragment: '(target as unknown as {',
+    reason: 'adoptedStyleSheets may not be in the configured DOM lib.',
+  },
+  {
+    file: 'packages/element/src/define-element.ts',
+    fragment: 'this as unknown as Record<string, unknown>',
+    reason: 'Custom element prop collection by dynamic prop name.',
+  },
+  {
+    file: 'packages/app/src/preact.ts',
+    fragment:
+      'host as unknown as { attributes?: Array<{ name: string; value: string }> | NamedNodeMap }',
+    reason: 'Preact island collects SSR-serialized props from host element attributes.',
   },
   {
     file: 'packages/router/src/client-router.ts',

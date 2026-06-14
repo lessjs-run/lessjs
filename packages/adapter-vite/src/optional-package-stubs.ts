@@ -13,7 +13,7 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
   '@openelement/content/sitemap': [
     'export function generateSitemap() { return []; }',
   ].join('\n'),
-  '@openelement/i18n': [
+  '@openelement/app/i18n': [
     'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
   ].join('\n'),
 };

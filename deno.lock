@@ -34,6 +34,7 @@
     "npm:marked@15.0.4": "15.0.4",
     "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.7",
     "npm:nitro@*": "3.0.260610-beta_vite@8.0.10__@types+node@22.19.19__esbuild@0.25.12",
+    "npm:preact-render-to-string@^6.5.0": "6.7.0_preact@10.29.2",
     "npm:preact@^10.28.0": "10.29.2",
     "npm:react-dom@^19.1.0": "19.2.7_react@19.2.7",
     "npm:react@^19.1.0": "19.2.7",
@@ -1722,6 +1723,12 @@
         "source-map-js"
       ]
     },
+    "preact-render-to-string@6.7.0_preact@10.29.2": {
+      "integrity": "sha512-Z4WR8fmLMRpdYqJ9i7vrlXSsSrxVJydwrkEXHapexfARbWfGb7vGcnvNQnIzN0cXciMVOlz/XLoiMCi9gUsy9Q==",
+      "dependencies": [
+        "preact"
+      ]
+    },
     "preact@10.29.2": {
       "integrity": "sha512-7tNmwg/7mzzAoB/8kSg6Hl37JraAZw3Z3A0JSY7VXlZwo82Xn0G7wKbNNs2qoF4ZEEsQGTwDAroNdqKs1ofJxQ=="
     },
@@ -2227,7 +2234,6 @@
       "jsr:@openelement/content@0.40",
       "jsr:@openelement/core@0.40",
       "jsr:@openelement/element@0.40",
-      "jsr:@openelement/i18n@0.40",
       "jsr:@openelement/protocol@0.40",
       "jsr:@openelement/router@0.40",
       "jsr:@openelement/signal@0.40",
@@ -2254,6 +2260,7 @@
       "npm:lit-html@3",
       "npm:lit@^3.2.0",
       "npm:media-chrome@^4.19.0",
+      "npm:preact-render-to-string@^6.5.0",
       "npm:preact@^10.28.0",
       "npm:react-dom@^19.1.0",
       "npm:react@^19.1.0",
@@ -2282,8 +2289,10 @@
           "jsr:@openelement/adapter-vite@0.40",
           "jsr:@openelement/content@0.40",
           "jsr:@openelement/core@0.40",
-          "jsr:@openelement/i18n@0.40",
+          "jsr:@openelement/element@0.40",
           "jsr:@openelement/protocol@0.40",
+          "jsr:@openelement/router@0.40",
+          "npm:preact-render-to-string@^6.5.0",
           "npm:preact@^10.28.0",
           "npm:vite@8.0.10"
         ]
@@ -2309,19 +2318,13 @@
       "packages/element": {
         "dependencies": [
           "jsr:@openelement/core@0.40",
-          "jsr:@openelement/signal@0.40"
-        ]
-      },
-      "packages/i18n": {
-        "dependencies": [
-          "jsr:@openelement/core@0.40",
           "jsr:@openelement/protocol@0.40",
-          "jsr:@openelement/router@0.40",
-          "npm:vite@8.0.10"
+          "jsr:@openelement/signal@0.40"
         ]
       },
       "packages/router": {
         "dependencies": [
+          "jsr:@openelement/protocol@0.40",
           "npm:marked@15.0.4"
         ]
       },
@@ -2344,6 +2347,7 @@
       "packages/ui": {
         "dependencies": [
           "jsr:@openelement/core@0.40",
+          "jsr:@openelement/element@0.40",
           "jsr:@openelement/signal@0.40"
         ]
       }

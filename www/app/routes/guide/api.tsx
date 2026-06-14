@@ -1,6 +1,6 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
@@ -19,7 +19,7 @@ routeSheet.replaceSync(
   `,
 );
 
-export class ApiPage extends DsdElement {
+export class ApiPage extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
@@ -31,18 +31,16 @@ export class ApiPage extends DsdElement {
       <div class='container'>
         <h1>API Routes</h1>
         <p class='subtitle'>
-          openElement 的服务端层基于 Hono。API routes 使用标准 Request/Response
-          语义，适合部署到 serverless 或 edge runtime。
+          openElement 的服务端层基于 Hono。API routes 使用标准 Request/Response 语义，适合部署到
+          serverless 或 edge runtime。
         </p>
         <h2>Design Principles</h2>
         <div class='principle'>
           <p>
-            <strong>使用平台原语。</strong>{' '}
-            优先使用 Fetch、Request、Response，而不是框架私有传输。
+            <strong>使用平台原语。</strong> 优先使用 Fetch、Request、Response，而不是框架私有传输。
           </p>
           <p>
-            <strong>在边界验证。</strong>{' '}
-            请求体应先完成解析和校验，再进入业务逻辑。
+            <strong>在边界验证。</strong> 请求体应先完成解析和校验，再进入业务逻辑。
           </p>
           <p>
             <strong>显式声明运行时。</strong>{' '}
@@ -51,8 +49,9 @@ export class ApiPage extends DsdElement {
         </div>
         <h2>Create API Routes</h2>
         <p>
-          API routes 放在 <span class='inline-code'>app/routes/api</span>。复杂 API
-          可以默认导出 Hono app，简单端点可以导出 plain function。
+          API routes 放在{' '}
+          <span class='inline-code'>app/routes/api</span>。复杂 API 可以默认导出 Hono
+          app，简单端点可以导出 plain function。
         </p>
         <h2>Static Build Boundary</h2>
         <p>
@@ -91,9 +90,10 @@ export class ApiPage extends DsdElement {
         </div>
         <h2>Create API Routes</h2>
         <p>
-          Place API routes in <span class='inline-code'>app/routes/api</span>. Default-export a Hono
-          app for complex APIs, or a plain function{' '}
-          <span class='inline-code'>(ctx) =&gt; Response</span> for simple endpoints.
+          Place API routes in{' '}
+          <span class='inline-code'>app/routes/api</span>. Default-export a Hono app for complex
+          APIs, or a plain function <span class='inline-code'>(ctx) =&gt; Response</span>{' '}
+          for simple endpoints.
         </p>
         <open-code-block>
           <pre>

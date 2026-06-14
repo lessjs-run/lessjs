@@ -50,7 +50,7 @@ export default definePage({
 组件作者优先使用 `@openelement/element`：
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/element';
+import { OpenElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 ## 文档

@@ -1,6 +1,6 @@
 # ADR-0104: Signal Engine Default Policy
 
-- Status: Accepted
+- Status: Accepted (Updated 2026-06-14)
 - Date: 2026-06-13
 - Target: v0.40.x
 - Depends on: ADR-0096, ADR-0101
@@ -15,18 +15,32 @@ The current signal package uses an existing default engine behind
 `@openelement/signal`. Protocols already define `SignalEngine` and conformance
 tests.
 
-## Decision
+## Decision (Updated 2026-06-14)
 
-Do not switch the default signal engine in the first v0.40 product-line reset.
+Switch the default signal engine from `alien-signals` to `@preact/signals-core`.
 
-Instead:
+The switch is safe because:
 
-- keep the current default engine;
-- add a candidate adapter for `@preact/signals-core` only if it remains behind
-  the `SignalEngine` protocol boundary;
-- require conformance, SSR/CSR, bundle, and consumer-smoke evidence before any
-  default-engine proposal;
-- require a later ADR to change the default.
+- The `SignalEngine` protocol boundary fully abstracts engine details.
+- Both engines pass the same conformance test suite.
+- `@preact/signals-core` is already a declared dependency of `@openelement/signal`
+  (added in v0.40.0 as a candidate).
+- `alien-signals` remains available as an optional engine via
+  `@openelement/signal/alien-engine` and can be activated at runtime via
+  `setSignalEngine()`.
+- `@openelement/core` and `@openelement/element` do not import
+  `@preact/signals-core` directly — they depend on `@openelement/signal` which
+  bundles the dependency.
+
+### Runtime switching
+
+```ts
+import { setSignalEngine } from '@openelement/signal';
+import { createAlienEngine } from '@openelement/signal/alien-engine';
+import { computed, effect, signal } from 'alien-signals';
+
+setSignalEngine(createAlienEngine({ signal, computed, effect }));
+```
 
 ## Non-Goals
 
@@ -39,19 +53,23 @@ Instead:
 
 ### Positive
 
-- v0.40 can prove Preact islands without destabilizing Elements and core.
-- Signal replacement remains protocol-driven instead of dependency-driven.
-- Existing consumers keep current signal behavior.
+- `@preact/signals-core` is a smaller, well-maintained engine with broad ecosystem
+  compatibility.
+- Runtime engine switching allows users to choose alien-signals when they need
+  its specific primitives (e.g. `effectScope`).
+- `effectScope` is removed from the main public API since it is alien-specific
+  and unused in the codebase.
 
 ### Negative
 
-- The Preact signal candidate is additional work before any default switch.
-- The project carries two signal-engine concepts during evaluation.
+- Existing consumers using alien-signals-specific behavior (e.g. `effectScope`,
+  `batch`, `untrack`) must explicitly switch to the alien engine.
+- The project carries two signal-engine concepts.
 
 ## Acceptance
 
-- Existing default signal tests remain green.
-- Candidate work must pass `runSignalEngineConformance`.
+- Existing signal tests remain green after the switch.
+- Both engines pass `runSignalEngineConformance`.
 - `@openelement/core` and `@openelement/element` do not require Preact signal
   packages.
-- Any default switch requires a later ADR and updated release evidence.
+- `effectScope` is not in the main `@openelement/signal` export.

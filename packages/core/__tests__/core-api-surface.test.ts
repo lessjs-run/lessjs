@@ -1,11 +1,10 @@
 import { assertEquals, assertExists } from 'jsr:@std/assert@1';
-import { DsdElement, Fragment, renderDsd, renderDsdStream, renderDsdTree } from '../src/index.ts';
+import { Fragment, renderDsd, renderDsdStream, renderDsdTree } from '../src/index.ts';
 import { jsx, jsxs } from '../src/jsx-runtime.ts';
 
 Deno.test('core stable API exports v0.24.1 JSX rendering primitives', () => {
   assertEquals(typeof renderDsd, 'function');
   assertEquals(typeof renderDsdStream, 'function');
-  assertEquals(typeof DsdElement, 'function');
   assertEquals(typeof jsx, 'function');
   assertEquals(typeof jsxs, 'function');
   assertEquals(typeof Fragment, 'symbol');
@@ -55,8 +54,7 @@ Deno.test('core JSX event handlers are excluded from SSR output', async () => {
   assertEquals(html.includes('<button type="button"'), true);
 });
 
-Deno.test('core DsdElement and renderDsd are callable', () => {
-  assertExists(DsdElement);
+Deno.test('core renderDsd and renderDsdStream are callable', () => {
   assertExists(renderDsd);
   assertExists(renderDsdStream);
 });

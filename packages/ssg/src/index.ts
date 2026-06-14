@@ -184,9 +184,10 @@ export type { HonoEntryOptions } from './entry-renderer.ts';
 export {
   extractCustomElementTags,
   generateIslandManifests,
-  stableHash,
   writeIslandManifests,
 } from './island-manifest.ts';
+
+export { stableHash } from './ssg-helpers.ts';
 export type {
   IslandLayerMap,
   IslandManifestEntry,

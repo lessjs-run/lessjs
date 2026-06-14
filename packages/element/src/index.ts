@@ -6,19 +6,46 @@
  * @openelement/app and @openelement/adapter-vite.
  */
 
-export { DsdElement, OpenElement } from '@openelement/core';
+// ─── Core exports ───────────────────────────────────────
+
+export { OpenElement } from './open-element.js';
+export type { OpenElementComponentConstructor } from './open-element.js';
+
+export { ErrorBoundary } from './error-boundary.js';
+
+export { defineElement, defineLayout } from './define-element.js';
+export type { ElementDefinition } from './types.js';
+
+// ─── Prop types ──────────────────────────────────────────
+
+export type { PropDecl, PropDeclFull, PropDeclShorthand, PropsFrom, PropType } from './prop.js';
+export {
+  disposeStaticProps,
+  handleStaticPropAttributeChange,
+  initializeStaticProps,
+  normalizePropDecl,
+  registerStaticObservedAttributes,
+  syncStaticPropsFromAttributes,
+  unwrap,
+} from './prop.js';
+
+// ─── JSX runtime (re-export from core) ───────────────────
+
 export { Fragment, jsx, jsxDEV, jsxs } from '@openelement/core/jsx-runtime';
 export type { OpenElementRenderer, VNode } from '@openelement/core';
 export { isVNode } from '@openelement/core';
 
+// ─── Renderers (re-export from core) ─────────────────────
+
 export { renderDsdTree, renderToDom } from '@openelement/core';
+
+// ─── Context (re-export from core) ───────────────────────
 
 export { consumeContext, createContext, provideContext } from '@openelement/core';
 export type { Context } from '@openelement/core';
 
-export type { PropDecl, PropsFrom, PropType } from '@openelement/core';
+// ─── Error types (re-export from core) ───────────────────
 
-export { ErrorBoundary } from '@openelement/core';
 export type {
   BuildError,
   ErrorCode,
@@ -32,16 +59,28 @@ export type {
   SsrRenderError,
 } from '@openelement/core';
 
+// ─── Signals (re-export) ─────────────────────────────────
+
 export { isSignalLike } from '@openelement/core';
 export type { SignalLike } from '@openelement/core';
+export { computed, effect, signal } from '@openelement/signal';
+export type { Signal } from '@openelement/protocol/signals';
+
+// ─── HTML utilities (re-export from core) ────────────────
 
 export { escapeAttr, escapeAttrValue, escapeHtml } from '@openelement/core';
 export type { SafeHtml, UnsafeHtml } from '@openelement/core';
 
+// ─── Trusted HTML (re-export from core) ──────────────────────────
+
+export { trustedHtml } from '@openelement/core';
+
+// ─── Island utilities (re-export from core) ──────────────
+
 export { bindSsrProps, defineIsland, getSsrProps } from '@openelement/core';
 export type { IslandOptions } from '@openelement/core';
 
-export { computed, effect, signal } from '@openelement/signal';
+// ─── StyleSheet (re-export from core) ────────────────────
 
 export { StyleSheet } from '@openelement/core/style-sheet';
 export type { StyleSheetLike, StyleSheetRule } from '@openelement/core/style-sheet';

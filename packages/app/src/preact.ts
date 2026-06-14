@@ -1,6 +1,20 @@
-import { defineIsland as defineRuntimeIsland, getSsrProps } from '@openelement/core';
+/**
+ * @openelement/app/preact — Preact island support.
+ *
+ * Creates custom elements that extend OpenElement and render Preact
+ * components through the DSD SSR pipeline. On the server, the Preact
+ * component is rendered to a string using preact-render-to-string and
+ * wrapped as trusted HTML in OpenElement's render(). On the client,
+ * preactHydrate or preactRender takes over in the clientActivate() hook.
+ *
+ * @module @openelement/app/preact
+ */
+
+import { OpenElement, trustedHtml, type VNode } from '@openelement/element';
+import { getSsrProps } from '@openelement/core';
+import { type ComponentChild, h, hydrate as preactHydrate, render as preactRender } from 'preact';
+import { renderToString } from 'preact-render-to-string';
 import type { IslandConfig } from '@openelement/protocol/islands';
-import { type ComponentChild, render } from 'preact';
 
 export type PreactIslandProps = Record<string, unknown>;
 
@@ -23,7 +37,11 @@ function assertCustomElementTag(tagName: string): void {
 
 function collectAttributes(host: HTMLElement): PreactIslandProps {
   const props: PreactIslandProps = {};
-  for (const attr of Array.from(host.attributes)) {
+  const attrs =
+    (host as unknown as { attributes?: Array<{ name: string; value: string }> | NamedNodeMap })
+      .attributes;
+  if (!attrs) return props;
+  for (const attr of Array.from(attrs)) {
     if (attr.name === 'data-ssr-props') continue;
     props[attr.name] = attr.value;
   }
@@ -46,29 +64,35 @@ export function definePreactIsland<Props extends PreactIslandProps = PreactIslan
   assertCustomElementTag(tagName);
   const baseProps = options.props ?? {};
 
-  class OpenElementPreactIsland extends HTMLElement {
-    #mounted = false;
-
-    connectedCallback(): void {
-      if (this.#mounted) return;
-      this.#mounted = true;
-      const root = options.dsd === false
-        ? this.attachShadow({ mode: 'open' })
-        : this.shadowRoot ?? this.attachShadow({ mode: 'open' });
-      render(Component(resolveProps(this, baseProps) as Props), root);
+  class OpenElementPreactIsland extends OpenElement {
+    override render(): VNode | null {
+      if (typeof document === 'undefined') {
+        // SSR path: render Preact component to string, return as trusted HTML
+        const html = renderToString(
+          h(Component, resolveProps(this, baseProps) as Props),
+        );
+        return trustedHtml(html);
+      }
+      // Client: let clientActivate() handle Preact hydration/render
+      return null;
     }
 
-    disconnectedCallback(): void {
-      if (!this.#mounted) return;
-      const root = this.shadowRoot;
-      if (root) render(null, root);
-      this.#mounted = false;
+    protected override clientActivate(): void {
+      const root = this.shadowRoot ?? this.attachShadow({ mode: 'open' });
+      const vnode = h(Component, resolveProps(this, baseProps) as Props);
+      if (options.ssr !== false) {
+        // DSD hydration: the shadow DOM already has SSR-rendered content
+        preactHydrate(vnode, root);
+      } else {
+        // CSR: full render from scratch
+        preactRender(vnode, root);
+      }
     }
   }
 
-  return defineRuntimeIsland(tagName, OpenElementPreactIsland, {
-    strategy: options.hydrate,
-    dsd: options.dsd,
-    ssr: options.ssr,
-  });
+  if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+    customElements.define(tagName, OpenElementPreactIsland);
+  }
+
+  return OpenElementPreactIsland;
 }

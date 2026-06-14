@@ -14,7 +14,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeHtml } from '@openelement/core';
@@ -57,11 +57,11 @@ sheet.replaceSync(`
   .callout-body ::slotted(p) { margin: 0; }
 `);
 
-export class OpenCallout extends DsdElement {
+export class OpenCallout extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;

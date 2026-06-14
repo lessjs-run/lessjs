@@ -6,8 +6,11 @@
   },
   "imports": {
     "@openelement/core": "jsr:@openelement/core@^0.40.0",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.40.0/errors",
     "@openelement/core/jsx-runtime": "jsr:@openelement/core@^0.40.0/jsx-runtime",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.40.0/logger",
     "@openelement/core/style-sheet": "jsr:@openelement/core@^0.40.0/style-sheet",
+    "@openelement/protocol": "jsr:@openelement/protocol@^0.40.0",
     "@openelement/signal": "jsr:@openelement/signal@^0.40.0"
   },
   "publish": {

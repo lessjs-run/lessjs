@@ -1,6 +1,6 @@
 # ADR-0102: Elements Package Product Surface
 
-- Status: Accepted
+- Status: Accepted (updated v0.40.0 final cleanup)
 - Date: 2026-06-13
 - Target: v0.40.0
 - Depends on: ADR-0099, ADR-0101
@@ -36,25 +36,43 @@ The package starts as a narrow product facade over the existing implementation:
   ownership.
 
 `@openelement/core` keeps `OpenElement` as a compatibility export for v0.40, but
-first-run docs should teach `@openelement/element`.
+first-run docs teach `@openelement/element`.
+
+**v0.40.0 final update**: `@openelement/element` now owns the full component
+authoring surface:
+
+- `OpenElement` — the canonical custom element base class
+- `defineElement`, `defineLayout` — element/layout definition helpers
+- Prop system (`PropDecl`, `initializeStaticProps`, etc.)
+- `ErrorBoundary` — declarative error boundary component
+- `StyleSheet` — CSSStyleSheet wrapper
+- `signal`, `computed`, `effect` — signal primitives (re-exported from
+  `@openelement/signal`)
+- JSX runtime (`jsx`, `jsxDEV`, `jsxs`, `Fragment` — re-exported from core)
+- Island utilities (`defineIsland`, `bindSsrProps`, `getSsrProps`)
+- Context API (`createContext`, `provideContext`, `consumeContext`)
+- HTML utilities (`escapeHtml`, `escapeAttr`, `trustedHtml`)
+
+The Elements product is now a real package that component authors import
+directly, rather than a compatibility bridge pointing to `@openelement/core`.
 
 ## Package Graph Changes
 
-The workspace package count increases from 20 to 21 for v0.40.
+The workspace package count is 11 for v0.40 (after archive-candidate packages
+were removed).
 
-Required implementation changes:
+Required implementation changes (completed):
 
-- add `packages/element`;
-- add `@openelement/element` to root `deno.json` workspace and imports;
-- add the package to `RELEASE_PACKAGE_ORDER` after `@openelement/core`;
-- update `PACKAGE_COUNT`;
-- update package graph and package surface checks;
-- add tests proving `OpenElement` import from `@openelement/element`;
-- update README and package docs to prefer Elements for component authoring.
+- [x] add `packages/element`;
+- [x] add `@openelement/element` to root `deno.json` workspace and imports;
+- [x] add the package to `RELEASE_PACKAGE_ORDER` after `@openelement/core`;
+- [x] update `PACKAGE_COUNT`;
+- [x] update package graph and package surface checks;
+- [x] add tests proving `OpenElement` import from `@openelement/element`;
+- [x] update README and package docs to prefer Elements for component authoring.
 
 ## Non-Goals
 
-- Do not remove `DsdElement` in v0.40.
 - Do not remove `OpenElement` from `@openelement/core` in v0.40.
 - Do not move the implementation out of `@openelement/core` in the same step.
 - Do not make Elements depend on Vite, Nitro, UI, app routing, or Preact.
@@ -71,21 +89,20 @@ Required implementation changes:
 ### Neutral
 
 - The package is initially a facade; implementation migration can happen later.
-- Package count temporarily increases before archive-candidate packages are
-  removed or merged by later ADR work.
 
 ### Negative
 
-- Release order, package count, import maps, and publish evidence must include
-  one more package.
 - JSR publish has one more package in the release line.
 
 ## Acceptance
 
-- `deno task graph:check` passes with 21 packages.
-- `deno task package-surface:check` classifies `@openelement/element` as
-  product-facing.
-- `deno task typecheck` checks the new package.
-- Tests prove `OpenElement` can be imported from `@openelement/element`.
-- README and current docs teach `@openelement/element` as the first-run
-  Elements surface.
+- [x] `deno task graph:check` passes with 11 packages.
+- [x] `deno task package-surface:check` classifies `@openelement/element` as
+      product-facing.
+- [x] `deno task typecheck` checks the new package.
+- [x] Tests prove `OpenElement` can be imported from `@openelement/element`.
+- [x] README and current docs teach `@openelement/element` as the first-run
+      Elements surface.
+- [x] `@openelement/element` exports `ErrorBoundary`, `defineElement`,
+      `defineLayout`, prop system, `StyleSheet`, signals, JSX runtime,
+      island utilities, context API, and HTML utilities.

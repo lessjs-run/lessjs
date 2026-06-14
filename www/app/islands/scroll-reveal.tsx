@@ -2,12 +2,13 @@
  * ScrollReveal — Ocean component.
  *
  * Wraps slotted content with an IntersectionObserver-driven reveal
- * animation. Pure DsdElement + signals — zero manual DOM queries.
+ * animation. Pure OpenElement + signals — zero manual DOM queries.
  *
  * v0.28: Signal-driven visibility via data-signal-class. querySelector +
  *   classList.add replaced with registerSignal + data-signal-class marker.
  */
-import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineCustomElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { defineIslandConfig } from '@openelement/app';
 import { signal } from '@openelement/signal';
 import { StyleSheet } from '@openelement/core/style-sheet';
@@ -39,7 +40,7 @@ styles.replaceSync(`
   }
 `);
 
-export default class ScrollReveal extends DsdElement {
+export default class ScrollReveal extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
 
   #visible = signal(false);

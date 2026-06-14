@@ -12,7 +12,7 @@ import {
   type EventMarkerContext,
   serializeEventMarkers,
 } from './event-hydration.ts';
-import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
+import { FOR_TAG, Fragment, HTML_TAG, SHOW_TAG } from './jsx-runtime.ts';
 import { DANGEROUS_KEYS, trustRenderHtml } from './security.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
@@ -193,6 +193,11 @@ export async function renderToNode(
     const parts: RenderNode[] = [];
     for (const child of children) parts.push(await renderToNode(child, eventContext));
     return fragmentNode(parts);
+  }
+
+  // Trusted HTML (raw HTML insertion, no wrapping tag)
+  if (tag === HTML_TAG) {
+    return trustedHtmlNode(props?.html ?? '');
   }
 
   // Show

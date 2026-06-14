@@ -1,10 +1,10 @@
 /**
- * @openelement/i18n - Unit Tests
+ * @openelement/app/i18n - Unit Tests
  * ADR 0018: Tests updated for pure function pattern (loadI18nData)
  */
 import { assertEquals, assertStrictEquals } from 'jsr:@std/assert@^1.0.0';
-import { loadI18nData } from '../src/i18n-data.ts';
-import { i18nStaticPaths, normalizeLocalePath, switchLocale } from '../src/routes.ts';
+import { loadI18nData } from '../src/i18n-runtime.ts';
+import { i18nStaticPaths, normalizeLocalePath, switchLocale } from '../src/i18n-runtime.ts';
 
 // ─── i18n-data.ts ────────────────────────────────────────────────
 
@@ -23,7 +23,7 @@ Deno.test('loadI18nData: returns independent copy', () => {
   assertEquals(opts.locales, ['en', 'zh']);
 });
 
-// ─── routes.ts - i18nStaticPaths ─────────────────────────────────
+// ─── i18nStaticPaths ─────────────────────────────────────────────
 
 Deno.test('i18nStaticPaths: generates paths from locale list', () => {
   const paths = i18nStaticPaths(['en', 'zh']);
@@ -40,7 +40,7 @@ Deno.test('i18nStaticPaths: returns empty array for empty locales', () => {
   assertEquals(paths, []);
 });
 
-// ─── routes.ts - switchLocale ────────────────────────────────────
+// ─── switchLocale ────────────────────────────────────────────────
 
 Deno.test('switchLocale: switches from en to zh', () => {
   const result = switchLocale('/en/guide/architecture', 'zh', ['en', 'zh']);

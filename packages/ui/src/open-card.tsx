@@ -24,7 +24,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'open-card';
@@ -76,11 +76,11 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenCard extends DsdElement {
+export class OpenCard extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     return (
       <article part='container'>
         <slot name='header'></slot>

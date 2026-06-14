@@ -5,7 +5,7 @@
  * Dogfooding: uses real open-button, open-card, open-input components.
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
@@ -248,7 +248,7 @@ routeSheet.replaceSync(
     `,
 );
 
-export class UIShowcase extends DsdElement {
+export class UIShowcase extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
@@ -259,124 +259,122 @@ export class UIShowcase extends DsdElement {
     const loc = this._getLocale('zh');
 
     return (
-      
-        <div class='container'>
-          <h1>设计系统</h1>
-          <p class='subtitle'>
-            <strong>双色板。零噪音。</strong>
-            <br />深色和浅色。没有别的。
-          </p>
-          <div class='section'>
-            <div class='section-title'>色板</div>
-            <div class='palette-row'>
-              <div class='palette-card palette-dark'>
-                <div class='palette-name'>深色</div>
-                <div class='swatch-grid'>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#000'></div>
-                    <div class='swatch-label'>基底</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#0a0a0a'></div>
-                    <div class='swatch-label'>表面</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fff'></div>
-                    <div class='swatch-label'>主色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#999'></div>
-                    <div class='swatch-label'>次色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#666'></div>
-                    <div class='swatch-label'>第三色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#444'></div>
-                    <div class='swatch-label'>静默</div>
-                  </div>
+      <div class='container'>
+        <h1>设计系统</h1>
+        <p class='subtitle'>
+          <strong>双色板。零噪音。</strong>
+          <br />深色和浅色。没有别的。
+        </p>
+        <div class='section'>
+          <div class='section-title'>色板</div>
+          <div class='palette-row'>
+            <div class='palette-card palette-dark'>
+              <div class='palette-name'>深色</div>
+              <div class='swatch-grid'>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#000'></div>
+                  <div class='swatch-label'>基底</div>
                 </div>
-                <p class='palette-desc'>
-                  <strong>黑色</strong> 基底。白色强调。灰色分层。
-                </p>
-              </div>
-              <div class='palette-card palette-light'>
-                <div class='palette-name'>浅色</div>
-                <div class='swatch-grid'>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fff'></div>
-                    <div class='swatch-label'>基底</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fafafa'></div>
-                    <div class='swatch-label'>表面</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#000'></div>
-                    <div class='swatch-label'>主色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#555'></div>
-                    <div class='swatch-label'>次色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#888'></div>
-                    <div class='swatch-label'>第三色</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#aaa'></div>
-                    <div class='swatch-label'>静默</div>
-                  </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#0a0a0a'></div>
+                  <div class='swatch-label'>表面</div>
                 </div>
-                <p class='palette-desc'>
-                  <strong>白色</strong> 基底。黑色强调。灰色分层。
-                </p>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fff'></div>
+                  <div class='swatch-label'>主色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#999'></div>
+                  <div class='swatch-label'>次色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#666'></div>
+                  <div class='swatch-label'>第三色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#444'></div>
+                  <div class='swatch-label'>静默</div>
+                </div>
               </div>
+              <p class='palette-desc'>
+                <strong>黑色</strong> 基底。白色强调。灰色分层。
+              </p>
             </div>
-          </div>
-          <div class='section'>
-            <div class='section-title'>按钮</div>
-            <div class='preview-card'>
-              <div class='preview-header'>
-                <span class='preview-title'>变体</span>
-                <span class='preview-badge'>可用</span>
+            <div class='palette-card palette-light'>
+              <div class='palette-name'>浅色</div>
+              <div class='swatch-grid'>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fff'></div>
+                  <div class='swatch-label'>基底</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fafafa'></div>
+                  <div class='swatch-label'>表面</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#000'></div>
+                  <div class='swatch-label'>主色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#555'></div>
+                  <div class='swatch-label'>次色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#888'></div>
+                  <div class='swatch-label'>第三色</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#aaa'></div>
+                  <div class='swatch-label'>静默</div>
+                </div>
               </div>
-              <div class='preview-body'>
-                <open-button variant='primary'>主要按钮</open-button>
-                <open-button>默认按钮</open-button>
-                <open-button variant='ghost'>幽灵按钮</open-button>
-              </div>
+              <p class='palette-desc'>
+                <strong>白色</strong> 基底。黑色强调。灰色分层。
+              </p>
             </div>
-          </div>
-          <div class='section'>
-            <div class='section-title'>输入框</div>
-            <div class='preview-card'>
-              <div class='preview-header'>
-                <span class='preview-title'>文本输入</span>
-                <span class='preview-badge'>可用</span>
-              </div>
-              <div class='preview-body preview-body-col'>
-                <open-input placeholder='输入邮箱...' label='邮箱'></open-input>
-                <open-input type='password' placeholder='密码' label='密码' required>
-                </open-input>
-                <open-input value='hello@openelement.org' label='只读' disabled></open-input>
-              </div>
-            </div>
-          </div>
-          <div class='install-section'>
-            <h3>安装 @openelement/ui</h3>
-            <div class='install-cmd'>
-              <span class='prompt'>$</span> deno add jsr:@openelement/ui
-            </div>
-            <p>Deno、Node、Bun。零配置。</p>
-          </div>
-          <div class='nav-row'>
-            <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
-            <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
           </div>
         </div>
-      
+        <div class='section'>
+          <div class='section-title'>按钮</div>
+          <div class='preview-card'>
+            <div class='preview-header'>
+              <span class='preview-title'>变体</span>
+              <span class='preview-badge'>可用</span>
+            </div>
+            <div class='preview-body'>
+              <open-button variant='primary'>主要按钮</open-button>
+              <open-button>默认按钮</open-button>
+              <open-button variant='ghost'>幽灵按钮</open-button>
+            </div>
+          </div>
+        </div>
+        <div class='section'>
+          <div class='section-title'>输入框</div>
+          <div class='preview-card'>
+            <div class='preview-header'>
+              <span class='preview-title'>文本输入</span>
+              <span class='preview-badge'>可用</span>
+            </div>
+            <div class='preview-body preview-body-col'>
+              <open-input placeholder='输入邮箱...' label='邮箱'></open-input>
+              <open-input type='password' placeholder='密码' label='密码' required>
+              </open-input>
+              <open-input value='hello@openelement.org' label='只读' disabled></open-input>
+            </div>
+          </div>
+        </div>
+        <div class='install-section'>
+          <h3>安装 @openelement/ui</h3>
+          <div class='install-cmd'>
+            <span class='prompt'>$</span> deno add jsr:@openelement/ui
+          </div>
+          <p>Deno、Node、Bun。零配置。</p>
+        </div>
+        <div class='nav-row'>
+          <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
+          <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
+        </div>
+      </div>
     );
   }
 
@@ -384,124 +382,122 @@ export class UIShowcase extends DsdElement {
     const loc = this._getLocale('en');
 
     return (
-      
-        <div class='container'>
-          <h1>Design System</h1>
-          <p class='subtitle'>
-            <strong>Two plates. Zero noise.</strong>
-            <br />Dark and light. Nothing else.
-          </p>
-          <div class='section'>
-            <div class='section-title'>Palettes</div>
-            <div class='palette-row'>
-              <div class='palette-card palette-dark'>
-                <div class='palette-name'>Dark</div>
-                <div class='swatch-grid'>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#000'></div>
-                    <div class='swatch-label'>Base</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#0a0a0a'></div>
-                    <div class='swatch-label'>Surface</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fff'></div>
-                    <div class='swatch-label'>Primary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#999'></div>
-                    <div class='swatch-label'>Secondary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#666'></div>
-                    <div class='swatch-label'>Tertiary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#444'></div>
-                    <div class='swatch-label'>Muted</div>
-                  </div>
+      <div class='container'>
+        <h1>Design System</h1>
+        <p class='subtitle'>
+          <strong>Two plates. Zero noise.</strong>
+          <br />Dark and light. Nothing else.
+        </p>
+        <div class='section'>
+          <div class='section-title'>Palettes</div>
+          <div class='palette-row'>
+            <div class='palette-card palette-dark'>
+              <div class='palette-name'>Dark</div>
+              <div class='swatch-grid'>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#000'></div>
+                  <div class='swatch-label'>Base</div>
                 </div>
-                <p class='palette-desc'>
-                  <strong>Black</strong> base. White accent. Gray layers.
-                </p>
-              </div>
-              <div class='palette-card palette-light'>
-                <div class='palette-name'>Light</div>
-                <div class='swatch-grid'>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fff'></div>
-                    <div class='swatch-label'>Base</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#fafafa'></div>
-                    <div class='swatch-label'>Surface</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#000'></div>
-                    <div class='swatch-label'>Primary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#555'></div>
-                    <div class='swatch-label'>Secondary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#888'></div>
-                    <div class='swatch-label'>Tertiary</div>
-                  </div>
-                  <div class='swatch-item'>
-                    <div class='swatch' style='background:#aaa'></div>
-                    <div class='swatch-label'>Muted</div>
-                  </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#0a0a0a'></div>
+                  <div class='swatch-label'>Surface</div>
                 </div>
-                <p class='palette-desc'>
-                  <strong>White</strong> base. Black accent. Gray layers.
-                </p>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fff'></div>
+                  <div class='swatch-label'>Primary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#999'></div>
+                  <div class='swatch-label'>Secondary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#666'></div>
+                  <div class='swatch-label'>Tertiary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#444'></div>
+                  <div class='swatch-label'>Muted</div>
+                </div>
               </div>
+              <p class='palette-desc'>
+                <strong>Black</strong> base. White accent. Gray layers.
+              </p>
             </div>
-          </div>
-          <div class='section'>
-            <div class='section-title'>Buttons</div>
-            <div class='preview-card'>
-              <div class='preview-header'>
-                <span class='preview-title'>Variants</span>
-                <span class='preview-badge'>Ready</span>
+            <div class='palette-card palette-light'>
+              <div class='palette-name'>Light</div>
+              <div class='swatch-grid'>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fff'></div>
+                  <div class='swatch-label'>Base</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#fafafa'></div>
+                  <div class='swatch-label'>Surface</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#000'></div>
+                  <div class='swatch-label'>Primary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#555'></div>
+                  <div class='swatch-label'>Secondary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#888'></div>
+                  <div class='swatch-label'>Tertiary</div>
+                </div>
+                <div class='swatch-item'>
+                  <div class='swatch' style='background:#aaa'></div>
+                  <div class='swatch-label'>Muted</div>
+                </div>
               </div>
-              <div class='preview-body'>
-                <open-button variant='primary'>Primary</open-button>
-                <open-button>Default</open-button>
-                <open-button variant='ghost'>Ghost</open-button>
-              </div>
+              <p class='palette-desc'>
+                <strong>White</strong> base. Black accent. Gray layers.
+              </p>
             </div>
-          </div>
-          <div class='section'>
-            <div class='section-title'>Inputs</div>
-            <div class='preview-card'>
-              <div class='preview-header'>
-                <span class='preview-title'>Text Input</span>
-                <span class='preview-badge'>Ready</span>
-              </div>
-              <div class='preview-body preview-body-col'>
-                <open-input placeholder='Enter email...' label='Email'></open-input>
-                <open-input type='password' placeholder='Password' label='Password' required>
-                </open-input>
-                <open-input value='hello@openelement.org' label='Read-only' disabled></open-input>
-              </div>
-            </div>
-          </div>
-          <div class='install-section'>
-            <h3>Install @openelement/ui</h3>
-            <div class='install-cmd'>
-              <span class='prompt'>$</span> deno add jsr:@openelement/ui
-            </div>
-            <p>Deno, Node, Bun. Zero config.</p>
-          </div>
-          <div class='nav-row'>
-            <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
-            <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
           </div>
         </div>
-      
+        <div class='section'>
+          <div class='section-title'>Buttons</div>
+          <div class='preview-card'>
+            <div class='preview-header'>
+              <span class='preview-title'>Variants</span>
+              <span class='preview-badge'>Ready</span>
+            </div>
+            <div class='preview-body'>
+              <open-button variant='primary'>Primary</open-button>
+              <open-button>Default</open-button>
+              <open-button variant='ghost'>Ghost</open-button>
+            </div>
+          </div>
+        </div>
+        <div class='section'>
+          <div class='section-title'>Inputs</div>
+          <div class='preview-card'>
+            <div class='preview-header'>
+              <span class='preview-title'>Text Input</span>
+              <span class='preview-badge'>Ready</span>
+            </div>
+            <div class='preview-body preview-body-col'>
+              <open-input placeholder='Enter email...' label='Email'></open-input>
+              <open-input type='password' placeholder='Password' label='Password' required>
+              </open-input>
+              <open-input value='hello@openelement.org' label='Read-only' disabled></open-input>
+            </div>
+          </div>
+        </div>
+        <div class='install-section'>
+          <h3>Install @openelement/ui</h3>
+          <div class='install-cmd'>
+            <span class='prompt'>$</span> deno add jsr:@openelement/ui
+          </div>
+          <p>Deno, Node, Bun. Zero config.</p>
+        </div>
+        <div class='nav-row'>
+          <a href={`/${loc}/architecture/architecture`} class='btn btn-ghost'>← Architecture</a>
+          <a href={`/${loc}/architecture/reference/core`} class='btn btn-ghost'>API Reference →</a>
+        </div>
+      </div>
     );
   }
 }

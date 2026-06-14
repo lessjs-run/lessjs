@@ -55,7 +55,7 @@ JavaScript 升级 island 之前解析 shadow root。
 当前 `@openelement/element` 仍可用于底层库代码：
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/element';
+import { OpenElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 应用路由通常应优先使用 `@openelement/app`。

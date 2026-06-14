@@ -15,7 +15,8 @@
  * @csspart shortcut - The keyboard shortcut kbd
  */
 
-import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineCustomElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import type { VNode } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signal';
@@ -168,7 +169,7 @@ sheet.replaceSync(`
   }
 `);
 
-export default class OpenSearch extends DsdElement {
+export default class OpenSearch extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, sheet];
 
   // ── Signals ──────────────────────────────────────────────────────────────

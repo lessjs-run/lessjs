@@ -1,5 +1,5 @@
 /**
- * @openelement/core — ErrorBoundary (ADR-0053 Layer 2).
+ * @openelement/element — ErrorBoundary (ADR-0053 Layer 2).
  *
  * Catches child component render() errors and displays a fallback
  * UI instead of a bare tag or broken DOM. Errors bubble up through
@@ -20,11 +20,11 @@
  * ```
  */
 
-import { type VNode } from './vnode.js';
-import { DsdElement } from './dsd-element.js';
-import { ErrorCode, type ErrorSeverity, OpenElementError } from './errors.js';
+import { type VNode } from '@openelement/core';
+import { OpenElement } from './open-element.js';
+import { ErrorCode, type ErrorSeverity, OpenElementError } from '@openelement/core';
 
-export abstract class ErrorBoundary extends DsdElement {
+export abstract class ErrorBoundary extends OpenElement {
   private _error: OpenElementError | null = null;
   private _retryCount = 0;
 

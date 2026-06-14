@@ -14,10 +14,27 @@ import type { ComponentLayer, HydrationStrategy, StrategySource } from './schema
 
 export type { ComponentLayer, HydrationStrategy, StrategySource };
 
-// --- Render phases & errors --------------------------------------
+// Import + re-export shared renderer types from protocol
+import type {
+  DsdOptions,
+  DsdRenderMetrics,
+  HydrationHint,
+  RenderError,
+  RenderErrorSeverity,
+  RenderOutput,
+  RenderPhase,
+} from '@openelement/protocol/renderer';
+export type {
+  DsdOptions,
+  DsdRenderMetrics,
+  HydrationHint,
+  RenderError,
+  RenderErrorSeverity,
+  RenderOutput,
+  RenderPhase,
+};
 
-export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'serialize';
-
+// Core-specific extensions
 export type RenderErrorCode =
   | 'LESS_RENDER_INSTANTIATE_FAILED'
   | 'LESS_RENDER_INVALID_OUTPUT'
@@ -26,15 +43,15 @@ export type RenderErrorCode =
   | 'LESS_RENDER_STYLE_FAILED'
   | 'LESS_RENDER_SERIALIZE_FAILED';
 
-export type RenderErrorSeverity = 'error' | 'warning';
+// --- DSD component constructor (moved from dsd-element.ts) -------
 
-export interface RenderError {
-  code: string;
-  severity: RenderErrorSeverity;
-  phase: string;
-  tagName: string;
-  message: string;
-  recoverable: boolean;
+export interface DsdComponentConstructor extends CustomElementConstructor {
+  styles?:
+    | import('./style-sheet.js').StyleSheetLike
+    | import('./style-sheet.js').StyleSheetLike[];
+  tagName?: string;
+  renderMode?: 'shadow' | 'light';
+  observedAttributes?: string[];
 }
 
 // --- Renderer protocol -------------------------------------------
@@ -56,23 +73,10 @@ export interface RenderInput {
   nestingDepth: number;
 }
 
-export interface HydrationHint {
-  tagName: string;
-  layer: ComponentLayer;
-  strategy?: HydrationStrategy;
-}
-
 export interface RenderHooks {
   beforeRender?: (input: RenderInput) => void;
   afterRender?: (output: RenderOutput) => void;
   onError?: (error: RenderError) => void;
-}
-
-export interface RenderOutput {
-  html: string;
-  errors: RenderError[];
-  metrics: DsdRenderMetrics;
-  hydrationHints: HydrationHint[];
 }
 
 // --- DSD component model -----------------------------------------
@@ -82,26 +86,6 @@ export interface DsdComponent {
   connectedCallback?(): void;
   layer?: ComponentLayer;
   [key: string]: unknown;
-}
-
-export interface DsdOptions {
-  delegatesFocus?: boolean;
-  clonable?: boolean;
-  serializable?: boolean;
-  slotAssignment?: 'named' | 'manual';
-  customElementRegistry?: boolean;
-  layer?: ComponentLayer;
-}
-
-// --- DSD metrics ------------------------------------------------
-
-export interface DsdRenderMetrics {
-  tagName: string;
-  renderTimeMs: number;
-  templateSize: number;
-  layer: ComponentLayer;
-  hasError: boolean;
-  nestingDepth: number;
 }
 
 export interface DsdReport {

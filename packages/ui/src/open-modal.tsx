@@ -16,14 +16,14 @@
  * @slot - Modal body content
  */
 
-import { DsdElement, type VNode } from '@openelement/core';
+import { OpenElement, type VNode } from '@openelement/element';
 import { signal } from '@openelement/signal';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { daisyClassSheet } from './daisy-classes.js';
 
 export const tagName = 'open-modal';
 
-export class OpenModal extends DsdElement {
+export class OpenModal extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet];
   #open = signal(false);
 

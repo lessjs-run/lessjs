@@ -2,6 +2,8 @@
  * @openelement/core — Unified Error Architecture (ADR-0053 / SOP-011).
  */
 
+import type { RenderError as ProtocolRenderError } from '@openelement/protocol/renderer';
+
 // ─── Well-known error codes ─────────────────────────────────────────
 
 /** Well-known error code constants for reference. String values are always accepted. */
@@ -109,7 +111,7 @@ export class SsrRenderError extends OpenElementError {
 
 // ─── New ADR-0053 error classes ─────────────────────────────────────
 
-export class RenderError extends OpenElementError {
+export class RenderError extends OpenElementError implements ProtocolRenderError {
   public readonly componentPath: string;
   public readonly tagName: string;
 

@@ -20,14 +20,14 @@
  * @slot panel - Tab panel content (multiple, one per tab)
  */
 
-import { DsdElement, type VNode } from '@openelement/core';
+import { OpenElement, type VNode } from '@openelement/element';
 import { signal } from '@openelement/signal';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { daisyClassSheet } from './daisy-classes.js';
 
 export const tagName = 'open-tabs';
 
-export class OpenTabs extends DsdElement {
+export class OpenTabs extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet];
   #active = signal(0);
 

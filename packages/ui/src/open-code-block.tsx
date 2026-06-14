@@ -20,7 +20,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'open-code-block';
@@ -126,7 +126,7 @@ sheet.replaceSync(`
   .token.entity { cursor: help; }
 `);
 
-export class OpenCodeBlock extends DsdElement {
+export class OpenCodeBlock extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
 
   private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
@@ -136,7 +136,7 @@ export class OpenCodeBlock extends DsdElement {
   private _highlightRetries = 0;
   private static MAX_HIGHLIGHT_RETRIES = 120;
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     return (
       <>
         <slot></slot>

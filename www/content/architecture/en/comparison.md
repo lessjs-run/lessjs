@@ -61,7 +61,7 @@ the Registry evidence pipeline.
 </tr>
 <tr>
 <td>Rendering</td>
-<td class="openElement-col">SSG + DSD + DsdElement + Islands (ISR next)</td>
+<td class="openElement-col">SSG + DSD + OpenElement + Islands (ISR next)</td>
 <td>SSG + SSR + Islands</td>
 <td>SSR + Islands</td>
 <td>SSR + RSC + SSG</td>

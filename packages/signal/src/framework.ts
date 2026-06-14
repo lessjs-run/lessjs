@@ -4,31 +4,33 @@
  * Developer-friendly API wrapping the engine.
  * signal(), computed(), effect() - the primary API surface.
  *
- * v0.22.1: Alien Signals is the only engine. TC39 polyfill removed.
- * effectScope exposes component-level effect lifecycle management.
+ * v0.40.0: @preact/signals-core is the default engine (was alien-signals).
+ * The engine can be swapped at runtime via setSignalEngine().
  *
  * @module @openelement/signal/framework
  */
 
-import { effectScope as _es } from 'alien-signals';
-import { createDefaultEngine } from './alien-engine.ts';
-import type { SignalEngine } from './types.ts';
+import { createPreactEngine } from './preact-engine.ts';
+import type { ReadonlySignal, SignalEngine, Unsubscribe, WritableSignal } from './types.ts';
 
-// ─── Engine (sync — alien-signals is hard dependency) ───────────
-const engine: SignalEngine = createDefaultEngine();
+// ─── Engine (default: @preact/signals-core) ─────────────────────
+let _engine: SignalEngine = createPreactEngine();
 
-export const signal: SignalEngine['signal'] = engine.signal.bind(engine);
-export const computed: SignalEngine['computed'] = engine.computed.bind(engine);
-export const effect: SignalEngine['effect'] = engine.effect.bind(engine);
-
-// ─── Alien-signals advanced primitives ──────────────────────────
+export function signal<T>(initialValue: T): WritableSignal<T> {
+  return _engine.signal(initialValue);
+}
+export function computed<T>(fn: () => T): ReadonlySignal<T> {
+  return _engine.computed(fn);
+}
+export function effect(fn: () => void | Unsubscribe): Unsubscribe {
+  return _engine.effect(fn);
+}
 
 /**
- * Create an effect scope. All effects created inside the scope
- * are automatically captured as children. The returned dispose
- * function cleans up all captured effects — a single call
- * replaces manual AbortController and signal subscriber tracking.
+ * Swap the signal engine at runtime.
+ * Previously created signals/computed/effects continue using the old engine.
+ * New calls to signal(), computed(), effect() use the new engine.
  */
-export function effectScope(fn: () => void): () => void {
-  return _es(fn);
+export function setSignalEngine(engine: SignalEngine): void {
+  _engine = engine;
 }

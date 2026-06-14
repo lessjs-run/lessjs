@@ -21,7 +21,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeAttr } from '@openelement/core';
@@ -133,13 +133,13 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenButton extends DsdElement {
+export class OpenButton extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override formAssociated = true;
   static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const v = this.getAttribute('variant') || 'default';
     const s = this.getAttribute('size') || 'md';
     const d = this.hasAttribute('disabled');

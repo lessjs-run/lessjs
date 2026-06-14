@@ -17,3 +17,4 @@ export * from './runtime.js';
 export * from './signals.js';
 export * from './ssg-contracts.js';
 export * from './validators.js';
+export * from './i18n.js';

@@ -23,7 +23,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeAttr, escapeHtml } from '@openelement/core';
@@ -114,14 +114,14 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenDialog extends DsdElement {
+export class OpenDialog extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['open', 'label'];
 
   private static _originalInertStates = new WeakMap<Element, boolean>();
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const label = this._esc(this.getAttribute('label') || '');
     return (
       <>

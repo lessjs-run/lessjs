@@ -29,7 +29,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeAttr, escapeHtml } from '@openelement/core';
@@ -107,7 +107,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenInput extends DsdElement {
+export class OpenInput extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override formAssociated = true;
   static override delegatesFocus = true;
@@ -122,7 +122,7 @@ export class OpenInput extends DsdElement {
     'error',
   ];
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const type = this.getAttribute('type') || 'text';
     const placeholder = this.getAttribute('placeholder') || '';
     const label = this.getAttribute('label') || '';

@@ -1,20 +1,25 @@
 /**
  * @openelement/signal - Alien Signals Engine Adapter.
  *
- * v0.22 (SOP-004): Default engine using alien-signals.
- * v0.22.1: TC39 polyfill removed. alien-signals is the only engine.
+ * v0.40.0: @preact/signals-core is the default engine (see framework.ts).
+ * alien-signals remains available as an optional engine through this module.
  *
  * Alien Signals (1.6KB) is a lightweight reactive library with push-pull
  * hybrid architecture, used by Vue 3.6 core and XState.
  *
  * ## Design (SOP-004 § Signals Facade)
- * - Alien is the ONLY engine.
- * - alien-signals is a hard dependency.
+ * - alien-signals is available as an optional engine.
+ * - The default engine can be changed at runtime via setSignalEngine().
  *
  * @module @openelement/signal/alien-engine
  */
 
-import { computed as _c, effect as _e, signal as _s } from 'alien-signals';
+import {
+  computed as _c,
+  effect as _e,
+  effectScope as alienEffectScope,
+  signal as _s,
+} from 'alien-signals';
 import type { SignalEngine } from './types.ts';
 
 // ─── Adapter (synchronous wrapper around alien-signals API) ─────
@@ -91,11 +96,25 @@ export function createAlienEngine(
 const _defaultAlienMod: AlienSignalsModule = { signal: _s, computed: _c, effect: _e };
 
 /**
- * Get the default signal engine.
+ * Get the default alien-signals engine.
  *
- * v0.22.1: Always returns alien-signals engine (sync).
- * alien-signals is a hard dependency — there is no fallback.
+ * v0.40.0: This returns an alien-signals engine. The framework default
+ * (signal/computed/effect in framework.ts) now uses @preact/signals-core.
  */
 export function createDefaultEngine(): SignalEngine {
   return createAlienEngine(_defaultAlienMod);
+}
+
+// ─── Advanced primitives ────────────────────────────────────────
+
+/**
+ * Create an effect scope using alien-signals' effectScope.
+ * All effects created inside the scope are automatically captured as children.
+ * The returned dispose function cleans up all captured effects.
+ *
+ * Note: This is an alien-signals-specific primitive. The default engine
+ * (@preact/signals-core) does not provide effectScope.
+ */
+export function effectScope(fn: () => void): () => void {
+  return alienEffectScope(fn);
 }

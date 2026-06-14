@@ -5,7 +5,7 @@
  * renderer, DOM implementations, Vite, Nitro, or server frameworks.
  */
 
-export type ComponentLayer = 'static' | 'interactive' | 'pure-island';
+export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island' | 'light-dom';
 export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
 export type StrategySource = 'default' | 'manifest' | 'component' | 'route';
 

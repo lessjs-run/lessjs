@@ -1,14 +1,13 @@
 import { assertEquals, assertInstanceOf } from 'jsr:@std/assert@1';
-import { DsdElement, OpenElement } from '../src/index.ts';
-import { jsx } from '../src/jsx-runtime.ts';
-import type { VNode } from '../src/vnode.ts';
+import { OpenElement } from '@openelement/element';
+import { jsx } from '@openelement/core/jsx-runtime';
+import type { VNode } from '@openelement/core';
 
 const hasDOM = typeof customElements !== 'undefined';
 
-Deno.test('OpenElement is the product-facing DsdElement subclass', () => {
+Deno.test('OpenElement is instantiable', () => {
   const el = new OpenElement();
   assertInstanceOf(el, OpenElement);
-  assertInstanceOf(el, DsdElement);
 });
 
 Deno.test('OpenElement keeps explicit light DOM opt-in behavior', () => {

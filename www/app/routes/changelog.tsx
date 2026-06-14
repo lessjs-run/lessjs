@@ -2,7 +2,7 @@
  * Changelog Page - openElement Framework Version History.
  */
 export const meta = { section: '', label: 'Changelog', order: 20 };
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../components/page-styles.js';
@@ -11,16 +11,18 @@ import { marked } from 'marked';
 import sanitizeHtml from 'npm:sanitize-html@^2.17.4';
 
 const routeSheet = new StyleSheet();
-routeSheet.replaceSync(pageStyles + `
+routeSheet.replaceSync(
+  pageStyles + `
   :host { display: block; }
   .changelog-content { font-size: var(--font-size-1); line-height: var(--font-lineheight-4); color: var(--gray-10); }
   .changelog-content h2 { font-size: var(--font-size-5); margin: var(--size-10) 0 var(--size-4); border-bottom: 0.5px solid var(--gray-3); padding-bottom: var(--size-4); }
   .changelog-content h3 { font-size: var(--font-size-3); margin: var(--size-6) 0 var(--size-2); }
   .changelog-content code { font-family: var(--font-mono); background: var(--gray-2); padding: var(--size-1) var(--size-2); border-radius: var(--radius-1); font-size: var(--font-size-00); }
   .changelog-content pre { background: var(--gray-2); padding: var(--size-5) var(--size-6); border-radius: var(--radius-3); overflow-x: auto; }
-`);
+`,
+);
 
-export class ChangelogPage extends DsdElement {
+export class ChangelogPage extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
@@ -34,18 +36,22 @@ export class ChangelogPage extends DsdElement {
         allowedAttributes: { a: ['href', 'target', 'rel'] },
       });
     } catch {
-      html = '<p>Unable to load the changelog. Read it on <a href="https://github.com/open-element/openelement/blob/main/CHANGELOG.md">GitHub</a>.</p>';
+      html =
+        '<p>Unable to load the changelog. Read it on <a href="https://github.com/open-element/openelement/blob/main/CHANGELOG.md">GitHub</a>.</p>';
     }
 
     return (
-      <div class="container">
+      <div class='container'>
         <h1>Changelog</h1>
-        <p class="subtitle">Release history and architecture changes for openElement.</p>
-        <p>The project follows Keep a Changelog and SemVer. Historical entries preserve older names where they describe older releases; current docs use the openElement contract.</p>
-        <div class="changelog-content" innerHTML={html} trustedHtml={true} />
-        <div class="nav-row">
-          <a href="/roadmap" class="btn btn-ghost">Roadmap</a>
-          <a href="/guide/getting-started" class="btn btn-ghost">Getting Started</a>
+        <p class='subtitle'>Release history and architecture changes for openElement.</p>
+        <p>
+          The project follows Keep a Changelog and SemVer. Historical entries preserve older names
+          where they describe older releases; current docs use the openElement contract.
+        </p>
+        <div class='changelog-content' innerHTML={html} trustedHtml={true} />
+        <div class='nav-row'>
+          <a href='/roadmap' class='btn btn-ghost'>Roadmap</a>
+          <a href='/guide/getting-started' class='btn btn-ghost'>Getting Started</a>
         </div>
       </div>
     );

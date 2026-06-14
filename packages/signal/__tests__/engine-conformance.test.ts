@@ -68,3 +68,14 @@ for (const [name, createEngine] of engines) {
     assertEquals(cleanups.includes(1), true);
   });
 }
+
+// ─── Default engine tests ───────────────────────────────────────
+
+Deno.test('Default engine is @preact/signals-core', () => {
+  const { signal: s, computed: c } = createPreactEngine();
+  const count = s(2);
+  const doubled = c(() => count.value * 2);
+  assertEquals(doubled.value, 4);
+  count.value = 10;
+  assertEquals(doubled.value, 20);
+});

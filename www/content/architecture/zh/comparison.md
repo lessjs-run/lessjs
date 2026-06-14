@@ -60,7 +60,7 @@ openElement 当前是 DSD-first Web Components 应用框架。与同级框架的
 </tr>
 <tr>
 <td>Rendering</td>
-<td class="openElement-col">SSG + DSD + DsdElement + Islands (ISR next)</td>
+<td class="openElement-col">SSG + DSD + OpenElement + Islands (ISR next)</td>
 <td>SSG + SSR + Islands</td>
 <td>SSR + Islands</td>
 <td>SSR + RSC + SSG</td>

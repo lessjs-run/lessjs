@@ -34,6 +34,8 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
   },
   app: {
     '.': 'src/index.ts',
+    i18n: 'src/i18n.ts',
+    'i18n-plugin': 'src/i18n-plugin.ts',
     preact: 'src/preact.ts',
     vite: 'src/vite.ts',
   },
@@ -57,7 +59,6 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
     'jsx-runtime': 'src/jsx-runtime.ts',
     'jsx-dev-runtime': 'src/jsx-runtime.ts',
     logger: 'src/logger.ts',
-    'open-element': 'src/open-element.ts',
     'render-dsd-stream': 'src/render-dsd-stream.ts',
     'signal-context': 'src/signal-context.ts',
     'style-sheet': 'src/style-sheet.ts',
@@ -66,10 +67,6 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
   create: { '.': 'cli.ts' },
   element: {
     '.': 'src/index.ts',
-  },
-  i18n: {
-    '.': 'src/index.ts',
-    data: 'src/i18n-data.ts',
   },
   router: {
     '.': 'src/mod.ts',
@@ -85,6 +82,7 @@ const OPENELEMENT_EXPORT_FILES: Record<string, Record<string, string>> = {
     components: 'src/components.ts',
     conformance: 'src/conformance.ts',
     data: 'src/data.ts',
+    i18n: 'src/i18n.ts',
     islands: 'src/islands.ts',
     renderer: 'src/renderer.ts',
     routes: 'src/routes.ts',

@@ -2,7 +2,7 @@
  * @openelement/docs - Comparison: openElement vs Alternatives
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 export const tagName = 'comparison-page';
@@ -123,135 +123,177 @@ routeSheet.replaceSync(`
       }
     `);
 
-export default class ComparisonPage extends DsdElement {
+export default class ComparisonPage extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
     return (
-      
-        <div class="container">
-          <h1>{isZh ? 'openElement 与竞品对比' : 'openElement vs Alternatives'}</h1>
-          <p class="subtitle">
-            openElement 是领先的 DSD-first Web Components 应用框架。不同框架的对比基于 DSD/WC 特性、
-            以及 island 和 Registry evidence pipeline。
-          </p>
+      <div class='container'>
+        <h1>{isZh ? 'openElement 与竞品对比' : 'openElement vs Alternatives'}</h1>
+        <p class='subtitle'>
+          openElement 是领先的 DSD-first Web Components 应用框架。不同框架的对比基于 DSD/WC 特性、
+          以及 island 和 Registry evidence pipeline。
+        </p>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">维度</th>
-                  <th scope="col" class="openElement-col">openElement</th>
-                  <th scope="col">Astro</th>
-                  <th scope="col">Fresh (Deno)</th>
-                  <th scope="col">Next.js</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>定位</td>
-                  <td class="openElement-col">DSD-first WC 应用框架</td>
-                  <td>全栈框架</td>
-                  <td>全栈 (Preact)</td>
-                  <td>全栈 (React)</td>
-                </tr>
-                <tr>
-                  <td>Runtime</td>
-                  <td class="openElement-col">Deno</td>
-                  <td>Node.js</td>
-                  <td>Deno</td>
-                  <td>Node.js</td>
-                </tr>
-                <tr>
-                  <td>客户端 JS</td>
-                  <td class="openElement-col"><span class="tag-yes">0 KB</span></td>
-                  <td><span class="tag-yes">0 KB</span></td>
-                  <td><span class="tag-no">~23 KB</span></td>
-                  <td><span class="tag-no">~90 KB</span></td>
-                </tr>
-                <tr>
-                  <td>WC 原生</td>
-                  <td class="openElement-col"><span class="tag-yes">DSD 一等公民</span></td>
-                  <td><span class="tag-no">不适用（通过通用组件）</span></td>
-                  <td><span class="tag-no">Preact-only</span></td>
-                  <td><span class="tag-no">?</span></td>
-                </tr>
-                <tr>
-                  <td>适配器</td>
-                  <td class="openElement-col">Lit / React / Vanilla 适配器</td>
-                  <td>适配器架构</td>
-                  <td>Preact</td>
-                  <td>React</td>
-                </tr>
-                <tr>
-                  <td>Rendering</td>
-                  <td class="openElement-col">SSG + DSD + DsdElement + Islands (ISR next)</td>
-                  <td>SSG + SSR + Islands</td>
-                  <td>SSR + Islands</td>
-                  <td>SSR + RSC + SSG</td>
-                </tr>
-                <tr>
-                  <td>Registry Hub</td>
-                  <td class="openElement-col"><span class="tag-yes">已集成</span></td>
-                  <td><span class="tag-no">?</span></td>
-                  <td><span class="tag-no">?</span></td>
-                  <td><span class="tag-no">?</span></td>
-                </tr>
-                <tr>
-                  <td>Server</td>
-                  <td class="openElement-col">Hono + Serverless</td>
-                  <td>Built-in + adapters</td>
-                  <td>Oak (optional)</td>
-                  <td>Next.js server</td>
-                </tr>
-                <tr>
-                  <td>组件模型</td>
-                  <td class="openElement-col">3-layer (DSD/Island) + 信号驱动</td>
-                  <td>Islands only</td>
-                  <td>Islands only</td>
-                  <td>Full hydration</td>
-                </tr>
-                <tr>
-                  <td>渲染时间</td>
-                  <td class="openElement-col">SSG ? / ISR ?? / SSR ??</td>
-                  <td>SSG ? / SSR ?</td>
-                  <td>SSR ?</td>
-                  <td>SSR ? / SSG ?</td>
-                </tr>
-                <tr>
-                  <td>Ecosystem</td>
-                  <td class="openElement-col"><span class="tag-partial">Emerging</span></td>
-                  <td>Mature</td>
-                  <td><span class="tag-partial">Small</span></td>
-                  <td>Massive</td>
-                </tr>
-                <tr>
-                  <td>Package Registry</td>
-                  <td class="openElement-col">JSR</td>
-                  <td>npm</td>
-                  <td>JSR + npm</td>
-                  <td>npm</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h2>openElement 的差异化优势</h2>
-          <ul>
-            <li><strong>支持 2 种价值模式</strong> — DSD 和 runtime 都提供价值。Astro 只有 WC 原生支持，Fresh 只有 DSD，Next 只有 React runtime。原生方案无法通过优化追平。</li>
-            <li><strong>支持 2+3 层架构</strong> — 渲染层 + Registry 一体化。封装、渲染、验证、部署。</li>
-            <li><strong>支持单框架</strong> — WC 原生全栈方案。"全栈框架 + WC 集成" 模式。"WC 是一等公民"。</li>
-          </ul>
-
-          <h2>openElement 的局限性</h2>
-          <ul>
-            <li><strong>全平台支持有限</strong> — openElement 支持所有现代浏览器，但无法覆盖所有平台。</li>
-            <li><strong>npm 生态访问受限</strong> — JSR-only 的发布方式。npm 用户需要额外工具。</li>
-            <li><strong>浏览器兼容性要求</strong> — 需要 DSD 支持的浏览器：Chrome 90+、Safari 16.4+、Firefox 123+。</li>
-          </ul>
+        <div class='table-wrap'>
+          <table>
+            <thead>
+              <tr>
+                <th scope='col'>维度</th>
+                <th scope='col' class='openElement-col'>openElement</th>
+                <th scope='col'>Astro</th>
+                <th scope='col'>Fresh (Deno)</th>
+                <th scope='col'>Next.js</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>定位</td>
+                <td class='openElement-col'>DSD-first WC 应用框架</td>
+                <td>全栈框架</td>
+                <td>全栈 (Preact)</td>
+                <td>全栈 (React)</td>
+              </tr>
+              <tr>
+                <td>Runtime</td>
+                <td class='openElement-col'>Deno</td>
+                <td>Node.js</td>
+                <td>Deno</td>
+                <td>Node.js</td>
+              </tr>
+              <tr>
+                <td>客户端 JS</td>
+                <td class='openElement-col'>
+                  <span class='tag-yes'>0 KB</span>
+                </td>
+                <td>
+                  <span class='tag-yes'>0 KB</span>
+                </td>
+                <td>
+                  <span class='tag-no'>~23 KB</span>
+                </td>
+                <td>
+                  <span class='tag-no'>~90 KB</span>
+                </td>
+              </tr>
+              <tr>
+                <td>WC 原生</td>
+                <td class='openElement-col'>
+                  <span class='tag-yes'>DSD 一等公民</span>
+                </td>
+                <td>
+                  <span class='tag-no'>不适用（通过通用组件）</span>
+                </td>
+                <td>
+                  <span class='tag-no'>Preact-only</span>
+                </td>
+                <td>
+                  <span class='tag-no'>?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>适配器</td>
+                <td class='openElement-col'>Lit / React / Vanilla 适配器</td>
+                <td>适配器架构</td>
+                <td>Preact</td>
+                <td>React</td>
+              </tr>
+              <tr>
+                <td>Rendering</td>
+                <td class='openElement-col'>SSG + DSD + OpenElement + Islands (ISR next)</td>
+                <td>SSG + SSR + Islands</td>
+                <td>SSR + Islands</td>
+                <td>SSR + RSC + SSG</td>
+              </tr>
+              <tr>
+                <td>Registry Hub</td>
+                <td class='openElement-col'>
+                  <span class='tag-yes'>已集成</span>
+                </td>
+                <td>
+                  <span class='tag-no'>?</span>
+                </td>
+                <td>
+                  <span class='tag-no'>?</span>
+                </td>
+                <td>
+                  <span class='tag-no'>?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Server</td>
+                <td class='openElement-col'>Hono + Serverless</td>
+                <td>Built-in + adapters</td>
+                <td>Oak (optional)</td>
+                <td>Next.js server</td>
+              </tr>
+              <tr>
+                <td>组件模型</td>
+                <td class='openElement-col'>3-layer (DSD/Island) + 信号驱动</td>
+                <td>Islands only</td>
+                <td>Islands only</td>
+                <td>Full hydration</td>
+              </tr>
+              <tr>
+                <td>渲染时间</td>
+                <td class='openElement-col'>SSG ? / ISR ?? / SSR ??</td>
+                <td>SSG ? / SSR ?</td>
+                <td>SSR ?</td>
+                <td>SSR ? / SSG ?</td>
+              </tr>
+              <tr>
+                <td>Ecosystem</td>
+                <td class='openElement-col'>
+                  <span class='tag-partial'>Emerging</span>
+                </td>
+                <td>Mature</td>
+                <td>
+                  <span class='tag-partial'>Small</span>
+                </td>
+                <td>Massive</td>
+              </tr>
+              <tr>
+                <td>Package Registry</td>
+                <td class='openElement-col'>JSR</td>
+                <td>npm</td>
+                <td>JSR + npm</td>
+                <td>npm</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      
+
+        <h2>openElement 的差异化优势</h2>
+        <ul>
+          <li>
+            <strong>支持 2 种价值模式</strong>{' '}
+            — DSD 和 runtime 都提供价值。Astro 只有 WC 原生支持，Fresh 只有 DSD，Next 只有 React
+            runtime。原生方案无法通过优化追平。
+          </li>
+          <li>
+            <strong>支持 2+3 层架构</strong> — 渲染层 + Registry 一体化。封装、渲染、验证、部署。
+          </li>
+          <li>
+            <strong>支持单框架</strong>{' '}
+            — WC 原生全栈方案。"全栈框架 + WC 集成" 模式。"WC 是一等公民"。
+          </li>
+        </ul>
+
+        <h2>openElement 的局限性</h2>
+        <ul>
+          <li>
+            <strong>全平台支持有限</strong> — openElement 支持所有现代浏览器，但无法覆盖所有平台。
+          </li>
+          <li>
+            <strong>npm 生态访问受限</strong> — JSR-only 的发布方式。npm 用户需要额外工具。
+          </li>
+          <li>
+            <strong>浏览器兼容性要求</strong>{' '}
+            — 需要 DSD 支持的浏览器：Chrome 90+、Safari 16.4+、Firefox 123+。
+          </li>
+        </ul>
+      </div>
     );
   }
 }

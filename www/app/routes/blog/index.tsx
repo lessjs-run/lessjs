@@ -2,7 +2,7 @@
  * Blog Index Page - Data-driven rendering via @openelement/generated/blog-data.
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { posts } from '@openelement/generated/blog-data';
@@ -20,23 +20,29 @@ routeSheet.replaceSync(`
   .new-badge { display: inline-block; font-size: 0.5rem; font-weight: var(--font-weight-7); letter-spacing: var(--font-letterspacing-4); padding: 0.0625rem 0.3125rem; border-radius: 2px; background: var(--gray-10); color: var(--gray-0); vertical-align: middle; margin-left: var(--size-1); }
 `);
 
-export class BlogIndexPage extends DsdElement {
+export class BlogIndexPage extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
 
   override render() {
     return (
-      <div class="container">
+      <div class='container'>
         <h1>Blog</h1>
-        <p class="subtitle">Design notes, architecture decisions, and release work for the openElement framework.</p>
-        <div class="blog-list">
+        <p class='subtitle'>
+          Design notes, architecture decisions, and release work for the openElement framework.
+        </p>
+        <div class='blog-list'>
           {posts.filter((p) => p.frontmatter.type !== 'adr').map((post, i) => {
             const tags = post.frontmatter.tags ?? [];
             return (
-              <a href={'/blog/' + post.slug} class="blog-item">
-                <h2>{post.frontmatter.title}{i === 0 && <span class="new-badge">NEW</span>}</h2>
-                {post.frontmatter.excerpt && <p class="blog-desc">{post.frontmatter.excerpt}</p>}
-                <span class="blog-date">{post.frontmatter.date}</span>
-                {tags.length > 0 && <div class="blog-tags">{tags.map((tag) => <span class="blog-tag">{tag}</span>)}</div>}
+              <a href={'/blog/' + post.slug} class='blog-item'>
+                <h2>{post.frontmatter.title}{i === 0 && <span class='new-badge'>NEW</span>}</h2>
+                {post.frontmatter.excerpt && <p class='blog-desc'>{post.frontmatter.excerpt}</p>}
+                <span class='blog-date'>{post.frontmatter.date}</span>
+                {tags.length > 0 && (
+                  <div class='blog-tags'>
+                    {tags.map((tag) => <span class='blog-tag'>{tag}</span>)}
+                  </div>
+                )}
               </a>
             );
           })}

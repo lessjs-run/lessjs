@@ -119,6 +119,27 @@ export class Router {
   }
 
   /**
+   * Fetch loader data for a route from the /_data endpoint.
+   * Used by open-layout (or other consumers) during SPA navigation to
+   * re-fetch data without a full page load.
+   *
+   * Returns the data object, or null if the route has no loader.
+   */
+  async fetchLoaderData<T = unknown>(routePath: string): Promise<{ data: T } | null> {
+    try {
+      const url = new URL(location.origin);
+      url.pathname = '/_data';
+      url.searchParams.set('route', routePath);
+      const resp = await fetch(url.toString());
+      if (!resp.ok) return null;
+      const json = await resp.json();
+      return json as { data: T };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
    * Stop the SPA router. Removes all event listeners.
    */
   stop(): void {

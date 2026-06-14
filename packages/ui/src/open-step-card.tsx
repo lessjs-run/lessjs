@@ -22,7 +22,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { escapeHtml } from '@openelement/core';
@@ -80,11 +80,11 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenStepCard extends DsdElement {
+export class OpenStepCard extends OpenElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const step = parseInt(this.getAttribute('step') || '1', 10);
     const label = this.getAttribute('label') || '';
     const description = this.getAttribute('description') || '';

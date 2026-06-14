@@ -29,7 +29,7 @@
  * ```
  */
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { type Context, createContext, provideContext } from '@openelement/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
@@ -499,7 +499,7 @@ sheet.replaceSync(`
   }
 `);
 
-export class OpenLayout extends DsdElement {
+export class OpenLayout extends OpenElement {
   private _cleanupNav?: () => void;
   private _navOptions?: {
     contentLoader: (path: string, locale: string) => Promise<void>;
@@ -565,7 +565,7 @@ export class OpenLayout extends DsdElement {
   private _themeHandler?: (e: Event) => void;
   private _docClickCleanup?: () => void;
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     return this._renderLayout();
   }
 

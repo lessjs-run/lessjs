@@ -8,7 +8,6 @@ const retainedPackages = [
   '@openelement/core',
   '@openelement/create',
   '@openelement/element',
-  '@openelement/i18n',
   '@openelement/protocol',
   '@openelement/router',
   '@openelement/signal',
@@ -77,7 +76,7 @@ for (const pkg of removedPackages) {
   }
 }
 
-for (const required of ['12-package', 'v0.40.x', 'ADR-0105']) {
+for (const required of ['11-package', 'v0.40.x', 'ADR-0105']) {
   if (!docs.includes(required)) {
     failures.push(`PACKAGE_SURFACE.md missing required anchor: ${required}`);
   }
@@ -89,4 +88,4 @@ if (failures.length > 0) {
   Deno.exit(1);
 }
 
-console.log('Package surface check passed (12 packages retained).');
+console.log('Package surface check passed (11 packages retained).');

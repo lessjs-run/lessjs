@@ -2,14 +2,16 @@
   "name": "@openelement/router",
   "version": "0.40.0",
   "exports": {
-    ".": "./src/mod.ts",
+    ".": "./src/index.ts",
+    "./mod": "./src/mod.ts",
     "./define-routes": "./src/define-routes.ts",
     "./pattern-translate": "./src/pattern-translate.ts",
     "./client-router": "./src/client-router.ts",
     "./page-loader": "./src/page-loader.ts"
   },
   "imports": {
-    "marked": "npm:marked@15.0.4"
+    "marked": "npm:marked@15.0.4",
+    "@openelement/protocol": "jsr:@openelement/protocol@^0.40.0"
   },
   "publish": {
     "include": [

@@ -6,7 +6,10 @@
  * v0.29.5: WeakMap replaces Symbol.for() for type-safe signal storage.
  */
 
-import type { DsdElement } from './dsd-element.js';
+// Minimal element interface for core WeakMap identity
+interface _El extends HTMLElement {
+  requestReactiveUpdate?(): void;
+}
 
 // ─── PropDecl Type Utilities ────────────────────────────────────
 
@@ -68,15 +71,15 @@ type PropSignal = { value: unknown; subscribe(fn: (v: unknown) => void): () => v
 
 // ─── WeakMap storage (v0.29.5: replaces Symbol.for()) ───────────
 
-const _propSignals = new WeakMap<DsdElement, PropSignalMap>();
-const _propUnsubscribers = new WeakMap<DsdElement, Array<() => void>>();
+const _propSignals = new WeakMap<_El, PropSignalMap>();
+const _propUnsubscribers = new WeakMap<_El, Array<() => void>>();
 const _ctorMetadata = new WeakMap<object, PropMetadataStore>();
-const _staticPropSignals = new WeakMap<DsdElement, Map<string, PropSignal>>();
-const _staticPropUnsubs = new WeakMap<DsdElement, Array<() => void>>();
+const _staticPropSignals = new WeakMap<_El, Map<string, PropSignal>>();
+const _staticPropUnsubs = new WeakMap<_El, Array<() => void>>();
 
 // ─── @prop() runtime (legacy compat) ────────────────────────────
 
-export function initializeProps(instance: DsdElement): void {
+export function initializeProps(instance: _El): void {
   const store = _ctorMetadata.get(instance.constructor);
   if (!store?.props.length) return;
 
@@ -100,7 +103,7 @@ export function initializeProps(instance: DsdElement): void {
       if (options.reflect && typeof key === 'string') {
         reflectToAttribute(instance, key, sig.value, options);
       }
-      instance.requestReactiveUpdate();
+      instance.requestReactiveUpdate?.();
     });
     unsubscribers.push(unsubscribe);
 
@@ -112,12 +115,15 @@ export function initializeProps(instance: DsdElement): void {
   }
 
   registerObservedAttributes(
-    instance.constructor as typeof DsdElement & { observedAttributes?: string[] },
+    instance.constructor as CustomElementConstructor & {
+      observedAttributes?: string[];
+      requestReactiveUpdate?(): void;
+    },
     store,
   );
 }
 
-export function disposeProps(instance: DsdElement): void {
+export function disposeProps(instance: _El): void {
   const unsubs = _propUnsubscribers.get(instance);
   if (unsubs) {
     for (const fn of unsubs.splice(0)) fn();
@@ -125,7 +131,7 @@ export function disposeProps(instance: DsdElement): void {
 }
 
 export function handlePropAttributeChange(
-  instance: DsdElement,
+  instance: _El,
   name: string,
   _oldValue: string | null,
   newValue: string | null,
@@ -158,7 +164,7 @@ function resolveAttrName(key: PropertyKey, options: PropertyOptions): string {
 }
 
 function getInitialValue(
-  instance: DsdElement,
+  instance: _El,
   key: PropertyKey,
   attrName: string,
   options: PropertyOptions,
@@ -186,7 +192,7 @@ function fromAttribute(value: string | null, options: PropertyOptions): unknown 
 }
 
 function reflectToAttribute(
-  instance: DsdElement,
+  instance: _El,
   key: string,
   value: unknown,
   options: PropertyOptions,
@@ -226,7 +232,7 @@ function createPropSignal(initial: unknown): PropSignal {
 }
 
 function installPropAccessor(
-  instance: DsdElement,
+  instance: _El,
   key: string | symbol,
   sigMap: PropSignalMap,
 ): void {
@@ -244,7 +250,7 @@ function installPropAccessor(
 }
 
 function registerObservedAttributes(
-  ctor: typeof DsdElement & { observedAttributes?: string[] },
+  ctor: CustomElementConstructor & { observedAttributes?: string[] },
   store: PropMetadataStore,
 ): void {
   if (!ctor.observedAttributes) {
@@ -260,7 +266,7 @@ function registerObservedAttributes(
 
 // ─── Static props runtime ───────────────────────────────────────
 
-export function initializeStaticProps(instance: DsdElement): void {
+export function initializeStaticProps(instance: _El): void {
   const ctor = instance.constructor as { props?: Record<string, unknown> };
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef || typeof propsDef !== 'object') return;
@@ -305,7 +311,7 @@ export function initializeStaticProps(instance: DsdElement): void {
   registerStaticObservedAttributes(ctor, propsDef);
 }
 
-export function disposeStaticProps(instance: DsdElement): void {
+export function disposeStaticProps(instance: _El): void {
   const unsubs = _staticPropUnsubs.get(instance);
   if (unsubs) {
     for (const fn of unsubs.splice(0)) fn();
@@ -313,7 +319,7 @@ export function disposeStaticProps(instance: DsdElement): void {
 }
 
 export function handleStaticPropAttributeChange(
-  instance: DsdElement,
+  instance: _El,
   name: string,
   _oldValue: string | null,
   newValue: string | null,
@@ -344,7 +350,7 @@ export function handleStaticPropAttributeChange(
   }
 }
 
-export function syncStaticPropsFromAttributes(instance: DsdElement): void {
+export function syncStaticPropsFromAttributes(instance: _El): void {
   const ctor = instance.constructor as { props?: Record<string, unknown> };
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef) return;

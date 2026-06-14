@@ -1,7 +1,7 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.40.0 Elements + Preact + Repository Slimming; 12-package cleanup train consolidated into v0.40.0.\
+> Current package line: v0.40.0 Elements + Preact + Repository Slimming; 11-package cleanup train consolidated into v0.40.0.\
 > Active version plan: docs/current/VERSION_PLAN.md.\
 > Updated: 2026-06-14.
 
@@ -57,7 +57,7 @@ advanced feature packages support the four products without replacing them.
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro                                                        | Done                     |
 | v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                                                            | Done                     |
 | v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff                                                        | Done                     |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, collapse to 12 packages, singular public names, 0 explicit any, AutoFlow3-only governance, SSG engine extraction | Done (local)             |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, collapse to 11 packages, singular public names, 0 explicit any, AutoFlow3-only governance, SSG engine extraction | Done (local)             |
 | v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                                                            | Planned                  |
 | v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                                                                     | Vision                   |
 
@@ -386,9 +386,9 @@ The Repository Slimming jobs are:
 
 Current implementation removes Hub/RPC/CEM/compat-check/interop adapter
 packages and collapses standalone runtime/style-sheet/ssg packages into the
-12-package surface. Workflows stay at four active files, active docs stay at
+11-package surface. Workflows stay at four active files, active docs stay at
 current truth plus ADR, roadmap/status, release evidence, and archive index,
-and `deno task package-surface:check` verifies the 12-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
+and `deno task package-surface:check` verifies the 11-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
 matrix. ADR-0102 also adds `@openelement/element` as the first-class Elements
 package.
 

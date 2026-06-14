@@ -152,7 +152,12 @@ Deno.test('createOpenJsrPackageResolverPlugin resolves retained core packages bu
   // Optional retained data packages are handled by optionalPackageStubsPlugin
   // so SSG can run when the consumer did not install them.
   assertEquals(await resolveId('@openelement/content'), null);
-  assertEquals(await resolveId('@openelement/i18n'), null);
+
+  // i18n is now part of @openelement/app
+  assertEquals(
+    await resolveId('@openelement/app/i18n'),
+    toVirtualOpenPackageId('app', 'src/i18n.ts'),
+  );
 
   assertEquals(
     await resolveId('@openelement/core'),

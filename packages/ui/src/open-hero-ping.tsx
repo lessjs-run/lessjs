@@ -11,7 +11,7 @@
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button
  */
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'open-hero-ping';
@@ -74,7 +74,7 @@ styles.replaceSync(`
   }
 `);
 
-export default class HeroPing extends DsdElement {
+export default class HeroPing extends OpenElement {
   static override styles = [openPropsTokenSheet, styles];
 
   apiUrl = '';
@@ -117,7 +117,7 @@ export default class HeroPing extends DsdElement {
     }
   };
 
-  override render(): ReturnType<typeof DsdElement.prototype.render> {
+  override render(): ReturnType<typeof OpenElement.prototype.render> {
     const dotClass = `dot ${this._state}`;
     const loading = this._state === 'loading';
     return (

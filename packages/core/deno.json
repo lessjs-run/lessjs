@@ -10,7 +10,6 @@
     "./isr-runtime": "./src/isr-runtime.ts",
     "./signal-context": "./src/signal-context.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
-    "./open-element": "./src/open-element.ts",
     "./style-sheet": "./src/style-sheet.ts",
     "./jsx-runtime": "./src/jsx-runtime.ts",
     "./jsx-dev-runtime": "./src/jsx-runtime.ts",

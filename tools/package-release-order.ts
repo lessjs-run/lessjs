@@ -10,7 +10,6 @@ export const RELEASE_PACKAGE_ORDER: ReleasePackageStep[] = [
   { pkg: '@openelement/signal', dir: 'packages/signal' },
   { pkg: '@openelement/core', dir: 'packages/core' },
   { pkg: '@openelement/element', dir: 'packages/element' },
-  { pkg: '@openelement/i18n', dir: 'packages/i18n' },
   { pkg: '@openelement/content', dir: 'packages/content' },
   { pkg: '@openelement/ssg', dir: 'packages/ssg' },
   { pkg: '@openelement/adapter-vite', dir: 'packages/adapter-vite' },

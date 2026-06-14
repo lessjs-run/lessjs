@@ -15,7 +15,8 @@
     "./runtime": "./src/runtime.ts",
     "./signals": "./src/signals.ts",
     "./ssg-contracts": "./src/ssg-contracts.ts",
-    "./validators": "./src/validators.ts"
+    "./validators": "./src/validators.ts",
+    "./i18n": "./src/i18n.ts"
   },
   "imports": {},
   "publish": {

@@ -23,7 +23,7 @@ remained standalone packages that blurred the product line.
 v0.40.x is a manually approved breaking cleanup train. These patches are not
 normal AutoFlow patch releases.
 
-The approved cleanup target is a 12-package package graph:
+The approved cleanup target is an 11-package package graph:
 
 - `@openelement/core`
 - `@openelement/element`
@@ -44,7 +44,7 @@ The following packages are removed from the current package graph:
 - `@openelement/ssg`
 
 `@openelement/element` remains plural and becomes the canonical component
-authoring facade. It re-exports `OpenElement`, `DsdElement`, `StyleSheet`,
+authoring facade. It re-exports `OpenElement`, `StyleSheet`,
 signals, island helpers, JSX runtime helpers, and key authoring types.
 
 `StyleSheet` moves to `@openelement/core/style-sheet` and is re-exported from
@@ -77,7 +77,7 @@ changes, or default engine changes are ordinary patch work.
 
 ## Consequences
 
-- The publish order shrinks to 12 packages.
+- The publish order shrinks to 11 packages.
 - Active code must not import removed packages.
 - Root generated artifacts and stale root benchmarks are rejected by repo
   hygiene checks.

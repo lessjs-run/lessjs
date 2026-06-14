@@ -38,6 +38,7 @@ Thumbs.db
 # Testing
 coverage/
 .coverage/
+.coverage-check/
 __test_fixtures__/
 playwright-report/
 test-results/

@@ -369,10 +369,14 @@ Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalida
   assertStringIncludes(code, 'let __page = ($pageIndex.default?.openElementPage || {})');
   assertStringIncludes(
     code,
-    'const __data = typeof __page.load === "function" ? await __page.load(__loadContext) : undefined',
+    'const __data = typeof $pageIndex.loader === "function" ? await $pageIndex.loader(__loadContext) : undefined',
   );
   assertStringIncludes(code, '__openElementParams: __params');
-  assertStringIncludes(code, '__openElementData: __data');
+  assertStringIncludes(code, 'data: __data');
+  assertFalse(
+    code.includes('__openElementData: __data'),
+    'Generated code should use `data` prop not `__openElementData`',
+  );
   assertStringIncludes(code, '__openElementRoute: __routeContext');
   assertStringIncludes(code, '__openElementMeta: __routeMeta');
   assertEquals(code.includes('module?.meta'), false);
@@ -391,7 +395,7 @@ Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalida
   assertStringIncludes(code, 'function __isOpenElementNotFound(error) {');
   assertStringIncludes(
     code,
-    'data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+    'data = typeof info.module.loader === "function" ? await info.module.loader(loadContext) : undefined;',
   );
   assertStringIncludes(code, '__openElementParams: params');
   assertStringIncludes(code, '__openElementRoute: loadContext.route');

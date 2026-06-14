@@ -6,9 +6,12 @@ This package exposes `OpenElement`, the product-facing base class for native Web
 Components built on openElement's existing shadow/DSD implementation. Shadow/DSD
 is the default render mode; light DOM remains explicit opt-in.
 
-`DsdElement` remains available as a v0.40 compatibility export from
-`@openelement/core` and `@openelement/element`, but new Elements docs and
-starters should use `OpenElement`.
+Also includes:
+
+- `ErrorBoundary` — catch child render errors with fallback UI
+- `defineElement` / `defineLayout` — functional component-style authoring
+- Prop system: `PropDecl`, `PropsFrom`, `PropType`
+- Full re-export of JSX, VNode, context, signals, StyleSheet, and island utilities
 
 ## Install
 
@@ -31,6 +34,19 @@ class MyCard extends OpenElement {
     );
   }
 }
+```
+
+## Functional Component Style
+
+```tsx
+import { defineElement } from '@openelement/element';
+
+defineElement('my-card', ({ title }) => (
+  <article>
+    <h2>{title}</h2>
+    <slot />
+  </article>
+));
 ```
 
 ## Boundary

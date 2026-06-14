@@ -9,7 +9,7 @@
  */
 
 import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
-import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
+import { FOR_TAG, Fragment, HTML_TAG, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
 import { trustRenderHtml } from './security.ts';
@@ -241,6 +241,18 @@ export function renderToDom(
     const frag = document.createDocumentFragment();
     for (const child of children) {
       frag.appendChild(renderToDom(child, signal, disposers));
+    }
+    return frag;
+  }
+
+  // Trusted HTML — parse raw HTML string into real DOM nodes
+  if (tag === HTML_TAG) {
+    const container = document.createElement('div');
+    const html = props?.html ?? '';
+    container.innerHTML = trustRenderHtml(String(html));
+    const frag = document.createDocumentFragment();
+    while (container.firstChild) {
+      frag.appendChild(container.firstChild);
     }
     return frag;
   }

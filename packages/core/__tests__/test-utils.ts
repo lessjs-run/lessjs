@@ -3,11 +3,10 @@
  *
  * v0.25.0 (SOP-009): Single re-export point for all core test imports.
  * Tests import from './test-utils.ts' instead of '../src/xxx.ts'.
+ *
+ * v0.40.0: DsdElement and ErrorBoundary moved to @openelement/element.
+ * Core tests import them directly from @openelement/element if needed.
  */
-
-// ── Core runtime ──────────────────────────────────────────────────
-export { DsdElement } from '../src/dsd-element.ts';
-export { ErrorBoundary } from '../src/error-boundary.ts';
 
 // ── JSX runtime ───────────────────────────────────────────────────
 export { Fragment, jsx, jsxDEV, jsxs } from '../src/jsx-runtime.ts';

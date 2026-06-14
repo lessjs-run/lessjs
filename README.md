@@ -43,7 +43,7 @@ Supporting packages such as `@openelement/core`, `adapter-vite`, `signals`,
 `router`, `content`, and `i18n` are advanced or implementation surfaces. They
 support the four products; they are not separate first-class product lines.
 
-In v0.40.x, the active workspace is the 12-package cleanup-train product line.
+In v0.40.x, the active workspace is the 11-package cleanup-train product line.
 Hub, RPC, CEM, compat-check, Lit/React/vanilla interop adapters, and standalone
 runtime/style-sheet/ssg packages are removed from the current package graph;
 historical details remain in git history and release evidence.

@@ -58,7 +58,7 @@ The future Elements product direction is `@openelement/element` with an
 low-level library code:
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/element';
+import { OpenElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 Application routes should normally use `@openelement/app` first.

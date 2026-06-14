@@ -1,37 +1,39 @@
 # Package Surface Inventory
 
-This is the v0.40.0 12-package product-line truth table.
+This is the v0.40.0 11-package product-line truth table.
+
+<!-- 11-package -->
 
 ```text
 openElement = Elements + UI + Framework + Protocols
 ```
 
 ADR-0101 approves the product-line reset and AutoFlow3 governance boundary.
-ADR-0105 approves the v0.40.0 breaking cleanup train and the 14-to-12 package
+ADR-0105 approves the v0.40.0 breaking cleanup train and the 14-to-11 package
 graph collapse.
 
-## Current 12-package surface
+## Current 11-package surface
 
-| Package                     | Class          | v0.40.0 decision                                                                                          |
-| --------------------------- | -------------- | --------------------------------------------------------------------------------------------------------- |
-| `@openelement/app`          | product-facing | Framework authoring API, including optional Preact island proof under `./preact`.                         |
-| `@openelement/create`       | product-facing | Starter and consumer entry.                                                                               |
-| `@openelement/element`      | product-facing | Canonical component-authoring facade for `OpenElement`, `DsdElement`, `StyleSheet`, islands, and signals. |
-| `@openelement/protocol`     | product-facing | Runtime-free replacement boundary. Now includes SSG engine contracts.                                     |
-| `@openelement/ui`           | product-facing | First-party `open-*` component library.                                                                   |
-| `@openelement/ssg`          | foundation     | Adapter-agnostic SSG engine (entry descriptor, render pipeline, route scanner, postprocess).              |
-| `@openelement/core`         | foundation     | Low-level implementation kernel, now including `StyleSheet`.                                              |
-| `@openelement/router`       | foundation     | Route support behind Framework.                                                                           |
-| `@openelement/signal`       | foundation     | Signal implementation behind protocols; default remains `alien-signals`.                                  |
-| `@openelement/content`      | foundation     | Content support behind Framework recipes.                                                                 |
-| `@openelement/i18n`         | foundation     | I18n support behind Framework recipes.                                                                    |
-| `@openelement/adapter-vite` | foundation     | Vite/Nitro build bridge; delegates SSG orchestration to `@openelement/ssg`.                               |
+| Package                     | Class          | v0.40.0 decision                                                                             |
+| --------------------------- | -------------- | -------------------------------------------------------------------------------------------- |
+| `@openelement/app`          | product-facing | Framework authoring API, including optional Preact island proof under `./preact`.            |
+| `@openelement/create`       | product-facing | Starter and consumer entry.                                                                  |
+| `@openelement/element`      | product-facing | Canonical component-authoring facade for `OpenElement`, `StyleSheet`, islands, and signals.  |
+| `@openelement/protocol`     | product-facing | Runtime-free replacement boundary. Now includes SSG engine contracts.                        |
+| `@openelement/ui`           | product-facing | First-party `open-*` component library.                                                      |
+| `@openelement/ssg`          | foundation     | Adapter-agnostic SSG engine (entry descriptor, render pipeline, route scanner, postprocess). |
+| `@openelement/core`         | foundation     | Low-level implementation kernel, now including `StyleSheet`.                                 |
+| `@openelement/router`       | foundation     | Route support behind Framework.                                                              |
+| `@openelement/signal`       | foundation     | Signal implementation behind protocols; default remains `alien-signals`.                     |
+| `@openelement/content`      | foundation     | Content support behind Framework recipes.                                                    |
+| `@openelement/adapter-vite` | foundation     | Vite/Nitro build bridge; delegates SSG orchestration to `@openelement/ssg`.                  |
 
 ## Removed from current graph
 
 v0.40.0 removes historical and collapsed packages from the current workspace and
 publish order:
 
+- `@openelement/i18n` (moved to `@openelement/app/i18n`)
 - `@openelement/rpc`
 - `@openelement/hub`
 - `@openelement/cem`

@@ -1,5 +1,5 @@
 /**
- * @openelement/core - DsdElement base class.
+ * @openelement/element - OpenElement base class.
  *
  * Zero-dependency Custom Element base class providing:
  *   - Declarative Shadow DOM (DSD) detection at upgrade time
@@ -11,7 +11,7 @@
  *   - formAssociated + delegatesFocus support
  *   - ReactiveHost protocol for explicit Signal integration
  *
- * DsdElement extends HTMLElement directly - ZERO Lit dependency.
+ * OpenElement extends HTMLElement directly - ZERO Lit dependency.
  * Components return `render(): VNode | null`.
  *
  * Lifecycle:
@@ -21,7 +21,7 @@
  *
  * Usage (static DSD component):
  * ```ts
- * class MyCard extends DsdElement {
+ * class MyCard extends OpenElement {
  *   static styles = myStyleSheet;
  *   render(): VNode {
  *     return <div class="card"><slot /></div>;
@@ -32,7 +32,7 @@
  *
  * Usage (reactive DSD component):
  * ```ts
- * class MyToggle extends DsdElement {
+ * class MyToggle extends OpenElement {
  *   #active = signal(false);
  *   render() {
  *     return (
@@ -44,11 +44,11 @@
  * }
  * ```
  *
- * @module @openelement/core/dsd-element
+ * @module @openelement/element/open-element
  */
 
-import type { ReactiveHost } from './schemas.js';
-import type { StyleSheetLike } from './style-sheet.js';
+import type { ReactiveHost } from '@openelement/core';
+import type { StyleSheetLike } from '@openelement/core/style-sheet';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 import {
   disposeStaticProps,
@@ -56,15 +56,15 @@ import {
   initializeStaticProps,
   syncStaticPropsFromAttributes,
 } from './prop.js';
-import { isVNode, type VNode } from './vnode.js';
-import { renderToDom } from './jsx-render-dom.js';
-import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
+import { isVNode, type VNode } from '@openelement/core';
+import { renderToDom } from '@openelement/core';
+import { collectEventBindings, hydrateEventMarkers } from '@openelement/core';
 import type { Signal } from '@openelement/protocol/signals';
 import { effect, signal } from '@openelement/signal';
-import { createLogger } from './logger.js';
+import { createLogger } from '@openelement/core/logger';
 
 /**
- * SSR-safe base class for DsdElement.
+ * SSR-safe base class for OpenElement.
  *
  * In browser: extends HTMLElement directly.
  * In SSR: assigns a minimal stub to globalThis.HTMLElement so the entire
@@ -100,7 +100,7 @@ if (typeof HTMLElement === 'undefined') {
  *
  * Subclasses MUST override `render(): VNode | null`.
  */
-export class DsdElement extends _Base implements ReactiveHost {
+export class OpenElement extends _Base implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
@@ -130,13 +130,6 @@ export class DsdElement extends _Base implements ReactiveHost {
    * When true, ElementInternals are attached in connectedCallback.
    */
   static formAssociated?: boolean;
-
-  /**
-   * Whether DSD has already populated this component's shadow root.
-   * When true, render() does not need to produce DOM content on the client;
-   * only event hydration (if any) is performed.
-   */
-  /** v0.25.0 (SOP-012): Removed — detection now inline in _renderOrHydrate(). */
 
   /**
    * Effect dispose tracking (ADR-0065).
@@ -197,7 +190,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    * @returns The existing or newly created ShadowRoot.
    */
   createRenderRoot(): ShadowRoot | this {
-    const ctor = this.constructor as typeof DsdElement;
+    const ctor = this.constructor as typeof OpenElement;
     if (ctor.renderMode === 'light') {
       return this;
     }
@@ -222,7 +215,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    * Apply static styles to the shadow root via adoptedStyleSheets.
    * Shared between CSR (createRenderRoot) and DSD (connectedCallback) paths.
    */
-  private _applyStyles(ctor: typeof DsdElement, root?: ShadowRoot): void {
+  private _applyStyles(ctor: typeof OpenElement, root?: ShadowRoot): void {
     const target = root ?? this.shadowRoot;
     if (!target || !ctor.styles) return;
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
@@ -246,7 +239,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    * If formAssociated is true, ElementInternals are attached.
    */
   connectedCallback(): void {
-    const ctor = this.constructor as typeof DsdElement;
+    const ctor = this.constructor as typeof OpenElement;
 
     // v0.24 (ADR-0052): Initialize @prop() signals and accessors
     initializeProps(this);
@@ -287,6 +280,9 @@ export class DsdElement extends _Base implements ReactiveHost {
     // subscriptions are added.
     this._renderOrHydrate();
 
+    // v0.40.0: Client-side activation hook for framework hydration
+    this.clientActivate();
+
     // Attach ElementInternals for form-associated custom elements
     if (ctor.formAssociated && typeof this.attachInternals === 'function') {
       this._internals = this.attachInternals();
@@ -298,7 +294,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    */
   private _renderOrHydrate(): void {
     try {
-      const ctor = this.constructor as typeof DsdElement;
+      const ctor = this.constructor as typeof OpenElement;
       if (ctor.renderMode === 'light') {
         this._renderIntoLightDom();
         this.onCsrRendered();
@@ -480,6 +476,21 @@ export class DsdElement extends _Base implements ReactiveHost {
   protected onCsrRendered(): void {}
 
   /**
+   * v0.40.0: Client-side activation hook.
+   *
+   * Called once after the element is connected, the shadow root
+   * is ready, and any DSD hydration or CSR rendering has completed.
+   * This is the right place for framework hydration (Preact, React,
+   * Vue, Lit) to take over the shadow DOM.
+   *
+   * Default implementation is a no-op. Subclasses override this to
+   * hydrate or render framework components into the shadow root.
+   */
+  protected clientActivate(): void {
+    // default no-op
+  }
+
+  /**
    * Hook called when the unified client render/hydrate path throws.
    * Subclasses may return a VNode fallback.
    */
@@ -493,7 +504,7 @@ export class DsdElement extends _Base implements ReactiveHost {
   }
 
   private _renderErrorFallback(error: unknown): void {
-    const ctor = this.constructor as typeof DsdElement;
+    const ctor = this.constructor as typeof OpenElement;
     const isLightDom = ctor.renderMode === 'light';
     if (!this.shadowRoot && !isLightDom) this.createRenderRoot();
     const target = isLightDom ? this : this.shadowRoot;
@@ -571,12 +582,12 @@ export class DsdElement extends _Base implements ReactiveHost {
   /**
    * Re-render the shadow DOM from `render()` and re-bind declarative events.
    *
-   * DsdElement intentionally does not include a reactive scheduler. Components
+   * OpenElement intentionally does not include a reactive scheduler. Components
    * with local state can call this method after state changes instead of
    * duplicating renderToDom() and event hydration.
    */
   update(): void {
-    const ctor = this.constructor as typeof DsdElement;
+    const ctor = this.constructor as typeof OpenElement;
     if (ctor.renderMode === 'light') {
       this._renderIntoLightDom();
       return;
@@ -588,7 +599,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    * ReactiveController-compatible update hook.
    *
    * Async state controllers call this method when state changes. Keeping this
-   * tiny alias lets DsdElement host controllers without inheriting Lit or a
+   * tiny alias lets OpenElement host controllers without inheriting Lit or a
    * scheduler.
    */
   requestUpdate(): void {
@@ -622,7 +633,7 @@ export class DsdElement extends _Base implements ReactiveHost {
    */
   requestReactiveUpdate(): void {
     if (!this.isConnected) return;
-    const ctor = this.constructor as typeof DsdElement;
+    const ctor = this.constructor as typeof OpenElement;
     if (ctor.renderMode === 'light') {
       this._renderIntoLightDom();
       return;
@@ -699,11 +710,11 @@ export class DsdElement extends _Base implements ReactiveHost {
   }
 }
 
-/** DsdElement constructor with framework-convention static properties. */
-export interface DsdComponentConstructor extends CustomElementConstructor {
+/** OpenElement constructor with framework-convention static properties. */
+export interface OpenElementComponentConstructor extends CustomElementConstructor {
   styles?:
-    | import('@openelement/core/style-sheet').StyleSheetLike
-    | import('@openelement/core/style-sheet').StyleSheetLike[];
+    | StyleSheetLike
+    | StyleSheetLike[];
   tagName?: string;
   renderMode?: 'shadow' | 'light';
   observedAttributes?: string[];

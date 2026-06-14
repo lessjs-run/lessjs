@@ -79,7 +79,7 @@ Deno.test('protocols: component adapter conformance checks descriptors', () => {
   const adapter: ComponentAdapter<typeof fixture> = {
     name: 'object-component',
     isComponent: (value): value is typeof fixture => value === fixture,
-    describe: (_component, tagName) => ({ tagName, layer: 'static' }),
+    describe: (_component, tagName) => ({ tagName, layer: 'dsd-static' }),
   };
 
   const results = runComponentAdapterConformance(adapter, fixture, 'open-fixture');

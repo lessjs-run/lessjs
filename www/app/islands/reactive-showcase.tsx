@@ -1,5 +1,5 @@
 /**
- * Reactive DSD Showcase — DsdElement + Signals (v0.21)
+ * Reactive DSD Showcase — OpenElement + Signals (v0.21)
  *
  * Demonstrates three core Reactive DSD patterns:
  *   1. Counter with signal() — fine-grained reactivity
@@ -11,9 +11,10 @@
  *   Replaces manual computed() in prop with data-signal + data-signal-attr.
  *
  * Zero framework runtime — pure DSD + Signals.
- * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
+ * Replaces Lit Island pattern with Ocean (OpenElement) reactivity.
  */
-import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineCustomElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { defineIslandConfig } from '@openelement/app';
 import { computed, signal } from '@openelement/signal';
 import { StyleSheet } from '@openelement/core/style-sheet';
@@ -86,7 +87,7 @@ const FRAMEWORKS = [
   'Eleventy',
 ];
 
-export default class ReactiveShowcase extends DsdElement {
+export default class ReactiveShowcase extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, showcaseStyles];
 
   #count = signal(0);

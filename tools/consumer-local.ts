@@ -86,6 +86,9 @@ denoJson.imports['@openelement/app/vite'] = pathToFileURL(
 denoJson.imports['@openelement/core'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
 ).href;
+denoJson.imports['@openelement/core/errors'] = pathToFileURL(
+  join(repoRoot, 'packages', 'core', 'src', 'errors.ts'),
+).href;
 denoJson.imports['@openelement/core/logger'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
 ).href;
@@ -108,6 +111,7 @@ for (
     'components',
     'conformance',
     'data',
+    'i18n',
     'islands',
     'renderer',
     'routes',
@@ -141,8 +145,8 @@ denoJson.imports['@openelement/core/style-sheet'] = pathToFileURL(
 denoJson.imports['@openelement/content'] = pathToFileURL(
   join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@openelement/i18n'] = pathToFileURL(
-  join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
+denoJson.imports['@openelement/app/i18n'] = pathToFileURL(
+  join(repoRoot, 'packages', 'app', 'src', 'i18n.ts'),
 ).href;
 denoJson.imports['@openelement/ui'] = pathToFileURL(
   join(repoRoot, 'packages', 'ui', 'src', 'index.ts'),
@@ -201,6 +205,10 @@ const aliases = [
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
   },
   {
+    find: '@openelement/core/errors',
+    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'errors.ts')),
+  },
+  {
     find: '@openelement/core',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
   },
@@ -210,6 +218,7 @@ const aliases = [
     'components',
     'conformance',
     'data',
+    'i18n',
     'islands',
     'renderer',
     'routes',

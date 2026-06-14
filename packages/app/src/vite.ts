@@ -8,12 +8,12 @@
 import type { Plugin } from 'vite';
 import type { FrameworkOptions } from '@openelement/core';
 import type { OpenElementContentOptions } from '@openelement/content';
-import type { OpenElementI18nOptions } from '@openelement/i18n';
+import type { OpenElementI18nOptions } from './i18n-runtime.ts';
 
 import { OpenElementBuildContext } from '@openelement/adapter-vite';
 import { createOpenPlugin } from '@openelement/adapter-vite/plugin';
 import { openContent } from '@openelement/content';
-import { openI18n } from '@openelement/i18n';
+import { openI18n } from './i18n-plugin.ts';
 import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('app');

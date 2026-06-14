@@ -85,7 +85,7 @@ export const tagName = 'my-counter';
 const sheet = new StyleSheet();
 sheet.replaceSync(':host ');
 
-export default class MyCounter extends DsdElement &gt;-&lt;/button&gt;
+export default class MyCounter extends OpenElement &gt;-&lt;/button&gt;
 &lt;span&gt;\$&lt;/span&gt;
 &lt;button @click=\$&gt;+&lt;/button&gt;
 \

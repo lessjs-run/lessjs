@@ -324,8 +324,8 @@ Deno.test('create-open: generated project builds through the one-command pipelin
     denoJson.imports['@openelement/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@openelement/i18n'] = pathToFileURL(
-      join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
+    denoJson.imports['@openelement/app/i18n'] = pathToFileURL(
+      join(repoRoot, 'packages', 'app', 'src', 'i18n.ts'),
     ).href;
     denoJson.imports['@openelement/ui'] = pathToFileURL(
       join(repoRoot, 'packages', 'ui', 'src', 'index.ts'),

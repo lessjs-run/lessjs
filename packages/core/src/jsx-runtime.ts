@@ -25,6 +25,22 @@ export const Fragment: unique symbol = Symbol.for('openelement.fragment');
 export const SHOW_TAG: unique symbol = Symbol.for('openelement.show');
 /** @internal Symbol for <For> tag matching in renderToDom */
 export const FOR_TAG: unique symbol = Symbol.for('openelement.for');
+/** @internal Symbol for raw HTML insertion (trustedHtml helper) */
+export const HTML_TAG: unique symbol = Symbol.for('openelement.html');
+
+/**
+ * Create a VNode that renders as raw trusted HTML.
+ *
+ * During SSR the HTML string is emitted verbatim; on the client it is parsed
+ * into real DOM nodes via innerHTML. The caller is responsible for sanitizing
+ * the input — this is a trust boundary, not a sanitizer.
+ *
+ * @param html - The raw HTML string to render.
+ * @returns A VNode that the render pipeline treats as trusted HTML.
+ */
+export function trustedHtml(html: string): VNode {
+  return { tag: HTML_TAG, props: { html }, children: [] };
+}
 
 /**
  * Show conditional rendering factory (ADR-0059).

@@ -17,7 +17,7 @@ order: 30
           <p class="subtitle">
             Declarative Shadow DOM is the core openElement rendering model: the server emits standard HTML,
             the browser creates shadow roots during parsing, and JavaScript only upgrades components and
-            binds necessary events. Since v0.20, DSD components are built on DsdElement + StyleSheet by default.
+            binds necessary events. Since v0.20, DSD components are built on OpenElement + StyleSheet by default.
           </p>
 
           <h2>What Is DSD</h2>
@@ -90,7 +90,7 @@ order: 30
 
           <h2>Reactive DSD (v0.21)</h2>
           <p>
-            DsdElement + Signals gives Ocean components zero-framework reactivity.
+            OpenElement + Signals gives Ocean components zero-framework reactivity.
             A single <code>signal(0)</code> drives a counter, a <code>computed()</code> drives a filter —
             no Lit, React, or any framework runtime required.
           </p>

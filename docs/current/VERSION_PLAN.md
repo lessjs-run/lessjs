@@ -17,7 +17,7 @@ automation.
 
 ## Scope
 
-- Keep a 12-package current graph documented in `docs/current/PACKAGE_SURFACE.md`.
+- Keep an 11-package current graph documented in `docs/current/PACKAGE_SURFACE.md`.
 - Promote `@openelement/element` into the canonical component-authoring facade.
 - Remove standalone `@openelement/runtime`, `@openelement/style-sheet`, and
   `@openelement/ssg` from the current package graph.
@@ -25,8 +25,8 @@ automation.
   `@openelement/element`.
 - Extract SSG engine into `@openelement/ssg` as an adapter-agnostic build engine.
 - Keep Preact island support as optional `@openelement/app/preact`.
-- Keep `alien-signals` as the default signal engine and add
-  `@openelement/signal/preact-engine` only as a candidate.
+- Switch default signal engine to `@preact/signals-core`; keep
+  `alien-signals` as an optional engine via `@openelement/signal/alien-engine`.
 - Keep AutoFlow3 as the single workflow/gate/evidence control plane.
 - Keep active docs to current truth, ADR, roadmap/status, release evidence, and
   archive index.
@@ -81,7 +81,7 @@ All workstreams are complete in v0.40.0.
 
 ### v0.40.0 - Signal Candidate And Code Clean
 
-- [x] Keep `alien-signals` as default.
+- [x] Switch default signal engine from `alien-signals` to `@preact/signals-core`. `alien-signals` remains available as optional engine via `@openelement/signal/alien-engine` and runtime `setSignalEngine()`.
 - [x] Add optional `@openelement/signal/preact-engine`.
 - [x] Run shared SignalEngine conformance across alien and Preact engines.
 - [x] Guard that core and elements do not require `@preact/signals-core`.
@@ -90,7 +90,7 @@ All workstreams are complete in v0.40.0.
 
 ### v0.40.0 - Release Hardening
 
-- [x] Add package graph and repo hygiene checks for the 12-package target.
+- [x] Add package graph and repo hygiene checks for the 11-package target.
 - [x] Add hook-policy coverage proving package/tool/hook changes trigger `arch:check`.
 - [x] Run full release dry-run and JSR publish dry-run in release order.
 - [x] Prepare release evidence for the cleanup train.
@@ -99,9 +99,9 @@ All workstreams are complete in v0.40.0.
 
 ## Acceptance
 
-- The workspace has exactly 12 current packages.
+- The workspace has exactly 11 current packages.
 - `graph:check`, `package-surface:check`, and release order agree on the same
-  12-package graph.
+  11-package graph.
 - Active workflows are at most 4 and all CI gate orchestration enters through
   AutoFlow3.
 - Root has no tracked generated artifacts or tracked `bench/`.

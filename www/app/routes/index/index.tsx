@@ -3,7 +3,7 @@
  * Strategic anchor: openElement = Elements + UI + Framework + Protocols.
  * Active execution: v0.40.0.
  */
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { consumeContext } from '@openelement/core/signal-context';
@@ -46,7 +46,7 @@ heroSheet.replaceSync(`
   @media (max-width: 640px) { .hero-inner { padding: var(--size-4) var(--size-4) 0; } .hero-left { padding-top: var(--size-4); } .features { padding: var(--size-6) var(--size-4); } .feature-grid { grid-template-columns: 1fr; } .giant-headline { font-size: 2.4rem; } .cta-bar { flex-direction: column; } }
 `);
 
-export class DocsHome extends DsdElement {
+export class DocsHome extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, heroSheet];
 
   override connectedCallback() {
@@ -58,44 +58,110 @@ export class DocsHome extends DsdElement {
 
   override render() {
     return (
-      <div class="swiss-grid">
-        <section class="hero">
-          <div class="hero-inner">
-            <div class="hero-left">
-              <p class="eyebrow">openElement 0.40.0 / v0.40.0 active</p>
-              <h1 class="giant-headline">THE OPEN<br /><span class="glow-line">ELEMENT.</span></h1>
-              <p class="hero-desc">A four-product Web Components platform: Elements, UI, Framework, and Protocols. JSX pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
-              <div class="terminal">
-                <div class="terminal-head"><span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>openelement build</div>
-                <div class="terminal-body">
-                  <div class="term-line"><span class="term-prefix">$ </span><span class="term-cmd">deno task build</span></div>
-                  <div class="term-line"><span class="term-info">[scan]</span><span> routes, islands, app shell, package manifests</span></div>
-                  <div class="term-line"><span class="term-ok">[lifecycle]</span><span> params, load, route meta, redirect, not-found</span></div>
-                  <div class="term-line"><span class="term-ok">[render]</span><span> VNode to DSD, VNode to DOM, one event model</span></div>
-                  <div class="term-line"><span class="term-gate">[gate]</span><span> graph, architecture, DSD report, publish dry-run</span></div>
+      <div class='swiss-grid'>
+        <section class='hero'>
+          <div class='hero-inner'>
+            <div class='hero-left'>
+              <p class='eyebrow'>openElement 0.40.0 / v0.40.0 active</p>
+              <h1 class='giant-headline'>
+                THE OPEN<br />
+                <span class='glow-line'>ELEMENT.</span>
+              </h1>
+              <p class='hero-desc'>
+                A four-product Web Components platform: Elements, UI, Framework, and Protocols. JSX
+                pages, one VNode renderer pipeline, structured route lifecycle, explicit trusted
+                HTML boundaries, and island JavaScript that upgrades only where it is needed.
+              </p>
+              <div class='terminal'>
+                <div class='terminal-head'>
+                  <span class='term-dot r'></span>
+                  <span class='term-dot y'></span>
+                  <span class='term-dot g'></span>openelement build
+                </div>
+                <div class='terminal-body'>
+                  <div class='term-line'>
+                    <span class='term-prefix'>$</span>
+                    <span class='term-cmd'>deno task build</span>
+                  </div>
+                  <div class='term-line'>
+                    <span class='term-info'>[scan]</span>
+                    <span>routes, islands, app shell, package manifests</span>
+                  </div>
+                  <div class='term-line'>
+                    <span class='term-ok'>[lifecycle]</span>
+                    <span>params, load, route meta, redirect, not-found</span>
+                  </div>
+                  <div class='term-line'>
+                    <span class='term-ok'>[render]</span>
+                    <span>VNode to DSD, VNode to DOM, one event model</span>
+                  </div>
+                  <div class='term-line'>
+                    <span class='term-gate'>[gate]</span>
+                    <span>graph, architecture, DSD report, publish dry-run</span>
+                  </div>
                 </div>
               </div>
-              <div class="cta-bar">
-                <a href="/guide/getting-started" class="btn btn-primary">Start building</a>
-                <a href="/architecture/architecture" class="btn btn-outline">Read architecture</a>
+              <div class='cta-bar'>
+                <a href='/guide/getting-started' class='btn btn-primary'>Start building</a>
+                <a href='/architecture/architecture' class='btn btn-outline'>Read architecture</a>
               </div>
             </div>
             <home-console></home-console>
           </div>
         </section>
 
-        <section class="features">
-          <div class="features-head">
+        <section class='features'>
+          <div class='features-head'>
             <p>Why openElement</p>
             <h2>Static-first Web Components without duplicate render paths.</h2>
           </div>
-          <div class="feature-grid">
-            <div class="ft-card"><span class="ft-icon">EL</span><h3>Elements-first</h3><p>OpenElement is the future Elements surface; shadow/DSD remains the default render mode.</p></div>
-            <div class="ft-card"><span class="ft-icon">IR</span><h3>One renderer model</h3><p>JSX becomes VNode IR. SSR, CSR, signals, and events share the same structural model.</p></div>
-            <div class="ft-card"><span class="ft-icon">LIFE</span><h3>App lifecycle</h3><p>Route params, load context, route metadata, redirect, not-found, and error fallback are explicit app contracts.</p></div>
-            <div class="ft-card"><span class="ft-icon">SEC</span><h3>Trusted boundary</h3><p>HTML injection is explicit and reserved for pre-sanitized non-interactive content.</p></div>
-            <div class="ft-card"><span class="ft-icon">CI</span><h3>Gate-proven</h3><p>AutoFlow3, package graph validation, workflow slimming, and Nitro proofs guard the 14-package line.</p></div>
-            <div class="ft-card"><span class="ft-icon">WC</span><h3>Web standards</h3><p>Custom Elements, Shadow DOM, CSSStyleSheet, URL, fetch, and Web Streams stay at the center.</p></div>
+          <div class='feature-grid'>
+            <div class='ft-card'>
+              <span class='ft-icon'>EL</span>
+              <h3>Elements-first</h3>
+              <p>
+                OpenElement is the future Elements surface; shadow/DSD remains the default render
+                mode.
+              </p>
+            </div>
+            <div class='ft-card'>
+              <span class='ft-icon'>IR</span>
+              <h3>One renderer model</h3>
+              <p>
+                JSX becomes VNode IR. SSR, CSR, signals, and events share the same structural model.
+              </p>
+            </div>
+            <div class='ft-card'>
+              <span class='ft-icon'>LIFE</span>
+              <h3>App lifecycle</h3>
+              <p>
+                Route params, load context, route metadata, redirect, not-found, and error fallback
+                are explicit app contracts.
+              </p>
+            </div>
+            <div class='ft-card'>
+              <span class='ft-icon'>SEC</span>
+              <h3>Trusted boundary</h3>
+              <p>
+                HTML injection is explicit and reserved for pre-sanitized non-interactive content.
+              </p>
+            </div>
+            <div class='ft-card'>
+              <span class='ft-icon'>CI</span>
+              <h3>Gate-proven</h3>
+              <p>
+                AutoFlow3, package graph validation, workflow slimming, and Nitro proofs guard the
+                14-package line.
+              </p>
+            </div>
+            <div class='ft-card'>
+              <span class='ft-icon'>WC</span>
+              <h3>Web standards</h3>
+              <p>
+                Custom Elements, Shadow DOM, CSSStyleSheet, URL, fetch, and Web Streams stay at the
+                center.
+              </p>
+            </div>
           </div>
         </section>
       </div>

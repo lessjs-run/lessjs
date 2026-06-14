@@ -27,7 +27,7 @@ import {
 import { getDefaultRegistry } from './adapter-registry.js';
 import { createLogger } from './logger.js';
 import { DsdRenderCollector } from './dsd-collector.js';
-import { type DsdComponentConstructor } from './dsd-element.js';
+import { type DsdComponentConstructor } from './render-schemas.js';
 import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
 import { renderDsdTree } from './render-ir.js';

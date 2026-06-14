@@ -5,7 +5,7 @@
  * The `slug` param is set by openElement dynamic routing: /blog/:slug
  * Data comes from generated app data, not @openelement/content module state.
  */
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { pageStyles } from '../../components/page-styles.js';
@@ -47,7 +47,7 @@ routeSheet.replaceSync(
   `,
 );
 
-export default class BlogPostPage extends DsdElement {
+export default class BlogPostPage extends OpenElement {
   slug = '';
 
   static override styles = [daisyClassSheet, openPropsTokenSheet, routeSheet];
@@ -62,38 +62,34 @@ export default class BlogPostPage extends DsdElement {
 
     if (!post) {
       return (
-        
-          <div class='container'>
-            <div class='not-found'>
-              <h1>404</h1>
-              <p>文章未找到: {this.slug}</p>
-              <a href='/blog'>← 返回博客</a>
-            </div>
+        <div class='container'>
+          <div class='not-found'>
+            <h1>404</h1>
+            <p>文章未找到: {this.slug}</p>
+            <a href='/blog'>← 返回博客</a>
           </div>
-        
+        </div>
       );
     }
     const tags = post.frontmatter.tags ?? [];
     return (
-      
-        <div class='container'>
-          <a href='/blog' class='blog-back'>← 博客</a>
-          <h1>{post.frontmatter.title}</h1>
-          <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
-          {tags.length > 0
-            ? (
-              <div class='blog-tags'>
-                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
-              </div>
-            )
-            : null}
-          <p class='blog-date'>{post.frontmatter.date}</p>
-          <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
-          <div class='nav-row'>
-            <a href='/blog' class='btn btn-ghost'>← 返回博客</a>
-          </div>
+      <div class='container'>
+        <a href='/blog' class='blog-back'>← 博客</a>
+        <h1>{post.frontmatter.title}</h1>
+        <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
+        {tags.length > 0
+          ? (
+            <div class='blog-tags'>
+              {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
+            </div>
+          )
+          : null}
+        <p class='blog-date'>{post.frontmatter.date}</p>
+        <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
+        <div class='nav-row'>
+          <a href='/blog' class='btn btn-ghost'>← 返回博客</a>
         </div>
-      
+      </div>
     );
   }
 
@@ -103,38 +99,34 @@ export default class BlogPostPage extends DsdElement {
 
     if (!post) {
       return (
-        
-          <div class='container'>
-            <div class='not-found'>
-              <h1>404</h1>
-              <p>Post not found: {this.slug}</p>
-              <a href='/en/blog'>← Back to Blog</a>
-            </div>
+        <div class='container'>
+          <div class='not-found'>
+            <h1>404</h1>
+            <p>Post not found: {this.slug}</p>
+            <a href='/en/blog'>← Back to Blog</a>
           </div>
-        
+        </div>
       );
     }
     const tags = post.frontmatter.tags ?? [];
     return (
-      
-        <div class='container'>
-          <a href='/blog' class='blog-back'>← Blog</a>
-          <h1>{post.frontmatter.title}</h1>
-          <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
-          {tags.length > 0
-            ? (
-              <div class='blog-tags'>
-                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
-              </div>
-            )
-            : null}
-          <p class='blog-date'>{post.frontmatter.date}</p>
-          <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
-          <div class='nav-row'>
-            <a href='/blog' class='btn btn-ghost'>← Back to Blog</a>
-          </div>
+      <div class='container'>
+        <a href='/blog' class='blog-back'>← Blog</a>
+        <h1>{post.frontmatter.title}</h1>
+        <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
+        {tags.length > 0
+          ? (
+            <div class='blog-tags'>
+              {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
+            </div>
+          )
+          : null}
+        <p class='blog-date'>{post.frontmatter.date}</p>
+        <div class='blog-content' innerHTML={post.html} trustedHtml={true}></div>
+        <div class='nav-row'>
+          <a href='/blog' class='btn btn-ghost'>← Back to Blog</a>
         </div>
-      
+      </div>
     );
   }
 }

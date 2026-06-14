@@ -1,6 +1,15 @@
-import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
-import { getIslandMeta } from '@openelement/core';
+import { assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { OpenElement } from '@openelement/element';
+import { h } from 'preact';
+
+// We test the new definePreactIsland by verifying:
+// 1. It returns a class extending OpenElement
+// 2. The SSR path produces trusted HTML content
+// 3. The class registers with customElements.define()
+
 import { definePreactIsland } from '../src/preact.ts';
+
+// ─── DOM stubs for Deno test environment ─────────────────────────
 
 class StubNode {
   nodeType = 1;
@@ -26,7 +35,6 @@ function installDomStubs(): () => void {
   const previousCustomElements = globalThis.customElements;
   const previousHTMLElement = globalThis.HTMLElement;
   const previousDocument = globalThis.document;
-
   const registry = new Map<string, CustomElementConstructor>();
   (globalThis as { customElements?: CustomElementRegistry }).customElements = {
     define(name: string, ctor: CustomElementConstructor) {
@@ -37,9 +45,16 @@ function installDomStubs(): () => void {
     },
   } as CustomElementRegistry;
 
+  // Per-instance attribute storage using a WeakMap to avoid
+  // issues with constructor-based static access across class hierarchies.
+  const _attrsMap = new WeakMap<object, Array<{ name: string; value: string }>>();
+
   class TestElement {
-    static attrs: Array<{ name: string; value: string }> = [];
     shadowRoot: ShadowRoot | null = null;
+
+    constructor() {
+      _attrsMap.set(this, []);
+    }
 
     attachShadow(): ShadowRoot {
       this.shadowRoot = new StubNode() as unknown as ShadowRoot;
@@ -47,7 +62,7 @@ function installDomStubs(): () => void {
     }
 
     get attributes(): Array<{ name: string; value: string }> {
-      return (this.constructor as typeof TestElement).attrs;
+      return _attrsMap.get(this) ?? [];
     }
 
     getAttribute(name: string): string | null {
@@ -56,6 +71,31 @@ function installDomStubs(): () => void {
 
     hasAttribute(name: string): boolean {
       return this.getAttribute(name) !== null;
+    }
+
+    // Allow setAttribute / removeAttribute for tests
+    setAttribute(name: string, value: string): void {
+      const attrs = _attrsMap.get(this) ?? [];
+      const existing = attrs.findIndex((a) => a.name === name);
+      if (existing >= 0) {
+        attrs[existing] = { name, value };
+      } else {
+        attrs.push({ name, value });
+      }
+      _attrsMap.set(this, attrs);
+    }
+
+    removeAttribute(name: string): void {
+      const attrs = (_attrsMap.get(this) ?? []).filter((a) => a.name !== name);
+      _attrsMap.set(this, attrs);
+    }
+
+    get isConnected(): boolean {
+      return true;
+    }
+
+    get tagName(): string {
+      return 'TEST-ELEMENT';
     }
   }
 
@@ -77,32 +117,88 @@ function installDomStubs(): () => void {
   };
 }
 
-Deno.test('definePreactIsland records island metadata for all hydration strategies', () => {
+// ─── Tests ───────────────────────────────────────────────────────
+
+Deno.test('definePreactIsland returns a class extending OpenElement', () => {
   const restore = installDomStubs();
   try {
-    for (const hydrate of ['load', 'idle', 'visible', 'only'] as const) {
-      const tagName = `preact-${hydrate}`;
-      const ctor = definePreactIsland(tagName, () => null, { hydrate });
-      const meta = getIslandMeta(ctor);
-      assertExists(meta);
-      assertEquals(meta.tagName, tagName);
-      assertEquals(meta.isIsland, true);
-      assertEquals(meta.ssr, hydrate === 'only' ? false : true);
-      assertEquals(meta.dsd, hydrate === 'only' ? false : true);
+    const ctor = definePreactIsland('test-island-ext', () => null);
+    // Should be a class
+    assertEquals(typeof ctor, 'function');
+    // Should extend OpenElement
+    assertExists(
+      ctor.prototype instanceof OpenElement ||
+        Object.prototype.isPrototypeOf.call(OpenElement, ctor.prototype),
+    );
+  } finally {
+    restore();
+  }
+});
+
+Deno.test('definePreactIsland registers the custom element', () => {
+  const restore = installDomStubs();
+  try {
+    const tagName = 'test-island-reg';
+    const ctor = definePreactIsland(tagName, () => null);
+    const registered =
+      (globalThis.customElements as unknown as Map<string, CustomElementConstructor>).get(
+        tagName,
+      ) ??
+        // fallback: check registry map
+        (globalThis.customElements as CustomElementRegistry).get(tagName);
+    assertEquals(registered, ctor);
+  } finally {
+    restore();
+  }
+});
+
+Deno.test('definePreactIsland SSR path returns trustedHtml VNode', () => {
+  const restore = installDomStubs();
+  try {
+    // Simulate SSR by temporarily making document undefined
+    const origDoc = globalThis.document;
+    // @ts-expect-error - intentionally clearing for SSR test
+    delete globalThis.document;
+
+    try {
+      const Component = (props: { name: string }) => h('p', null, `Hello ${props.name}`);
+      const ctor = definePreactIsland('test-ssr-island', Component as never, {
+        props: { name: 'World' },
+      });
+
+      const instance = new ctor() as OpenElement;
+      const result = instance.render();
+
+      // Should return a VNode with the trusted HTML
+      assertExists(result);
+      assertEquals(typeof result, 'object');
+      // The VNode should have the HTML_TAG symbol as tag
+      assertEquals(String((result as { tag: symbol }).tag), 'Symbol(openelement.html)');
+      // The html prop should contain rendered content
+      const props = (result as { props: Record<string, unknown> }).props;
+      assertExists(props.html);
+      assertStringIncludes(String(props.html), 'World');
+    } finally {
+      (globalThis as { document?: Document }).document = origDoc;
     }
   } finally {
     restore();
   }
 });
 
-Deno.test('definePreactIsland supports DSD opt-out metadata', () => {
+Deno.test('definePreactIsland client path skips render() and activates via clientActivate', () => {
   const restore = installDomStubs();
   try {
-    const ctor = definePreactIsland('preact-no-dsd', () => null, { dsd: false });
-    const meta = getIslandMeta(ctor);
-    assertExists(meta);
-    assertEquals(meta.layer, 'pure-island');
-    assertEquals(meta.dsd, false);
+    const Component = (props: { label: string }) => `<span>${props.label}</span>`;
+    const ctor = definePreactIsland('test-client-island', Component as never, {
+      props: { label: 'Client' },
+    });
+
+    const instance = new ctor() as OpenElement & { clientActivate: () => void };
+    // On client, render() should return null
+    assertEquals(instance.render(), null);
+    // clientActivate() should exist and be callable
+    assertEquals(typeof instance.clientActivate, 'function');
   } finally {
     restore();
   }

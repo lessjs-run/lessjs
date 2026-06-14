@@ -1,5 +1,6 @@
 import { defineIslandConfig } from '@openelement/app';
-import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineCustomElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { signal } from '@openelement/signal';
 import { consumeContext } from '@openelement/core';
@@ -44,7 +45,7 @@ styles.replaceSync(`
   }
 `);
 
-export default class HomeConsole extends DsdElement {
+export default class HomeConsole extends OpenElement {
   static override styles = [daisyClassSheet, openPropsTokenSheet, styles];
   #count = signal(42);
 

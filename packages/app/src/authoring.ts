@@ -7,9 +7,15 @@ import { ERROR_PREFIX } from '@openelement/core';
  * graph.
  */
 
-import { DsdElement, type VNode } from '@openelement/core';
+import {
+  defineElement,
+  type ElementDefinition,
+  OpenElement,
+  type VNode,
+} from '@openelement/element';
 import { defineIsland as defineRuntimeIsland } from '@openelement/core';
 import type { IslandConfig as ProtocolIslandConfig } from '@openelement/protocol/islands';
+import { __internal_setActionData, __internal_setLoaderData } from '@openelement/router';
 
 export type PageRenderingMode = 'auto' | 'static' | 'dynamic';
 export type PageStreamingMode = 'auto' | 'force' | false;
@@ -96,16 +102,6 @@ export interface PageHead {
   dangerouslyHeadFragments?: string[];
 }
 
-export interface PageLoadContext<
-  Params extends Record<string, string> = Record<string, string>,
-> {
-  params: Params;
-  request?: Request;
-  env?: Record<string, unknown>;
-  platform?: unknown;
-  route: PageRouteContext;
-}
-
 export interface PageRenderContext<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
@@ -130,11 +126,6 @@ export type PageRenderFunction<
   Params extends Record<string, string> = Record<string, string>,
 > = (context: PageRenderContext<Data, Params>) => VNode | null;
 
-export type PageLoadFunction<
-  Data = unknown,
-  Params extends Record<string, string> = Record<string, string>,
-> = (context: PageLoadContext<Params>) => Data | Promise<Data>;
-
 export type PageErrorFunction<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
@@ -147,7 +138,6 @@ export interface PageDefinition<
   route?: PageRouteIntent;
   head?: PageHead;
   renderIntent?: PageRenderIntent;
-  load?: PageLoadFunction<Data, Params>;
   render: PageRenderFunction<Data, Params>;
   error?: PageErrorFunction<Data, Params>;
 }
@@ -163,20 +153,22 @@ export interface OpenElementPageDescriptor<
 
 type PageHostProps = {
   __openElementParams?: Record<string, string>;
-  __openElementData?: unknown;
+  data?: unknown;
+  __openElementActionData?: unknown;
   __openElementRequest?: Request;
   __openElementRoute?: PageRouteContext;
   __openElementMeta?: PageMeta;
   __openElementError?: unknown;
 };
 
-abstract class ApplicationElement extends DsdElement {
+abstract class ApplicationElement extends OpenElement {
   [key: string]: unknown;
 }
 
 abstract class ApplicationPageElement extends ApplicationElement implements PageHostProps {
   __openElementParams?: Record<string, string>;
-  __openElementData?: unknown;
+  data?: unknown;
+  __openElementActionData?: unknown;
   __openElementRequest?: Request;
   __openElementRoute?: PageRouteContext;
   __openElementMeta?: PageMeta;
@@ -186,7 +178,7 @@ abstract class ApplicationPageElement extends ApplicationElement implements Page
 type PageConstructor<
   Data = unknown,
   Params extends Record<string, string> = Record<string, string>,
-> = typeof DsdElement & {
+> = typeof OpenElement & {
   openElementPage: OpenElementPageDescriptor<Data, Params>;
 };
 
@@ -203,7 +195,6 @@ const PAGE_DESCRIPTOR_FIELDS = new Set([
   'route',
   'head',
   'renderIntent',
-  'load',
   'render',
   'error',
 ]);
@@ -215,7 +206,7 @@ function assertCanonicalPageDefinition(input: unknown): asserts input is PageDef
   if (typeof input === 'function') {
     throw new Error(
       `${ERROR_PREFIX} definePage() requires a canonical object descriptor. ` +
-        'Use definePage({ route, head, renderIntent, load, render, error }).',
+        'Use definePage({ route, head, renderIntent, render, error }).',
     );
   }
   if (typeof input !== 'object' || input === null) {
@@ -225,7 +216,7 @@ function assertCanonicalPageDefinition(input: unknown): asserts input is PageDef
     if (PAGE_DESCRIPTOR_FIELDS.has(key)) continue;
     throw new Error(
       `${ERROR_PREFIX} definePage() does not accept top-level "${key}". ` +
-        'Use only route, head, renderIntent, load, render, and error.',
+        'Use only route, head, renderIntent, render, and error.',
     );
   }
   if (typeof (input as { render?: unknown }).render !== 'function') {
@@ -262,8 +253,12 @@ export function definePage<
     static openElementPage = pageDescriptor;
 
     override render(): VNode | null {
+      // Provide loader/action data to hooks (useLoaderData / useActionData)
+      __internal_setLoaderData(this.data);
+      __internal_setActionData(this.__openElementActionData);
+
       const params = (this.__openElementParams ?? this.params ?? {}) as Params;
-      const data = this.__openElementData as Data;
+      const data = this.data as Data;
       const context = {
         data,
         params,
@@ -282,57 +277,6 @@ export function definePage<
   }
 
   return OpenElementPage;
-}
-
-export interface ElementDefinition<
-  Props extends Record<string, unknown> = Record<string, unknown>,
-> {
-  styles?: typeof DsdElement.styles;
-  render: (props: Props) => VNode | null;
-}
-
-function normalizeElementDefinition<Props extends Record<string, unknown>>(
-  input: ((props: Props) => VNode | null) | ElementDefinition<Props>,
-): ElementDefinition<Props> {
-  return typeof input === 'function' ? { render: input } : input;
-}
-
-function assertCustomElementTag(tagName: string): void {
-  if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(tagName)) {
-    throw new Error(
-      `${ERROR_PREFIX} "${tagName}" is not a valid custom element name. ` +
-        'Use lowercase ASCII letters, digits, and at least one hyphen.',
-    );
-  }
-}
-
-export function defineElement<Props extends Record<string, unknown> = Record<string, unknown>>(
-  tagName: string,
-  input: ((props: Props) => VNode | null) | ElementDefinition<Props>,
-): typeof DsdElement {
-  assertCustomElementTag(tagName);
-  const definition = normalizeElementDefinition(input);
-
-  class OpenElementComponent extends ApplicationElement {
-    static override styles = definition.styles;
-
-    override render(): VNode | null {
-      return definition.render(collectPublicProps(this) as Props);
-    }
-  }
-
-  if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-    customElements.define(tagName, OpenElementComponent);
-  }
-
-  return OpenElementComponent;
-}
-
-export function defineLayout<Props extends Record<string, unknown> = Record<string, unknown>>(
-  tagName: string,
-  input: ((props: Props) => VNode | null) | ElementDefinition<Props>,
-): typeof DsdElement {
-  return defineElement(tagName, input);
 }
 
 export type AppIslandOptions = ProtocolIslandConfig;
@@ -365,7 +309,6 @@ export function defineIsland<Props extends Record<string, unknown> = Record<stri
   input: ((props: Props) => VNode | null) | ElementDefinition<Props> | CustomElementConstructor,
   options: AppIslandOptions = {},
 ): CustomElementConstructor {
-  assertCustomElementTag(tagName);
   const componentClass = typeof input === 'function' && input.prototype?.render
     ? input as CustomElementConstructor
     : defineElement(tagName, input as ((props: Props) => VNode | null) | ElementDefinition<Props>);

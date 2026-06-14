@@ -1,8 +1,6 @@
 export {
-  defineElement,
   defineIsland,
   defineIslandConfig,
-  defineLayout,
   definePage,
   isOpenElementNotFound,
   isOpenElementRedirect,
@@ -13,7 +11,6 @@ export {
 } from './authoring.ts';
 export type {
   AppIslandOptions,
-  ElementDefinition,
   IslandConfig,
   NormalizedPageRenderIntent,
   OpenElementPageDescriptor,
@@ -21,8 +18,6 @@ export type {
   PageErrorContext,
   PageErrorFunction,
   PageHead,
-  PageLoadContext,
-  PageLoadFunction,
   PageMeta,
   PageRenderContext,
   PageRenderFunction,
@@ -33,3 +28,10 @@ export type {
   PageRouteIntent,
   PageStreamingMode,
 } from './authoring.ts';
+
+// Re-export route data types from protocol for convenience
+export type { Action, ActionContext, Loader, LoaderContext } from '@openelement/protocol/data';
+
+// Re-export from @openelement/element for convenience
+export { defineElement, defineLayout } from '@openelement/element';
+export type { ElementDefinition } from '@openelement/element';

@@ -8,14 +8,14 @@ Deno.test('OPTIONAL_PACKAGE_STUBS covers retained optional generated-data packag
   assertEquals(
     Object.keys(OPTIONAL_PACKAGE_STUBS).sort(),
     [
+      '@openelement/app/i18n',
       '@openelement/content',
       '@openelement/content/sitemap',
-      '@openelement/i18n',
     ],
   );
   assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/content'], 'loadBlogData');
   assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/content/sitemap'], 'generateSitemap');
-  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/i18n'], 'loadI18nData');
+  assertStringIncludes(OPTIONAL_PACKAGE_STUBS['@openelement/app/i18n'], 'loadI18nData');
 });
 
 Deno.test('optionalPackageStubsPlugin exposes a single shared stub plugin', () => {

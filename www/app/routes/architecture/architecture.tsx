@@ -1,7 +1,7 @@
 export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
-import { DsdElement } from '@openelement/core';
+import { OpenElement } from '@openelement/element';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
@@ -232,7 +232,7 @@ signals ----^
 cem -> compat-check -> hub
 content -> adapter-vite -> app`;
 
-export class ArchitecturePage extends DsdElement {
+export class ArchitecturePage extends OpenElement {
   declare locale?: string;
 
   static override styles = [daisyClassSheet, openPropsTokenSheet, pageSheet];
@@ -240,30 +240,28 @@ export class ArchitecturePage extends DsdElement {
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
     return (
-      
-        <div class="shell">
-          <section class="hero">
-            <div>
-              <div class="eyebrow">
-                <span class="badge badge-primary">ADR-0050</span>
-                <span class="badge badge-primary">{OPENELEMENT_VERSION}</span>
-                <span class="badge badge-success">graph gate passing</span>
-              </div>
-              <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
-              <p class="lede">
-                openElement is organized around explicit package ownership:
-                protocols own shared contracts, core stays the runtime kernel,
-                runtime owns authoring imports, app owns configuration,
-                protocols own contracts, and adapter-vite/ssg stay in the
-                advanced build infrastructure.
-              </p>
+      <div class='shell'>
+        <section class='hero'>
+          <div>
+            <div class='eyebrow'>
+              <span class='badge badge-primary'>ADR-0050</span>
+              <span class='badge badge-primary'>{OPENELEMENT_VERSION}</span>
+              <span class='badge badge-success'>graph gate passing</span>
             </div>
-            <div class="artifact">
-              <div class="artifact-head">
-                <strong>package graph sketch</strong>
-                <span>source imports declared per package</span>
-              </div>
-              <pre><code>{`signals ──────────────────────────────────────────────────── (leaf)
+            <h1>{isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
+            <p class='lede'>
+              openElement is organized around explicit package ownership: protocols own shared
+              contracts, core stays the runtime kernel, runtime owns authoring imports, app owns
+              configuration, protocols own contracts, and adapter-vite/ssg stay in the advanced
+              build infrastructure.
+            </p>
+          </div>
+          <div class='artifact'>
+            <div class='artifact-head'>
+              <strong>package graph sketch</strong>
+              <span>source imports declared per package</span>
+            </div>
+            <pre><code>{`signals ──────────────────────────────────────────────────── (leaf)
 style-sheet ──────────────────────────────────────────── (leaf)
 protocols ────────────────────────────────────────────────── (leaf)
 rpc ────────────────────────────────────────────────────────────── (leaf)
@@ -283,87 +281,151 @@ adapter-vite ────? cem, compat-check, content, core, protocols, style-sh
 ui ────────────────────────? core, router, signals, style-sheet
 app ──────────────────────? adapter-vite, content, core, i18n
 hub ──────────────────────? compat-check, core`}</code></pre>
-            </div>
-          </section>
+          </div>
+        </section>
 
-          <section class="section">
-            <div class="section-head">
-              <div>
-                <p class="kicker">layers</p>
-                <h2>{isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'}</h2>
-              </div>
-              <p class="section-copy">
-                {OPENELEMENT_VERSION} keeps package responsibility inspectable. Feature
-                packages use protocols for shared build contracts instead of
-                adapter internals, and ordinary users write components from the
-                runtime facade.
+        <section class='section'>
+          <div class='section-head'>
+            <div>
+              <p class='kicker'>layers</p>
+              <h2>
+                {isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'}
+              </h2>
+            </div>
+            <p class='section-copy'>
+              {OPENELEMENT_VERSION}{' '}
+              keeps package responsibility inspectable. Feature packages use protocols for shared
+              build contracts instead of adapter internals, and ordinary users write components from
+              the runtime facade.
+            </p>
+          </div>
+          <div class='layer-map'>
+            <div class='layer'>
+              <strong>tools and gates</strong>
+              <span>create, graph checker, publish workflow, smoke tests</span>
+              <p>Prove generated users, release order, and docs truth.</p>
+            </div>
+            <div class='layer'>
+              <strong>product surfaces</strong>
+              <span>
+                @openelement/create, @openelement/app, @openelement/element, @openelement/ui,
+                @openelement/protocol
+              </span>
+              <p>
+                Keep first-run docs focused on app authoring, elements, UI, protocols, and generated
+                projects.
               </p>
             </div>
-            <div class="layer-map">
-              <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/element, @openelement/ui, @openelement/protocol</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
-              <div class="layer"><strong>advanced build infrastructure</strong><span>@openelement/adapter-vite, @openelement/ssg</span><p>Own Vite plugin assembly, route scanning, generated entries, rendering, and postprocess phases.</p></div>
-              <div class="layer"><strong>advanced feature packages</strong><span>content, i18n, router, signals, style-sheet, adapter packages</span><p>Remain public where guides need them, but are not first-run product rows.</p></div>
-              <div class="layer"><strong>internal and archived packages</strong><span>cem, compat-check, hub, rpc</span><p>Stay in the package graph for tooling, compatibility, or historical evidence without being presented as v1 products.</p></div>
-              <div class="layer"><strong>runtime kernel</strong><span>@openelement/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
-              <div class="layer"><strong>protocols</strong><span>@openelement/protocol</span><p>Own runtime-free shared contracts and conformance shapes.</p></div>
-            </div>
-          </section>
-
-          <section class="section">
-            <div class="section-head">
-              <div>
-                <p class="kicker">why it exists</p>
-                <h2>{isZh ? '精简核心，诚实的 facade。' : 'Small core, honest facades.'}</h2>
-              </div>
-              <p class="section-copy">
-                The framework can only grow if users, contributors, and release
-                automation agree about which package owns each concept.
+            <div class='layer'>
+              <strong>advanced build infrastructure</strong>
+              <span>@openelement/adapter-vite, @openelement/ssg</span>
+              <p>
+                Own Vite plugin assembly, route scanning, generated entries, rendering, and
+                postprocess phases.
               </p>
             </div>
-            <div class="cards">
-              <div class="card card-bordered p-4">
-                <h3>{isZh ? '为什么需要 protocols？' : 'Why protocols?'}</h3>
-                <p>Content, i18n, ssg, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
-              </div>
-              <div class="card card-bordered p-4">
-                <h3>{isZh ? '为什么需要 runtime？' : 'Why runtime?'}</h3>
-                <p>Generated components need a single authoring import. Runtime provides that without turning core into an all-purpose DX barrel.</p>
-              </div>
-              <div class="card card-bordered p-4">
-                <h3>{isZh ? '为什么需要 signals facade？' : 'Why signals facade?'}</h3>
-                <p>openElement uses alien-signals as the engine. The public openElement contract is .value, subscribe(), and DSD integration semantics.</p>
-              </div>
+            <div class='layer'>
+              <strong>advanced feature packages</strong>
+              <span>content, i18n, router, signals, style-sheet, adapter packages</span>
+              <p>Remain public where guides need them, but are not first-run product rows.</p>
             </div>
-          </section>
-
-          <section class="section">
-            <div class="section-head">
-              <div>
-                <p class="kicker">release gates</p>
-                <h2>{isZh ? '架构由机械检查保证。' : 'The architecture is checked mechanically.'}</h2>
-              </div>
-              <p class="section-copy">
-                The root import map can hide missing dependencies during local
-                development. The graph gate checks package-local truth before
-                publishing.
+            <div class='layer'>
+              <strong>internal and archived packages</strong>
+              <span>cem, compat-check, hub, rpc</span>
+              <p>
+                Stay in the package graph for tooling, compatibility, or historical evidence without
+                being presented as v1 products.
               </p>
             </div>
-            <div class="gate-grid">
-              <div class="gate"><strong>0 cycles</strong><span>Internal openElement package dependencies must remain acyclic.</span></div>
-              <div class="gate"><strong>20 packages</strong><span>Every package in packages/ must be present in the publish workflow.</span></div>
-              <div class="gate"><strong>direct imports</strong><span>Each source-level @openelement/* import must be declared in that package's deno.json.</span></div>
-              <div class="gate"><strong>0.36.4</strong><span>Unified version releases keep JSR packages resolvable as one set.</span></div>
+            <div class='layer'>
+              <strong>runtime kernel</strong>
+              <span>@openelement/core</span>
+              <p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p>
             </div>
-          </section>
+            <div class='layer'>
+              <strong>protocols</strong>
+              <span>@openelement/protocol</span>
+              <p>Own runtime-free shared contracts and conformance shapes.</p>
+            </div>
+          </div>
+        </section>
 
-          <nav class="nav-row">
-            <a class="btn btn-ghost" href="/roadmap">Roadmap truth {'->'}</a>
-            <a class="btn btn-ghost" href="/changelog">Changelog {'->'}</a>
-            <a class="btn btn-ghost" href="/guide/getting-started">Start building {'->'}</a>
-          </nav>
-        </div>
-      
+        <section class='section'>
+          <div class='section-head'>
+            <div>
+              <p class='kicker'>why it exists</p>
+              <h2>{isZh ? '精简核心，诚实的 facade。' : 'Small core, honest facades.'}</h2>
+            </div>
+            <p class='section-copy'>
+              The framework can only grow if users, contributors, and release automation agree about
+              which package owns each concept.
+            </p>
+          </div>
+          <div class='cards'>
+            <div class='card card-bordered p-4'>
+              <h3>{isZh ? '为什么需要 protocols？' : 'Why protocols?'}</h3>
+              <p>
+                Content, i18n, ssg, and adapter-vite need shared build contracts. Those contracts
+                are not Vite implementation and should not live under adapter-vite.
+              </p>
+            </div>
+            <div class='card card-bordered p-4'>
+              <h3>{isZh ? '为什么需要 runtime？' : 'Why runtime?'}</h3>
+              <p>
+                Generated components need a single authoring import. Runtime provides that without
+                turning core into an all-purpose DX barrel.
+              </p>
+            </div>
+            <div class='card card-bordered p-4'>
+              <h3>{isZh ? '为什么需要 signals facade？' : 'Why signals facade?'}</h3>
+              <p>
+                openElement uses alien-signals as the engine. The public openElement contract is
+                .value, subscribe(), and DSD integration semantics.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class='section'>
+          <div class='section-head'>
+            <div>
+              <p class='kicker'>release gates</p>
+              <h2>{isZh ? '架构由机械检查保证。' : 'The architecture is checked mechanically.'}</h2>
+            </div>
+            <p class='section-copy'>
+              The root import map can hide missing dependencies during local development. The graph
+              gate checks package-local truth before publishing.
+            </p>
+          </div>
+          <div class='gate-grid'>
+            <div class='gate'>
+              <strong>0 cycles</strong>
+              <span>Internal openElement package dependencies must remain acyclic.</span>
+            </div>
+            <div class='gate'>
+              <strong>20 packages</strong>
+              <span>Every package in packages/ must be present in the publish workflow.</span>
+            </div>
+            <div class='gate'>
+              <strong>direct imports</strong>
+              <span>
+                Each source-level @openelement/* import must be declared in that package's
+                deno.json.
+              </span>
+            </div>
+            <div class='gate'>
+              <strong>0.36.4</strong>
+              <span>Unified version releases keep JSR packages resolvable as one set.</span>
+            </div>
+          </div>
+        </section>
+
+        <nav class='nav-row'>
+          <a class='btn btn-ghost' href='/roadmap'>Roadmap truth {'->'}</a>
+          <a class='btn btn-ghost' href='/changelog'>Changelog {'->'}</a>
+          <a class='btn btn-ghost' href='/guide/getting-started'>Start building {'->'}</a>
+        </nav>
+      </div>
     );
   }
 }

@@ -17,7 +17,7 @@ order: 30
           <p class="subtitle">
             Declarative Shadow DOM 是 openElement 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
             shadow root，JavaScript 只负责后续升级和必要事件绑定。v0.20 起，DSD 组件默认以
-            DsdElement + StyleSheet 实现。
+            OpenElement + StyleSheet 实现。
           </p>
 
           <h2>什么是 DSD</h2>
@@ -87,7 +87,7 @@ order: 30
 
           <h2>Reactive DSD（v0.21）</h2>
           <p>
-            DsdElement + Signals 让 Ocean 组件获得零框架响应式。
+            OpenElement + Signals 让 Ocean 组件获得零框架响应式。
             一个 <code>signal(0)</code> 驱动计数器，一个 <code>computed()</code> 驱动过滤器——
             不需要 Lit、React 或任何框架运行时。
           </p>
