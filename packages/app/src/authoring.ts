@@ -9,7 +9,7 @@ import { ERROR_PREFIX } from '@openelement/core';
 
 import { DsdElement, type VNode } from '@openelement/core';
 import { defineIsland as defineRuntimeIsland } from '@openelement/core';
-import type { IslandConfig as ProtocolIslandConfig } from '@openelement/protocols/islands';
+import type { IslandConfig as ProtocolIslandConfig } from '@openelement/protocol/islands';
 
 export type PageRenderingMode = 'auto' | 'static' | 'dynamic';
 export type PageStreamingMode = 'auto' | 'force' | false;

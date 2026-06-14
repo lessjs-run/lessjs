@@ -51,10 +51,10 @@ export {
   type PageIslandManifest,
   type SpeculationRulesOptions,
   writeIslandManifests,
-} from './ssg/index.ts';
+} from '@openelement/ssg';
 
 // External resolver types used by the adapter-vite build pipeline
-export type { ExternalManifest } from './ssg/index.ts';
+export type { ExternalManifest } from '@openelement/ssg';
 
 // Subpath resolver (public constants)
 export { CORE_SUBPATHS, VIRTUAL_CORE_PREFIX } from './subpath-resolver.js';

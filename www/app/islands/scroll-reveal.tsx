@@ -9,7 +9,7 @@
  */
 import { defineCustomElement, DsdElement } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 

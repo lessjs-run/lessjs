@@ -33,7 +33,7 @@ openElement = Elements + UI + Framework + Protocols
 ```
 
 The v0.40 line productizes this direction by focusing on `OpenElement`, the
-future `@openelement/elements` surface, Preact island proof, and signal-engine
+future `@openelement/element` surface, Preact island proof, and signal-engine
 conformance. ADR-0099's earlier Vue adapter proof language is superseded for
 the pre-1.0 path. Vue, React, Svelte, and broad heavy-framework island expansion
 remain frozen unless a later ADR reopens them.

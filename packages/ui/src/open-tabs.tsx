@@ -21,7 +21,7 @@
  */
 
 import { DsdElement, type VNode } from '@openelement/core';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { daisyClassSheet } from './daisy-classes.js';
 

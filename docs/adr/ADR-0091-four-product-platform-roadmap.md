@@ -23,7 +23,7 @@ The repository already has foundations for the intended product lines:
 
 - `DsdElement`, DSD rendering, JSX runtime, and render reports in core;
 - `@openelement/ui` and Open Props token work;
-- `@openelement/protocols` as a small zero-dependency contract layer;
+- `@openelement/protocol` as a small zero-dependency contract layer;
 - `@openelement/app`, `@openelement/adapter-vite`, `@openelement/ssg`, and
   `@openelement/create` as the framework/preset path;
 - SSR, SSG, Streaming DSD, and ISR primitives.

@@ -138,14 +138,14 @@ Show/For are currently CSR-only (`renderToDom` constructs DOM from scratch). DSD
 
 ### Gap status
 
-| #  | Gap                        | Severity | Status                                                                                                |
-| -- | -------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| G1 | Effect memory leak         | P0       | ✅ Fixed — AbortSignal chain through `_walkAndBind`                                                   |
-| G2 | consumeContext dead copy   | P0       | ✅ Fixed — returns source signal from Map                                                             |
-| G3 | DSD text node binding      | P1       | ⚠️ `_walkAndBind` skips text children; counter/home-console text only CSR-reactive                    |
-| G4 | Show/For DSD hydration     | P2       | ⚠️ CSR-only `renderToDom` constructs                                                                  |
-| G5 | Batch/effectScope exposure | P2       | ⚠️ alien-signals has `effectScope`/`batch`/`untrack`; `@openelement/signals` facade doesn't re-export |
-| G6 | JSX element type           | Done     | ✅ `JSX.Element.children` aligned with `VNode.children`                                               |
+| #  | Gap                        | Severity | Status                                                                                               |
+| -- | -------------------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| G1 | Effect memory leak         | P0       | ✅ Fixed — AbortSignal chain through `_walkAndBind`                                                  |
+| G2 | consumeContext dead copy   | P0       | ✅ Fixed — returns source signal from Map                                                            |
+| G3 | DSD text node binding      | P1       | ⚠️ `_walkAndBind` skips text children; counter/home-console text only CSR-reactive                   |
+| G4 | Show/For DSD hydration     | P2       | ⚠️ CSR-only `renderToDom` constructs                                                                 |
+| G5 | Batch/effectScope exposure | P2       | ⚠️ alien-signals has `effectScope`/`batch`/`untrack`; `@openelement/signal` facade doesn't re-export |
+| G6 | JSX element type           | Done     | ✅ `JSX.Element.children` aligned with `VNode.children`                                              |
 
 ### Positive
 
@@ -161,7 +161,7 @@ Show/For are currently CSR-only (`renderToDom` constructs DOM from scratch). DSD
 - `_layoutWorkaroundReRender()` required for Chromium DSD layout bug (one-time DOM replacement)
 - DSD text binding mechanism needs ~20 lines (G3, P1)
 - Show/For DSD hydration needs ~50 lines (G4, P2)
-- alien-signals `effectScope` not yet exposed through `@openelement/signals` (G5, P2)
+- alien-signals `effectScope` not yet exposed through `@openelement/signal` (G5, P2)
 
 ## Related
 

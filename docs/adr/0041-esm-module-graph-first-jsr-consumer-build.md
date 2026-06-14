@@ -13,7 +13,7 @@ is standards-first ESM:
 
 1. LessJS packages expose TypeScript ESM entrypoints through JSR exports.
 2. Application source imports stable bare specifiers such as `@openelement/core`,
-   `@openelement/ui/less-card`, and `@openelement/signals/framework`.
+   `@openelement/ui/less-card`, and `@openelement/signal/framework`.
 3. Vite/Rolldown performs the final production bundle, tree-shaking, and code
    splitting.
 
@@ -23,7 +23,7 @@ modules to Vite. Source that was valid under Deno/JSR package resolution could
 still contain metadata-resolved specifiers such as:
 
 ```text
-jsr:@openelement/signals@^0.21/framework
+jsr:@openelement/signal@^0.21/framework
 ```
 
 Vite/Rolldown does not natively own Deno's `jsr:` package scheme. When the SSG

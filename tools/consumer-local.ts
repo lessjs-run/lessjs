@@ -98,8 +98,8 @@ denoJson.imports['@openelement/core/jsx-runtime'] = pathToFileURL(
 denoJson.imports['@openelement/core/jsx-dev-runtime'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
 ).href;
-denoJson.imports['@openelement/protocols'] = pathToFileURL(
-  join(repoRoot, 'packages', 'protocols', 'src', 'index.ts'),
+denoJson.imports['@openelement/protocol'] = pathToFileURL(
+  join(repoRoot, 'packages', 'protocol', 'src', 'index.ts'),
 ).href;
 for (
   const subpath of [
@@ -116,8 +116,8 @@ for (
     'validators',
   ]
 ) {
-  denoJson.imports[`@openelement/protocols/${subpath}`] = pathToFileURL(
-    join(repoRoot, 'packages', 'protocols', 'src', `${subpath}.ts`),
+  denoJson.imports[`@openelement/protocol/${subpath}`] = pathToFileURL(
+    join(repoRoot, 'packages', 'protocol', 'src', `${subpath}.ts`),
   ).href;
 }
 denoJson.imports['@openelement/adapter-vite/build-context'] = pathToFileURL(
@@ -126,14 +126,14 @@ denoJson.imports['@openelement/adapter-vite/build-context'] = pathToFileURL(
 denoJson.imports['@openelement/adapter-vite'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@openelement/signals'] = pathToFileURL(
-  join(repoRoot, 'packages', 'signals', 'src', 'index.ts'),
+denoJson.imports['@openelement/signal'] = pathToFileURL(
+  join(repoRoot, 'packages', 'signal', 'src', 'index.ts'),
 ).href;
-denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
-  join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
+denoJson.imports['@openelement/signal/framework'] = pathToFileURL(
+  join(repoRoot, 'packages', 'signal', 'src', 'framework.ts'),
 ).href;
-denoJson.imports['@openelement/elements'] = pathToFileURL(
-  join(repoRoot, 'packages', 'elements', 'src', 'index.ts'),
+denoJson.imports['@openelement/element'] = pathToFileURL(
+  join(repoRoot, 'packages', 'element', 'src', 'index.ts'),
 ).href;
 denoJson.imports['@openelement/core/style-sheet'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'style-sheet.ts'),
@@ -171,7 +171,7 @@ writeFileSync(denoJsonPath, JSON.stringify(denoJson, null, 2));
 
 // Step 3: Patch vite.config.ts for local source resolution
 const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
-const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
+const signalsSrc = join(repoRoot, 'packages', 'signal', 'src');
 
 const aliases = [
   {
@@ -217,22 +217,22 @@ const aliases = [
     'signals',
     'validators',
   ].map((subpath) => ({
-    find: `@openelement/protocols/${subpath}`,
+    find: `@openelement/protocol/${subpath}`,
     replacement: vitePath(
-      join(repoRoot, 'packages', 'protocols', 'src', `${subpath}.ts`),
+      join(repoRoot, 'packages', 'protocol', 'src', `${subpath}.ts`),
     ),
   })),
   {
-    find: '@openelement/protocols',
-    replacement: vitePath(join(repoRoot, 'packages', 'protocols', 'src', 'index.ts')),
+    find: '@openelement/protocol',
+    replacement: vitePath(join(repoRoot, 'packages', 'protocol', 'src', 'index.ts')),
   },
   {
-    find: '@openelement/signals/framework',
+    find: '@openelement/signal/framework',
     replacement: vitePath(join(signalsSrc, 'framework.ts')),
   },
   {
-    find: '@openelement/elements',
-    replacement: vitePath(join(repoRoot, 'packages', 'elements', 'src', 'index.ts')),
+    find: '@openelement/element',
+    replacement: vitePath(join(repoRoot, 'packages', 'element', 'src', 'index.ts')),
   },
   {
     find: '@openelement/core/style-sheet',

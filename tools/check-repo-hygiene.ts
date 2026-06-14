@@ -9,10 +9,12 @@ const removedPackageNames = [
   '@openelement/adapter-vanilla',
   '@openelement/cem',
   '@openelement/compat-check',
+  '@openelement/elements',
   '@openelement/hub',
+  '@openelement/protocols',
   '@openelement/rpc',
   '@openelement/runtime',
-  '@openelement/ssg',
+  '@openelement/signals',
   '@openelement/style-sheet',
 ];
 
@@ -22,11 +24,28 @@ const removedPackageDirs = [
   'packages/adapter-vanilla',
   'packages/cem',
   'packages/compat-check',
+  'packages/elements',
   'packages/hub',
+  'packages/protocols',
   'packages/rpc',
   'packages/runtime',
-  'packages/ssg',
+  'packages/signals',
   'packages/style-sheet',
+];
+
+const removedAutoflow2Paths = [
+  'tools/autoflow/mod.ts',
+  'tools/autoflow/mod-check.ts',
+  'tools/autoflow/mod-evolve.ts',
+  'tools/autoflow/mod-health.ts',
+  'tools/autoflow/fixtures',
+  'tools/autoflow/readers',
+  'tools/autoflow/prompts',
+  'tools/autoflow/cells.ts',
+  'tools/autoflow/state-machine.ts',
+  'tools/autoflow/cell-state-machine.ts',
+  'tools/autoflow/evidence-ledger.ts',
+  'tools/autoflow/agent-code-generator.ts',
 ];
 
 const forbiddenRootTracked = [
@@ -107,6 +126,12 @@ function isActiveScanFile(path: string): boolean {
 for (const dir of removedPackageDirs) {
   if (await exists(dir)) {
     failures.push({ path: dir, message: 'removed package directory is still present' });
+  }
+}
+
+for (const path of removedAutoflow2Paths) {
+  if (await exists(path)) {
+    failures.push({ path, message: 'AutoFlow2 remnant is still present' });
   }
 }
 

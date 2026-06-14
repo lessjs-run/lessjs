@@ -130,7 +130,7 @@ Initial canonical owners:
 
 | Concept                             | Canonical owner                                                      |
 | ----------------------------------- | -------------------------------------------------------------------- |
-| `CompatibilityClassification`       | `@openelement/protocols` or `@openelement/core/types`, but not both  |
+| `CompatibilityClassification`       | `@openelement/protocol` or `@openelement/core/types`, but not both   |
 | HTML and attribute escaping         | `@openelement/core`                                                  |
 | Hub package record loading          | `packages/hub/src/cli/shared.ts`                                     |
 | Hub snapshot placeholder rendering  | `packages/hub/src/snapshot-placeholder.ts`                           |

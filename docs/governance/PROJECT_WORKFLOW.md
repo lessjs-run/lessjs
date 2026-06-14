@@ -24,29 +24,27 @@ Read these files before starting work:
 3. `docs/roadmap/ROADMAP.md`
 4. the active version plan under `docs/current/VERSION_PLAN.md`
 5. relevant ADRs listed by the version plan
-6. historical SOP/NextVersion evidence only when auditing older release lines
 
 If these documents disagree, stop and fix the documents before changing product
 code. The workflow is part of the product contract.
 
 ## Document Roles
 
-| Layer       | Location                  | Purpose                                             |
-| ----------- | ------------------------- | --------------------------------------------------- |
-| Governance  | `docs/governance/`        | Mandatory process and release rules                 |
-| Status      | `docs/status/STATUS.md`   | Current truth, active line, and release gate order  |
-| Roadmap     | `docs/roadmap/`           | Version sequence and product direction              |
-| ADR         | `docs/adr/`               | Architectural decisions and irreversible trade-offs |
-| VersionPlan | `docs/current/`           | Active version contract: goals, tasks, verification |
-| SOP/Next    | `docs/sop/`, `docs/next/` | Historical release evidence during v0.40 migration  |
-| Changelog   | `docs/changelog/`         | User-visible changes after implementation is proven |
-| Release     | `docs/release/`           | Release note after local and remote gates are green |
+| Layer       | Location                | Purpose                                             |
+| ----------- | ----------------------- | --------------------------------------------------- |
+| Governance  | `docs/governance/`      | Mandatory process and release rules                 |
+| Status      | `docs/status/STATUS.md` | Current truth, active line, and release gate order  |
+| Roadmap     | `docs/roadmap/`         | Version sequence and product direction              |
+| ADR         | `docs/adr/`             | Architectural decisions and irreversible trade-offs |
+| VersionPlan | `docs/current/`         | Active version contract: goals, tasks, verification |
+| Changelog   | `docs/changelog/`       | User-visible changes after implementation is proven |
+| Release     | `docs/release/`         | Release note after local and remote gates are green |
 
 ## Active Version Plan
 
 Every minor version must have an approved active version plan before
-implementation starts. ADR-0101 replaces the old requirement for a separate SOP
-and NextVersion package with one current plan.
+implementation starts. ADR-0101 consolidates release planning into one current
+plan under `docs/current/`.
 
 Required sections:
 

@@ -11,8 +11,14 @@ import { assert, assertEquals, assertExists, assertStringIncludes } from 'jsr:@s
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { Hono } from 'hono';
-import { ssgRender } from '../src/cli/ssg-render.js';
-import type { SsgPageOutput, SsgRenderOptions, SsrBundle } from '../src/cli/ssg-render.js';
+import { ssgRender } from '@openelement/ssg';
+import { RenderError } from '@openelement/core';
+import type {
+  SsgPageOutput,
+  SsgRenderEvidence,
+  SsgRenderOptions,
+  SsrBundle,
+} from '@openelement/ssg';
 
 const TEST_OUT_DIR = './dist-test-ssg-report';
 
@@ -118,19 +124,15 @@ Deno.test('SSG report: collects diagnostics from renderRoute', async (t) => {
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });
   }
 
+  const renderError = new RenderError(
+    'test-component',
+    'test error',
+    'LESS_RENDER_RENDER_FAILED',
+    'test-el',
+  );
   const mockOutput: SsgPageOutput = {
     html: '<html><body>dynamic page</body></html>',
-    errors: [
-      {
-        code: 'LESS_RENDER_RENDER_FAILED',
-        severity: 'warning',
-        phase: 'render',
-        tagName: 'test-el',
-        message: 'test error',
-        recoverable: true,
-        // deno-lint-ignore no-explicit-any
-      } as any,
-    ],
+    errors: [renderError],
     hydrationHints: [
       { tagName: 'test-el', layer: 'dsd-interactive' },
     ],
@@ -288,7 +290,11 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   ];
 
   const bundle = createMockBundle();
-  await ssgRender(bundle, defaultOptions, ctx);
+  await ssgRender(bundle, defaultOptions, {
+    packageManifests: ctx.phase1.packageManifests,
+    packageIslandDecls: ctx.phase1.packageIslandDecls,
+    cemClassifications: ctx.phase1.cemClassifications,
+  } as SsgRenderEvidence);
 
   const report = readReport(TEST_OUT_DIR);
   const decisions = report.manifestDecisions as Array<Record<string, unknown>>;
@@ -391,7 +397,11 @@ Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassificat
   ];
 
   const bundle = createMockBundle();
-  await ssgRender(bundle, defaultOptions, ctx);
+  await ssgRender(bundle, defaultOptions, {
+    packageManifests: ctx.phase1.packageManifests,
+    packageIslandDecls: ctx.phase1.packageIslandDecls,
+    cemClassifications: ctx.phase1.cemClassifications,
+  } as SsgRenderEvidence);
 
   const report = readReport(TEST_OUT_DIR);
   const cem = report.cemCompatibility as Record<string, unknown>;
@@ -464,7 +474,11 @@ Deno.test('SSG report: cemCompatibility with only ssr-capable components', async
   ];
 
   const bundle = createMockBundle();
-  await ssgRender(bundle, defaultOptions, ctx);
+  await ssgRender(bundle, defaultOptions, {
+    packageManifests: ctx.phase1.packageManifests,
+    packageIslandDecls: ctx.phase1.packageIslandDecls,
+    cemClassifications: ctx.phase1.cemClassifications,
+  } as SsgRenderEvidence);
 
   const report = readReport(TEST_OUT_DIR);
   const cem = report.cemCompatibility as Record<string, unknown>;

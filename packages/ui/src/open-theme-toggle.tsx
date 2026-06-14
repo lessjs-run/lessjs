@@ -21,7 +21,7 @@
 import { DsdElement } from '@openelement/core';
 import { StyleSheet, type StyleSheetLike } from '@openelement/core/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 export const tagName = 'open-theme-toggle';
 
 const sheet: StyleSheetLike = new StyleSheet();

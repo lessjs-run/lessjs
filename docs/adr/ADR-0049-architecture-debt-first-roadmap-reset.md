@@ -13,7 +13,7 @@ next feature line:
 - extracted packages such as `@openelement/style-sheet` are not yet cleanly owned;
 - `adapter-vite` mixes plugin assembly, dependency resolution, head injection,
   optional stubs, and phase orchestration in one large module;
-- `@openelement/signals` has useful public API value, but its engine/facade boundary
+- `@openelement/signal` has useful public API value, but its engine/facade boundary
   is unclear;
 - Hub, CEM, and manifest validation repeat schema concepts across packages;
 - CI proves many things, but coverage artifacts, consumer E2E depth, traces, and

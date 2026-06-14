@@ -23,9 +23,9 @@ interface PackageConfig {
 
 const PACKAGES = [
   'core',
-  'protocols',
-  'elements',
-  'signals',
+  'protocol',
+  'element',
+  'signal',
   'ui',
   'router',
   'adapter-vite',

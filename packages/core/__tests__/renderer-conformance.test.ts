@@ -1,6 +1,6 @@
 import { assertEquals } from 'jsr:@std/assert@1';
-import { runRendererConformance } from '@openelement/protocols/conformance';
-import type { RendererProtocol } from '@openelement/protocols/renderer';
+import { runRendererConformance } from '@openelement/protocol/conformance';
+import type { RendererProtocol } from '@openelement/protocol/renderer';
 import { jsx } from '../src/jsx-runtime.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
 

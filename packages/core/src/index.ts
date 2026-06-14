@@ -167,7 +167,7 @@ export {
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
 
-// v0.23: Build-time shared types live in @openelement/protocols/build-types.
+// v0.23: Build-time shared types live in @openelement/protocol/build-types.
 
 // WC Package Protocol (v0.17+)
 export {

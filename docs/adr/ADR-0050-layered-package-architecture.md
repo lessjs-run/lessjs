@@ -13,7 +13,7 @@ The v0.22 release work exposed a deeper pattern than ordinary cleanup:
   resolution, SSG phases, generated entry code, and Vite plugin assembly.
 - `@openelement/content` and `@openelement/i18n` depend on adapter-owned build contracts
   even though they are feature packages.
-- `@openelement/signals` is a LessJS facade over `alien-signals`, not an owned
+- `@openelement/signal` is a LessJS facade over `alien-signals`, not an owned
   reactive engine.
 - Generated projects are now a release contract. Recent failures came from
   published package graphs and consumer import maps, not from local source
@@ -64,13 +64,13 @@ barrel. v0.23 architecture work does not preserve incorrectly owned public
 paths. Removed paths should be replaced by their canonical owner and documented
 as intentional architecture breakage.
 
-`@openelement/signals` remains the LessJS signal API facade powered by
+`@openelement/signal` remains the LessJS signal API facade powered by
 `alien-signals`. LessJS owns the public `.value` / `subscribe()` contract and
 framework integration semantics, not the low-level reactive algorithm.
 
 `@openelement/core` must not import `alien-signals` as the canonical engine path.
 The owner of signal creation, computed values, effects, and engine wrapping is
-`@openelement/signals`.
+`@openelement/signal`.
 
 `@openelement/app` remains the configuration facade for `lessjs()` and Vite plugin
 composition. A separate authoring facade such as `@openelement/runtime` may be added
@@ -130,7 +130,7 @@ moving code:
 | Package                     | Target role                         | v0.23 pressure                                              |
 | --------------------------- | ----------------------------------- | ----------------------------------------------------------- |
 | `@openelement/core`         | runtime kernel                      | remove engine/build/compat drift                            |
-| `@openelement/signals`      | LessJS facade over `alien-signals`  | own signal creation and framework semantics                 |
+| `@openelement/signal`       | LessJS facade over `alien-signals`  | own signal creation and framework semantics                 |
 | `@openelement/style-sheet`  | CSSStyleSheet abstraction           | remain canonical owner                                      |
 | `@openelement/adapter-vite` | Vite adapter and SSG implementation | stop owning shared contracts                                |
 | `@openelement/app`          | configuration facade                | avoid runtime authoring exports                             |
@@ -162,7 +162,7 @@ without depending on Vite adapter implementation.
 ### Replace `alien-signals`
 
 Rejected for v0.23. The debt is not the engine choice; the debt is that the
-engine ownership boundary is unclear. `@openelement/signals` should wrap
+engine ownership boundary is unclear. `@openelement/signal` should wrap
 `alien-signals` cleanly.
 
 ## Acceptance

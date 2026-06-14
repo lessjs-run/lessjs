@@ -5,3 +5,5 @@ export { Router } from './client-router.ts';
 export type { RouterStartOptions } from './client-router.ts';
 export { loadPage } from './page-loader.ts';
 export type { PageData } from './page-loader.ts';
+export { normalizeLocalePath } from './locale-path.ts';
+export type { LocalePath } from './locale-path.ts';

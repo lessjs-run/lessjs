@@ -15,7 +15,7 @@
  */
 import { defineCustomElement, DsdElement } from '@openelement/core';
 import { defineIslandConfig } from '@openelement/app';
-import { computed, signal } from '@openelement/signals';
+import { computed, signal } from '@openelement/signal';
 import { StyleSheet } from '@openelement/core/style-sheet';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 

@@ -9,7 +9,7 @@ Date: 2026-06-12
 `@openelement/ssg` currently owns the generated server-entry descriptor in
 `entry-descriptor.ts`. That descriptor is a pure data object, but its type
 surface is coupled to the SSG package. ADR-0096 requires
-`@openelement/protocols` to become the replacement boundary for route,
+`@openelement/protocol` to become the replacement boundary for route,
 runtime, renderer, island, and cache integration.
 
 The route manifest is the most important protocol handoff for a Nitro runtime
@@ -19,7 +19,7 @@ implementation modules to understand the application contract.
 
 ## Decision
 
-`@openelement/protocols/routes` owns the route manifest and entry descriptor
+`@openelement/protocol/routes` owns the route manifest and entry descriptor
 contract shape.
 
 The protocol module defines:
@@ -43,7 +43,7 @@ The protocol module defines:
 
 The migration rule is compatibility-first:
 
-1. Protocol types are introduced in `@openelement/protocols/routes`.
+1. Protocol types are introduced in `@openelement/protocol/routes`.
 2. SSG may re-export or implement against those types without changing public
    behavior.
 3. Full implementation migration only happens when graph, build, and renderer
@@ -88,4 +88,4 @@ The migration rule is compatibility-first:
 - ADR-0091: Four-Product Platform Roadmap.
 - ADR-0096: Protocol-First Vite + Nitro Runtime Architecture.
 - `packages/ssg/src/entry-descriptor.ts`
-- `packages/protocols/src/routes.ts`
+- `packages/protocol/src/routes.ts`

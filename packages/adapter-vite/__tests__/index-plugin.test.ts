@@ -20,9 +20,20 @@ import { OpenElementError, SsrRenderError } from '@openelement/core/errors';
 import { createSsrContext, extractParams, parseQuery } from '@openelement/core/context';
 import { renderSsrError, wrapInDocument } from '@openelement/core';
 
-import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg/index.ts';
+import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '@openelement/ssg';
 
 import { printBuildManifest, scanClientBuild, scanSSGOutput } from '../src/build-manifest.ts';
+
+type CallablePluginHook = (...args: unknown[]) => unknown;
+
+function callPluginHook(hook: unknown, ...args: unknown[]): unknown {
+  if (typeof hook === 'function') return hook(...args);
+  if (hook && typeof hook === 'object' && 'handler' in hook) {
+    const objectHook = hook as { handler: CallablePluginHook };
+    return objectHook.handler(...args);
+  }
+  return undefined;
+}
 
 // createOpenPlugin() Plugin Factory
 
@@ -414,13 +425,9 @@ Deno.test('createOpenPlugin() virtualEntryPlugin.load fallback when ctx.honoEntr
   const plugins = createOpenPlugin();
   const virtualPlugin = plugins.find((p) => p.name === 'open:virtual-entry')!;
   // First call configResolved to set honoEntryCode
-  // deno-lint-ignore no-explicit-any
-  if (typeof (plugins[0] as any).configResolved === 'function') {
-    // deno-lint-ignore no-explicit-any
-    (plugins[0] as any).configResolved({} as never);
-  }
+  callPluginHook(plugins[0].configResolved, {});
   // load should return code
-  const code = (virtualPlugin.load as Function)('\0virtual:open-hono-entry' as never);
+  const code = callPluginHook(virtualPlugin.load, '\0virtual:open-hono-entry');
   assertExists(code);
   assertStringIncludes(code as string, 'hono');
 });
@@ -428,14 +435,14 @@ Deno.test('createOpenPlugin() virtualEntryPlugin.load fallback when ctx.honoEntr
 Deno.test('createOpenPlugin() virtualEntryPlugin.resolveId returns null for unknown IDs', () => {
   const plugins = createOpenPlugin();
   const virtualPlugin = plugins.find((p) => p.name === 'open:virtual-entry')!;
-  const result = (virtualPlugin.resolveId as Function)('unknown-module', undefined, {});
+  const result = callPluginHook(virtualPlugin.resolveId, 'unknown-module', undefined, {});
   assertEquals(result, undefined);
 });
 
 Deno.test('createOpenPlugin() virtualEntryPlugin.load returns null for unknown IDs', () => {
   const plugins = createOpenPlugin();
   const virtualPlugin = plugins.find((p) => p.name === 'open:virtual-entry')!;
-  const result = (virtualPlugin.load as Function)('unknown-id');
+  const result = callPluginHook(virtualPlugin.load, 'unknown-id');
   assertEquals(result, undefined);
 });
 

@@ -440,7 +440,7 @@ Deno.test('DsdElement: this.params default empty object', () => {
 Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively', async () => {
   if (!hasDOM) return;
 
-  const { signal } = await import('@openelement/signals');
+  const { signal } = await import('@openelement/signal');
   const tagName = `test-sigattr-${Math.random().toString(36).slice(2, 7)}`;
 
   const themeSig = signal('dark');
@@ -492,7 +492,7 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
 Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness', async () => {
   if (!hasDOM) return;
 
-  const { signal } = await import('@openelement/signals');
+  const { signal } = await import('@openelement/signal');
   const tagName = `test-sigclass-${Math.random().toString(36).slice(2, 7)}`;
 
   const toggleSig = signal('on');

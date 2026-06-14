@@ -113,7 +113,7 @@ export class IslandsGuidePage extends DsdElement {
           <open-code-block><pre><code>{`// app/islands/my-counter.ts
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/core/style-sheet';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 
 export const tagName = 'my-counter';
 

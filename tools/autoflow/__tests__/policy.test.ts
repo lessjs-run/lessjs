@@ -35,7 +35,7 @@ Deno.test('policy: package topology changes require human review', () => {
 
 Deno.test('policy: v0.40.x cleanup train patch requires approved plan id', () => {
   const decision = evaluatePatchEligibility({
-    changedPaths: ['packages/elements/src/index.ts'],
+    changedPaths: ['packages/element/src/index.ts'],
   });
   assertFalse(decision.allowed);
   assert(decision.reason.includes('v0.40.x cleanup train'));
@@ -43,7 +43,7 @@ Deno.test('policy: v0.40.x cleanup train patch requires approved plan id', () =>
 
 Deno.test('policy: v0.40.x cleanup train patch accepts explicit human approval id', () => {
   const decision = evaluatePatchEligibility({
-    changedPaths: ['packages/elements/src/index.ts'],
+    changedPaths: ['packages/element/src/index.ts'],
     approvedPlanId: V040_CLEANUP_TRAIN_APPROVAL_ID,
   });
   assert(decision.allowed);

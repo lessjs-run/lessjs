@@ -16,10 +16,10 @@
  * installers update the default registry automatically.
  */
 
-import type { RendererProtocol } from '@openelement/protocols/renderer';
+import type { RendererProtocol } from '@openelement/protocol/renderer';
 
 // Re-export for consumers who import from @openelement/core/adapter-registry
-export type { RendererProtocol } from '@openelement/protocols/renderer';
+export type { RendererProtocol } from '@openelement/protocol/renderer';
 
 export interface AdapterRegistry {
   register(adapter: RendererProtocol | undefined): void;

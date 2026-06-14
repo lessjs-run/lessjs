@@ -53,7 +53,7 @@ metadata；真实路由匹配仍由文件扫描器负责。
 
 ```tsx
 import { defineIsland, defineIslandConfig } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 export const openElement = defineIslandConfig({
   hydrate: 'idle',

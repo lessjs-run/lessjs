@@ -34,16 +34,16 @@ openElement = Elements + UI + Framework + Protocols
 
 | Product   | Surface                                   | Role                                                                    |
 | --------- | ----------------------------------------- | ----------------------------------------------------------------------- |
-| Elements  | `@openelement/elements`, `OpenElement`    | Native Web Components authoring layer, competing with Lit and FAST.     |
+| Elements  | `@openelement/element`, `OpenElement`     | Native Web Components authoring layer, competing with Lit and FAST.     |
 | UI        | `@openelement/ui`                         | First-party `open-*` components built on the Elements model.            |
 | Framework | `@openelement/app`, `@openelement/create` | Pages, layouts, islands, API routes, Vite + Nitro build/runtime output. |
-| Protocols | `@openelement/protocols`                  | Runtime-free replacement boundaries and conformance contracts.          |
+| Protocols | `@openelement/protocol`                   | Runtime-free replacement boundaries and conformance contracts.          |
 
 Supporting packages such as `@openelement/core`, `adapter-vite`, `signals`,
 `router`, `content`, and `i18n` are advanced or implementation surfaces. They
 support the four products; they are not separate first-class product lines.
 
-In v0.40.x, the active workspace is the 11-package cleanup-train product line.
+In v0.40.x, the active workspace is the 12-package cleanup-train product line.
 Hub, RPC, CEM, compat-check, Lit/React/vanilla interop adapters, and standalone
 runtime/style-sheet/ssg packages are removed from the current package graph;
 historical details remain in git history and release evidence.
@@ -71,7 +71,7 @@ For browser-upgraded UI:
 
 ```tsx
 import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 const count = signal(0);
 

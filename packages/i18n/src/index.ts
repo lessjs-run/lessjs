@@ -32,7 +32,7 @@
 
 import type { Plugin } from 'vite';
 import type { OpenElementI18nOptions } from './types.ts';
-import type { OpenElementBuildContextLike } from '@openelement/protocols/build-types';
+import type { OpenElementBuildContextLike } from '@openelement/protocol/build-types';
 import { loadI18nData, writeI18nDataModule } from './i18n-data.ts';
 import { createLogger } from '@openelement/core/logger';
 import process from 'node:process';

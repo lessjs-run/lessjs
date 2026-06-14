@@ -71,7 +71,7 @@ export default definePage({
         <code>defineIsland()</code> for browser-upgraded interactivity.
       </p>
       <open-code-block><pre><code>{`import { defineElement, defineIsland } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 export const Badge = defineElement('app-badge', ({ label }) => {
   return <span part='badge'>{label}</span>;
@@ -150,7 +150,7 @@ export default definePage({
 
       <h2>组件和 islands</h2>
       <open-code-block><pre><code>{`import { defineElement, defineIsland } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 defineElement('app-badge', ({ label }) => {
   return <span part='badge'>{label}</span>;

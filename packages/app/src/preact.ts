@@ -1,5 +1,5 @@
 import { defineIsland as defineRuntimeIsland, getSsrProps } from '@openelement/core';
-import type { IslandConfig } from '@openelement/protocols/islands';
+import type { IslandConfig } from '@openelement/protocol/islands';
 import { type ComponentChild, render } from 'preact';
 
 export type PreactIslandProps = Record<string, unknown>;

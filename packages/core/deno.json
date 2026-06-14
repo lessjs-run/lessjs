@@ -19,11 +19,11 @@
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@openelement/protocols/conformance": "jsr:@openelement/protocols@^0.40.0/conformance",
-    "@openelement/protocols/data": "jsr:@openelement/protocols@^0.40.0/data",
-    "@openelement/protocols/renderer": "jsr:@openelement/protocols@^0.40.0/renderer",
-    "@openelement/protocols/signals": "jsr:@openelement/protocols@^0.40.0/signals",
-    "@openelement/signals": "jsr:@openelement/signals@^0.40.0"
+    "@openelement/protocol/conformance": "jsr:@openelement/protocol@^0.40.0/conformance",
+    "@openelement/protocol/data": "jsr:@openelement/protocol@^0.40.0/data",
+    "@openelement/protocol/renderer": "jsr:@openelement/protocol@^0.40.0/renderer",
+    "@openelement/protocol/signals": "jsr:@openelement/protocol@^0.40.0/signals",
+    "@openelement/signal": "jsr:@openelement/signal@^0.40.0"
   },
   "publish": {
     "include": [

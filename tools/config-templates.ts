@@ -58,7 +58,7 @@ export const CONFIG_EXCEPTIONS: Record<string, Partial<PackageConfig>> = {
       test: 'deno test --allow-read --allow-write --allow-env --allow-net __tests__/',
     },
   },
-  '@openelement/signals': {
+  '@openelement/signal': {
     lint: {
       rules: {
         exclude: ['no-explicit-any'],

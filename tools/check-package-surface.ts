@@ -7,11 +7,12 @@ const retainedPackages = [
   '@openelement/content',
   '@openelement/core',
   '@openelement/create',
-  '@openelement/elements',
+  '@openelement/element',
   '@openelement/i18n',
-  '@openelement/protocols',
+  '@openelement/protocol',
   '@openelement/router',
-  '@openelement/signals',
+  '@openelement/signal',
+  '@openelement/ssg',
   '@openelement/ui',
 ].sort();
 
@@ -21,10 +22,12 @@ const removedPackages = [
   '@openelement/adapter-vanilla',
   '@openelement/cem',
   '@openelement/compat-check',
+  '@openelement/elements',
   '@openelement/hub',
+  '@openelement/protocols',
   '@openelement/rpc',
   '@openelement/runtime',
-  '@openelement/ssg',
+  '@openelement/signals',
   '@openelement/style-sheet',
 ].sort();
 
@@ -74,7 +77,7 @@ for (const pkg of removedPackages) {
   }
 }
 
-for (const required of ['11-package', 'v0.40.x', 'ADR-0105']) {
+for (const required of ['12-package', 'v0.40.x', 'ADR-0105']) {
   if (!docs.includes(required)) {
     failures.push(`PACKAGE_SURFACE.md missing required anchor: ${required}`);
   }
@@ -86,4 +89,4 @@ if (failures.length > 0) {
   Deno.exit(1);
 }
 
-console.log('Package surface check passed (11 packages retained).');
+console.log('Package surface check passed (12 packages retained).');

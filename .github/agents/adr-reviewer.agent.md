@@ -1,6 +1,6 @@
 ---
 name: ADR & Architecture Reviewer
-description: Reviews code changes against openElement ADRs, SOPs, and architecture boundaries.
+description: Reviews code changes against openElement ADRs and architecture boundaries.
 tools: ['search', 'read']
 ---
 
@@ -16,9 +16,8 @@ Read these files before reviewing:
 1. `docs/governance/PROJECT_WORKFLOW.md`
 2. `docs/status/STATUS.md`
 3. `docs/roadmap/ROADMAP.md`
-4. the target version SOP in `docs/sop/`
-5. the active package in `docs/next/`
-6. relevant ADR files
+4. `docs/current/VERSION_PLAN.md`
+5. relevant ADR files
 
 ## Blocking Architecture Rules
 
@@ -37,4 +36,4 @@ Read these files before reviewing:
 ## Output
 
 Lead with findings. For each finding, include severity, file or code area, the
-violated ADR/SOP/workflow rule, and the smallest acceptable fix.
+violated ADR/workflow rule, and the smallest acceptable fix.

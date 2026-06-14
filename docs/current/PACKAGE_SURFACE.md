@@ -1,34 +1,35 @@
 # Package Surface Inventory
 
-This is the v0.40.x 11-package cleanup-train truth table.
+This is the v0.40.0 12-package product-line truth table.
 
 ```text
 openElement = Elements + UI + Framework + Protocols
 ```
 
 ADR-0101 approves the product-line reset and AutoFlow3 governance boundary.
-ADR-0105 approves the v0.40.x breaking cleanup train and the 14-to-11 package
+ADR-0105 approves the v0.40.0 breaking cleanup train and the 14-to-12 package
 graph collapse.
 
-## Current 11-package surface
+## Current 12-package surface
 
-| Package                     | Class          | v0.40.x decision                                                                                          |
+| Package                     | Class          | v0.40.0 decision                                                                                          |
 | --------------------------- | -------------- | --------------------------------------------------------------------------------------------------------- |
 | `@openelement/app`          | product-facing | Framework authoring API, including optional Preact island proof under `./preact`.                         |
 | `@openelement/create`       | product-facing | Starter and consumer entry.                                                                               |
-| `@openelement/elements`     | product-facing | Canonical component-authoring facade for `OpenElement`, `DsdElement`, `StyleSheet`, islands, and signals. |
-| `@openelement/protocols`    | product-facing | Runtime-free replacement boundary.                                                                        |
+| `@openelement/element`      | product-facing | Canonical component-authoring facade for `OpenElement`, `DsdElement`, `StyleSheet`, islands, and signals. |
+| `@openelement/protocol`     | product-facing | Runtime-free replacement boundary. Now includes SSG engine contracts.                                     |
 | `@openelement/ui`           | product-facing | First-party `open-*` component library.                                                                   |
+| `@openelement/ssg`          | foundation     | Adapter-agnostic SSG engine (entry descriptor, render pipeline, route scanner, postprocess).              |
 | `@openelement/core`         | foundation     | Low-level implementation kernel, now including `StyleSheet`.                                              |
 | `@openelement/router`       | foundation     | Route support behind Framework.                                                                           |
-| `@openelement/signals`      | foundation     | Signal implementation behind protocols; default remains `alien-signals`.                                  |
+| `@openelement/signal`       | foundation     | Signal implementation behind protocols; default remains `alien-signals`.                                  |
 | `@openelement/content`      | foundation     | Content support behind Framework recipes.                                                                 |
 | `@openelement/i18n`         | foundation     | I18n support behind Framework recipes.                                                                    |
-| `@openelement/adapter-vite` | foundation     | Vite/Nitro build bridge; SSG internals live here.                                                         |
+| `@openelement/adapter-vite` | foundation     | Vite/Nitro build bridge; delegates SSG orchestration to `@openelement/ssg`.                               |
 
 ## Removed from current graph
 
-v0.40.x removes historical and collapsed packages from the current workspace and
+v0.40.0 removes historical and collapsed packages from the current workspace and
 publish order:
 
 - `@openelement/rpc`
@@ -40,14 +41,18 @@ publish order:
 - `@openelement/adapter-vanilla`
 - `@openelement/runtime`
 - `@openelement/style-sheet`
-- `@openelement/ssg`
 
 `StyleSheet` now lives in `@openelement/core/style-sheet` and is re-exported
-from `@openelement/elements`. SSG is internal to `@openelement/adapter-vite`.
-The canonical authoring import is `@openelement/elements`.
+from `@openelement/element`. SSG engine is extracted into `@openelement/ssg` as
+an adapter-agnostic build engine that depends only on protocol, core, router,
+and content — never on Vite. `@openelement/adapter-vite` delegates SSG
+orchestration to it and keeps only Vite-specific glue (generated-data-resolver,
+package-resolver, CLI entry points).
+The canonical authoring import is `@openelement/element`.
 
 ## Governance
 
-The v0.40.x cleanup train is manually approved breaking patch work, not normal
-AutoFlow patch automation. AutoFlow3 patch release must refuse this train unless
-the release state references approval id `ADR-0105/v0.40.x-cleanup-train`.
+The v0.40.0 cleanup train is manually approved breaking work consolidated into
+the v0.40.0 release, not normal AutoFlow patch automation. AutoFlow3 patch
+release must refuse this train unless the release state references approval id
+`ADR-0105/v0.40.x-cleanup-train`.

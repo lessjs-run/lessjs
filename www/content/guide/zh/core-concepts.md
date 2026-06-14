@@ -51,11 +51,11 @@ JavaScript 升级 island 之前解析 shadow root。
 
 ## Elements 和 Runtime primitives
 
-未来 Elements 产品方向是 `@openelement/elements` 和 `OpenElement` 基类。
-当前 `@openelement/elements` 仍可用于底层库代码：
+未来 Elements 产品方向是 `@openelement/element` 和 `OpenElement` 基类。
+当前 `@openelement/element` 仍可用于底层库代码：
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/elements';
+import { DsdElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 应用路由通常应优先使用 `@openelement/app`。

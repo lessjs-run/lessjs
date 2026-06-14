@@ -11,7 +11,7 @@
 ## Context
 
 ADR-0039 established the architectural intent: DsdElement integrates with
-`@openelement/signals` to enable zero-framework reactivity. The actual implementation
+`@openelement/signal` to enable zero-framework reactivity. The actual implementation
 achieved the "html template with Signal interpolation" half — Signals can be
 interpolated into templates and trigger microtask-batched re-renders.
 
@@ -252,5 +252,5 @@ attributeChangedCallback(name, _old, value) {
 - ADR-0039: DsdElement + Signals Reactive Architecture
 - ADR-0051: Self-built `html` Template System Strengthening
 - ADR-0053: Unified Error Handling Architecture
-- `packages/signals/src/`: Signal engine facade over alien-signals
+- `packages/signal/src/`: Signal engine facade over alien-signals
 - `packages/core/src/dsd-element.ts`: DsdElement base class (~501 lines)

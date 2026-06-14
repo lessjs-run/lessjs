@@ -4,24 +4,19 @@ title: '[Release]: '
 body:
   - type: markdown
     attributes:
-      value: 'Release work must follow `docs/governance/PROJECT_WORKFLOW.md`.'
+      value: 'Release work must follow `docs/governance/PROJECT_WORKFLOW.md` and `docs/current/VERSION_PLAN.md`.'
   - type: input
     id: version
     attributes:
       label: Version
-      description: Example: v0.32.0
+      description: Example: v0.40.0
     validations:
       required: true
   - type: input
-    id: sop
+    id: plan
     attributes:
-      label: SOP
-    validations:
-      required: true
-  - type: input
-    id: next
-    attributes:
-      label: NextVersion package
+      label: Version plan
+      description: Example: docs/current/VERSION_PLAN.md
     validations:
       required: true
   - type: textarea

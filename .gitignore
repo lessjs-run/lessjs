@@ -51,6 +51,9 @@ docs/autoflow/cells/*/state.json
 # Vite cache
 .vite/
 
+# Generated data modules (typed stubs are tracked as .d.ts)
+www/app/data/_generated-blog-data.ts
+
 # Test / build / lint / coverage output files
 test-*.txt
 cov-*.txt

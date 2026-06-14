@@ -37,17 +37,17 @@ The four first-class products are:
 
 | Product   | Primary public direction                  | Product role                                                                                                         |
 | --------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Elements  | `@openelement/elements`, `OpenElement`    | Native Web Components authoring layer with JSX, signals, styles, shadow/DSD defaults, and explicit light DOM opt-in. |
+| Elements  | `@openelement/element`, `OpenElement`     | Native Web Components authoring layer with JSX, signals, styles, shadow/DSD defaults, and explicit light DOM opt-in. |
 | UI        | `@openelement/ui`                         | First-party `open-*` components built on the Elements model.                                                         |
 | Framework | `@openelement/app`, `@openelement/create` | Application shell, file routes, layouts, pages, islands, API routes, and Vite + Nitro output.                        |
-| Protocols | `@openelement/protocols`                  | Runtime-free replacement boundaries and conformance contracts.                                                       |
+| Protocols | `@openelement/protocol`                   | Runtime-free replacement boundaries and conformance contracts.                                                       |
 
 Supporting packages are not first-class product lines:
 
 - `@openelement/runtime` is a convenience facade and migration bridge.
 - `@openelement/core` is the advanced runtime kernel.
 - `@openelement/adapter-vite` is the Framework engine bridge for Vite + Nitro.
-- `@openelement/signals`, `@openelement/style-sheet`, `@openelement/router`,
+- `@openelement/signal`, `@openelement/style-sheet`, `@openelement/router`,
   `@openelement/content`, `@openelement/i18n`, and `@openelement/ssg` are
   advanced supporting packages.
 - Adapter packages are ecosystem integration points.
@@ -60,7 +60,7 @@ Supporting packages are not first-class product lines:
 public API. This ADR does not require a long-term `DsdElement` compatibility
 alias.
 
-`@openelement/elements` is approved as the future Elements package name. The
+`@openelement/element` is approved as the future Elements package name. The
 implementation must update package count, release order, import maps, docs, and
 graph checks when the package is introduced.
 
@@ -94,7 +94,7 @@ this ADR, v0.39 templates, and the current UI strategy.
 
 ### Negative
 
-- The package graph grows when `@openelement/elements` and a future
+- The package graph grows when `@openelement/element` and a future
   heavy-island adapter package are implemented.
 - A breaking rename from `DsdElement` to `OpenElement` requires careful
   migration notes and release evidence.
@@ -103,11 +103,11 @@ this ADR, v0.39 templates, and the current UI strategy.
 
 ## Non-Goals
 
-- Do not implement `@openelement/elements` in this ADR-only update.
+- Do not implement `@openelement/element` in this ADR-only update.
 - Do not implement a heavy-framework island adapter in this ADR-only update.
 - Do not introduce Web Awesome as a default or recommended UI substrate.
 - Do not expand the React adapter in v0.39.
-- Do not rename `@openelement/protocols` to `@openelement/protocol`.
+- Do not rename `@openelement/protocol` to `@openelement/protocol`.
 - Do not present Vite or Nitro as first-class openElement products.
 
 ## Related

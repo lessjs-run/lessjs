@@ -5,7 +5,7 @@ import {
   resolveOpenPackageExport,
   resolveVirtualOpenPackageRelative,
   toVirtualOpenPackageId,
-} from '../src/ssg/index.ts';
+} from '../src/ssg-package-resolver.ts';
 
 Deno.test('parseOpenPackageSpecifier parses bare openElement package ids', () => {
   assertEquals(parseOpenPackageSpecifier('@openelement/core'), {
@@ -19,8 +19,8 @@ Deno.test('parseOpenPackageSpecifier parses bare openElement package ids', () =>
 });
 
 Deno.test('parseOpenPackageSpecifier parses JSR openElement package ids', () => {
-  assertEquals(parseOpenPackageSpecifier('jsr:@openelement/signals@^0.21/framework'), {
-    packageName: 'signals',
+  assertEquals(parseOpenPackageSpecifier('jsr:@openelement/signal@^0.21/framework'), {
+    packageName: 'signal',
     range: '^0.21',
     subpath: 'framework',
   });
@@ -36,12 +36,12 @@ Deno.test('resolveOpenPackageExport maps public subpaths to source files', () =>
   assertEquals(resolveOpenPackageExport('core', 'logger'), 'src/logger.ts');
   assertEquals(resolveOpenPackageExport('core', 'style-sheet'), 'src/style-sheet.ts');
   assertEquals(resolveOpenPackageExport('ui', 'open-card'), 'src/open-card.tsx');
-  assertEquals(resolveOpenPackageExport('protocols', 'build-types'), 'src/build-types.ts');
-  assertEquals(resolveOpenPackageExport('signals', 'framework'), 'src/framework.ts');
-  assertEquals(resolveOpenPackageExport('signals', 'preact-engine'), 'src/preact-engine.ts');
+  assertEquals(resolveOpenPackageExport('protocol', 'build-types'), 'src/build-types.ts');
+  assertEquals(resolveOpenPackageExport('signal', 'framework'), 'src/framework.ts');
+  assertEquals(resolveOpenPackageExport('signal', 'preact-engine'), 'src/preact-engine.ts');
   assertEquals(resolveOpenPackageExport('app', '.'), 'src/index.ts');
   assertEquals(resolveOpenPackageExport('app', 'preact'), 'src/preact.ts');
-  assertEquals(resolveOpenPackageExport('elements', '.'), 'src/index.ts');
+  assertEquals(resolveOpenPackageExport('element', '.'), 'src/index.ts');
 });
 
 Deno.test('resolveOpenPackageExport reports unknown openElement subpaths clearly', () => {
@@ -87,12 +87,12 @@ Deno.test('createOpenJsrPackageResolverPlugin resolves JSR and bare package ids'
     toVirtualOpenPackageId('ui', 'src/open-card.tsx'),
   );
   assertEquals(
-    await resolveId('jsr:@openelement/signals@^0.21/framework'),
-    toVirtualOpenPackageId('signals', 'src/framework.ts'),
+    await resolveId('jsr:@openelement/signal@^0.21/framework'),
+    toVirtualOpenPackageId('signal', 'src/framework.ts'),
   );
   assertEquals(
-    await load(toVirtualOpenPackageId('signals', 'src/framework.ts')),
-    'export const url = "https://jsr.io/@openelement/signals/0.21.9/src/framework.ts";',
+    await load(toVirtualOpenPackageId('signal', 'src/framework.ts')),
+    'export const url = "https://jsr.io/@openelement/signal/0.21.9/src/framework.ts";',
   );
 });
 
@@ -141,8 +141,8 @@ Deno.test('createOpenJsrPackageResolverPlugin resolves retained core packages bu
     toVirtualOpenPackageId('app', 'src/index.ts'),
   );
   assertEquals(
-    await resolveId('@openelement/elements'),
-    toVirtualOpenPackageId('elements', 'src/index.ts'),
+    await resolveId('@openelement/element'),
+    toVirtualOpenPackageId('element', 'src/index.ts'),
   );
   assertEquals(
     await resolveId('@openelement/router'),

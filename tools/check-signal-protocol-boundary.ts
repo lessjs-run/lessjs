@@ -4,10 +4,10 @@ type Failure = {
 };
 
 const failures: Failure[] = [];
-const sourceRoots = ['packages/core/src', 'packages/elements/src'];
+const sourceRoots = ['packages/core/src', 'packages/element/src'];
 const protectedPackageConfigs = [
   'packages/core/deno.json',
-  'packages/elements/deno.json',
+  'packages/element/deno.json',
 ];
 const forbiddenRequiredDeps = ['@preact/signals-core', '@preact/signals'];
 
@@ -43,7 +43,7 @@ for (const root of sourceRoots) {
         failures.push({
           file,
           message:
-            'core must import signal protocol types from @openelement/protocols/signals, not @openelement/signals',
+            'core must import signal protocol types from @openelement/protocol/signals, not @openelement/signal',
         });
       }
     }
@@ -57,7 +57,7 @@ for (const file of protectedPackageConfigs) {
       failures.push({
         file,
         message:
-          `${dep} must not be a required dependency of @openelement/core or @openelement/elements`,
+          `${dep} must not be a required dependency of @openelement/core or @openelement/element`,
       });
     }
   }

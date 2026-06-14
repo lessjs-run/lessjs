@@ -85,7 +85,7 @@ export interface CacheAdapter<Value = unknown> {
 ```
 
 These shapes are illustrative until v0.37.5 codifies the minimal accepted
-interfaces in `@openelement/protocols`.
+interfaces in `@openelement/protocol`.
 
 ## Product Position
 
@@ -125,7 +125,7 @@ identity.
 
 - This is a larger product pivot than a simple `adapter-nitro` experiment.
   It requires roadmap, SOP, docs, and package-boundary updates.
-- `@openelement/protocols` must become a real contract package rather than a
+- `@openelement/protocol` must become a real contract package rather than a
   thin type bucket.
 - The project must avoid exposing Nitro-specific configuration as the primary
   user-facing API too early.

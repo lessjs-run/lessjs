@@ -33,6 +33,6 @@ export { consumeContext, createContext, provideContext } from '../src/signal-con
 export type { Context } from '../src/signal-context.ts';
 
 // ── Cross-package (signals, style-sheet) ───────────────────────────
-export { computed, effect, signal } from '../../signals/src/framework.ts';
+export { computed, effect, signal } from '../../signal/src/framework.ts';
 export { StyleSheet } from '../src/style-sheet.ts';
 export type { StyleSheetLike } from '../src/style-sheet.ts';

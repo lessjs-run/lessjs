@@ -298,7 +298,7 @@ export class RoadmapPage extends DsdElement {
             </div>
             <div class="phase">
               <div class="version">v0.37.5</div>
-              <div><h3>Protocol Ports + DaisyUI Coverage Completion</h3><p>Complete interactive UI coverage and move public protocol types into @openelement/protocols with conformance tests.</p></div>
+              <div><h3>Protocol Ports + DaisyUI Coverage Completion</h3><p>Complete interactive UI coverage and move public protocol types into @openelement/protocol with conformance tests.</p></div>
               <span class="badge badge-warning status">Planned</span>
             </div>
             <div class="phase">

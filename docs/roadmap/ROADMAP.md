@@ -1,9 +1,9 @@
 # openElement Roadmap
 
 > Source of truth for forward version planning.\
-> Current package line: v0.40.0 Elements + Preact + Repository Slimming; v0.40.x cleanup train targets 11 packages.\
+> Current package line: v0.40.0 Elements + Preact + Repository Slimming; 12-package cleanup train consolidated into v0.40.0.\
 > Active version plan: docs/current/VERSION_PLAN.md.\
-> Updated: 2026-06-13.
+> Updated: 2026-06-14.
 
 Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`.
 
@@ -16,7 +16,7 @@ openElement = Elements + UI + Framework + Protocols
 ```
 
 Elements is the native Web Components authoring surface. Its public surface is
-`@openelement/elements` and `OpenElement`, competing with Lit and FAST while
+`@openelement/element` and `OpenElement`, competing with Lit and FAST while
 keeping shadow/DSD as the default render mode and explicit light DOM opt-in.
 UI is the first-party `open-*` component library built on the Elements model.
 Framework is the application layer powered by Vite + Nitro. Protocols is the
@@ -29,37 +29,37 @@ application framework identity, with shadow/DSD as the default render mode and
 light DOM as first-class opt-in.
 
 Vite + Nitro remain default Framework engines, not first-class products.
-`@openelement/core`, `@openelement/adapter-vite`, `@openelement/signals`, and
+`@openelement/core`, `@openelement/adapter-vite`, `@openelement/signal`, and
 advanced feature packages support the four products without replacing them.
 
 ## Version Ladder
 
-| Version | Name                                               | Goal                                                                                                                 | Status                   |
-| ------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| v0.30.x | Contract cleanup                                   | Architecture and package contract cleanup                                                                            | Done                     |
-| v0.31.0 | JSX-first Application API                          | App authoring API, `/vite` config split, docs/template DX                                                            | Done                     |
-| v0.32.0 | App Lifecycle Contract                             | Route, load, context, layout, error, redirect lifecycle                                                              | Done                     |
-| v0.33.0 | AI-Readable API Foundation                         | Structured page, island, head, route, and render intent APIs                                                         | Done                     |
-| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Workflow state, cells, evidence ledger, allowed-action report                                                        | Done                     |
-| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Harness Gate, Cell Execution, Evolution Loop, full-auto evidence                                                     | Done                     |
-| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Rendering runtime evidence, docs, ISR, SSG Phase 1, parallel SSG, AutoFlow cell base                                 | Done with deferred items |
-| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Windows-safe AutoFlow tests, real merged cell metrics, release truth alignment                                       | Done                     |
-| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell                  | Done                     |
-| v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite                        | Done                     |
-| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate                            | Done                     |
-| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                                   | Done                     |
-| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                            | Done                     |
-| v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                                              | Done                     |
-| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                       | Done                     |
-| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                                           | Done                     |
-| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate | Done / JSR caveat        |
-| v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocols the replacement boundary and define Vite + Nitro as the default base engine              | Done                     |
-| v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro            | Done                     |
-| v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                | Done                     |
-| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff            | Done                     |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, and collapse root/docs/Hub/package/gate shape toward 11 packages     | Active                   |
-| v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                | Planned                  |
-| v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                         | Vision                   |
+| Version | Name                                               | Goal                                                                                                                                                             | Status                   |
+| ------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| v0.30.x | Contract cleanup                                   | Architecture and package contract cleanup                                                                                                                        | Done                     |
+| v0.31.0 | JSX-first Application API                          | App authoring API, `/vite` config split, docs/template DX                                                                                                        | Done                     |
+| v0.32.0 | App Lifecycle Contract                             | Route, load, context, layout, error, redirect lifecycle                                                                                                          | Done                     |
+| v0.33.0 | AI-Readable API Foundation                         | Structured page, island, head, route, and render intent APIs                                                                                                     | Done                     |
+| v0.34.0 | AutoFlow2 Sidecar Kernel                           | Workflow state, cells, evidence ledger, allowed-action report                                                                                                    | Done                     |
+| v0.35.x | AutoFlow2 Mechanical Autonomy                      | Harness Gate, Cell Execution, Evolution Loop, full-auto evidence                                                                                                 | Done                     |
+| v0.36.0 | Rendering Runtime, Deployment & Deferred Refactors | Rendering runtime evidence, docs, ISR, SSG Phase 1, parallel SSG, AutoFlow cell base                                                                             | Done with deferred items |
+| v0.36.1 | AutoFlow Closure & v0.36 Release Truth             | Windows-safe AutoFlow tests, real merged cell metrics, release truth alignment                                                                                   | Done                     |
+| v0.36.2 | SSG Bridge Migration + Rendering Evidence Closure  | Move Vite-free SSG render/postprocess code into `@openelement/ssg`; keep adapter-vite as Vite shell                                                              | Done                     |
+| v0.36.3 | Complete SSG File Ownership Migration              | Move route scanner, entry generator, Vite plugin, generated data resolver out of adapter-vite                                                                    | Done                     |
+| v0.36.4 | Firefox/WebKit Cross-Browser Proof                 | Resolve Firefox/WebKit timeout and behavior differences; establish cross-browser E2E gate                                                                        | Done                     |
+| v0.36.5 | Release Truth and AutoFlow Closure                 | Align workflow, release docs, AutoFlow evidence, and website truth                                                                                               | Done                     |
+| v0.37.0 | Product Doctrine + Rendering Contract Reset        | ADR-0091, default 0JS doctrine, DSD/shadow default, light opt-in terms, v0.37.x SOP split                                                                        | Done                     |
+| v0.37.1 | DsdElement Shadow + Light Contract                 | Explicit DsdElement light DOM opt-in with SSR/CSR proof                                                                                                          | Done                     |
+| v0.37.2 | SSR / ISR Server Runtime Contract                  | Request-time SSR/ISR runtime boundary, cache contract, server adapter evidence                                                                                   | Done                     |
+| v0.37.3 | Data / Database Boundary                           | Data/database adapter contracts and recipes without built-in ORM ownership                                                                                       | Done                     |
+| v0.37.4 | Hygiene + Pure CSS UI + Architecture Decoupling    | Close code-quality debt, pure CSS UI, ui/router decoupling, dsd-hydration dedup, test supplementation, autoflow:gate                                             | Done / JSR caveat        |
+| v0.37.5 | Protocol-First Runtime Architecture                | Make @openelement/protocol the replacement boundary and define Vite + Nitro as the default base engine                                                           | Done                     |
+| v0.37.6 | Vite + Nitro Runtime Proof                         | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro                                                        | Done                     |
+| v0.38.0 | Product Surface Reset and Hardening                | Public package/API/product surface reset based on protocol and Nitro runtime evidence                                                                            | Done                     |
+| v0.39.0 | Framework RC + Four-Product Matrix Reset           | ADR-0099, public docs integrity, Elements direction, starter/deploy/consumer gates, Preact island handoff                                                        | Done                     |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Productize `OpenElement`, prove Preact islands, collapse to 12 packages, singular public names, 0 explicit any, AutoFlow3-only governance, SSG engine extraction | Done (local)             |
+| v0.41.0 | v1.0 Freeze Candidate                              | Freeze public APIs, complete protocol conformance, harden UI scope, migration docs, and release gates                                                            | Planned                  |
+| v1.0.0  | Stable Four-Product Platform                       | API freeze for elements, UI, protocol, and framework with workflow evidence in release gates                                                                     | Vision                   |
 
 ## v0.36.0 - Rendering Runtime, Deployment & Deferred Refactors
 
@@ -223,7 +223,7 @@ local gates, AutoFlow evidence, and non-JSR CI were correct.
 
 ## v0.37.5 - Protocol-First Runtime Architecture
 
-Make `@openelement/protocols` the real replacement boundary and accept
+Make `@openelement/protocol` the real replacement boundary and accept
 ADR-0096: Protocol-First Vite + Nitro Runtime Architecture. ADR-0098 defines
 the EntryDescriptor route manifest contract required before Nitro can consume
 route semantics without importing SSG implementation modules.
@@ -237,7 +237,7 @@ Core work:
 
 - move or re-export runtime-free renderer, component adapter, route manifest,
   island, signal, data, runtime adapter, cache, and storage contracts into
-  `@openelement/protocols`;
+  `@openelement/protocol`;
 - add conformance test entry points such as `runRendererConformance(impl)`;
 - write the EntryDescriptor / route manifest ADR before route protocol
   migration;
@@ -306,7 +306,7 @@ Prove the first composed framework path after the preceding contracts exist.
 - verify static zero-JS output, explicit islands, SSR/ISR evidence, data recipe
   boundaries, and CSS UI integration;
 - verify adapter-lit passes protocol conformance suites using only
-  `@openelement/protocols` imports (protocol layer proof);
+  `@openelement/protocol` imports (protocol layer proof);
 - keep the smoke narrow enough to be repeatable in local and CI gates.
 
 ## v0.38.x - Product Surface Reset and Hardening
@@ -326,7 +326,7 @@ Governance convergence before v0.38 exit:
   publishing/distribution options in the release design.
 
 ADR-0099 supersedes the v0.38 candidate package-name deferral for future work.
-It approves the four-product matrix and the future `@openelement/elements`
+It approves the four-product matrix and the future `@openelement/element`
 product name, while leaving package implementation for v0.39 follow-up tasks.
 
 ## v0.39.0 - Framework RC + Four-Product Matrix Reset
@@ -362,13 +362,13 @@ v0.40.0 has two equal exit requirements:
 
 The product-surface jobs are:
 
-- create the real Elements product surface around `@openelement/elements` and
+- create the real Elements product surface around `@openelement/element` and
   `OpenElement`, with migration notes instead of a long-term public
   `DsdElement` alias;
 - add Preact as the only heavy-framework island priority, reflecting the
   Fresh/Deno lineage without making Preact the identity of openElement;
 - evaluate `@preact/signals-core` as a `SignalEngine` implementation candidate
-  behind `@openelement/signals` and `@openelement/protocols/signals`
+  behind `@openelement/signal` and `@openelement/protocol/signals`
   conformance, not as an immediate default-engine swap.
 
 The Repository Slimming jobs are:
@@ -386,10 +386,10 @@ The Repository Slimming jobs are:
 
 Current implementation removes Hub/RPC/CEM/compat-check/interop adapter
 packages and collapses standalone runtime/style-sheet/ssg packages into the
-11-package surface. Workflows stay at four active files, active docs stay at
+12-package surface. Workflows stay at four active files, active docs stay at
 current truth plus ADR, roadmap/status, release evidence, and archive index,
-and `deno task package-surface:check` verifies the 11-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
-matrix. ADR-0102 also adds `@openelement/elements` as the first-class Elements
+and `deno task package-surface:check` verifies the 12-package surface. Nitro Node and Workers proofs remain part of the v0.40 gate
+matrix. ADR-0102 also adds `@openelement/element` as the first-class Elements
 package.
 
 The v0.40 non-goals are explicit: Hub remains frozen, Vue/React/Svelte island

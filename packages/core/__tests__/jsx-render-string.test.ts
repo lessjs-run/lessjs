@@ -8,7 +8,7 @@
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 
 Deno.test('renderDsdTree renders text', async () => {
   assertEquals(await renderDsdTree('hello'), 'hello');

@@ -7,8 +7,8 @@
  * @module @openelement/core/signal-context
  */
 
-import type { WritableSignal } from '@openelement/protocols/signals';
-import { signal } from '@openelement/signals';
+import type { WritableSignal } from '@openelement/protocol/signals';
+import { signal } from '@openelement/signal';
 
 export interface Context<T> {
   key: symbol;

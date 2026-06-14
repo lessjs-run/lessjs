@@ -78,7 +78,7 @@ order: 40
     </p>
     <open-code-block><pre><code>// app/islands/my-counter.ts
 
-import from '@openelement/elements';
+import from '@openelement/element';
 
 export const tagName = 'my-counter';
 

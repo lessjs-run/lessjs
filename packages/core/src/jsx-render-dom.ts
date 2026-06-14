@@ -13,7 +13,7 @@ import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
 import { trustRenderHtml } from './security.ts';
-import { effect } from '@openelement/signals';
+import { effect } from '@openelement/signal';
 import { createLogger } from './logger.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';

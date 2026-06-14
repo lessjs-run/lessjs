@@ -51,7 +51,7 @@ jobs:
       - name: Publish to JSR (missing versions only)
         run: deno run --allow-read --allow-run --allow-net tools/run-package-graph-task.ts publish
 
-  # SOP-013: Post-Publish Consumer Smoke Test
+  # Post-Publish Consumer Smoke Test
   # Verifies that freshly published JSR packages form a complete, buildable
   # consumer project. This is the final release gate - it catches problems that
   # pre-publish testing cannot because the new version does not yet exist on JSR.

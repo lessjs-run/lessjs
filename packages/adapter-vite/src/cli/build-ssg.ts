@@ -25,13 +25,13 @@ import type {
   OpenElementPackageManifest,
 } from '@openelement/core';
 import type { OpenElementBuildContext } from '../build-context.js';
-import { ssgRender, type SsgRenderOptions } from '../ssg/index.ts';
+import { ssgRender, type SsgRenderOptions } from '@openelement/ssg';
 import { SsrRenderError } from '@openelement/core/errors';
 import { createLogger } from '@openelement/core/logger';
 import { createSsgRenderEvidence } from './ssg-render.js';
-import { createGeneratedDataResolverPlugin } from '../ssg/index.ts';
-import { createOpenJsrPackageResolverPlugin } from '../ssg/index.ts';
-import { generateSsrPolyfillBanner, resolveExternalManifest } from '../ssg/index.ts';
+import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js';
+import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
+import { generateSsrPolyfillBanner, resolveExternalManifest } from '@openelement/ssg';
 import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
 
 const log = createLogger('ssg');
@@ -109,7 +109,7 @@ interface BuildSSGOptions {
   middleware?: FrameworkOptions['middleware'];
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
-  islandMeta?: Record<string, Partial<import('../ssg/index.ts').IslandDecl>>;
+  islandMeta?: Record<string, Partial<import('@openelement/ssg').IslandDecl>>;
   packageManifests?: OpenElementPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
@@ -134,7 +134,7 @@ interface BuildSSGOptions {
    * Enables browser prefetch/prerender of pages before the user navigates.
    * Can be a boolean (true = auto-generate from routes) or explicit rules.
    */
-  speculation?: boolean | import('../ssg/index.ts').SpeculationRulesOptions;
+  speculation?: boolean | import('@openelement/ssg').SpeculationRulesOptions;
   /** ADR-0047: Skip Deno pre-resolution, use regex fallback for external deps. */
   skipPreResolution?: boolean;
 }
@@ -185,14 +185,14 @@ async function buildSSG(
 
   // Generate SSG entry code
   const { scanRoutes, scanIslands, scanIslandMeta, fileToTagName } = await import(
-    '../ssg/index.ts'
+    '@openelement/ssg'
   );
-  const { generateHonoEntryCode } = await import('../ssg/index.ts');
+  const { generateHonoEntryCode } = await import('@openelement/ssg');
 
   const routes = await scanRoutes(routesDir);
 
   // v0.25.0: Generate type-safe route parameter declarations for `virtual:open-routes`
-  const { generateRouteTypes } = await import('../ssg/index.ts');
+  const { generateRouteTypes } = await import('@openelement/ssg');
   const routeTypeDts = generateRouteTypes(routes);
   const dotOpenElementDir = join(root, '.openElement');
   mkdirSync(dotOpenElementDir, { recursive: true });
@@ -207,7 +207,7 @@ async function buildSSG(
   const ssgIslandMeta = Object.keys(islandMeta).length > 0
     ? islandMeta
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
-  const { buildEntryDescriptor } = await import('../ssg/index.ts');
+  const { buildEntryDescriptor } = await import('@openelement/ssg');
 
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,
@@ -217,7 +217,7 @@ async function buildSSG(
     islandFiles: ssgIslandFiles,
     islandMeta: ssgIslandMeta,
     packageManifests,
-    hubClientOnlyTags: [],
+    clientOnlyTags: [],
     appShell,
     layouts,
   }).ssrAdmissionPlan;
@@ -235,7 +235,7 @@ async function buildSSG(
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
     upgradeStrategy: options.upgradeStrategy || 'idle',
-    hubClientOnlyTags: [],
+    clientOnlyTags: [],
     appShell,
     layouts,
   });
@@ -253,7 +253,7 @@ async function buildSSG(
     // to fail and the entire SSG pipeline to produce empty HTML.
     const defaultNoExternal = [
       /^@openelement\//,
-      // alien-signals is a hard dependency of @openelement/signals.
+      // alien-signals is a hard dependency of @openelement/signal.
       // Without noExternal, it leaks as a bare import that Deno can resolve
       // locally (via workspace import map) but CF Pages cannot.
       'alien-signals',

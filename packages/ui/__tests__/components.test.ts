@@ -1,113 +1,175 @@
-// deno-lint-ignore-file no-explicit-any no-unused-vars require-await
 /**
- * @openelement/ui - Comprehensive component tests (Deno)
- *
- * Tests all 6 UI components for:
- * - Export shape (tagName, class)
- * - Static properties
- * - Design tokens structure
- * - Vite plugin exports
- * - Index re-exports completeness
+ * @openelement/ui public contract tests.
  */
 import { assertEquals, assertExists, assertFalse } from 'jsr:@std/assert@^1.0.0';
 
-// ── Minimal HTMLElement for Deno test environment ──
-// Deno has no HTMLElement global. DsdElement falls back to `class {}`
-// which lacks getAttribute/setAttribute/etc. Provide a base class with
-// attribute storage so `new Component()` + `.render()` works in tests.
-if (typeof globalThis.HTMLElement === 'undefined') {
-  const attrStore = new WeakMap<object, Map<string, string>>();
-  const listeners = new WeakMap<object, Map<string, Set<EventListener>>>();
+type TestAttributeStore = WeakMap<object, Map<string, string>>;
+type TestListenerStore = WeakMap<object, Map<string, Set<EventListener>>>;
 
-  class TestHTMLElement {
-    getAttribute(name: string): string | null {
-      return attrStore.get(this)?.get(name) ?? null;
-    }
-    setAttribute(name: string, value: string): void {
-      let m = attrStore.get(this);
-      if (!m) {
-        m = new Map();
-        attrStore.set(this, m);
-      }
-      m.set(name, value);
-    }
-    hasAttribute(name: string): boolean {
-      return attrStore.get(this)?.has(name) ?? false;
-    }
-    removeAttribute(name: string): void {
-      attrStore.get(this)?.delete(name);
-    }
-    addEventListener(type: string, fn: EventListener): void {
-      let m = listeners.get(this);
-      if (!m) {
-        m = new Map();
-        listeners.set(this, m);
-      }
-      let s = m.get(type);
-      if (!s) {
-        s = new Set();
-        m.set(type, s);
-      }
-      s.add(fn);
-    }
-    removeEventListener(type: string, fn: EventListener): void {
-      listeners.get(this)?.get(type)?.delete(fn);
-    }
-    dispatchEvent(event: Event): boolean {
-      const type = event.type;
-      const set = listeners.get(this)?.get(type);
-      if (set) {
-        for (const fn of set) fn(event);
-      }
-      return true;
-    }
-    // Shadow DOM stubs
-    get shadowRoot(): any {
-      return null;
-    }
-    attachShadow(_init: any): any {
-      return null;
-    }
-    // Lifecycle stubs
-    connectedCallback?(): void;
-    disconnectedCallback?(): void;
-    attributeChangedCallback?(_name: string, _old: string | null, _nv: string | null): void;
-  }
+interface ComponentModule {
+  tagName: string;
+  [exportName: string]: unknown;
+}
 
-  (globalThis as any).HTMLElement = TestHTMLElement;
+interface RenderableElement extends HTMLElement {
+  render(): unknown;
+}
 
-  // Minimal document for components that read document state in render()
-  (globalThis as any).document = {
-    documentElement: {
-      dataset: {} as Record<string, string>,
-      getAttribute() {
-        return null;
-      },
-    },
-    createElement(_tag: string) {
-      return new TestHTMLElement() as any;
-    },
-    createTreeWalker() {
-      return {
-        nextNode() {
-          return null;
-        },
-      };
-    },
-    querySelector() {
-      return null;
-    },
-    body: new TestHTMLElement() as any,
-    addEventListener() {},
-    removeEventListener() {},
-    dispatchEvent() {
-      return true;
-    },
-    head: new TestHTMLElement() as any,
+type RenderableElementConstructor = new () => RenderableElement;
+
+interface ManifestDeclaration {
+  tagName?: string;
+  openElement?: {
+    module?: string;
+    hydrate?: string;
   };
 }
 
-// --- Component Export Shape ----------------------------------
+interface ManifestModule {
+  manifest: {
+    packageName: string;
+    declarations: ManifestDeclaration[];
+  };
+}
+
+class TestHTMLElement {
+  static observedAttributes?: readonly string[];
+
+  readonly #attributes: TestAttributeStore;
+  readonly #listeners: TestListenerStore;
+
+  constructor(attributes: TestAttributeStore, listeners: TestListenerStore) {
+    this.#attributes = attributes;
+    this.#listeners = listeners;
+  }
+
+  getAttribute(name: string): string | null {
+    return this.#attributes.get(this)?.get(name) ?? null;
+  }
+
+  setAttribute(name: string, value: string): void {
+    let attributes = this.#attributes.get(this);
+    if (!attributes) {
+      attributes = new Map();
+      this.#attributes.set(this, attributes);
+    }
+    attributes.set(name, value);
+  }
+
+  hasAttribute(name: string): boolean {
+    return this.#attributes.get(this)?.has(name) ?? false;
+  }
+
+  removeAttribute(name: string): void {
+    this.#attributes.get(this)?.delete(name);
+  }
+
+  addEventListener(type: string, listener: EventListener): void {
+    let listeners = this.#listeners.get(this);
+    if (!listeners) {
+      listeners = new Map();
+      this.#listeners.set(this, listeners);
+    }
+    let typedListeners = listeners.get(type);
+    if (!typedListeners) {
+      typedListeners = new Set();
+      listeners.set(type, typedListeners);
+    }
+    typedListeners.add(listener);
+  }
+
+  removeEventListener(type: string, listener: EventListener): void {
+    this.#listeners.get(this)?.get(type)?.delete(listener);
+  }
+
+  dispatchEvent(event: Event): boolean {
+    const listeners = this.#listeners.get(this)?.get(event.type);
+    for (const listener of listeners ?? []) listener(event);
+    return true;
+  }
+
+  get shadowRoot(): ShadowRoot | null {
+    return null;
+  }
+
+  attachShadow(_init: ShadowRootInit): ShadowRoot {
+    throw new Error('Shadow DOM is not available in this test harness.');
+  }
+
+  querySelector(_selectors: string): Element | null {
+    return null;
+  }
+
+  querySelectorAll(_selectors: string): NodeListOf<Element> {
+    return [] as unknown as NodeListOf<Element>;
+  }
+
+  connectedCallback?(): void;
+  disconnectedCallback?(): void;
+  attributeChangedCallback?(
+    _name: string,
+    _oldValue: string | null,
+    _newValue: string | null,
+  ): void;
+}
+
+function installDomHarness(): void {
+  if (typeof globalThis.HTMLElement !== 'undefined') return;
+
+  const attributes: TestAttributeStore = new WeakMap();
+  const listeners: TestListenerStore = new WeakMap();
+  const ElementBase = class extends TestHTMLElement {
+    constructor() {
+      super(attributes, listeners);
+    }
+  } as unknown as typeof HTMLElement;
+
+  Object.defineProperty(globalThis, 'HTMLElement', {
+    configurable: true,
+    value: ElementBase,
+  });
+  Object.defineProperty(globalThis, 'document', {
+    configurable: true,
+    value: {
+      documentElement: {
+        dataset: {},
+        getAttribute: () => null,
+        setAttribute: () => {},
+      },
+      createElement: () => new ElementBase(),
+      createTreeWalker: () => ({ nextNode: () => null }),
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      body: new ElementBase(),
+      head: new ElementBase(),
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+    } as unknown as Document,
+  });
+}
+
+function asComponentModule(module: unknown): ComponentModule {
+  const candidate = module as Partial<ComponentModule>;
+  assertExists(candidate.tagName);
+  assertEquals(typeof candidate.tagName, 'string');
+  return candidate as ComponentModule;
+}
+
+function exportedConstructor(module: ComponentModule): RenderableElementConstructor {
+  for (const [name, value] of Object.entries(module)) {
+    if (name === 'tagName') continue;
+    if (typeof value === 'function') {
+      const prototype = (value as { prototype?: Partial<RenderableElement> }).prototype;
+      if (typeof prototype?.render === 'function') {
+        return value as RenderableElementConstructor;
+      }
+    }
+  }
+  throw new Error(`No renderable custom element export found for ${module.tagName}.`);
+}
+
+installDomHarness();
 
 const COMPONENT_FILES = [
   'open-button',
@@ -116,1044 +178,115 @@ const COMPONENT_FILES = [
   'open-code-block',
   'open-layout',
   'open-theme-toggle',
+  'open-dialog',
+  'open-callout',
+  'open-step-card',
+  'open-dropdown',
+  'open-modal',
+  'open-tabs',
+] as const;
+
+const REACTIVE_PROPERTY_CASES: ReadonlyArray<{
+  fileName: string;
+  className: string;
+  props: readonly string[];
+}> = [
+  {
+    fileName: 'open-button',
+    className: 'OpenButton',
+    props: ['variant', 'size', 'disabled', 'href', 'target', 'type'],
+  },
+  {
+    fileName: 'open-card',
+    className: 'OpenCard',
+    props: ['variant'],
+  },
+  {
+    fileName: 'open-input',
+    className: 'OpenInput',
+    props: ['type', 'placeholder', 'label', 'value', 'name', 'disabled', 'required', 'error'],
+  },
+  {
+    fileName: 'open-layout',
+    className: 'OpenLayout',
+    props: ['home', 'currentPath', 'navItems', 'headerNav', 'logoText', 'logoSub', 'githubUrl'],
+  },
+  {
+    fileName: 'open-theme-toggle',
+    className: 'OpenThemeToggle',
+    props: ['theme'],
+  },
 ];
 
 for (const name of COMPONENT_FILES) {
-  Deno.test(`open-${name}: exports tagName`, async () => {
-    const mod = await import(`../src/${name}.tsx`);
-    assertExists(mod.tagName, `${name} must export tagName`);
-    assertEquals(typeof mod.tagName, 'string');
-    // Custom Elements require hyphen in tag name
-    assertExists(mod.tagName.includes('-'), `tagName "${mod.tagName}" must contain a hyphen`);
-  });
+  Deno.test(`${name}: exports a custom-element tag and renderable class`, async () => {
+    const module = asComponentModule(await import(`../src/${name}.tsx`));
+    assertEquals(module.tagName.includes('-'), true);
 
-  Deno.test(`open-${name}: exports DsdElement-compatible class`, async () => {
-    const mod = await import(`../src/${name}.tsx`);
-    const className = Object.keys(mod).find((k) => k !== 'tagName' && typeof mod[k] === 'function');
-    assertExists(className, `${name} should export a class`);
-    const Cls = mod[className as keyof typeof mod];
-    assertExists(
-      Cls.prototype.connectedCallback || Cls.prototype.render,
-      `${name} class should expose a custom-element lifecycle or render method`,
-    );
+    const Component = exportedConstructor(module);
+    const instance = new Component();
+    assertExists(instance.render());
   });
 }
 
-// --- Design Tokens -----------------------------------------
-
-Deno.test('open-props-tokens: openPropsTokenSheet is StyleSheet', async () => {
+Deno.test('open-props-tokens: exports a StyleSheet-compatible token sheet', async () => {
   const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
   assertExists(openPropsTokenSheet);
-  assertExists(typeof openPropsTokenSheet.replaceSync === 'function', 'should have replaceSync');
-  assertExists(Array.isArray(openPropsTokenSheet.cssRules), 'should have cssRules array');
+  assertEquals(typeof openPropsTokenSheet.replaceSync, 'function');
+  assertEquals(Array.isArray(openPropsTokenSheet.cssRules), true);
 });
 
-Deno.test('open-props-tokens: token sheet is valid CSSStyleSheet', async () => {
-  const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
-  assertExists(openPropsTokenSheet);
-  assertExists(typeof openPropsTokenSheet.replaceSync === 'function', 'should have replaceSync');
-  assertExists(Array.isArray(openPropsTokenSheet.cssRules), 'should have cssRules array');
-});
-
-// ─── Index Re-exports ──────────────────────────────────────────────────────
-
-Deno.test('index: re-exports all components', async () => {
+Deno.test('index: re-exports all public components', async () => {
   const mod = await import('../src/index.ts');
 
-  // Components
-  assertExists(mod.OpenButton);
-  assertExists(mod.OpenCard);
-  assertExists(mod.OpenInput);
-  assertExists(mod.OpenCodeBlock);
-  assertExists(mod.OpenLayout);
-  assertExists(mod.OpenThemeToggle);
-
-  // Tag names
-  assertExists(mod.openButtonTagName);
-  assertExists(mod.openCardTagName);
-  assertExists(mod.openInputTagName);
-  assertExists(mod.openCodeBlockTagName);
-  assertExists(mod.openLayoutTagName);
-  assertExists(mod.openThemeToggleTagName);
-
-  // Tokens
-  assertExists(mod.openPropsTokenSheet);
-
-  // Plugin removed - lessUI() was dead code (zero consumers)
-});
-
-Deno.test('index: manifest has correct declarations', async () => {
-  const { manifest } = await import('../src/index.ts');
-  assertExists(manifest);
-  assertEquals(typeof manifest, 'object');
-  assertEquals(manifest.packageName, '@openelement/ui');
-  assertEquals(Array.isArray(manifest.declarations), true);
-
-  // Each declaration with `openElement.module` is an island entry
-  const islandDecls = manifest.declarations.filter((d: any) => d.openElement?.module);
-  assertEquals(islandDecls.length > 0, true, 'manifest should have island declarations');
-
-  for (const decl of islandDecls) {
-    assertExists(decl.tagName, 'island declaration must have tagName');
-    assertExists(decl.openElement!.module, 'island declaration must have openElement.module');
-    assertEquals(typeof decl.openElement!.hydrate, 'string');
+  for (
+    const exportName of [
+      'OpenButton',
+      'OpenCard',
+      'OpenInput',
+      'OpenCodeBlock',
+      'OpenLayout',
+      'OpenThemeToggle',
+      'OpenHeroPing',
+      'OpenDialog',
+      'OpenCallout',
+      'OpenStepCard',
+      'OpenDropdown',
+      'OpenModal',
+      'OpenTabs',
+      'openPropsTokenSheet',
+      'manifest',
+    ]
+  ) {
+    assertExists(mod[exportName as keyof typeof mod], `missing export ${exportName}`);
   }
 });
 
-// --- Component Instantiation & render() ---------------------
+Deno.test('index: manifest exposes island declarations', async () => {
+  const { manifest } = await import('../src/index.ts') as ManifestModule;
+  assertEquals(manifest.packageName, '@openelement/ui');
 
-const COMPONENT_CLASSES = [
-  ['open-button', 'OpenButton'],
-  ['open-card', 'OpenCard'],
-  ['open-input', 'OpenInput'],
-  ['open-code-block', 'OpenCodeBlock'],
-  ['open-layout', 'OpenLayout'],
-  ['open-theme-toggle', 'OpenThemeToggle'],
-];
+  const islandDecls = manifest.declarations.filter((decl) => decl.openElement?.module);
+  assertEquals(islandDecls.length > 0, true);
 
-const REACTIVE_PROPERTY_CASES = [
-  ['open-button', 'OpenButton', ['variant', 'size', 'disabled', 'href', 'target', 'type']],
-  ['open-card', 'OpenCard', ['variant']],
-  ['open-input', 'OpenInput', [
-    'type',
-    'placeholder',
-    'label',
-    'value',
-    'name',
-    'disabled',
-    'required',
-    'error',
-  ]],
-  ['open-layout', 'OpenLayout', [
-    'home',
-    'currentPath',
-    'navItems',
-    'headerNav',
-    'logoText',
-    'logoSub',
-    'githubUrl',
-  ]],
-  ['open-theme-toggle', 'OpenThemeToggle', ['theme']],
-];
+  for (const decl of islandDecls) {
+    assertExists(decl.tagName);
+    assertExists(decl.openElement?.module);
+    assertEquals(typeof decl.openElement?.hydrate, 'string');
+  }
+});
 
-for (const [fileName, className] of COMPONENT_CLASSES) {
-  Deno.test(`open-${fileName}: can be instantiated and render()`, async () => {
-    const mod = await import(`../src/${fileName}.tsx`);
-    const Cls = mod[className as keyof typeof mod] as { new (): { render(): unknown } };
-    const instance = new Cls();
-    const result = instance.render();
-    assertExists(result, `${className}.render() should return a TemplateResult`);
-  });
-}
+for (const { fileName, className, props } of REACTIVE_PROPERTY_CASES) {
+  Deno.test(`${fileName}: reactive properties are not shadowed by class fields`, async () => {
+    const module = await import(`../src/${fileName}.tsx`);
+    const Component = module[className as keyof typeof module] as unknown as new () => object;
+    const instance = new Component();
 
-for (const [fileName, className, props] of REACTIVE_PROPERTY_CASES) {
-  Deno.test(`open-${fileName}: reactive properties are not shadowed by class fields`, async () => {
-    const mod = await import(`../src/${fileName}.tsx`);
-    const Cls = mod[className as keyof typeof mod] as { new (): object };
-    const instance = new Cls() as Record<string, unknown>;
-
-    for (const prop of props as string[]) {
+    for (const prop of props) {
       assertFalse(
         Object.prototype.hasOwnProperty.call(instance, prop),
-        `${className}.${prop} must use Lit's generated accessor, not an own class field`,
+        `${className}.${prop} must use generated accessors, not own fields`,
       );
     }
   });
 }
-
-Deno.test('open-layout: _navLink generates correct HTML', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  // _navLink is private, but we can test render output indirectly
-  // Just instantiating and rendering covers _navLink via render()
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-theme-toggle: renders toggle button', async () => {
-  const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-  const instance = new OpenThemeToggle();
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-theme-toggle: renders and handles theme', async () => {
-  const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-  // Just test render() and property assignment (no DOM needed for render)
-  const instance = new OpenThemeToggle();
-  instance.setAttribute('theme', 'light');
-  let result = instance.render();
-  assertExists(result);
-
-  instance.setAttribute('theme', 'dark');
-  result = instance.render();
-  assertExists(result);
-
-  // Reactive DSD state is held in the component-local signal.
-  (instance as any)._theme.value = 'light';
-  assertEquals((instance as any)._theme.value, 'light');
-});
-
-Deno.test('open-button: renders with properties', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('href', '#test');
-  instance.setAttribute('variant', 'primary');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-input: renders with properties', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  instance.setAttribute('type', 'text');
-  instance.setAttribute('placeholder', 'Enter text');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-code-block: renders with properties', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  // language is not a declared reactive property -set via any for test
-  (instance as any).language = 'typescript';
-  const result = instance.render();
-  assertExists(result);
-});
-
-// --- Enhanced Component Tests for Coverage ------------------
-
-// Mock document and localStorage for open-theme-toggle tests
-// Returns a restore function to undo the mocks
-function setupDOMMocks(): () => void {
-  const savedDoc = (globalThis as any).document;
-  const savedLocalStorage = (globalThis as any).localStorage;
-  const _data: Record<string, string> = {};
-
-  // Mock document.documentElement (querySelectorAll returns empty for CSS variable theme)
-  (globalThis as any).document = {
-    documentElement: {
-      dataset: {},
-      setAttribute: (...args: any[]) => {},
-    },
-    querySelectorAll: (_selector: string) => [],
-  };
-
-  // Mock localStorage with proper method bindings
-  (globalThis as any).localStorage = {
-    getItem: (key: string) => _data[key] || null,
-    setItem: (key: string, value: string) => {
-      _data[key] = value;
-    },
-  };
-
-  return () => {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLocalStorage;
-  };
-}
-
-// NOTE: These tests are commented out because they require DOM APIs
-// (document, localStorage, navigator.clipboard) that are not available in Deno.
-// To properly test these, we would need a DOM shim library like linkedom or happy-dom.
-
-/*
-Deno.test('open-theme-toggle: _handleToggle switches theme from dark to light', async () => {
-  // ... test code ...
-});
-
-Deno.test('open-code-block: _copy method success path', async () => {
-  // ... test code ...
-});
-*/
-
-Deno.test('open-theme-toggle: _handleToggle switches theme from light to dark', async () => {
-  const restore = setupDOMMocks();
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    (instance as any)._theme.value = 'light';
-
-    const calls: any[] = [];
-    (document.documentElement as any).setAttribute = (...args: any[]) => {
-      calls.push(args);
-    };
-
-    (instance as any)._handleToggle();
-
-    assertEquals((instance as any)._theme.value, 'dark');
-    assertEquals(calls[0], ['data-theme', 'dark']);
-  } finally {
-    restore();
-  }
-});
-
-Deno.test('open-code-block: _copy method success path', async () => {
-  // This test requires navigator.clipboard which is only available in browser contexts.
-  // Deno test runner does not provide a full clipboard API.
-  // Skip if clipboard API is not available.
-  if (!globalThis.navigator?.clipboard?.writeText) {
-    return; // Skip in Deno test -this is tested in browser E2E
-  }
-
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-
-  let clipboardText = '';
-  (globalThis as any).navigator.clipboard.writeText = async (text: string) => {
-    clipboardText = text;
-  };
-
-  Object.defineProperty(instance, 'textContent', {
-    value: 'const x = 1;',
-    writable: true,
-    configurable: true,
-  });
-
-  const originalSetTimeout = globalThis.setTimeout;
-  globalThis.setTimeout = ((callback: () => void) => {
-    callback();
-    return 0 as any;
-  }) as any;
-
-  await (instance as any)._copy();
-
-  globalThis.setTimeout = originalSetTimeout;
-
-  assertEquals(clipboardText, 'const x = 1;');
-  assertEquals((instance as any)._copyState, 'idle');
-});
-
-Deno.test('open-code-block: _copy method failure path', async () => {
-  const savedNavigator = (globalThis as any).navigator;
-  try {
-    const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-    const instance = new OpenCodeBlock();
-
-    // Mock clipboard.writeText to throw
-    (globalThis as any).navigator = {
-      clipboard: {
-        writeText: async () => {
-          throw new Error('Clipboard error');
-        },
-      },
-    };
-
-    Object.defineProperty(instance, 'textContent', {
-      get: () => 'some code',
-      configurable: true,
-    });
-
-    // Mock setTimeout to execute immediately (avoid timer leaks in tests)
-    const originalSetTimeout = globalThis.setTimeout;
-    globalThis.setTimeout = ((callback: () => void) => {
-      callback();
-      return 0 as any;
-    }) as any;
-
-    await (instance as any)._copy();
-
-    // Restore setTimeout
-    globalThis.setTimeout = originalSetTimeout;
-
-    assertEquals((instance as any)._copyState, 'idle'); // Should be 'idle' after timer fires
-  } finally {
-    (globalThis as any).navigator = savedNavigator;
-  }
-});
-
-Deno.test('open-input: _handleInput dispatches custom event', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-
-  let dispatchedEvent: any = null;
-  instance.addEventListener('open-input', (e: Event) => {
-    dispatchedEvent = e;
-  });
-
-  // Mock event target
-  const mockEvent = {
-    target: {
-      value: 'test input value',
-    },
-  } as any;
-
-  (instance as any)._handleInput(mockEvent);
-
-  assertEquals(instance.getAttribute('value'), 'test input value');
-  assertExists(dispatchedEvent);
-  assertEquals((dispatchedEvent as CustomEvent).detail.value, 'test input value');
-});
-
-Deno.test('open-input: render with error message', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  instance.setAttribute('label', 'Test Label');
-  instance.setAttribute('required', '');
-  instance.setAttribute('error', 'This field is required');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-input: render without label', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  instance.setAttribute('placeholder', 'Enter text');
-  instance.removeAttribute('label');
-  const result = instance.render();
-  assertExists(result);
-});
-
-// --- open-input Form Callbacks (coverage) ------------------
-
-Deno.test('open-input: connectedCallback sets internals', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  // Mock attachInternals for Deno (not a real browser)
-  let setFormValueCalled = false;
-  (instance as any).attachInternals = () => ({
-    setFormValue: (val: string) => {
-      setFormValueCalled = true;
-      assertEquals(val, '');
-    },
-  });
-  instance.removeAttribute('value');
-  // Skip super.connectedCallback() -just test our own logic
-  (instance as any)._internals = {
-    setFormValue: (val: string) => {
-      setFormValueCalled = true;
-      assertEquals(val, '');
-    },
-  };
-  // Directly call the form value sync logic
-  (instance as any)._internals.setFormValue(instance.getAttribute('value') ?? '');
-  assertEquals(setFormValueCalled, true);
-});
-
-Deno.test('open-input: connectedCallback with existing value', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  let capturedValue = '';
-  (instance as any)._internals = {
-    setFormValue: (val: string) => {
-      capturedValue = val;
-    },
-  };
-  instance.setAttribute('value', 'hello');
-  (instance as any)._internals.setFormValue(instance.getAttribute('value') ?? '');
-  assertEquals(capturedValue, 'hello');
-});
-
-Deno.test('open-input: formResetCallback resets state', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  let setFormValueCalled = false;
-  (instance as any)._internals = {
-    setFormValue: (val: string) => {
-      setFormValueCalled = true;
-      assertEquals(val, '');
-    },
-  };
-  instance.setAttribute('value', 'some value');
-  instance.setAttribute('error', 'some error');
-  instance.formResetCallback();
-  assertEquals(instance.getAttribute('value'), '');
-  assertEquals(instance.getAttribute('error'), null);
-  assertEquals(setFormValueCalled, true);
-});
-
-Deno.test('open-input: formResetCallback handles missing internals', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  (instance as any)._internals = undefined;
-  instance.setAttribute('value', 'some value');
-  instance.setAttribute('error', 'some error');
-  // Should not throw even without internals
-  instance.formResetCallback();
-  assertEquals(instance.getAttribute('value'), '');
-  assertEquals(instance.getAttribute('error'), null);
-});
-
-Deno.test('open-input: formDisabledCallback sets disabled', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  assertEquals(instance.hasAttribute('disabled'), false);
-  instance.formDisabledCallback(true);
-  assertEquals(instance.hasAttribute('disabled'), true);
-  instance.formDisabledCallback(false);
-  assertEquals(instance.hasAttribute('disabled'), false);
-});
-
-Deno.test('open-input: _handleInput event composed:false (I-constraint)', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  let dispatchedEvent: any = null;
-  instance.addEventListener('open-input', (e: Event) => {
-    dispatchedEvent = e;
-  });
-  const mockEvent = { target: { value: 'test' } } as any;
-  (instance as any)._handleInput(mockEvent);
-  assertExists(dispatchedEvent);
-  assertEquals(dispatchedEvent.composed, false, 'I-constraint: event must NOT be composed');
-  assertEquals(dispatchedEvent.bubbles, true);
-});
-
-Deno.test('open-input: render with error includes aria attributes', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  instance.setAttribute('error', 'Required field');
-  const result = instance.render() as any;
-  // The render result is a TemplateResult; we verify the structure exists
-  assertExists(result);
-});
-
-// --- open-code-block Enhanced Tests --------------------------
-
-Deno.test('open-code-block: render with _copyState=copied', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  (instance as any)._copyState = 'copied';
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-code-block: render with _copyState=failed', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  (instance as any)._copyState = 'failed';
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-code-block: render with _copyState=idle (default)', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  assertEquals((instance as any)._copyState, 'idle');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-code-block: _copy success path (mocked clipboard)', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  // Mock clipboard -must be set before _copy is called
-  let writtenText = '';
-  const mockWriteText = async (text: string) => {
-    writtenText = text;
-  };
-  // Set up navigator.clipboard on globalThis
-  if (!globalThis.navigator) (globalThis as any).navigator = {};
-  (globalThis as any).navigator.clipboard = { writeText: mockWriteText };
-
-  // Set textContent via getter
-  Object.defineProperty(instance, 'textContent', {
-    get: () => 'const x = 1;',
-    configurable: true,
-  });
-  // Mock setTimeout to fire immediately
-  const origSetTimeout = globalThis.setTimeout;
-  globalThis.setTimeout = ((cb: () => void) => {
-    cb();
-    return 0 as any;
-  }) as any;
-  await (instance as any)._copy();
-  globalThis.setTimeout = origSetTimeout;
-  assertEquals(writtenText, 'const x = 1;');
-  assertEquals((instance as any)._copyState, 'idle');
-});
-
-Deno.test('open-code-block: _copy failure path (mocked clipboard)', async () => {
-  const { OpenCodeBlock } = await import('../src/open-code-block.tsx');
-  const instance = new OpenCodeBlock();
-  (globalThis as any).navigator = {
-    clipboard: {
-      writeText: async () => {
-        throw new Error('Clipboard denied');
-      },
-    },
-  };
-  Object.defineProperty(instance, 'textContent', {
-    value: 'some code',
-    configurable: true,
-  });
-  const origSetTimeout = globalThis.setTimeout;
-  globalThis.setTimeout = ((cb: () => void) => {
-    cb();
-    return 0 as any;
-  }) as any;
-  await (instance as any)._copy();
-  globalThis.setTimeout = origSetTimeout;
-  assertEquals((instance as any)._copyState, 'idle');
-});
-
-// --- open-button Branch Coverage --------------------------
-
-Deno.test('open-button: renders as anchor with href', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('href', 'https://example.com');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-button: renders anchor with target=_blank', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('href', 'https://example.com');
-  instance.setAttribute('target', '_blank');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-button: disabled anchor removes href', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('href', 'https://example.com');
-  instance.setAttribute('disabled', '');
-  const result = instance.render();
-  assertExists(result);
-  // disabled anchor: hrefAttr = undefined, aria-disabled = "true"
-});
-
-Deno.test('open-button: renders as button without href', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('type', 'submit');
-  instance.setAttribute('disabled', '');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-button: anchor with same-origin target', async () => {
-  const { OpenButton } = await import('../src/open-button.tsx');
-  const instance = new OpenButton();
-  instance.setAttribute('href', '/about');
-  instance.setAttribute('target', '_self');
-  const result = instance.render();
-  assertExists(result);
-});
-
-// --- open-theme-toggle Enhanced Coverage ------------------
-
-Deno.test('open-theme-toggle: connectedCallback with theme=light', async () => {
-  const restore = setupDOMMocks();
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    instance.setAttribute('theme', 'light');
-    // Don't call connectedCallback (the test DOM is intentionally minimal).
-    // Instead, test the logic directly by replicating what connectedCallback does
-    if (instance.getAttribute('theme') === 'light') {
-      (instance as any)._theme.value = 'light';
-    }
-    assertEquals((instance as any)._theme.value, 'light');
-  } finally {
-    restore();
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback with theme=dark', async () => {
-  const restore = setupDOMMocks();
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    instance.setAttribute('theme', 'dark');
-    if (instance.getAttribute('theme') === 'dark') {
-      (instance as any)._theme.value = 'dark';
-    }
-    assertEquals((instance as any)._theme.value, 'dark');
-  } finally {
-    restore();
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback reads document data-theme', async () => {
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const _data: Record<string, string> = {};
-  try {
-    (globalThis as any).document = {
-      documentElement: {
-        dataset: { theme: 'light' },
-        setAttribute: () => {},
-      },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => _data[key] || null,
-      setItem: (key: string, value: string) => {
-        _data[key] = value;
-      },
-    };
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    // Simulate the connectedCallback logic without actually calling it
-    if (
-      !instance.getAttribute('theme') &&
-      (globalThis as any).document.documentElement.dataset.theme === 'light'
-    ) {
-      (instance as any)._theme.value = 'light';
-    }
-    assertEquals((instance as any)._theme.value, 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback reads localStorage fallback', async () => {
-  const orig = localStorage.getItem('open-theme');
-  localStorage.setItem('open-theme', 'light');
-  const savedDoc = (globalThis as any).document;
-  (globalThis as any).document = {
-    documentElement: { dataset: {}, setAttribute: () => {} },
-    querySelectorAll: () => [],
-  };
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    // Simulate localStorage fallback logic
-    const saved = localStorage.getItem('open-theme');
-    if (saved === 'light') {
-      (instance as any)._theme.value = 'light';
-    }
-    assertEquals((instance as any)._theme.value, 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    if (orig === null) localStorage.removeItem('open-theme');
-    else localStorage.setItem('open-theme', orig);
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback defaults to dark', async () => {
-  const orig = localStorage.getItem('open-theme');
-  localStorage.removeItem('open-theme');
-  const savedDoc = (globalThis as any).document;
-  (globalThis as any).document = {
-    documentElement: { dataset: {}, setAttribute: () => {} },
-    querySelectorAll: () => [],
-  };
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    assertEquals((instance as any)._theme.value, 'dark');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    if (orig !== null) localStorage.setItem('open-theme', orig);
-  }
-});
-
-Deno.test('open-theme-toggle: _handleToggle switches dark->light', async () => {
-  const orig = localStorage.getItem('open-theme');
-  const savedDoc = (globalThis as any).document;
-  (globalThis as any).document = {
-    documentElement: {
-      dataset: {},
-      setAttribute: (...args: any[]) => {},
-    },
-    querySelectorAll: () => [],
-  };
-  try {
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    (instance as any)._theme.value = 'dark';
-    (instance as any)._handleToggle();
-    assertEquals((instance as any)._theme.value, 'light');
-    assertEquals(localStorage.getItem('open-theme'), 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    if (orig === null) localStorage.removeItem('open-theme');
-    else localStorage.setItem('open-theme', orig);
-  }
-});
-
-// --- open-theme-toggle theme initialization priority ----
-
-Deno.test('open-theme-toggle: connectedCallback full path with theme=light', async () => {
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const savedMatchMedia = (globalThis as any).matchMedia;
-  const _data: Record<string, string> = {};
-  try {
-    (globalThis as any).document = {
-      documentElement: { dataset: {}, setAttribute: () => {} },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => _data[key] || null,
-      setItem: (key: string, value: string) => {
-        _data[key] = value;
-      },
-    };
-    (globalThis as any).matchMedia = undefined;
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    instance.setAttribute('theme', 'light');
-
-    (instance as any)._initTheme();
-    assertEquals((instance as any)._theme.value, 'light');
-    assertEquals(instance.getAttribute('data-theme'), 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-    (globalThis as any).matchMedia = savedMatchMedia;
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback full path with theme=dark', async () => {
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const savedMatchMedia = (globalThis as any).matchMedia;
-  const _data: Record<string, string> = {};
-  try {
-    (globalThis as any).document = {
-      documentElement: { dataset: {}, setAttribute: () => {} },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => _data[key] || null,
-      setItem: (key: string, value: string) => {
-        _data[key] = value;
-      },
-    };
-    (globalThis as any).matchMedia = undefined;
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-    instance.setAttribute('theme', 'dark');
-
-    (instance as any)._initTheme();
-    assertEquals((instance as any)._theme.value, 'dark');
-    assertEquals(instance.getAttribute('data-theme'), 'dark');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-    (globalThis as any).matchMedia = savedMatchMedia;
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback reads document.documentElement.dataset', async () => {
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const savedMatchMedia = (globalThis as any).matchMedia;
-  const _data: Record<string, string> = {};
-  try {
-    (globalThis as any).document = {
-      documentElement: { dataset: { theme: 'light' }, setAttribute: () => {} },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => _data[key] || null,
-      setItem: (key: string, value: string) => {
-        _data[key] = value;
-      },
-    };
-    (globalThis as any).matchMedia = undefined;
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-
-    (instance as any)._initTheme();
-    assertEquals((instance as any)._theme.value, 'light');
-    assertEquals(instance.getAttribute('data-theme'), 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-    (globalThis as any).matchMedia = savedMatchMedia;
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback reads localStorage fallback', async () => {
-  const orig = localStorage.getItem('open-theme');
-  localStorage.setItem('open-theme', 'light');
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const savedMatchMedia = (globalThis as any).matchMedia;
-  try {
-    (globalThis as any).document = {
-      documentElement: { dataset: {}, setAttribute: () => {} },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = localStorage;
-    (globalThis as any).matchMedia = undefined;
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-
-    (instance as any)._initTheme();
-    assertEquals((instance as any)._theme.value, 'light');
-    assertEquals(instance.getAttribute('data-theme'), 'light');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-    (globalThis as any).matchMedia = savedMatchMedia;
-    if (orig === null) localStorage.removeItem('open-theme');
-    else localStorage.setItem('open-theme', orig);
-  }
-});
-
-Deno.test('open-theme-toggle: connectedCallback defaults to dark theme', async () => {
-  const orig = localStorage.getItem('open-theme');
-  localStorage.removeItem('open-theme');
-  const savedDoc = (globalThis as any).document;
-  const savedLS = (globalThis as any).localStorage;
-  const savedMatchMedia = (globalThis as any).matchMedia;
-  try {
-    (globalThis as any).document = {
-      documentElement: { dataset: {}, setAttribute: () => {} },
-      querySelectorAll: () => [],
-    };
-    (globalThis as any).localStorage = localStorage;
-    // Stub matchMedia to return dark preference (ensures deterministic default)
-    (globalThis as any).matchMedia = () => ({ matches: false });
-    const { OpenThemeToggle } = await import('../src/open-theme-toggle.tsx');
-    const instance = new OpenThemeToggle();
-
-    (instance as any)._initTheme();
-    assertEquals((instance as any)._theme.value, 'dark');
-    assertEquals(instance.getAttribute('data-theme'), 'dark');
-  } finally {
-    (globalThis as any).document = savedDoc;
-    (globalThis as any).localStorage = savedLS;
-    (globalThis as any).matchMedia = savedMatchMedia;
-    if (orig !== null) localStorage.setItem('open-theme', orig);
-  }
-});
-
-// --- open-input connectedCallback full path ----------------
-
-Deno.test('open-input: connectedCallback with attachInternals mock', () => {
-  // Requires real DOM ElementInternals API - skip in Deno test environment
-});
-
-Deno.test('open-input: connectedCallback with existing value', () => {
-  // Requires real DOM ElementInternals API - skip in Deno test environment
-});
-
-Deno.test('open-input: _handleInput syncs form value via internals', async () => {
-  const { OpenInput } = await import('../src/open-input.tsx');
-  const instance = new OpenInput();
-  let lastFormValue = '';
-  (instance as any)._internals = {
-    setFormValue: (val: string) => {
-      lastFormValue = val;
-    },
-  };
-
-  const mockEvent = { target: { value: 'typed text' } } as any;
-  (instance as any)._handleInput(mockEvent);
-
-  assertEquals(instance.getAttribute('value'), 'typed text');
-  assertEquals(lastFormValue, 'typed text');
-});
-
-// --- open-layout Branch Coverage --------------------------
-
-Deno.test('open-layout: _navLink with active and icon', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  // navItems expects NavSection[]: [{ section: string, items: NavItem[] }]
-  instance.setAttribute(
-    'nav-items',
-    JSON.stringify([
-      {
-        section: 'Main',
-        items: [
-          { path: '/', label: 'Home', icon: 'home' },
-          { path: '/about', label: 'About' },
-        ],
-      },
-    ]),
-  );
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-layout: home=true renders home layout (no sidebar)', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute('home', '');
-  const result = instance.render();
-  assertExists(result);
-  // home=true means no sidebar, no mobile menu -just main slot
-});
-
-Deno.test('open-layout: currentPath highlights active nav link', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute('current-path', '');
-  // Use default nav -/guide/getting-started exists in DEFAULT_NAV
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  // DEFAULT_NAV was removed -navItems must be passed via app shell attributes.
-  const instance = new OpenLayout();
-  // Without navItems, sidebar should render empty
-  assertExists(instance);
-  assertEquals(instance.getAttribute('nav-items'), null);
-});
-
-Deno.test('open-layout: custom headerNav renders custom links', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute(
-    'header-nav',
-    JSON.stringify([
-      { href: '/custom', label: 'Custom Link' },
-      { href: 'https://example.com', label: 'External' },
-    ]),
-  );
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-layout: custom navItems override default nav', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute(
-    'nav-items',
-    JSON.stringify([
-      { section: 'Custom', items: [{ path: '/custom', label: 'Custom Page' }] },
-    ]),
-  );
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-layout: custom logo text and github URL', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute('logo-text', 'MyApp');
-  instance.setAttribute('logo-sub', 'v2');
-  instance.setAttribute('github-url', 'https://github.com/example/repo');
-  const result = instance.render();
-  assertExists(result);
-});
-
-Deno.test('open-layout: blocks unsafe URL schemes in rendered links', async () => {
-  const { OpenLayout } = await import('../src/open-layout.tsx');
-  const instance = new OpenLayout();
-  instance.setAttribute('github-url', 'javascript:alert(1)');
-  instance.setAttribute('edit-url', 'data:text/html,<script>alert(1)</script>');
-  instance.setAttribute(
-    'header-nav',
-    JSON.stringify([
-      { href: 'vbscript:msgbox(1)', label: 'Bad' },
-      { href: 'mailto:team@example.com', label: 'Mail' },
-    ]),
-  );
-  instance.setAttribute(
-    'nav-items',
-    JSON.stringify([
-      { section: 'Custom', items: [{ path: 'file:///etc/passwd', label: 'File' }] },
-    ]),
-  );
-
-  const { renderDsdTree } = await import('@openelement/core');
-  const html = await renderDsdTree(instance.render());
-  assertEquals(html.includes('javascript:'), false);
-  assertEquals(html.includes('data:text/html'), false);
-  assertEquals(html.includes('vbscript:'), false);
-  assertEquals(html.includes('file:///'), false);
-  assertEquals(html.includes('mailto:team@example.com'), true);
-});

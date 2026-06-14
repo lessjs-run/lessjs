@@ -1,7 +1,7 @@
 import { defineIslandConfig } from '@openelement/app';
 import { defineCustomElement, DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/core/style-sheet';
-import { signal } from '@openelement/signals';
+import { signal } from '@openelement/signal';
 import { consumeContext } from '@openelement/core';
 import { daisyClassSheet, openPropsTokenSheet } from '@openelement/ui';
 import { THEME_CTX } from '@openelement/ui/open-layout';

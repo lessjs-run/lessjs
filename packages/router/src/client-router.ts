@@ -15,6 +15,8 @@ interface NavigationLike extends EventTarget {
   removeEventListener(type: 'navigate', listener: EventListener): void;
 }
 
+import { normalizeLocalePath } from './locale-path.ts';
+
 interface NavigationNavigateEvent extends Event {
   canIntercept: boolean;
   hashChange: boolean;
@@ -290,26 +292,4 @@ export class Router {
       return ['en'];
     }
   }
-}
-
-/**
- * because router publishes to JSR independently and i18n may not be in the dependency graph.
- * 15 lines of duplication is acceptable for independent packages.
- */
-function normalizeLocalePath(
-  pathname: string,
-  options: { locales: string[]; defaultLocale: string },
-): { locale: string; path: string } {
-  const locales = options.locales.length > 0 ? options.locales : [options.defaultLocale];
-  const defaultLocale = locales.includes(options.defaultLocale)
-    ? options.defaultLocale
-    : locales[0];
-  const cleanPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
-  const parts = cleanPath.split('/').filter(Boolean);
-  const first = parts[0];
-  const hasLocalePrefix = first !== undefined && locales.includes(first);
-  return {
-    locale: hasLocalePrefix ? first : defaultLocale,
-    path: '/' + (hasLocalePrefix ? parts.slice(1) : parts).join('/'),
-  };
 }

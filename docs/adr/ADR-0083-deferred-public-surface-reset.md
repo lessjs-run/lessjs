@@ -49,7 +49,7 @@ The target public surface for v0.38 review is:
 
 ```text
 @openelement/protocol    small public interop contracts
-@openelement/elements    DSD-first Custom Element authoring surface
+@openelement/element    DSD-first Custom Element authoring surface
 @openelement/ui          DSD-first UI component library
 @openelement/framework   application framework surface
 @openelement/create      project scaffolding
@@ -64,10 +64,10 @@ separate release cadence:
 @openelement/framework/router
 @openelement/framework/content
 @openelement/framework/i18n
-@openelement/elements/signals
-@openelement/elements/styles
-@openelement/elements/compat/lit
-@openelement/elements/compat/react
+@openelement/element/signals
+@openelement/element/styles
+@openelement/element/compat/lit
+@openelement/element/compat/react
 ```
 
 ## Immediate Governance
@@ -105,8 +105,8 @@ Negative:
 Neutral:
 
 - `@openelement/protocol` is a likely public package, but the current
-  `@openelement/protocols` package is not automatically that contract.
+  `@openelement/protocol` package is not automatically that contract.
 - `signals` remains public API, but its long-term public home should be reviewed
-  as part of `@openelement/elements`.
+  as part of `@openelement/element`.
 - `router` remains framework-owned until it is proven generic enough to stand as
   a separate product.

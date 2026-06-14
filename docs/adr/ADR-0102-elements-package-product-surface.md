@@ -24,7 +24,7 @@ human-approved ADR evidence before implementation.
 
 ## Decision
 
-Add `@openelement/elements` as the first-class Elements package in v0.40.
+Add `@openelement/element` as the first-class Elements package in v0.40.
 
 The package starts as a narrow product facade over the existing implementation:
 
@@ -36,7 +36,7 @@ The package starts as a narrow product facade over the existing implementation:
   ownership.
 
 `@openelement/core` keeps `OpenElement` as a compatibility export for v0.40, but
-first-run docs should teach `@openelement/elements`.
+first-run docs should teach `@openelement/element`.
 
 ## Package Graph Changes
 
@@ -44,12 +44,12 @@ The workspace package count increases from 20 to 21 for v0.40.
 
 Required implementation changes:
 
-- add `packages/elements`;
-- add `@openelement/elements` to root `deno.json` workspace and imports;
+- add `packages/element`;
+- add `@openelement/element` to root `deno.json` workspace and imports;
 - add the package to `RELEASE_PACKAGE_ORDER` after `@openelement/core`;
 - update `PACKAGE_COUNT`;
 - update package graph and package surface checks;
-- add tests proving `OpenElement` import from `@openelement/elements`;
+- add tests proving `OpenElement` import from `@openelement/element`;
 - update README and package docs to prefer Elements for component authoring.
 
 ## Non-Goals
@@ -83,9 +83,9 @@ Required implementation changes:
 ## Acceptance
 
 - `deno task graph:check` passes with 21 packages.
-- `deno task package-surface:check` classifies `@openelement/elements` as
+- `deno task package-surface:check` classifies `@openelement/element` as
   product-facing.
 - `deno task typecheck` checks the new package.
-- Tests prove `OpenElement` can be imported from `@openelement/elements`.
-- README and current docs teach `@openelement/elements` as the first-run
+- Tests prove `OpenElement` can be imported from `@openelement/element`.
+- README and current docs teach `@openelement/element` as the first-run
   Elements surface.

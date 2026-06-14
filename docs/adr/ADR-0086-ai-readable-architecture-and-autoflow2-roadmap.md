@@ -74,7 +74,7 @@ ADR-0083 remains accepted. The v0.38 review still targets a smaller v1 surface:
 
 ```text
 @openelement/protocol
-@openelement/elements
+@openelement/element
 @openelement/ui
 @openelement/framework
 @openelement/create

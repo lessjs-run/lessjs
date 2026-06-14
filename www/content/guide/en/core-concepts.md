@@ -53,12 +53,12 @@ explicit hydration strategy metadata such as `load`, `idle`, `visible`, or
 
 ## Elements And Runtime Primitives
 
-The future Elements product direction is `@openelement/elements` with an
-`OpenElement` base class. Today, `@openelement/elements` remains available for
+The future Elements product direction is `@openelement/element` with an
+`OpenElement` base class. Today, `@openelement/element` remains available for
 low-level library code:
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/elements';
+import { DsdElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 Application routes should normally use `@openelement/app` first.

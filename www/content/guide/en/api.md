@@ -62,10 +62,10 @@ content, and i18n.
 
 - `@openelement/app` and `@openelement/create`: Framework product surface.
 - `@openelement/ui`: first-party UI product surface.
-- `@openelement/protocols`: runtime-free Protocols product surface.
-- Future `@openelement/elements`: Elements product surface with `OpenElement`.
-- `@openelement/elements`: current low-level element, signals, and stylesheet
+- `@openelement/protocol`: runtime-free Protocols product surface.
+- Future `@openelement/element`: Elements product surface with `OpenElement`.
+- `@openelement/element`: current low-level element, signals, and stylesheet
   facade.
 - `@openelement/core`: renderer kernel and JSX runtime.
-- `@openelement/signals`: signal primitives.
+- `@openelement/signal`: signal primitives.
 - `@openelement/core/style-sheet`: CSSStyleSheet abstraction.

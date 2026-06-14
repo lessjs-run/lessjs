@@ -61,8 +61,7 @@ test.describe('Accessibility', () => {
       const hasDelegatesFocus = await page.evaluate(() => {
         const ctor = customElements.get('open-theme-toggle');
         if (!ctor) return false;
-        // deno-lint-ignore no-explicit-any
-        return (ctor as any).delegatesFocus === true;
+        return (ctor as unknown as { delegatesFocus?: boolean }).delegatesFocus === true;
       });
       expect(hasDelegatesFocus).toBe(true);
 

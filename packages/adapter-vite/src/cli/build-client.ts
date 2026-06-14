@@ -17,9 +17,9 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
-import { type ClientIslandEntry, generateClientEntry } from '../ssg/index.ts';
+import { type ClientIslandEntry, generateClientEntry } from '@openelement/ssg';
 import type { OpenElementBuildContext } from '../build-context.js';
-import { createOpenJsrPackageResolverPlugin } from '../ssg/index.ts';
+import { createOpenJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { createLogger } from '@openelement/core/logger';
 
 const log = createLogger('ssg');

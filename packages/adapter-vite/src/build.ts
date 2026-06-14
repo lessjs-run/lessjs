@@ -174,12 +174,12 @@ export function buildPlugin(
                 const base = ctx.phase3.base || '/';
                 const scriptSrc = `${base}client/${entry.file}`;
                 const { buildIslandChunkMap, injectClientScript } = await import(
-                  './ssg/index.ts'
+                  '@openelement/ssg'
                 );
                 const {
                   generateIslandManifests,
                   writeIslandManifests,
-                } = await import('./ssg/index.ts');
+                } = await import('@openelement/ssg');
                 const outputDir = join(root, outDir);
                 injectClientScript(outputDir, scriptSrc);
                 const chunkMap = buildIslandChunkMap(

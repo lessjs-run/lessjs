@@ -301,12 +301,12 @@ hub ──────────────────────? compat-c
             </div>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/elements, @openelement/ui, @openelement/protocols</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
+              <div class="layer"><strong>product surfaces</strong><span>@openelement/create, @openelement/app, @openelement/element, @openelement/ui, @openelement/protocol</span><p>Keep first-run docs focused on app authoring, elements, UI, protocols, and generated projects.</p></div>
               <div class="layer"><strong>advanced build infrastructure</strong><span>@openelement/adapter-vite, @openelement/ssg</span><p>Own Vite plugin assembly, route scanning, generated entries, rendering, and postprocess phases.</p></div>
               <div class="layer"><strong>advanced feature packages</strong><span>content, i18n, router, signals, style-sheet, adapter packages</span><p>Remain public where guides need them, but are not first-run product rows.</p></div>
               <div class="layer"><strong>internal and archived packages</strong><span>cem, compat-check, hub, rpc</span><p>Stay in the package graph for tooling, compatibility, or historical evidence without being presented as v1 products.</p></div>
               <div class="layer"><strong>runtime kernel</strong><span>@openelement/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
-              <div class="layer"><strong>protocols</strong><span>@openelement/protocols</span><p>Own runtime-free shared contracts and conformance shapes.</p></div>
+              <div class="layer"><strong>protocols</strong><span>@openelement/protocol</span><p>Own runtime-free shared contracts and conformance shapes.</p></div>
             </div>
           </section>
 

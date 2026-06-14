@@ -24,10 +24,10 @@ openElement = Elements + UI + Framework + Protocols
 
 | 产品      | Surface                                   | 角色                                                               |
 | --------- | ----------------------------------------- | ------------------------------------------------------------------ |
-| Elements  | `@openelement/elements`, `OpenElement`    | 原生 Web Components authoring facade。                             |
+| Elements  | `@openelement/element`, `OpenElement`     | 原生 Web Components authoring facade。                             |
 | UI        | `@openelement/ui`                         | 基于 Elements 模型的一方 `open-*` 组件库。                         |
 | Framework | `@openelement/app`, `@openelement/create` | 页面、布局、islands、API routes、Vite + Nitro build/runtime 输出。 |
-| Protocols | `@openelement/protocols`                  | Runtime-free 的可替换边界和 conformance contracts。                |
+| Protocols | `@openelement/protocol`                   | Runtime-free 的可替换边界和 conformance contracts。                |
 
 v0.40.x 当前 workspace 收敛为 11 个包。Hub、RPC、CEM、compat-check、Lit/React/vanilla interop adapters、独立 runtime/style-sheet/ssg 包已退出当前包图；历史细节保留在 git history 和 release evidence 中。
 
@@ -47,10 +47,10 @@ export default definePage({
 });
 ```
 
-组件作者优先使用 `@openelement/elements`：
+组件作者优先使用 `@openelement/element`：
 
 ```tsx
-import { DsdElement, signal, StyleSheet } from '@openelement/elements';
+import { DsdElement, signal, StyleSheet } from '@openelement/element';
 ```
 
 ## 文档

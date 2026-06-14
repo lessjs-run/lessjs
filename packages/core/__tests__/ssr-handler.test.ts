@@ -98,8 +98,12 @@ Deno.test('html-escape - renderSsrError', async (t) => {
   await t.step('accepts RouteEntry instead of status number', () => {
     const error = new Error('Render failed');
     // In production mode, status defaults to 500 when RouteEntry is passed
-    // deno-lint-ignore no-explicit-any
-    const html = renderSsrError(error, { type: 'page', path: '/test' } as any, false);
+    const html = renderSsrError(error, {
+      type: 'page',
+      path: '/test',
+      filePath: 'test.tsx',
+      varName: 'TestPage',
+    }, false);
     assertEquals(html.includes('Error 500'), true);
     assertEquals(html.includes('Render failed'), true);
   });

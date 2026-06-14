@@ -7,8 +7,7 @@ export interface DsdHydration {
   _hydrateEvents(): void;
 }
 
-// deno-lint-ignore no-explicit-any
-export type Constructor<T = HTMLElement> = new (...args: any[]) => T;
+export type Constructor<T = HTMLElement> = new (...args: unknown[]) => T;
 
 import { bindHydrateEvents } from './dsd-hydration-events.js';
 import type { HydrateEventDescriptor } from './schemas.js';

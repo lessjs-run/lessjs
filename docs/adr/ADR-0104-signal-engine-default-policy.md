@@ -12,7 +12,7 @@ heavy-framework island proof. However, a default signal-engine change affects
 runtime behavior and is explicitly protected by ADR-0101.
 
 The current signal package uses an existing default engine behind
-`@openelement/signals`. Protocols already define `SignalEngine` and conformance
+`@openelement/signal`. Protocols already define `SignalEngine` and conformance
 tests.
 
 ## Decision
@@ -32,7 +32,7 @@ Instead:
 
 - Do not make Preact the identity of openElement.
 - Do not add Preact or `@preact/signals-core` as a required dependency of
-  `@openelement/core` or `@openelement/elements`.
+  `@openelement/core` or `@openelement/element`.
 - Do not change signal scheduling or host update semantics without tests.
 
 ## Consequences
@@ -52,6 +52,6 @@ Instead:
 
 - Existing default signal tests remain green.
 - Candidate work must pass `runSignalEngineConformance`.
-- `@openelement/core` and `@openelement/elements` do not require Preact signal
+- `@openelement/core` and `@openelement/element` do not require Preact signal
   packages.
 - Any default switch requires a later ADR and updated release evidence.

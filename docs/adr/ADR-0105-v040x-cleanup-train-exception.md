@@ -14,7 +14,7 @@ minor/major product scope, public API, package topology, default runtime,
 default signal engine, or release policy.
 
 The v0.40 repository still carried too much historical surface after the first
-cleanup pass. In particular, `@openelement/elements` was still thin, while
+cleanup pass. In particular, `@openelement/element` was still thin, while
 `@openelement/runtime`, `@openelement/style-sheet`, and `@openelement/ssg`
 remained standalone packages that blurred the product line.
 
@@ -26,13 +26,13 @@ normal AutoFlow patch releases.
 The approved cleanup target is an 11-package package graph:
 
 - `@openelement/core`
-- `@openelement/elements`
+- `@openelement/element`
 - `@openelement/ui`
 - `@openelement/app`
 - `@openelement/create`
-- `@openelement/protocols`
+- `@openelement/protocol`
 - `@openelement/adapter-vite`
-- `@openelement/signals`
+- `@openelement/signal`
 - `@openelement/router`
 - `@openelement/content`
 - `@openelement/i18n`
@@ -43,12 +43,12 @@ The following packages are removed from the current package graph:
 - `@openelement/style-sheet`
 - `@openelement/ssg`
 
-`@openelement/elements` remains plural and becomes the canonical component
+`@openelement/element` remains plural and becomes the canonical component
 authoring facade. It re-exports `OpenElement`, `DsdElement`, `StyleSheet`,
 signals, island helpers, JSX runtime helpers, and key authoring types.
 
 `StyleSheet` moves to `@openelement/core/style-sheet` and is re-exported from
-`@openelement/elements`.
+`@openelement/element`.
 
 SSG implementation moves inside `@openelement/adapter-vite` as build-pipeline
 internals. There is no standalone public `@openelement/ssg` package in the
@@ -59,7 +59,7 @@ is a comparison target for Preact island semantics, not an adopted router or
 server runtime.
 
 `alien-signals` remains the default signal engine in v0.40.x.
-`@openelement/signals/preact-engine` is only an optional candidate backed by
+`@openelement/signal/preact-engine` is only an optional candidate backed by
 `@preact/signals-core`.
 
 ## AutoFlow Boundary

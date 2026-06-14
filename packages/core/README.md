@@ -2,7 +2,7 @@
 
 Advanced openElement runtime kernel.
 
-Most users should start from `@openelement/app`, `@openelement/elements`, or
+Most users should start from `@openelement/app`, `@openelement/element`, or
 `@openelement/ui`. `@openelement/core` owns low-level primitives used by those
 products:
 
@@ -13,10 +13,10 @@ products:
 - Static props, event hydration, island metadata, and SSR context helpers.
 - Unified errors, signal-like utilities, and DOM rendering helpers.
 
-ADR-0102 defines `@openelement/elements` and `OpenElement` as the first-run
+ADR-0102 defines `@openelement/element` and `OpenElement` as the first-run
 Elements package and authoring name. v0.40 keeps `DsdElement` and the
 `@openelement/core` `OpenElement` export for compatibility while new component
-authoring docs should start from `@openelement/elements`.
+authoring docs should start from `@openelement/element`.
 
 This package does not contain Vite, CLI, or build orchestration logic.
 
@@ -28,12 +28,12 @@ deno add jsr:@openelement/core
 
 ## Low-Level Component Authoring
 
-Prefer `@openelement/elements` for new components. This core import path remains
+Prefer `@openelement/element` for new components. This core import path remains
 available for compatibility and framework internals.
 
 ```tsx
-import { OpenElement } from '@openelement/elements';
-import { signal } from '@openelement/signals';
+import { OpenElement } from '@openelement/element';
+import { signal } from '@openelement/signal';
 
 class MyButton extends OpenElement {
   static props = { variant: String, disabled: Boolean };

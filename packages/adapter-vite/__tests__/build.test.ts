@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 /**
  * @openelement/adapter-vite - build / entry-generators tests (Deno)
  *
@@ -11,28 +10,32 @@ import {
   assertFalse,
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
-import { generateClientEntry } from '../src/ssg/index.ts';
+import { generateClientEntry } from '@openelement/ssg';
 import { buildPlugin } from '../src/build.ts';
 import { OpenElementBuildContext } from '../src/build-context.ts';
+
+type ObjectHook = {
+  handler: (...args: unknown[]) => unknown;
+};
 
 /**
  * Call a Vite ObjectHook that may be a plain function or { handler, order? }.
  * Avoids TS2349 "not all constituents are callable".
  */
-function callHook(hook: unknown, ...args: any[]): void {
+function callHook(hook: unknown, ...args: unknown[]): void {
   if (typeof hook === 'function') {
     hook(...args);
   } else if (hook && typeof hook === 'object' && 'handler' in hook) {
-    (hook as { handler: (...a: any[]) => any }).handler(...args);
+    (hook as ObjectHook).handler(...args);
   }
 }
 
-async function callAsyncHook(hook: unknown, ...args: any[]): Promise<void> {
+async function callAsyncHook(hook: unknown, ...args: unknown[]): Promise<void> {
   let result: unknown;
   if (typeof hook === 'function') {
     result = hook(...args);
   } else if (hook && typeof hook === 'object' && 'handler' in hook) {
-    result = (hook as { handler: (...a: any[]) => any }).handler(...args);
+    result = (hook as ObjectHook).handler(...args);
   }
   if (result instanceof Promise) await result;
 }

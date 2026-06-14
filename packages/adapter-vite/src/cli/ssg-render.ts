@@ -13,7 +13,7 @@ import {
   type SsgRenderEvidence,
   type SsgRenderOptions,
   type SsrBundle,
-} from '../ssg/index.ts';
+} from '@openelement/ssg';
 import { printBuildManifest } from '../build-manifest.js';
 import type { OpenElementBuildContext } from '../build-context.js';
 

@@ -15,7 +15,7 @@ import {
   assertFalse,
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
-import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/ssg/index.ts';
+import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '@openelement/ssg';
 import type { RouteEntry } from '@openelement/core';
 
 // Fixtures

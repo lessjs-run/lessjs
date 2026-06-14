@@ -1,0 +1,37 @@
+{
+  "name": "@openelement/ssg",
+  "version": "0.40.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "imports": {
+    "@openelement/core": "jsr:@openelement/core@^0.40.0",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.40.0/logger",
+    "@openelement/core/errors": "jsr:@openelement/core@^0.40.0/errors",
+    "@openelement/core/style-sheet": "jsr:@openelement/core@^0.40.0/style-sheet",
+    "@openelement/protocol/routes": "jsr:@openelement/protocol@^0.40.0/routes",
+    "@openelement/protocol/runtime": "jsr:@openelement/protocol@^0.40.0/runtime",
+    "@openelement/protocol": "jsr:@openelement/protocol@^0.40.0",
+    "hono": "npm:hono@^4.12",
+    "typescript": "npm:typescript@^5.9.0"
+  },
+  "tasks": {
+    "build": "deno check src/index.ts",
+    "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
+  },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

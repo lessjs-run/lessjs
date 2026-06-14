@@ -147,7 +147,7 @@ export default definePage({
         Interactive UI should return VNodes and use JSX event handlers.
       </p>
       <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 const count = signal(0);
 
@@ -238,7 +238,7 @@ export default definePage({
 
       <h2>交互写法</h2>
       <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
-import { signal } from '@openelement/elements';
+import { signal } from '@openelement/element';
 
 const count = signal(0);
 

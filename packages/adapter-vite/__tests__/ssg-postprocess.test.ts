@@ -11,7 +11,7 @@ import {
   injectCspMeta,
   injectSpeculationRules,
   injectViewTransitionMeta,
-} from '../src/ssg/index.ts';
+} from '@openelement/ssg';
 
 import { join } from 'node:path';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';

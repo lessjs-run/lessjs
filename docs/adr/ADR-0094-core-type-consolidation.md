@@ -70,7 +70,7 @@ semantic boundaries:
 - No type shape changes. Every type keeps its current name and structure.
 - No public API breakage. All re-exports in `index.ts` continue to resolve.
 - No behavioral changes. This is a file organization change only.
-- No changes to `@openelement/cem` or `@openelement/protocols`.
+- No changes to `@openelement/cem` or `@openelement/protocol`.
 
 ## Consequences
 

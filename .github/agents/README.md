@@ -8,10 +8,9 @@ Every agent prompt in this directory must require reading
 
 ## Files
 
-- `adr-reviewer.agent.md` checks architecture boundaries against ADR and SOP decisions.
-- `sop-gate.agent.md` checks whether a change satisfies the active release SOP.
+- `adr-reviewer.agent.md` checks architecture boundaries against ADR decisions.
 - `test-quality.agent.md` checks test coverage intent and regression risk.
 
 Keep these prompts versioned because they encode project review policy that is
-useful during pull request review. Update them when ADR or SOP expectations
+useful during pull request review. Update them when ADR or workflow expectations
 change; do not treat them as generated artifacts.
