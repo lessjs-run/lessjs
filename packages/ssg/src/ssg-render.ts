@@ -31,6 +31,7 @@ import type {
   RenderError,
   SsrAdmissionDecision,
 } from '@openelement/core';
+import type { SsgIslandDeclForReport, SsgRenderOptions } from '@openelement/protocol/ssg-contracts';
 import { createIsrCacheKey, escapeAttr } from '@openelement/core';
 import { createLogger } from '@openelement/core/logger';
 
@@ -71,34 +72,6 @@ export interface SsrBundle {
   getStaticPaths?: (path: string) => Promise<Array<Record<string, string>>>;
   posts?: unknown[];
   [key: string]: unknown;
-}
-
-export interface SsgRenderOptions {
-  root: string;
-  outDir: string;
-  base?: string;
-  headExtras?: string;
-  html?: { lang?: string; title?: string };
-  middleware?: {
-    csp?: { policy?: string; reportOnly?: boolean; nonce?: boolean };
-  };
-  upgradeStrategy?: string;
-  pwa?: {
-    name?: string;
-    shortName?: string;
-    themeColor?: string;
-    backgroundColor?: string;
-  };
-  viewTransition?: boolean;
-  speculation?: boolean | Record<string, unknown>;
-  islandTagNames?: string[];
-  routesDir?: string;
-}
-
-export interface SsgIslandDeclForReport {
-  tagName: string;
-  hydrate?: HydrationStrategy | string;
-  dsd?: boolean;
 }
 
 export interface SsgRenderEvidence {

@@ -23,7 +23,7 @@ remained standalone packages that blurred the product line.
 v0.40.x is a manually approved breaking cleanup train. These patches are not
 normal AutoFlow patch releases.
 
-The approved cleanup target is an 11-package package graph:
+The approved cleanup target is a 12-package package graph:
 
 - `@openelement/core`
 - `@openelement/element`
@@ -77,7 +77,7 @@ changes, or default engine changes are ordinary patch work.
 
 ## Consequences
 
-- The publish order shrinks to 11 packages.
+- The publish order shrinks to 12 packages.
 - Active code must not import removed packages.
 - Root generated artifacts and stale root benchmarks are rejected by repo
   hygiene checks.

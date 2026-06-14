@@ -2334,6 +2334,7 @@
       },
       "packages/ssg": {
         "dependencies": [
+          "jsr:@openelement/content@0.40",
           "jsr:@openelement/core@0.40",
           "jsr:@openelement/protocol@0.40",
           "npm:hono@^4.12.0",

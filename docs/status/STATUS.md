@@ -9,7 +9,7 @@ Mandatory workflow: `docs/governance/PROJECT_WORKFLOW.md`. Active version plan:
 
 v0.40.0 is released as the product-line cleanup release. It keeps the public
 target at `openElement = Elements + UI + Framework + Protocols`, makes the
-active package line `0.40.0`, and narrows the workspace to 11 packages. Hub,
+active package line `0.40.0`, and narrows the workspace to 12 packages. Hub,
 RPC, CEM, compat-check, Lit/React/vanilla interop adapters, and standalone
 runtime/style-sheet/ssg packages are removed from the current package graph.
 Hub routes and registry data are also removed from the website output.
@@ -215,7 +215,7 @@ built-in cell generation.
 | v0.37.6 | Vite + Nitro Runtime Proof                         | Done                | Prove openElement routes, rendering, islands, assets, SSR/ISR intent, and deployment output through Nitro     |
 | v0.38.0 | Product Surface Reset and Hardening                | Done                | Reset public package/API/product surface based on protocol and Nitro runtime evidence                         |
 | v0.39.0 | Framework RC + Four-Product Matrix Reset           | Done                | ADR-0099, public docs integrity, Elements direction, Preact handoff, starter/deploy/consumer gates            |
-| v0.40.0 | Elements + Preact + Repository Slimming            | Done (local)        | Productize `OpenElement`, prove Preact islands, and collapse root/docs/Hub/package/gate shape to 11 packages  |
+| v0.40.0 | Elements + Preact + Repository Slimming            | Done (local)        | Productize `OpenElement`, prove Preact islands, and collapse root/docs/Hub/package/gate shape to 12 packages  |
 | v0.41.0 | v1.0 Freeze Candidate                              | Planned             | API freeze candidate, protocol conformance, UI hardening, migration docs, and release-gate proof              |
 | v1.0.0  | Stable Four-Product Platform                       | Vision              | API freeze for Elements, UI, Framework, and Protocols with workflow evidence in release gates                 |
 
@@ -277,7 +277,7 @@ Package governance for v0.40:
   choices at protocol, adapter, or recipe boundaries.
 
 v0.40 package governance approves a breaking cleanup from 21 historical packages
-to the 11-package current surface. Future package deletion, package merge, new
+to the 12-package current surface. Future package deletion, package merge, new
 package creation, package graph topology changes, default runtime changes, and
 default signal-engine changes still require ADR-backed human approval under
 ADR-0101.
@@ -329,7 +329,7 @@ The workspace package count is now 11.
   current target.
 - Heavy-framework island expansion is frozen except for the planned v0.40
   Preact island proof.
-- v0.40 owns the physical repository slimming work: root generated outputs, Hub data, active docs categories, 11-package surface checks, and duplicate gate orchestration must stay aligned with the four-product matrix.
+- v0.40 owns the physical repository slimming work: root generated outputs, Hub data, active docs categories, 12-package surface checks, and duplicate gate orchestration must stay aligned with the four-product matrix.
 - Database work belongs in data/database adapter contracts and recipes. It must
   not become a built-in ORM, auth platform, or migration system.
 - A Vite + Nitro runtime proof should compose openElement routes, rendering,

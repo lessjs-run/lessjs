@@ -11,7 +11,8 @@
     "@openelement/core/style-sheet": "jsr:@openelement/core@^0.40.0/style-sheet",
     "@openelement/protocol/routes": "jsr:@openelement/protocol@^0.40.0/routes",
     "@openelement/protocol/runtime": "jsr:@openelement/protocol@^0.40.0/runtime",
-    "@openelement/protocol": "jsr:@openelement/protocol@^0.40.0",
+    "@openelement/protocol/ssg-contracts": "jsr:@openelement/protocol@^0.40.0/ssg-contracts",
+    "@openelement/content": "jsr:@openelement/content@^0.40.0",
     "hono": "npm:hono@^4.12",
     "typescript": "npm:typescript@^5.9.0"
   },

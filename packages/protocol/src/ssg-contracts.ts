@@ -1,21 +1,16 @@
 /**
  * SSG engine protocol contracts.
  *
- * Runtime-free data contracts consumed by
- * the SSG engine and build adapters.
+ * Runtime-free data contracts consumed by the SSG engine and build adapters.
+ * These types keep the SSG engine adapter-agnostic: the engine depends on
+ * protocol and core, never on Vite or adapter-vite.
  *
- * These types keep the SSG engine adapter-agnostic: the engine
- * depends only on protocol, core, router, and content — never
- * on Vite or adapter-vite.
- *
- * This module is zero-dependency — it imports nothing outside
- * protocol itself.
+ * This module is zero-dependency — it imports nothing outside protocol itself.
  */
 
 import type { HydrationStrategy } from './renderer.ts';
-import type { SsrAdmissionPlan } from './routes.ts';
 
-// ─── Concurrency types (from ssg/index.ts) ───────────────────
+// ─── Concurrency types ───────────────────────────────────────
 
 /** A single page to be rendered during SSG. */
 export interface SsgPageInput {
@@ -51,52 +46,7 @@ export interface ParallelRenderResult {
   errorCount: number;
 }
 
-// ─── SSG render pipeline types ───────────────────────────────
-
-/** Per-page render diagnostics. */
-export interface SsgPageOutput {
-  /** Rendered HTML string */
-  html: string;
-  /** Render errors collected during rendering */
-  errors: Array<{
-    code: string;
-    severity: 'error' | 'warning';
-    phase: string;
-    tagName: string;
-    message: string;
-    recoverable: boolean;
-  }>;
-  /** Hydration hints collected during rendering */
-  hydrationHints: Array<{
-    tagName: string;
-    layer: 'static' | 'interactive' | 'pure-island';
-    strategy?: HydrationStrategy;
-  }>;
-  /** Number of DSD components rendered on this page */
-  componentCount: number;
-  /** Total render time for all components on this page (ms) */
-  renderTimeMs: number;
-}
-
-/** SSR bundle structure loaded by SSG render pipeline. */
-export interface SsrBundle {
-  default: unknown;
-  routeInfo?: Array<{
-    path: string;
-    tagName: string;
-    isDynamic: boolean;
-    paramNames: string[];
-    revalidate?: number;
-    params?: Record<string, string>;
-  }>;
-  renderRoute?: (
-    path: string,
-    opts?: Record<string, unknown>,
-  ) => Promise<SsgPageOutput>;
-  getStaticPaths?: (path: string) => Promise<Array<Record<string, string>>>;
-  posts?: unknown[];
-  [key: string]: unknown;
-}
+// ─── SSG render pipeline options ─────────────────────────────
 
 /** Options passed to the shared SSG render pipeline. */
 export interface SsgRenderOptions {
@@ -128,60 +78,6 @@ export interface SsgIslandDeclForReport {
   dsd?: boolean;
 }
 
-/** SSR admission decision imported from core for type compatibility. */
-export interface SsgAdmissionDecision {
-  tagName: string;
-  modulePath?: string;
-  source?: 'local' | 'package' | 'nested';
-  renderPath: 'ssr+client' | 'client-only' | 'rejected';
-  reason: string;
-}
-
-/** Compatibility classification imported from core for type compatibility. */
-export interface SsgCompatibilityClassification {
-  tagName: string;
-  tier?: string;
-  compatible?: boolean;
-  reason?: string;
-  [key: string]: unknown;
-}
-
-/** OpenElement package manifest (simplified for protocol boundary). */
-export interface SsgPackageManifest {
-  name: string;
-  declarations?: Array<{
-    tagName: string;
-    openElement?: {
-      module?: string;
-      hydrate?: string;
-      ssr?: boolean;
-      dsd?: boolean;
-    };
-  }>;
-  [key: string]: unknown;
-}
-
-/** Evidence ledger produced by SSG render pipeline. */
-export interface SsgRenderEvidence {
-  i18nOptions?: {
-    locales: string[];
-    defaultLocale?: string;
-    [key: string]: unknown;
-  } | null;
-  localIslandMeta?: Record<string, { hydrate?: HydrationStrategy | string }>;
-  packageIslandDecls?: SsgIslandDeclForReport[];
-  packageManifests?: SsgPackageManifest[];
-  admissionDecisions?: SsgAdmissionDecision[];
-  cemClassifications?: SsgCompatibilityClassification[];
-  ssrAdmissionPlan?: SsrAdmissionPlan;
-  onPrintBuildManifest?: (input: {
-    root: string;
-    outDir: string;
-    phase: 3;
-    headExtras?: string;
-  }) => Promise<void>;
-}
-
 // ─── External resolver types ─────────────────────────────────
 
 /** Manifest produced by Deno dependency pre-resolution. */
@@ -208,22 +104,4 @@ export interface ClientIslandEntry {
   ssr?: boolean;
   dsd?: boolean;
   reason?: string;
-}
-
-// ─── Route scanner types ─────────────────────────────────────
-
-/** Local island metadata indexed by tag name. */
-export interface LocalIslandMeta {
-  hydrate?: HydrationStrategy | string;
-  ssr?: boolean;
-  dsd?: boolean;
-  reason?: string;
-  strategySource?: 'default' | 'manifest' | 'component' | 'route';
-}
-
-/** Output of CEM manifest scan. */
-export interface CemScanResult {
-  islandMeta?: Record<string, LocalIslandMeta>;
-  packageIslandDecls?: SsgIslandDeclForReport[];
-  packageManifests?: SsgPackageManifest[];
 }

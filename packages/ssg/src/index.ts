@@ -15,43 +15,24 @@
  * @module @openelement/ssg
  */
 
-// Types
-
-/** A single page to be rendered during SSG. */
-export interface SsgPageInput {
-  /** Route path (e.g. '/about', '/blog/hello') */
-  path: string;
-  /** Route params (e.g. { slug: 'hello' }) */
-  params?: Record<string, string>;
-}
-
-/** Result of rendering a single page through the concurrency helper. */
-export interface ParallelRenderPageOutput {
-  path: string;
-  html: string;
-  durationMs: number;
-  error?: string;
-}
-
-/** Options for parallel SSG rendering. */
-export interface ParallelRenderOptions {
-  /** Pages to render. */
-  pages: SsgPageInput[];
-  /** Render function called for each page. */
-  renderPage: (page: SsgPageInput) => Promise<string>;
-  /** Number of concurrent workers. Defaults to hardware concurrency or 4. */
-  concurrency?: number;
-}
-
-/** Summary of a parallel render run. */
-export interface ParallelRenderResult {
-  pages: ParallelRenderPageOutput[];
-  totalDurationMs: number;
-  successCount: number;
-  errorCount: number;
-}
+export type {
+  ClientIslandEntry,
+  ExternalManifest,
+  ParallelRenderOptions,
+  ParallelRenderPageOutput,
+  ParallelRenderResult,
+  SsgIslandDeclForReport,
+  SsgPageInput,
+  SsgRenderOptions,
+} from '@openelement/protocol/ssg-contracts';
 
 // ─── Sequential Renderer (baseline) ────────────────────────────
+
+import type {
+  ParallelRenderOptions,
+  ParallelRenderPageOutput,
+  ParallelRenderResult,
+} from '@openelement/protocol/ssg-contracts';
 
 /**
  * Render pages sequentially. Useful for debugging and as a
@@ -142,13 +123,7 @@ export async function renderParallel(
 }
 
 export { resolveDynamicRoutePath, ssgRender } from './ssg-render.ts';
-export type {
-  SsgIslandDeclForReport,
-  SsgPageOutput,
-  SsgRenderEvidence,
-  SsgRenderOptions,
-  SsrBundle,
-} from './ssg-render.ts';
+export type { SsgPageOutput, SsgRenderEvidence, SsrBundle } from './ssg-render.ts';
 export {
   buildIslandChunkMap,
   buildSpeculationRulesJson,
@@ -170,7 +145,6 @@ export {
   resolvePackageExports,
   walkExports,
 } from './external-resolver.ts';
-export type { ExternalManifest } from './external-resolver.ts';
 
 export {
   detectAndClassifyCemPackages,
@@ -181,7 +155,6 @@ export {
   scanPackageManifests,
   scanRoutes,
 } from './route-scanner.ts';
-export type { CemScanResult, LocalIslandMeta } from './route-scanner.ts';
 
 export { generateRouteTypes } from './route-type-generator.ts';
 
@@ -222,4 +195,3 @@ export type {
 } from './island-manifest.ts';
 
 export { generateClientEntry, validateClientIslandEntry } from './entry-generators.ts';
-export type { ClientIslandEntry } from './entry-generators.ts';

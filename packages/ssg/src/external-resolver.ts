@@ -9,21 +9,10 @@
  * For each external package, we parse its package.json exports field to
  * auto-discover ALL subpath exports. No more regex maintenance.
  */
+import type { ExternalManifest } from '@openelement/protocol/ssg-contracts';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
-
-/** Manifest produced by Deno dependency pre-resolution. */
-export interface ExternalManifest {
-  /** Complete list of bare specifiers to mark as external. */
-  specifiers: string[];
-  /** Redirect map (bare specifier to npm: URL) for importmap generation. */
-  importMap: Record<string, string>;
-  /** ISO timestamp of generation. */
-  generatedAt: string;
-  /** SHA-256 hash prefix of deno.lock at time of generation. */
-  lockHash: string;
-}
 
 interface DenoInfoModule {
   specifier: string;

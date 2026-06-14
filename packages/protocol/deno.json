@@ -14,6 +14,7 @@
     "./routes": "./src/routes.ts",
     "./runtime": "./src/runtime.ts",
     "./signals": "./src/signals.ts",
+    "./ssg-contracts": "./src/ssg-contracts.ts",
     "./validators": "./src/validators.ts"
   },
   "imports": {},
